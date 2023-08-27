@@ -12,27 +12,29 @@
 /[Ll]ogs/
 /[Ll]ibrary/
 /[Uu]ser[Ss]ettings/
-/[Aa]ssets/[Pp]lugins/
-/[Aa]ssets/[Ii]ronSource/
-/[Aa]ssets/[Gg]oogleMobile/
-/[Aa]ssets/[Aa]daptive Perfoemance/
-/[Aa]ssets/[Aa]ddressableAssetsData
-/[Aa]ssets/[Aa]Animation
-/[Aa]ssets/[Aa]EckTechGames
-/[Aa]ssets/[Gg]PM
-/[Aa]ssets/_PIGI
-/[Aa]ssets/_OBJ
-/[Aa]ssets/[Tt]oon
-/[Aa]ssets/[Tt]extMesh Pro
-/[Aa]ssets/[Mm]aterial/olds
-/[Aa]ssets/[Ii]mages
-/[Aa]ssets/[Aa]nimation
-/[Aa]ssets/[Ee]ckTechGames
+/[Pp]lugins/
+/[Ii]ronSource/
+/[Gg]oogleMobile/
+/[Aa]daptive Perfoemance/
+/[Aa]ddressableAssetsData
+/[Aa]Animation
+/[Aa]EckTechGames
+/[Gg]PM
+/_PIGI
+/_OBJ
+/[Tt]oon
+/[Tt]extMesh Pro
+/[Mm]aterial/olds
+/[Ii]mages
+/[Aa]nimation
+/[Ee]ckTechGames
 /[Gg]PM/
 /[Pp]ackages/
 /[Pp]rojectSettings/
-/Assets/Epic Toon FX/
-
+/Epic Toon FX/
+/AssetKits/
+/GabrielBissonnette/
+/GradientURP/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
