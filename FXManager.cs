@@ -119,7 +119,7 @@ public class FXManager : MonoBehaviour
 
 public enum FXType
 {
-    Bomb, SmallExplosion, ItemHit, Meteo
+    Bomb, SmallExplosion, ItemHit, ShadowMissile, ShadowBomb,
 }
 
 [Serializable]

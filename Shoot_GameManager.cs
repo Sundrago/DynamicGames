@@ -59,13 +59,13 @@ public class Shoot_GameManager : MonoBehaviour
         path[1] = Vector3.Lerp(path[0], path[2], 0.5f);
         path[1].x = player.position.x < 0 ? -xdiff : xdiff;
 
-        GameObject meteo = fXManager.CreateFX(FXType.Meteo, island);
-        meteo.transform.DOPath(path, 2f, PathType.CatmullRom, PathMode.TopDown2D, 1, Color.red)
-            .SetEase(Ease.OutQuint)
+        GameObject meteo = fXManager.CreateFX(FXType.ShadowMissile, island);
+        meteo.transform.DOPath(path, Random.Range(1.8f, 2.2f), PathType.CatmullRom, PathMode.TopDown2D, 1, Color.red)
+            .SetEase(Ease.OutQuart)
             .OnComplete(()=> {
                 //fXManager.KillFX(meteo.GetComponent<FX>());
                 print("bobmd");
-                fXManager.CreateFX(FXType.Bomb, meteo.transform);
+                fXManager.CreateFX(FXType.ShadowBomb, meteo.transform);
             });
 
         float map(float s, float a1, float a2, float b1, float b2)
