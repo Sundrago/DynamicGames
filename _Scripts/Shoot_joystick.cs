@@ -68,8 +68,8 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
             shape.position = targetObj.transform.position;
             shape.rotation = new Vector3(targetObj.transform.eulerAngles.z,0f,0f);
         }
-            if(Time.frameCount%10 == 0) {
-                bullet_Manager.SpawnBullet(BulletType.normalV1, targetObj.transform.position, vecNormal);
+            if(Time.frameCount%10 == 0 && vecNormal != Vector3.zero) {
+                bullet_Manager.SpawnBullet(targetObj.transform.position, vecNormal);
             }
         speed *= friction;
         speed = new Vector3(Mathf.Clamp(speed.x, -maxSpeed, maxSpeed), Mathf.Clamp(speed.y, -maxSpeed, maxSpeed), 0);

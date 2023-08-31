@@ -73,7 +73,7 @@ public class Shoot_Enemy_Manager : MonoBehaviour
         }
     }
 
-    void SpawnEnemyInCircle(float radius, int count)
+    public void SpawnEnemyInCircle(float radius, int count)
     {
         Vector2 playerPos = player.transform.position;
 

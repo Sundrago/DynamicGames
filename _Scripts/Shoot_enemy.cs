@@ -65,6 +65,7 @@ public class Shoot_enemy : MonoBehaviour
 
     public void KillEnemy()
     {
+        if (state == enemy_stats.despawning) return;
         state = enemy_stats.despawning;
         FXManager.Instance.CreateFX(FXType.SmallExplosion, gameObject.transform);
         GetComponent<SpriteRenderer>().DOColor(Color.black, 0.5f)

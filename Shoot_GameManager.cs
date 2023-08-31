@@ -10,6 +10,11 @@ public class Shoot_GameManager : MonoBehaviour
     [SerializeField] Shoot_Enemy_Manager enemy_Manager;
     [SerializeField] Transform player, island;
     [SerializeField] FXManager fXManager;
+
+    enum ShootGameState { dead, playing }
+
+    ShootGameState state = ShootGameState.playing;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +24,12 @@ public class Shoot_GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Time.frameCount % 120 == 0) CreateMeteo();
+
+        if (Time.frameCount % 120 == 0)
+        {
+            if (state == ShootGameState.playing)
+                CreateMeteo();
+        }
     }
 
     async Task SpawnOnLeft(int count)
@@ -64,7 +74,6 @@ public class Shoot_GameManager : MonoBehaviour
             .SetEase(Ease.OutQuart)
             .OnComplete(()=> {
                 //fXManager.KillFX(meteo.GetComponent<FX>());
-                print("bobmd");
                 fXManager.CreateFX(FXType.ShadowBomb, meteo.transform);
             });
 
@@ -72,6 +81,13 @@ public class Shoot_GameManager : MonoBehaviour
         {
             return b1 + (s - a1) * (b2 - b1) / (a2 - a1);
         }
+    }
+
+    public void PlayerDead()
+    {
+        if (state == ShootGameState.dead) return;
+
+        state = ShootGameState.dead;
     }
 }
 

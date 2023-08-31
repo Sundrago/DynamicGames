@@ -6,19 +6,19 @@ using UnityEngine.Pool;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 
-public enum BulletType { normalV1, normalV2, normalV3, }
-
 [Serializable]
 public class BulletInfo
 {
-    public BulletType type;
     [PreviewField(Alignment = ObjectFieldAlignment.Center)]
     public Sprite sprite;
+    public FXType fx;
 
     [VerticalGroup("value")]
     public int points;
     [VerticalGroup("value")]
     public float velocity;
+    [VerticalGroup("value")]
+    public float radius;
 }
 
 public class Shoot_Bullet_Manager : MonoBehaviour
@@ -31,15 +31,19 @@ public class Shoot_Bullet_Manager : MonoBehaviour
     [SerializeField] ShootScoreManager score;
     [SerializeField] ParticleSystem _FX_islandHit;
     [SerializeField] Shoot_bullet _bullet;
+    [SerializeField] public int currentBullet = 0;
 
     [SerializeField] int defaultCapacity, maxCapacity;
     private ObjectPool<Shoot_bullet> bullet_pool;
     private ObjectPool<ParticleSystem> fx_pool;
     private List<Shoot_bullet> bullets;
     private Vector2 screenBounds;
+    private Shoot_Enemy_Manager enemy_Manager;
 
     private void Start()
     {
+        enemy_Manager = Shoot_Enemy_Manager.Instance;
+
         bullet_pool = new ObjectPool<Shoot_bullet>(() =>
         {
             Shoot_bullet bullet = Instantiate(_bullet);
@@ -55,7 +59,7 @@ public class Shoot_Bullet_Manager : MonoBehaviour
         {
             bullets.Remove(bullet);
             Destroy(bullet.gameObject);
-        }, false, defaultCapacity, maxCapacity);
+        }, true, defaultCapacity, maxCapacity);
 
         fx_pool = new ObjectPool<ParticleSystem>(() =>
         {
@@ -76,20 +80,30 @@ public class Shoot_Bullet_Manager : MonoBehaviour
 
     }
 
-    public void SpawnBullet(BulletType type, Vector2 _position, Vector2 _direction)
+    public void SpawnBullet(Vector2 _position, Vector2 _direction)
     {
         Shoot_bullet bullet = bullet_pool.Get();
         _direction.Normalize();
-        bullet.Init(bulletInfos[(int)type].sprite, type, bulletInfos[(int)type].points, new Vector3(_direction.x, _direction.y, 0), bulletInfos[(int)type].velocity);
+        bullet.Init(bulletInfos[currentBullet], new Vector3(_direction.x, _direction.y, 0));
         bullet.gameObject.transform.SetParent(gameObject.transform);
         bullet.gameObject.transform.position = _position;
         float angle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg;
         bullet.gameObject.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
     }
 
+    public void UpgradeBullet()
+    {
+        currentBullet += 1;
+        if(currentBullet >= bulletInfos.Count)
+        {
+            currentBullet = bulletInfos.Count - 1;
+        }
+    }
+
     private void KillBullet(Shoot_bullet bullet)
     {
-        bullet_pool.Release(bullet);
+        if(bullet.fx != null && bullet.fx.activeSelf) FXManager.Instance.KillFX(bullet.fx.GetComponent<FX>());
+        if(bullet.gameObject.activeSelf) bullet_pool.Release(bullet);
     }
 
     public void KillParticleFX(ParticleSystem fx)
@@ -162,6 +176,21 @@ public class Shoot_Bullet_Manager : MonoBehaviour
             }
 
             if (bullet.bounceCount > 2 || bullet.startTime +5f < Time.time) KillBullet(bullet);
+
+            //hit enemy
+            List<Shoot_enemy> enemy_list = enemy_Manager.enemy_list;
+
+            for(int j = enemy_list.Count-1; j >= 0; j--)
+            {
+                Shoot_enemy enemy = enemy_list[j];
+                if(Vector2.Distance(bullet.gameObject.transform.position, enemy.gameObject.transform.position) < bullet.radius)
+                {
+                    if (enemy.state == enemy_stats.despawning) continue;
+                    enemy.KillEnemy();
+                    KillBullet(bullet);
+                    FXManager.Instance.CreateFX(FXType.SmallExplosion, bullet.transform);
+                }
+            }
         }
     }
 }

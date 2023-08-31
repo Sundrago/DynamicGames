@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 public class FX : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class FX : MonoBehaviour
 
         foreach (ParticleSystem particle in particleSystems)
         {
+            particle.Clear();
             particle.Play();
         }
 
@@ -24,7 +26,7 @@ public class FX : MonoBehaviour
             GetComponent<Shoot_FX>().KillEnemyIfInDistance();
         }
 
-        Invoke("OnParticleSystemStopped", durationInSec);
+        if(durationInSec != 0) Invoke("OnParticleSystemStopped", durationInSec);
     }
 
     public void OnParticleSystemStopped()
@@ -37,5 +39,16 @@ public class FX : MonoBehaviour
         return fXType;
     }
 
-    
+
+    [Button]
+    private void AutoAddParticles(FXType type)
+    {
+        particleSystems = GetComponentsInChildren<ParticleSystem>();
+
+        FXManager manager = gameObject.transform.GetComponentInParent<FXManager>();
+        FXData fxdata = new FXData();
+        fxdata.prefab = this;
+        fxdata.type = type;
+        manager.FXDatas.Add(fxdata);
+    }
 }

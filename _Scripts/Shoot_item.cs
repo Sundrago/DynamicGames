@@ -8,51 +8,32 @@ public class Shoot_item : MonoBehaviour
     [SerializeField] Boundaries boundaries;
     [SerializeField] GameObject item, item_holder, FX_itemHit;
     [SerializeField] Transform player;
+    [SerializeField] Shoot_Bullet_Manager bullet_Manager;
 
     [SerializeField] float velocity = 0.2f;
     [SerializeField] Vector2 vec;
     [SerializeField] float width = 2f;
+    [SerializeField] Sprite[] item_imgs;
 
+
+    private Vector2 screenBounds;
     private List<Shoot_item_obj> Shoot_Items = new List<Shoot_item_obj>();
 
     void Start()
     {
-        GameObject new_item = Instantiate(item, item_holder.transform);
-        new_item.transform.localPosition = Vector3.zero;
-        Shoot_item_obj obj = new Shoot_item_obj(new_item.transform, "");
-        new_item.SetActive(true);
-        Shoot_Items.Add(obj);
-
-        new_item = Instantiate(item, item_holder.transform);
-        new_item.transform.localPosition = Vector3.zero;
-        obj = new Shoot_item_obj(new_item.transform, "");
-        new_item.SetActive(true);
-        Shoot_Items.Add(obj);
-
-        new_item = Instantiate(item, item_holder.transform);
-        new_item.transform.localPosition = Vector3.zero;
-        obj = new Shoot_item_obj(new_item.transform, "");
-        new_item.SetActive(true);
-        Shoot_Items.Add(obj);
-
-        new_item = Instantiate(item, item_holder.transform);
-        new_item.transform.localPosition = Vector3.zero;
-        obj = new Shoot_item_obj(new_item.transform, "");
-        new_item.SetActive(true);
-        Shoot_Items.Add(obj);
-
-        new_item = Instantiate(item, item_holder.transform);
-        new_item.transform.localPosition = Vector3.zero;
-        obj = new Shoot_item_obj(new_item.transform, "");
-        new_item.SetActive(true);
-        Shoot_Items.Add(obj);
+        screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
+        
     }
 
     private void SpawnItem()
     {
         GameObject new_item = Instantiate(item, item_holder.transform);
-        new_item.transform.localPosition = Vector3.zero;
-        Shoot_item_obj obj = new Shoot_item_obj(new_item.transform, "");
+        new_item.transform.localPosition = GetRandomPosOnScreen();
+
+        int rnd = Random.Range(0, 2);
+        Shoot_item_obj obj = new Shoot_item_obj(new_item.transform, (itemType)rnd);
+        new_item.GetComponent<SpriteRenderer>().sprite = item_imgs[rnd];
+
         new_item.transform.DOScale(new Vector3(0, 0, 0), 1f)
             .From();
         new_item.SetActive(true);
@@ -61,7 +42,7 @@ public class Shoot_item : MonoBehaviour
 
     void Update()
     {
-        if (Time.frameCount % 300 == 1)
+        if (Time.frameCount % 450 == 0)
         {
             SpawnItem();
         }
@@ -105,8 +86,29 @@ public class Shoot_item : MonoBehaviour
                     .SetEase(Ease.InOutElastic)
                     .OnComplete(() => { Destroy(obj.transform.gameObject); });
 
-                FXManager.Instance.CreateFX(FXType.Bomb, obj.transform);
+                GotItem(obj.type);
+
+                FXManager.Instance.CreateFX(FXType.ItemHit, obj.transform);
             }
+        }
+    }
+
+    private Vector2 GetRandomPosOnScreen()
+    {
+        return new Vector2(Random.Range(-1f, 1f) * screenBounds.x, Random.Range(-1f, 1f) * screenBounds.y);
+    }
+
+    private void GotItem(itemType type)
+    {
+        switch(type)
+        {
+            case itemType.weapon:
+                bullet_Manager.UpgradeBullet();
+                break;
+
+            case itemType.shield:
+                bullet_Manager.UpgradeBullet();
+                break;
         }
     }
 
@@ -114,10 +116,10 @@ public class Shoot_item : MonoBehaviour
     {
         public Transform transform;
         public Vector3 vec;
-        public string type;
+        public itemType type;
         public float velocity;
 
-        public Shoot_item_obj(Transform _transform, string _type = "", float _velocity = 0.2f)
+        public Shoot_item_obj(Transform _transform, itemType _type, float _velocity = 0.2f)
         {
             transform = _transform;
             vec = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0f);
@@ -125,4 +127,6 @@ public class Shoot_item : MonoBehaviour
             velocity = _velocity;
         }
     }
+
+    public enum itemType { weapon, shield }
 }
