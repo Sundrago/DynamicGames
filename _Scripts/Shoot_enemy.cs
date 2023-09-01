@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public enum enemy_stats {prewarm, spawning, ready, despawning};
+public enum enemy_stats {prewarm, spawning, ready, despawning, gameOver};
 
 public class Shoot_enemy : MonoBehaviour
 {
@@ -49,7 +49,7 @@ public class Shoot_enemy : MonoBehaviour
 
     void Update()
     {
-        if (state == enemy_stats.prewarm) return;
+        if (state == enemy_stats.prewarm || state == enemy_stats.gameOver) return;
 
         direction = player.position - gameObject.transform.position;
         direction.z = 0f;
@@ -58,17 +58,27 @@ public class Shoot_enemy : MonoBehaviour
 
         if (state == enemy_stats.ready)
         {
-            if(Vector2.Distance(player.position, gameObject.transform.position) < 0.1f) return;
+            if (Vector2.Distance(player.position, gameObject.transform.position) < 0.125f)
+            {
+                Shoot_GameManager.Instacne.GetAttack();
+                KillEnemy();
+                return;
+            }
             gameObject.transform.position += direction.normalized * velocity * Time.deltaTime;
         }
     }
 
-    public void KillEnemy()
+    public void KillEnemy(float delay = 0)
     {
         if (state == enemy_stats.despawning) return;
         state = enemy_stats.despawning;
         FXManager.Instance.CreateFX(FXType.SmallExplosion, gameObject.transform);
-        GetComponent<SpriteRenderer>().DOColor(Color.black, 0.5f)
+
+        Color color = Color.black;
+        color.a = 0;
+
+        GetComponent<SpriteRenderer>().DOColor(color, 1f)
+            .SetDelay(delay)
             .OnComplete(() => Shoot_Enemy_Manager.Instance.DestroyEnemy(this));
     }
 }

@@ -5,7 +5,7 @@ using TMPro;
 using DG.Tweening;
 using UnityEngine.UI;
 
-public enum GameType {land, jump, build};
+public enum GameType {land, jump, build, shoot};
 
 public class EndScoreCtrl : MonoBehaviour
 {

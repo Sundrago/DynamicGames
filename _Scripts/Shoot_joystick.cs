@@ -10,6 +10,7 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     [SerializeField] Boundaries boundaries;
     [SerializeField] Shoot_Bullet_Manager bullet_Manager;
     [SerializeField] ParticleSystem ThrustFx;
+    [SerializeField] Shoot_GameManager gameManager;
 
     [SerializeField] float max_radius = 1f;
     [SerializeField] float clamp_max_velocity = 75f;
@@ -20,7 +21,7 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     [SerializeField] float maxSpeed = 5f;
     [SerializeField] float velocity = 0.5f;
 
-    private Vector3 vecNormal;
+    public Vector3 vecNormal;
     private Vector3 speed = Vector3.zero;
     private Vector2 initialPoint;
 
@@ -44,7 +45,7 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
         initialPoint = Camera.main.ScreenToWorldPoint(eventData.position);
         joystickUI.transform.position = initialPoint; // = new Vector2(initialPoint.x, initialPoint.y + joystickUI.GetComponent<RectTransform>().transform.localScale.y / 2f);
         joystickUI.SetActive(true);
-        emmision.rateOverTimeMultiplier = 20;
+        emmision.rateOverTimeMultiplier = 60;
     }
 
     void IDragHandler.OnDrag(PointerEventData eventData)
@@ -68,26 +69,31 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
             shape.position = targetObj.transform.position;
             shape.rotation = new Vector3(targetObj.transform.eulerAngles.z,0f,0f);
         }
-            if(Time.frameCount%10 == 0 && vecNormal != Vector3.zero) {
-                bullet_Manager.SpawnBullet(targetObj.transform.position, vecNormal);
-            }
+            
         speed *= friction;
         speed = new Vector3(Mathf.Clamp(speed.x, -maxSpeed, maxSpeed), Mathf.Clamp(speed.y, -maxSpeed, maxSpeed), 0);
         targetObj.transform.position = targetObj.transform.position + (speed * Time.deltaTime);
 
         if(targetObj.transform.position.x < boundaries.left.position.x) {
-            targetObj.transform.position = new Vector3(boundaries.left.position.x, targetObj.transform.position.y, 0f);
+            targetObj.transform.position = new Vector3(boundaries.left.position.x, targetObj.transform.position.y, targetObj.transform.position.z);
         } else if(targetObj.transform.position.x > boundaries.right.position.x) {
-            targetObj.transform.position = new Vector3(boundaries.right.position.x, targetObj.transform.position.y, 0f);
+            targetObj.transform.position = new Vector3(boundaries.right.position.x, targetObj.transform.position.y, targetObj.transform.position.z);
         } 
         if(targetObj.transform.position.y > boundaries.top.position.y) {
-            targetObj.transform.position = new Vector3(targetObj.transform.position.x, boundaries.top.position.y, 0f);
+            targetObj.transform.position = new Vector3(targetObj.transform.position.x, boundaries.top.position.y, targetObj.transform.position.z);
         } else if(targetObj.transform.position.y < boundaries.btm.position.y) {
-            targetObj.transform.position = new Vector3(targetObj.transform.position.x, boundaries.btm.position.y, 0f);
+            targetObj.transform.position = new Vector3(targetObj.transform.position.x, boundaries.btm.position.y, targetObj.transform.position.z);
         }
     }
 
     void UpdatePointer(Vector2 dragPoint) {
+
+        if(gameManager.state != Shoot_GameManager.ShootGameState.playing)
+        {
+            vecNormal = Vector3.zero;
+            return;
+        }
+
         Vector2 vec = new Vector2(dragPoint.x - initialPoint.x, dragPoint.y - initialPoint.y);
         vec = Vector2.ClampMagnitude(vec * clamp_max_velocity, max_radius);
         joysyick_knob.transform.localPosition = vec;

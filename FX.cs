@@ -17,14 +17,15 @@ public class FX : MonoBehaviour
 
         foreach (ParticleSystem particle in particleSystems)
         {
+            particle.time = 0;
             particle.Clear();
             particle.Play();
         }
 
-        if(fXType == FXType.Bomb)
-        {
-            GetComponent<Shoot_FX>().KillEnemyIfInDistance();
-        }
+        //if(fXType == FXType.Bomb)
+        //{
+        //    GetComponent<Shoot_FX>().KillEnemyIfInDistance();
+        //}
 
         if(durationInSec != 0) Invoke("OnParticleSystemStopped", durationInSec);
     }
@@ -46,9 +47,17 @@ public class FX : MonoBehaviour
         particleSystems = GetComponentsInChildren<ParticleSystem>();
 
         FXManager manager = gameObject.transform.GetComponentInParent<FXManager>();
+
+        foreach(FXData fX in manager.FXDatas)
+        {
+            if (fX.type == type) return;
+        }
+
         FXData fxdata = new FXData();
         fxdata.prefab = this;
         fxdata.type = type;
         manager.FXDatas.Add(fxdata);
+
+        gameObject.SetActive(false);
     }
 }

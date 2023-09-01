@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Pool;
 using DG.Tweening;
 using Sirenix.OdinInspector;
+using System.Threading.Tasks;
 
 [Serializable]
 public class BulletInfo
@@ -14,11 +15,13 @@ public class BulletInfo
     public FXType fx;
 
     [VerticalGroup("value")]
-    public int points;
+    public int points = 1;
     [VerticalGroup("value")]
     public float velocity;
     [VerticalGroup("value")]
     public float radius;
+    [VerticalGroup("value")]
+    public int intervalInMeleSec = 150;
 }
 
 public class Shoot_Bullet_Manager : MonoBehaviour
@@ -32,6 +35,9 @@ public class Shoot_Bullet_Manager : MonoBehaviour
     [SerializeField] ParticleSystem _FX_islandHit;
     [SerializeField] Shoot_bullet _bullet;
     [SerializeField] public int currentBullet = 0;
+    [SerializeField] Shoot_joystick joystick;
+    [SerializeField] Shoot_GameManager gameManager;
+    [SerializeField] Transform player;
 
     [SerializeField] int defaultCapacity, maxCapacity;
     private ObjectPool<Shoot_bullet> bullet_pool;
@@ -39,6 +45,7 @@ public class Shoot_Bullet_Manager : MonoBehaviour
     private List<Shoot_bullet> bullets;
     private Vector2 screenBounds;
     private Shoot_Enemy_Manager enemy_Manager;
+    public int bounceCount = 0;
 
     private void Start()
     {
@@ -80,7 +87,13 @@ public class Shoot_Bullet_Manager : MonoBehaviour
 
     }
 
-    public void SpawnBullet(Vector2 _position, Vector2 _direction)
+    public void Init()
+    {
+        bounceCount = 0;
+        currentBullet = 0;
+    }
+
+    public void SepawnBullet(Vector2 _position, Vector2 _direction)
     {
         Shoot_bullet bullet = bullet_pool.Get();
         _direction.Normalize();
@@ -175,7 +188,7 @@ public class Shoot_Bullet_Manager : MonoBehaviour
                 ++bullet.bounceCount;
             }
 
-            if (bullet.bounceCount > 2 || bullet.startTime +5f < Time.time) KillBullet(bullet);
+            if (bullet.bounceCount > bounceCount || bullet.startTime +5f < Time.time) KillBullet(bullet);
 
             //hit enemy
             List<Shoot_enemy> enemy_list = enemy_Manager.enemy_list;
@@ -191,6 +204,20 @@ public class Shoot_Bullet_Manager : MonoBehaviour
                     FXManager.Instance.CreateFX(FXType.SmallExplosion, bullet.transform);
                 }
             }
+        }
+    }
+
+    public async Task StartSpawnBulletTimer()
+    {
+        if (joystick.vecNormal != Vector3.zero)
+        {
+            SepawnBullet(player.transform.position, joystick.vecNormal);
+        }
+
+        if(gameManager.state == Shoot_GameManager.ShootGameState.playing)
+        {
+            await Task.Delay(bulletInfos[currentBullet].intervalInMeleSec);
+            StartSpawnBulletTimer();
         }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.SocialPlatforms.GameCenter;
 
-public enum leaderboard_ids {score_land, score_jump, score_build};
+public enum leaderboard_ids {score_land, score_jump, score_build, score_shoot};
 
 public class LeaderboardManger : MonoBehaviour
 {

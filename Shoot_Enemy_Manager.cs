@@ -95,4 +95,11 @@ public class Shoot_Enemy_Manager : MonoBehaviour
 
         enemy_list.Add(enemy);
     }
+
+    public void GameOver() {
+        foreach(Shoot_enemy enemy in enemy_list)
+        {
+            enemy.state = enemy_stats.gameOver;
+        }
+    }
 }
