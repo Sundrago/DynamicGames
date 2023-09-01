@@ -12,12 +12,14 @@ public class Shoot_GameManager : MonoBehaviour
     [SerializeField] public Transform player, island;
     [SerializeField] FXManager fXManager;
     [SerializeField] Shoot_joystick joystick;
+    [SerializeField] Shoot_item shoot_Item;
 
     [SerializeField] Animator face;
     [SerializeField] IslandSizeCtrl islandSizeCtrl;
     [SerializeField] EndScoreCtrl endScore;
     [SerializeField] ShootScoreManager score;
     [SerializeField] Transform startPosition;
+    [SerializeField] SFXCTRL sfx;
 
     public static Shoot_GameManager Instacne;
 
@@ -35,22 +37,43 @@ public class Shoot_GameManager : MonoBehaviour
     void Start()
     {
         SetShootGameStatus(ShootGameState.playing);
+        sfx.PlayBGM(5);
         SpawnOnLeft(5);
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        if (Time.frameCount % 120 == 0)
+        if(score.GetScore() == 5)
         {
+            score.AddScore(1);
+            FaceAnim0();
+        }
+        if (Time.frameCount % 100 == 0)
+        {
+            if (score.GetScore() < 10) return;
             if (state == ShootGameState.playing)
                 CreateMeteo();
         }
+
+        if (Time.frameCount % 399 == 0)
+        {
+            enemy_Manager.SpawnEnemyInCircle(1f, Random.Range(4, 12));
+        }
     }
 
-    void Init()
+    async Task FaceAnim0()
     {
+        islandSizeCtrl.OpenIsland();
+        await Task.Delay(1000);
+        face.SetTrigger("turnRed");
+        await Task.Delay(2000);
+        islandSizeCtrl.CloseIsland();
+    }
+
+    public void RestartGame()
+    {
+        endScore.HideScore();
         DestroyShield();
 
         face.SetTrigger("idle");
@@ -62,8 +85,13 @@ public class Shoot_GameManager : MonoBehaviour
         player.DOLocalRotate(startPosition.localEulerAngles, 0.5f)
             .SetEase(Ease.InOutCubic)
             .OnComplete(()=> {
-                state = ShootGameState.ready;
+                SetShootGameStatus(ShootGameState.playing);
+                joystick.gameObject.SetActive(true);
             });
+
+        enemy_Manager.KillAll();
+        shoot_Item.KillAll();
+        bullet_Manager.Restart();
     }
 
     async Task SpawnOnLeft(int count)
@@ -76,7 +104,7 @@ public class Shoot_GameManager : MonoBehaviour
             await Task.Delay(1000);
         }
         door_left.SetTrigger("close");
-        SpawnOnRight(5);
+        SpawnOnRight(3);
     }
 
     async Task SpawnOnRight(int count)
@@ -89,7 +117,7 @@ public class Shoot_GameManager : MonoBehaviour
             await Task.Delay(1000);
         }
         door_right.SetTrigger("close");
-        SpawnOnLeft(5);
+        SpawnOnLeft(3);
     }
 
     public void CreateMeteo()
@@ -134,6 +162,7 @@ public class Shoot_GameManager : MonoBehaviour
             case ShootGameState.ready :
                 break;
             case ShootGameState.playing:
+                joystick.vecNormal = Vector3.zero;
                 bullet_Manager.StartSpawnBulletTimer();
                 break;
             case ShootGameState.dead:
@@ -175,6 +204,7 @@ public class Shoot_GameManager : MonoBehaviour
         face.SetTrigger("idle");
         islandSizeCtrl.CloseIsland();
         endScore.ShowScore(score.GetScore(), GameType.shoot) ;
+        joystick.gameObject.SetActive(false);
     }
 }
 

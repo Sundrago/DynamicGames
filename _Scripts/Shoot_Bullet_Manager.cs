@@ -87,7 +87,7 @@ public class Shoot_Bullet_Manager : MonoBehaviour
 
     }
 
-    public void Init()
+    public void Restart()
     {
         bounceCount = 0;
         currentBullet = 0;
@@ -141,8 +141,7 @@ public class Shoot_Bullet_Manager : MonoBehaviour
             bullet.gameObject.transform.position.y < island_Boundaries.top.position.y)
             {
                 island.transform.localScale = new Vector3(1f, 1f, 1f);
-                if (DOTween.IsTweening(island.transform)) DOTween.Kill(island.transform);
-                island.transform.DOPunchScale(new Vector3(0.1f, 0.1f, 0.1f), 0.25f);
+                island.transform.DOPunchScale(new Vector3(0.05f, 0.05f, 0.05f), 0.25f);
                 score.AddScore(bullet.points);
 
                 ParticleSystem fx = fx_pool.Get();

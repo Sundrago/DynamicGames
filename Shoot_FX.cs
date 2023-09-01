@@ -9,6 +9,8 @@ public class Shoot_FX : MonoBehaviour
     [SerializeField] FXType type;
     [SerializeField] float distance;
 
+    private float updateDistance;
+
     private Shoot_Enemy_Manager enemy_Manager;
     Transform player;
     
@@ -17,6 +19,11 @@ public class Shoot_FX : MonoBehaviour
     {
         enemy_Manager = Shoot_Enemy_Manager.Instance;
         player = Shoot_GameManager.Instacne.player;
+    }
+
+    private void OnEnable()
+    {
+        updateDistance = distance;
     }
 
     private void KillEnemyIfInDistance()
@@ -40,12 +47,12 @@ public class Shoot_FX : MonoBehaviour
 
     private void KillPlayerIfInDistance()
     {
-        if(Vector2.Distance(player.position, gameObject.transform.position) < distance)
+        if(Vector2.Distance(player.position, gameObject.transform.position) < updateDistance)
         {
             Shoot_GameManager.Instacne.GetAttack();
         }
 
-        distance *= 0.7f;
+        updateDistance *= 0.7f;
     }
         
     private void Update()

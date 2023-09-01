@@ -41,6 +41,7 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
 
     void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
     {
+        if (gameManager.state != Shoot_GameManager.ShootGameState.playing) return;
         onDrag = true;
         initialPoint = Camera.main.ScreenToWorldPoint(eventData.position);
         joystickUI.transform.position = initialPoint; // = new Vector2(initialPoint.x, initialPoint.y + joystickUI.GetComponent<RectTransform>().transform.localScale.y / 2f);

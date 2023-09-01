@@ -44,6 +44,7 @@ public class Shoot_Enemy_Manager : MonoBehaviour
 
     public void SpawnEnemy(Vector2 pos)
     {
+        if (Shoot_GameManager.Instacne.state != Shoot_GameManager.ShootGameState.playing) return;
         Shoot_enemy enemy = enemy_pool.Get();
         enemy.transform.SetParent(gameObject.transform);
         enemy.transform.position = pos;
@@ -100,6 +101,14 @@ public class Shoot_Enemy_Manager : MonoBehaviour
         foreach(Shoot_enemy enemy in enemy_list)
         {
             enemy.state = enemy_stats.gameOver;
+        }
+    }
+
+    public void KillAll()
+    {
+        for(int i = enemy_list.Count-1; i>=0; i--)
+        {
+            DestroyEnemy(enemy_list[i]);
         }
     }
 }

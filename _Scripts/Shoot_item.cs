@@ -35,7 +35,7 @@ public class Shoot_item : MonoBehaviour
 
         int rnd = Random.Range(0, 4);
 
-        if (rnd == 1 && gameManager.shield == null) rnd = 0;
+        if (rnd == 1 && gameManager.shield != null) rnd = 0;
         else if (rnd == 2)
         {
             float chance = bullet_Manager.bounceCount * 0.25f;
@@ -92,7 +92,6 @@ public class Shoot_item : MonoBehaviour
 
             if(Vector2.Distance(player.position, obj.transform.position) < 0.3)
             {
-                print(obj.type);
                 Shoot_Items.Remove(obj);
 
                 obj.transform.DOScale(0f, 0.25f)
@@ -146,6 +145,15 @@ public class Shoot_item : MonoBehaviour
             vec = new Vector3(Random.Range(-1.5f, 1.5f), Random.Range(-1.5f, 1.5f), 0f);
             type = _type;
             velocity = _velocity;
+        }
+    }
+
+    public void KillAll()
+    {
+        for (int i = Shoot_Items.Count - 1; i >= 0; i--)
+        {
+            Destroy(Shoot_Items[i].transform.gameObject);
+            Shoot_Items.RemoveAt(i);
         }
     }
 
