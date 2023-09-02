@@ -28,6 +28,8 @@ public class Shoot_item : MonoBehaviour
 
     private void SpawnItem()
     {
+        if (gameManager.state != Shoot_GameManager.ShootGameState.playing) return;
+
         if (Shoot_Items.Count >= 4) return;
 
         GameObject new_item = Instantiate(item, item_holder.transform);
@@ -53,7 +55,7 @@ public class Shoot_item : MonoBehaviour
 
     void Update()
     {
-        if (Time.frameCount % 100 == 0)
+        if (Time.frameCount % 150 == 0)
         {
             SpawnItem();
         }

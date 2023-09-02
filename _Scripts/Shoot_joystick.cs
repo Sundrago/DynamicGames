@@ -41,7 +41,14 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
 
     void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
     {
-        if (gameManager.state != Shoot_GameManager.ShootGameState.playing) return;
+        if (!(gameManager.state == Shoot_GameManager.ShootGameState.playing || gameManager.state == Shoot_GameManager.ShootGameState.ready!))
+        {
+            onDrag = false;
+            joystickUI.SetActive(false);
+            joysyick_knob.transform.localPosition = Vector2.zero;
+            emmision.rateOverTimeMultiplier = 0;
+            return;
+        }
         onDrag = true;
         initialPoint = Camera.main.ScreenToWorldPoint(eventData.position);
         joystickUI.transform.position = initialPoint; // = new Vector2(initialPoint.x, initialPoint.y + joystickUI.GetComponent<RectTransform>().transform.localScale.y / 2f);
@@ -88,10 +95,14 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     }
 
     void UpdatePointer(Vector2 dragPoint) {
+        if (!onDrag) return;
 
-        if(gameManager.state != Shoot_GameManager.ShootGameState.playing)
+        if (!(gameManager.state == Shoot_GameManager.ShootGameState.playing || gameManager.state == Shoot_GameManager.ShootGameState.ready!))
         {
-            vecNormal = Vector3.zero;
+            onDrag = false;
+            joystickUI.SetActive(false);
+            joysyick_knob.transform.localPosition = Vector2.zero;
+            emmision.rateOverTimeMultiplier = 0;
             return;
         }
 

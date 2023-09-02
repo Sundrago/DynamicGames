@@ -89,6 +89,7 @@ public class Shoot_Enemy_Manager : MonoBehaviour
 
     public void SpawnOnIsland(int angle, float x, float y)
     {
+        if (Shoot_GameManager.Instacne.state != Shoot_GameManager.ShootGameState.playing) return;
         Shoot_enemy enemy = enemy_pool.Get();
         enemy.transform.SetParent(gameObject.transform);
         enemy.transform.position = new Vector3(island.position.x, island.position.y, 0f);

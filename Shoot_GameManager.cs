@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
 using DG.Tweening;
+using Sirenix.OdinInspector;
 
 public class Shoot_GameManager : MonoBehaviour
 {
@@ -24,6 +25,8 @@ public class Shoot_GameManager : MonoBehaviour
     public static Shoot_GameManager Instacne;
 
     public enum ShootGameState { ready, dead, playing }
+
+    [ReadOnly]
     public FX shield = null;
 
     public ShootGameState state;
@@ -36,7 +39,7 @@ public class Shoot_GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SetShootGameStatus(ShootGameState.playing);
+        SetShootGameStatus(ShootGameState.ready);
         sfx.PlayBGM(5);
         SpawnOnLeft(5);
     }
@@ -44,7 +47,30 @@ public class Shoot_GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(score.GetScore() == 5)
+        switch (state)
+        {
+            case ShootGameState.ready:
+                Update_ready();
+                break;
+            case ShootGameState.playing:
+                Update_Playing();
+                break;
+            case ShootGameState.dead:
+                break;
+
+        }
+
+        
+    }
+
+    private void Update_ready()
+    {
+        if (joystick.vecNormal != Vector3.zero) SetShootGameStatus(ShootGameState.playing);
+    }
+
+    private void Update_Playing()
+    {
+        if (score.GetScore() == 5)
         {
             score.AddScore(1);
             FaceAnim0();
@@ -52,7 +78,6 @@ public class Shoot_GameManager : MonoBehaviour
         if (Time.frameCount % 100 == 0)
         {
             if (score.GetScore() < 10) return;
-            if (state == ShootGameState.playing)
                 CreateMeteo();
         }
 
@@ -85,7 +110,7 @@ public class Shoot_GameManager : MonoBehaviour
         player.DOLocalRotate(startPosition.localEulerAngles, 0.5f)
             .SetEase(Ease.InOutCubic)
             .OnComplete(()=> {
-                SetShootGameStatus(ShootGameState.playing);
+                SetShootGameStatus(ShootGameState.ready);
                 joystick.gameObject.SetActive(true);
             });
 
@@ -160,9 +185,9 @@ public class Shoot_GameManager : MonoBehaviour
         state = _state;
         switch(state) {
             case ShootGameState.ready :
+                joystick.vecNormal = Vector3.zero;
                 break;
             case ShootGameState.playing:
-                joystick.vecNormal = Vector3.zero;
                 bullet_Manager.StartSpawnBulletTimer();
                 break;
             case ShootGameState.dead:

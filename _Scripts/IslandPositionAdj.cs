@@ -6,6 +6,7 @@ public class IslandPositionAdj : MonoBehaviour
 {
     [SerializeField] GameObject[] Adjs;
     [SerializeField] GameObject guide;
+    [SerializeField] GameObject asdf;
     // Start is called before the first frame update
     void Start()
     {
