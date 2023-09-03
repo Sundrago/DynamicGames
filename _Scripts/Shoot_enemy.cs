@@ -14,34 +14,37 @@ public class Shoot_enemy : MonoBehaviour
     private float angle;
     private Vector3 direction;
 
-    public void Init(Transform _player, float _velocity, float prewarm_rotation = -1, float prewarm_x = 0, float prewarm_y = 0)
+    public void Init(Transform _player, float _velocity, float prewarm_duration = 1.5f, float prewarm_rotation = -1, float prewarm_x = 0, float prewarm_y = 0)
     {
         player = _player;
         velocity = _velocity;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
 
         if(prewarm_rotation == -1)
         {
             state = enemy_stats.spawning;
 
-            GetComponent<SpriteRenderer>().color = Color.red;
-            GetComponent<SpriteRenderer>().DOFade(0f, 2f)
+            spriteRenderer.color = Color.red;
+            spriteRenderer.DOFade(0f, 2f)
                 .From()
                 .OnComplete(() => state = enemy_stats.ready);
         } else
         {
-            GetComponent<SpriteRenderer>().color = new Color(1f, 0f, 0f, 0.5f);
+            spriteRenderer.color = new Color(1f, 0f, 0f, 0.5f);
             state = enemy_stats.prewarm;
             gameObject.transform.localEulerAngles = new Vector3(0f, 0f, prewarm_rotation);
-            gameObject.transform.DOMoveX(prewarm_x, 1.5f)
+            gameObject.transform.DOMoveX(prewarm_x, prewarm_duration)
+                .SetEase((Ease.OutCubic))
                 .SetRelative(true);
-            gameObject.transform.DOMoveY(prewarm_y, 1.5f)
+            gameObject.transform.DOMoveY(prewarm_y, prewarm_duration)
                 .SetRelative(true)
+                .SetEase((Ease.OutCubic))
                 .OnComplete(()=> {
                     direction = player.position - gameObject.transform.position;
                     angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
                     gameObject.transform.DORotate(new Vector3(0f, 0f, angle), 0.5f)
                     .SetEase(Ease.OutCubic);
-                    GetComponent<SpriteRenderer>().DOFade(1f, 0.5f)
+                    spriteRenderer.DOFade(1f, 0.5f)
                         .OnComplete(() => state = enemy_stats.ready);
                 });
         }
@@ -72,7 +75,7 @@ public class Shoot_enemy : MonoBehaviour
     {
         if (state == enemy_stats.despawning) return;
         state = enemy_stats.despawning;
-        FXManager.Instance.CreateFX(FXType.SmallExplosion, gameObject.transform);
+        if(delay == 0) FXManager.Instance.CreateFX(FXType.SmallExplosion, gameObject.transform);
 
         Color color = Color.black;
         color.a = 0;

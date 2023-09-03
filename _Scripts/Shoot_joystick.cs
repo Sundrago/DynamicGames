@@ -32,7 +32,6 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     private void Start()
     {
         joystickUI.SetActive(false);
-        Application.targetFrameRate = 60;
         shape = ThrustFx.shape;
         emmision = ThrustFx.emission;
 
@@ -43,10 +42,7 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     {
         if (!(gameManager.state == Shoot_GameManager.ShootGameState.playing || gameManager.state == Shoot_GameManager.ShootGameState.ready!))
         {
-            onDrag = false;
-            joystickUI.SetActive(false);
-            joysyick_knob.transform.localPosition = Vector2.zero;
-            emmision.rateOverTimeMultiplier = 0;
+            Reset();
             return;
         }
         onDrag = true;
@@ -58,16 +54,14 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
 
     void IDragHandler.OnDrag(PointerEventData eventData)
     {
+        if (!onDrag) return;
         Vector2 dragPoint = Camera.main.ScreenToWorldPoint(eventData.position);
         UpdatePointer(dragPoint);
     }
 
     void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
     {
-        onDrag = false;
-        joystickUI.SetActive(false);
-        joysyick_knob.transform.localPosition = Vector2.zero;
-        emmision.rateOverTimeMultiplier = 0;
+        Reset();
     }
 
     void LateUpdate()
@@ -99,10 +93,7 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
 
         if (!(gameManager.state == Shoot_GameManager.ShootGameState.playing || gameManager.state == Shoot_GameManager.ShootGameState.ready!))
         {
-            onDrag = false;
-            joystickUI.SetActive(false);
-            joysyick_knob.transform.localPosition = Vector2.zero;
-            emmision.rateOverTimeMultiplier = 0;
+            Reset();
             return;
         }
 
@@ -115,5 +106,13 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
         targetObj.transform.rotation = Quaternion.Lerp(targetObj.transform.rotation, Quaternion.Euler(new Vector3(0f, 0f, angle)), 0.5f);
 
         joystick_inensity = Vector2.Distance(Vector2.zero, joysyick_knob.transform.localPosition) / 50f;
+    }
+    
+    public void Reset()
+    {
+        onDrag = false;
+        joysyick_knob.transform.localPosition = Vector2.zero;
+        emmision.rateOverTimeMultiplier = 0;
+        joystickUI.SetActive(false);
     }
 }

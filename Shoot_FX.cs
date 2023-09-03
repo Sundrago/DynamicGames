@@ -31,8 +31,6 @@ public class Shoot_FX : MonoBehaviour
         for (int i = enemy_Manager.enemy_list.Count - 1; i>=0; i--)
         {
             Shoot_enemy enemy = enemy_Manager.enemy_list[i];
-            Debug.DrawLine(gameObject.transform.position, enemy.transform.position, Color.blue, 3f);
-
             if (Vector2.Distance(gameObject.transform.position, enemy.gameObject.transform.position) < distance)
             {
                 if (enemy.state != enemy_stats.despawning)

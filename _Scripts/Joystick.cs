@@ -81,4 +81,5 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
                 break;
         }
     }
+
 }

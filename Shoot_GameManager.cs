@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using System.Threading.Tasks;
 using DG.Tweening;
 using Sirenix.OdinInspector;
+using TMPro;
 
 public class Shoot_GameManager : MonoBehaviour
 {
@@ -23,6 +25,10 @@ public class Shoot_GameManager : MonoBehaviour
     [SerializeField] SFXCTRL sfx;
 
     public static Shoot_GameManager Instacne;
+    
+    private AutoAttackInfo createEnemyInCircle = new AutoAttackInfo();
+    private AutoAttackInfo createEnemyRandomPos = new AutoAttackInfo();
+    private AutoAttackInfo createMetheor = new AutoAttackInfo();
 
     public enum ShootGameState { ready, dead, playing }
 
@@ -39,9 +45,14 @@ public class Shoot_GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Application.targetFrameRate = 60;
+
         SetShootGameStatus(ShootGameState.ready);
         sfx.PlayBGM(5);
-        SpawnOnLeft(5);
+        stage = 0;
+        createEnemyInCircle.Init(1000, 0, 0);
+        createEnemyRandomPos.Init(1000, 0, 0);
+        createMetheor.Init(1000,0,0);
     }
 
     // Update is called once per frame
@@ -57,10 +68,7 @@ public class Shoot_GameManager : MonoBehaviour
                 break;
             case ShootGameState.dead:
                 break;
-
         }
-
-        
     }
 
     private void Update_ready()
@@ -70,32 +78,363 @@ public class Shoot_GameManager : MonoBehaviour
 
     private void Update_Playing()
     {
-        if (score.GetScore() == 5)
-        {
-            score.AddScore(1);
-            FaceAnim0();
-        }
-        if (Time.frameCount % 100 == 0)
-        {
-            if (score.GetScore() < 10) return;
-                CreateMeteo();
-        }
+        if(Time.frameCount % 20 != 0) return;
 
-        if (Time.frameCount % 399 == 0)
-        {
-            enemy_Manager.SpawnEnemyInCircle(1f, Random.Range(4, 12));
-        }
+        int myScofre = score.GetScore();
+
+        if (myScofre < 5) SetStage(0);
+        else if (myScofre < 30) SetStage(1);
+        else if (myScofre < 80) SetStage(2);
+        else if (myScofre < 150) SetStage(3);
+        else if (myScofre < 250) SetStage(4);
+        else if (myScofre < 400) SetStage(5);
+        else if (myScofre < 600) SetStage(6);
+        else if (myScofre < 900) SetStage(7);
     }
 
-    async Task FaceAnim0()
+    public int stage;
+    
+    async Task SetStage(int _stage)
     {
-        islandSizeCtrl.OpenIsland();
-        await Task.Delay(1000);
-        face.SetTrigger("turnRed");
-        await Task.Delay(2000);
-        islandSizeCtrl.CloseIsland();
+        if(state != ShootGameState.playing) return;
+        if(stage >= _stage) return;
+
+        stage = _stage;
+        int rnd;
+
+        switch (stage)
+        {
+            case 0:
+                createEnemyInCircle.Init(1000, 0, 0);
+                createEnemyRandomPos.Init(1000, 0, 0);
+                createMetheor.Init(1000,0,0);
+                break;
+            case 1:
+                islandSizeCtrl.OpenIsland();
+                await Task.Delay(1000);
+                face.SetTrigger("turnRed");
+                await Task.Delay(2000);
+                rnd = Random.Range(0, 3);
+                switch (rnd)
+                {
+                    case 0:
+                        CreateMetheor();
+                        await Task.Delay(2000);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                    case 1:
+                        enemy_Manager.SpawnEnemyAtRandomPos();
+                        enemy_Manager.SpawnEnemyAtRandomPos();
+                        enemy_Manager.SpawnEnemyAtRandomPos();
+                        await Task.Delay(1000);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                    case 2:
+                        SpawnOnLeft(2);
+                        SpawnOnRight(2);
+                        await Task.Delay(3000);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                }
+                await Task.Delay(1000);
+                createEnemyInCircle.Init(12000, 0, 1);
+                createEnemyRandomPos.Init(4000, 0, 2);
+                createMetheor.Init(1000,0,0);
+                shoot_Item.SpawnItem();
+                break;
+            case 2:
+                islandSizeCtrl.OpenIsland();
+                await Task.Delay(1000);
+                face.SetTrigger("angry01");
+                await Task.Delay(2000);
+                CreateMetheor();
+                await Task.Delay(1000);
+                
+                rnd = Random.Range(0, 3);
+                switch (rnd)
+                {
+                    case 0:
+                        CreateMetheor();
+                        await Task.Delay(1000);
+                        CreateMetheor();
+                        await Task.Delay(1000);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                    case 1:
+                        enemy_Manager.SpawnEnemyAtRandomPos();
+                        enemy_Manager.SpawnEnemyAtRandomPos();
+                        enemy_Manager.SpawnEnemyAtRandomPos();
+                        enemy_Manager.SpawnEnemyAtRandomPos();
+                        await Task.Delay(1000);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                    case 2:
+                        SpawnOnLeft(4);
+                        SpawnOnRight(4);
+                        await Task.Delay(4000);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                }
+                await Task.Delay(1000);
+                createEnemyInCircle.Init(10000, 0, 1);
+                createEnemyRandomPos.Init(3900, 1, 3);
+                createMetheor.Init(1000,0,0);
+                break;
+            case 3:
+                islandSizeCtrl.OpenIsland();
+                await Task.Delay(1000);
+                face.SetTrigger("angry01");
+                await Task.Delay(1000);
+                CreateMetheor();
+                await Task.Delay(1000);
+                
+                rnd = Random.Range(0, 3);
+                switch (rnd)
+                {
+                    case 0:
+                        CreateMetheor();
+                        await Task.Delay(1000);
+                        CreateMetheor();
+                        await Task.Delay(3000);
+                        CreateMetheor();
+                        await Task.Delay(1000);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                    case 1:
+                        enemy_Manager.SpawnEnemyAtRandomPos();
+                        enemy_Manager.SpawnEnemyAtRandomPos();
+                        enemy_Manager.SpawnEnemyAtRandomPos();
+                        enemy_Manager.SpawnEnemyAtRandomPos();
+                        enemy_Manager.SpawnEnemyAtRandomPos();
+                        await Task.Delay(1000);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                    case 2:
+                        SpawnOnLeft(5);
+                        SpawnOnRight(5);
+                        await Task.Delay(4000);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                }
+                await Task.Delay(1000);
+                createEnemyInCircle.Init(10000, 0, 4);
+                createEnemyRandomPos.Init(3900, 1, 4);
+                createMetheor.Init(9000,0,1);
+                break;
+            case 4:
+                islandSizeCtrl.OpenIsland();
+                await Task.Delay(1000);
+                face.SetTrigger("angry01");
+                await Task.Delay(1000);
+                CreateMetheor();
+                await Task.Delay(1000);
+                enemy_Manager.SpawnEnemyInLineY(6);
+                
+                rnd = Random.Range(0, 3);
+                switch (rnd)
+                {
+                    case 0:
+                        CreateMetheor();
+                        await Task.Delay(1000);
+                        CreateMetheor();
+                        await Task.Delay(1000);
+                        CreateMetheor();
+                        await Task.Delay(1000);
+                        CreateMetheor();
+                        await Task.Delay(1000);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                    case 1:
+                        enemy_Manager.SpawnEnemyInCircle(1f, Random.Range(5, 8));
+                        await Task.Delay(1000);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                    case 2:
+                        SpawnOnLeft(5);
+                        SpawnOnRight(5);
+                        await Task.Delay(4000);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                }
+                await Task.Delay(1000);
+                createEnemyInCircle.Init(10000, 2, 6);
+                createEnemyRandomPos.Init(3900, 1, 4);
+                createMetheor.Init(9000,0,1);
+                break;
+            case 5:
+                islandSizeCtrl.OpenIsland();
+                await Task.Delay(1000);
+                face.SetTrigger("angry01");
+                await Task.Delay(1000);
+                CreateMetheor();
+                await Task.Delay(1000);
+                enemy_Manager.SpawnEnemyInLineY(8);
+                
+                rnd = Random.Range(0, 3);
+                switch (rnd)
+                {
+                    case 0:
+                        CreateMetheor();
+                        await Task.Delay(500);
+                        CreateMetheor();
+                        await Task.Delay(500);
+                        CreateMetheor();
+                        await Task.Delay(500);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                    case 1:
+                        enemy_Manager.SpawnEnemyInCircle(1f, Random.Range(5, 12));
+                        await Task.Delay(1000);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                    case 2:
+                        SpawnOnLeft(5);
+                        SpawnOnRight(5);
+                        await Task.Delay(4000);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                }
+                await Task.Delay(1000);
+                createEnemyInCircle.Init(10000, 2, 6);
+                createEnemyRandomPos.Init(3900, 1, 4);
+                createMetheor.Init(9000,0,2);
+                break;
+            case 6:
+                islandSizeCtrl.OpenIsland();
+                await Task.Delay(1000);
+                face.SetTrigger("angry01");
+                await Task.Delay(1000);
+                CreateMetheor();
+                await Task.Delay(1000);
+                enemy_Manager.SpawnEnemyInLineY(10);
+                
+                rnd = Random.Range(0, 3);
+                switch (rnd)
+                {
+                    case 0:
+                        CreateMetheor();
+                        await Task.Delay(500);
+                        CreateMetheor();
+                        await Task.Delay(500);
+                        CreateMetheor();
+                        await Task.Delay(2000);
+                        CreateMetheor();
+                        await Task.Delay(500);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                    case 1:
+                        enemy_Manager.SpawnEnemyInCircle(0.8f, Random.Range(3, 5));
+                        await Task.Delay(300);
+                        enemy_Manager.SpawnEnemyInCircle(1.2f, Random.Range(5, 8));
+                        await Task.Delay(1000);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                    case 2:
+                        SpawnOnLeft(5);
+                        SpawnOnRight(5);
+                        await Task.Delay(4000);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                }
+                await Task.Delay(1000);
+                createEnemyInCircle.Init(10000, 3, 12);
+                createEnemyRandomPos.Init(3900, 1, 4);
+                createMetheor.Init(8000,0,2);
+                break;
+            case 7:
+                islandSizeCtrl.OpenIsland();
+                await Task.Delay(1000);
+                face.SetTrigger("angry02");
+                enemy_Manager.SpawnEnemyInLineY(10);
+                await Task.Delay(500);
+                CreateMetheor();
+                await Task.Delay(500);
+                CreateMetheor();
+                enemy_Manager.SpawnEnemyInCircle(0.9f, Random.Range(5, 8));
+                await Task.Delay(500);
+                
+                rnd = Random.Range(0, 3);
+                switch (rnd)
+                {
+                    case 0:
+                        CreateMetheor();
+                        await Task.Delay(500);
+                        CreateMetheor();
+                        await Task.Delay(500);
+                        CreateMetheor();
+                        await Task.Delay(2000);
+                        CreateMetheor();
+                        await Task.Delay(500);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                    case 1:
+                        enemy_Manager.SpawnEnemyInCircle(0.8f, Random.Range(3, 5));
+                        await Task.Delay(300);
+                        enemy_Manager.SpawnEnemyInCircle(1f, Random.Range(5, 8));
+                        await Task.Delay(1000);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                    case 2:
+                        SpawnOnLeft(5);
+                        SpawnOnRight(5);
+                        await Task.Delay(4000);
+                        islandSizeCtrl.CloseIsland();
+                        break;
+                }
+                await Task.Delay(1000);
+                enemy_Manager.SpawnEnemyInLineY(10);
+                createEnemyInCircle.Init(6100, 5, 10);
+                createEnemyRandomPos.Init(1900, 0, 4);
+                createMetheor.Init(4000,0,2);
+                break;
+        }
     }
 
+    async Task CreateEnemyAtRandomPos()
+    {
+        if(state != ShootGameState.playing) return;
+        if (createEnemyRandomPos.max != 0)
+        {
+            int amt = Random.Range(createEnemyRandomPos.min, createEnemyRandomPos.max + 1);
+            for (int i = 0; i < amt; i++)
+            {
+                enemy_Manager.SpawnEnemyAtRandomPos();
+            }
+        }
+        await Task.Delay(createEnemyRandomPos.delay);
+        CreateEnemyAtRandomPos();
+    }
+
+    async Task CreateEnemyAtPlayerInCircle()
+    {
+        if(state != ShootGameState.playing) return;
+
+        if (createEnemyInCircle.max != 0)
+        {
+            enemy_Manager.SpawnEnemyInCircle(1f, Random.Range(createEnemyInCircle.min, createEnemyInCircle.max));
+        }
+        await Task.Delay(createEnemyInCircle.delay);
+        CreateEnemyAtPlayerInCircle();
+    }
+
+    async Task CreateMetheors()
+    {
+        if(state != ShootGameState.playing) return;
+        
+        if (createMetheor.max != 0)
+        {
+            int amt = Random.Range(createMetheor.min, createMetheor.max + 1);
+            for (int i = 0; i < amt; i++)
+            {
+                await Task.Delay(2000);
+                CreateMetheor();
+            }
+        }
+        await Task.Delay(createMetheor.delay);
+        CreateMetheors();
+    }
+    
+    
     public void RestartGame()
     {
         endScore.HideScore();
@@ -117,35 +456,34 @@ public class Shoot_GameManager : MonoBehaviour
         enemy_Manager.KillAll();
         shoot_Item.KillAll();
         bullet_Manager.Restart();
+        stage = 0;
     }
 
     async Task SpawnOnLeft(int count)
     {
         door_left.SetTrigger("open");
-        await Task.Delay(1000);
+        await Task.Delay(400);
         for(int i = 0; i<count; i++)
         {
             enemy_Manager.SpawnOnIsland(180, -1.5f, 0f);
             await Task.Delay(1000);
         }
         door_left.SetTrigger("close");
-        SpawnOnRight(3);
     }
 
     async Task SpawnOnRight(int count)
     {
         door_right.SetTrigger("open");
-        await Task.Delay(1000);
+        await Task.Delay(400);
         for (int i = 0; i < count; i++)
         {
             enemy_Manager.SpawnOnIsland(0, 1.5f, 0f);
             await Task.Delay(1000);
         }
         door_right.SetTrigger("close");
-        SpawnOnLeft(3);
     }
-
-    public void CreateMeteo()
+    
+    private void CreateMetheor()
     {
         Vector3[] path = new Vector3[3];
         path[0] = island.transform.position;
@@ -157,12 +495,12 @@ public class Shoot_GameManager : MonoBehaviour
         path[1] = Vector3.Lerp(path[0], path[2], 0.5f);
         path[1].x = player.position.x < 0 ? -xdiff : xdiff;
 
-        GameObject meteo = fXManager.CreateFX(FXType.ShadowMissile, path[0]);
-        meteo.transform.DOPath(path, Random.Range(1.8f, 2.2f), PathType.CatmullRom, PathMode.TopDown2D, 1, Color.red)
+        GameObject metheor = fXManager.CreateFX(FXType.ShadowMissile, path[0]);
+        metheor.transform.DOPath(path, Random.Range(1.8f, 2.2f), PathType.CatmullRom, PathMode.TopDown2D, 1, Color.red)
             .SetEase(Ease.OutQuart)
             .OnComplete(()=> {
-                //fXManager.KillFX(meteo.GetComponent<FX>());
-                fXManager.CreateFX(FXType.ShadowBomb, meteo.transform);
+                //fXManager.KillFX(metheor.GetComponent<FX>());
+                fXManager.CreateFX(FXType.ShadowBomb, metheor.transform);
             });
 
         float map(float s, float a1, float a2, float b1, float b2)
@@ -188,9 +526,13 @@ public class Shoot_GameManager : MonoBehaviour
                 joystick.vecNormal = Vector3.zero;
                 break;
             case ShootGameState.playing:
+                CreateMetheors();
+                CreateEnemyAtRandomPos();
+                CreateEnemyAtPlayerInCircle();
                 bullet_Manager.StartSpawnBulletTimer();
                 break;
             case ShootGameState.dead:
+                joystick.Reset();
                 break;
 
         }
@@ -230,6 +572,18 @@ public class Shoot_GameManager : MonoBehaviour
         islandSizeCtrl.CloseIsland();
         endScore.ShowScore(score.GetScore(), GameType.shoot) ;
         joystick.gameObject.SetActive(false);
+    }
+
+    class AutoAttackInfo
+    {
+        public int delay, min, max;
+
+        public void Init(int _delay, int _min, int _max)
+        {
+            delay = _delay;
+            min = _min;
+            max = _max;
+        }
     }
 }
 

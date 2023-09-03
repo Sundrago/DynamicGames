@@ -197,10 +197,11 @@ public class Shoot_Bullet_Manager : MonoBehaviour
                 Shoot_enemy enemy = enemy_list[j];
                 if(Vector2.Distance(bullet.gameObject.transform.position, enemy.gameObject.transform.position) < bullet.radius)
                 {
-                    if (enemy.state == enemy_stats.despawning) continue;
+                    if (enemy.state != enemy_stats.ready) continue;
                     enemy.KillEnemy();
                     KillBullet(bullet);
                     FXManager.Instance.CreateFX(FXType.SmallExplosion, bullet.transform);
+                    break;
                 }
             }
         }

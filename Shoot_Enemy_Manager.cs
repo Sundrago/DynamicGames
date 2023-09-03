@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -87,13 +88,30 @@ public class Shoot_Enemy_Manager : MonoBehaviour
         }
     }
 
+    [Button]
+    public void SpawnEnemyInLineY(int count)
+    {
+        float normalY = -0.9f;
+        for (int i = 0; i < count; i++)
+        {
+            float normalX = 2f / (count + 1) * (i+1) - 1f;
+            Vector2 pos = new Vector2(normalX * screenBounds.x, normalY * screenBounds.y);
+            SpawnEnemy(pos);
+        }
+    }
+
+    public void SpawnEnemyAtRandomPos()
+    {
+        SpawnEnemy(GetRandomPosOnScreen());
+    }
+
     public void SpawnOnIsland(int angle, float x, float y)
     {
         if (Shoot_GameManager.Instacne.state != Shoot_GameManager.ShootGameState.playing) return;
         Shoot_enemy enemy = enemy_pool.Get();
         enemy.transform.SetParent(gameObject.transform);
         enemy.transform.position = new Vector3(island.position.x, island.position.y, 0f);
-        enemy.Init(player, 0.4f, angle, x, y);
+        enemy.Init(player, 0.4f, 1f, angle, x, y);
 
         enemy_list.Add(enemy);
     }
