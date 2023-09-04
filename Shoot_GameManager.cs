@@ -31,6 +31,7 @@ public class Shoot_GameManager : MonoBehaviour
     private AutoAttackInfo createMetheor = new AutoAttackInfo();
     private AutoAttackInfo createEnemyInSpira = new AutoAttackInfo();
     private AutoAttackInfo createEnemyInLine = new AutoAttackInfo();
+    private AutoAttackInfo createItem = new AutoAttackInfo();
 
     public enum ShootGameState { ready, dead, playing }
 
@@ -53,8 +54,11 @@ public class Shoot_GameManager : MonoBehaviour
         sfx.PlayBGM(5);
         stage = 0;
         createEnemyInCircle.Init(1000, 0, 0);
-        createEnemyRandomPos.Init(1000, 0, 0);
-        createMetheor.Init(1000,0,0);
+        createEnemyRandomPos.Init(1100, 0, 0);
+        createMetheor.Init(1200,0,0);
+        createEnemyInLine.Init(1300,0,0);
+        createEnemyInSpira.Init(1400,0,0);
+        createItem.Init(3700,1,1, 0.5f);
     }
 
     // Update is called once per frame
@@ -112,6 +116,7 @@ public class Shoot_GameManager : MonoBehaviour
                 createMetheor.Init(1200,0,0);
                 createEnemyInLine.Init(1300, 0, 0);
                 createEnemyInSpira.Init(1400, 0, 0);
+                createItem.Init(3700,1,1, 0.5f);
                 break;
             case 1:
                 islandSizeCtrl.OpenIsland();
@@ -492,6 +497,20 @@ public class Shoot_GameManager : MonoBehaviour
         await Task.Delay(info.delay);
         CreateEnemyInSpiral();
     }
+
+    async Task CreateItem()
+    {
+        if(state != ShootGameState.playing) return;
+
+        AutoAttackInfo info = createItem;
+        if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
+        {
+            shoot_Item.SpawnItem();
+        }
+
+        await Task.Delay(info.delay);
+        CreateItem();
+    }
     
     
     public void RestartGame()
@@ -590,6 +609,7 @@ public class Shoot_GameManager : MonoBehaviour
                 CreateEnemyAtPlayerInCircle();
                 CreateEnemyInLine();
                 CreateEnemyInSpiral();
+                CreateItem();
                 bullet_Manager.StartSpawnBulletTimer();
                 break;
             case ShootGameState.dead:
@@ -637,8 +657,8 @@ public class Shoot_GameManager : MonoBehaviour
 
     class AutoAttackInfo
     {
-        public int delay, min, max;
-        public float probability;
+        public int delay = 1000, min = 0, max = 0;
+        public float probability = 0;
 
         public void Init(int _delay, int _min, int _max, float _probability = 1)
         {

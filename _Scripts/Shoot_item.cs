@@ -67,12 +67,6 @@ public class Shoot_item : MonoBehaviour
 
     void Update()
     {
-        if (Time.frameCount % 250 == 0)
-        {
-            if(Random.Range(0,2) == 0)
-                SpawnItem();
-        }
-
         if (gameManager.state != Shoot_GameManager.ShootGameState.playing) return;
 
         for (int i = items.Count - 1; i>=0; i--)
