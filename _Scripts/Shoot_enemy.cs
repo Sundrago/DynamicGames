@@ -14,7 +14,7 @@ public class Shoot_enemy : MonoBehaviour
     private float angle;
     private Vector3 direction;
 
-    public void Init(Transform _player, float _velocity, float prewarm_duration = 1.5f, float prewarm_rotation = -1, float prewarm_x = 0, float prewarm_y = 0)
+    public void Init(Transform _player, float _velocity, float prewarm_duration = 0, float prewarm_rotation = -1, float prewarm_x = 0, float prewarm_y = 0)
     {
         player = _player;
         velocity = _velocity;
@@ -25,7 +25,7 @@ public class Shoot_enemy : MonoBehaviour
             state = enemy_stats.spawning;
 
             spriteRenderer.color = Color.red;
-            spriteRenderer.DOFade(0f, 2f)
+            spriteRenderer.DOFade(0f, 2f + prewarm_duration)
                 .From()
                 .OnComplete(() => state = enemy_stats.ready);
         } else

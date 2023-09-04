@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -17,7 +18,8 @@ public class Shoot_Enemy_Manager : MonoBehaviour
     public static Shoot_Enemy_Manager Instance;
 
     public List<Shoot_enemy> enemy_list = new List<Shoot_enemy>();
-
+    private bool SpawingOnSpiral = false;
+    
     private void Awake()
     {
         Instance = this;
@@ -43,13 +45,15 @@ public class Shoot_Enemy_Manager : MonoBehaviour
 
     }
 
-    public void SpawnEnemy(Vector2 pos)
+    public void SpawnEnemy(Vector2 pos, bool forceCreate = false,  float delay = 0)
     {
         if (Shoot_GameManager.Instacne.state != Shoot_GameManager.ShootGameState.playing) return;
+        if(!forceCreate && SpawingOnSpiral) return;
+        
         Shoot_enemy enemy = enemy_pool.Get();
         enemy.transform.SetParent(gameObject.transform);
         enemy.transform.position = pos;
-        enemy.Init(player, 0.4f);
+        enemy.Init(player, 0.4f, delay);
 
         enemy_list.Add(enemy);
     }
@@ -89,6 +93,28 @@ public class Shoot_Enemy_Manager : MonoBehaviour
     }
 
     [Button]
+    public async Task SpawnEnemyInSpiral(float radiusMin, float radiusMax, int count, float maxAngle = 1.5f, int delay = 150, float enemyPrewarm = 0.5f)
+    {
+        SpawingOnSpiral = true;
+        
+        Vector2 playerPos = player.transform.position;
+        float randomAngle = Random.Range(0f, 2f);
+        
+        for(int i = 0; i<count; i++)
+        {
+            float normal = 1f / count * i;
+            float angle = (randomAngle + normal * maxAngle) * 2f * Mathf.PI;
+            float radius = radiusMin + (radiusMax - radiusMin) * normal;
+
+            Vector2 pos = playerPos + new Vector2(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius);
+            SpawnEnemy(pos, true, enemyPrewarm);
+            await Task.Delay(delay);
+        }
+
+        SpawingOnSpiral = false;
+    }
+    
+    
     public void SpawnEnemyInLineY(int count)
     {
         float normalY = -0.9f;

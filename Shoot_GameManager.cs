@@ -29,6 +29,8 @@ public class Shoot_GameManager : MonoBehaviour
     private AutoAttackInfo createEnemyInCircle = new AutoAttackInfo();
     private AutoAttackInfo createEnemyRandomPos = new AutoAttackInfo();
     private AutoAttackInfo createMetheor = new AutoAttackInfo();
+    private AutoAttackInfo createEnemyInSpira = new AutoAttackInfo();
+    private AutoAttackInfo createEnemyInLine = new AutoAttackInfo();
 
     public enum ShootGameState { ready, dead, playing }
 
@@ -106,8 +108,10 @@ public class Shoot_GameManager : MonoBehaviour
         {
             case 0:
                 createEnemyInCircle.Init(1000, 0, 0);
-                createEnemyRandomPos.Init(1000, 0, 0);
-                createMetheor.Init(1000,0,0);
+                createEnemyRandomPos.Init(1100, 0, 0);
+                createMetheor.Init(1200,0,0);
+                createEnemyInLine.Init(1300, 0, 0);
+                createEnemyInSpira.Init(1400, 0, 0);
                 break;
             case 1:
                 islandSizeCtrl.OpenIsland();
@@ -188,7 +192,7 @@ public class Shoot_GameManager : MonoBehaviour
                 CreateMetheor();
                 await Task.Delay(1000);
                 
-                rnd = Random.Range(0, 3);
+                rnd = Random.Range(0, 4);
                 switch (rnd)
                 {
                     case 0:
@@ -215,11 +219,15 @@ public class Shoot_GameManager : MonoBehaviour
                         await Task.Delay(4000);
                         islandSizeCtrl.CloseIsland();
                         break;
+                    case 3:
+                        await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.7f, 20, 1.35f, 30, 0.75f);
+                        break;
                 }
                 await Task.Delay(1000);
                 createEnemyInCircle.Init(10000, 0, 4);
                 createEnemyRandomPos.Init(3900, 1, 4);
                 createMetheor.Init(9000,0,1);
+                createEnemyInLine.Init(7500, 3, 5, 0.3f);
                 break;
             case 4:
                 islandSizeCtrl.OpenIsland();
@@ -230,7 +238,7 @@ public class Shoot_GameManager : MonoBehaviour
                 await Task.Delay(1000);
                 enemy_Manager.SpawnEnemyInLineY(6);
                 
-                rnd = Random.Range(0, 3);
+                rnd = Random.Range(0, 4);
                 switch (rnd)
                 {
                     case 0:
@@ -255,11 +263,15 @@ public class Shoot_GameManager : MonoBehaviour
                         await Task.Delay(4000);
                         islandSizeCtrl.CloseIsland();
                         break;
+                    case 3:
+                        await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.7f, 25, 1.35f, 30, 0.75f);
+                        break;
                 }
                 await Task.Delay(1000);
                 createEnemyInCircle.Init(10000, 2, 6);
                 createEnemyRandomPos.Init(3900, 1, 4);
                 createMetheor.Init(9000,0,1);
+                createEnemyInLine.Init(7500, 3, 8, 0.3f);
                 break;
             case 5:
                 islandSizeCtrl.OpenIsland();
@@ -270,7 +282,7 @@ public class Shoot_GameManager : MonoBehaviour
                 await Task.Delay(1000);
                 enemy_Manager.SpawnEnemyInLineY(8);
                 
-                rnd = Random.Range(0, 3);
+                rnd = Random.Range(0, 4);
                 switch (rnd)
                 {
                     case 0:
@@ -293,11 +305,15 @@ public class Shoot_GameManager : MonoBehaviour
                         await Task.Delay(4000);
                         islandSizeCtrl.CloseIsland();
                         break;
+                    case 3:
+                        await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.7f, 25, 1.35f, 30, 0.5f);
+                        break;
                 }
                 await Task.Delay(1000);
                 createEnemyInCircle.Init(10000, 2, 6);
                 createEnemyRandomPos.Init(3900, 1, 4);
                 createMetheor.Init(9000,0,2);
+                createEnemyInLine.Init(7500, 3, 8, 0.4f);
                 break;
             case 6:
                 islandSizeCtrl.OpenIsland();
@@ -308,7 +324,7 @@ public class Shoot_GameManager : MonoBehaviour
                 await Task.Delay(1000);
                 enemy_Manager.SpawnEnemyInLineY(10);
                 
-                rnd = Random.Range(0, 3);
+                rnd = Random.Range(0, 4);
                 switch (rnd)
                 {
                     case 0:
@@ -335,11 +351,15 @@ public class Shoot_GameManager : MonoBehaviour
                         await Task.Delay(4000);
                         islandSizeCtrl.CloseIsland();
                         break;
+                    case 3:
+                        await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 30, 0.5f);
+                        break;
                 }
                 await Task.Delay(1000);
                 createEnemyInCircle.Init(10000, 3, 12);
                 createEnemyRandomPos.Init(3900, 1, 4);
                 createMetheor.Init(8000,0,2);
+                createEnemyInLine.Init(7500, 5, 10, 0.45f);
                 break;
             case 7:
                 islandSizeCtrl.OpenIsland();
@@ -353,7 +373,7 @@ public class Shoot_GameManager : MonoBehaviour
                 enemy_Manager.SpawnEnemyInCircle(0.9f, Random.Range(5, 8));
                 await Task.Delay(500);
                 
-                rnd = Random.Range(0, 3);
+                rnd = Random.Range(0, 4);
                 switch (rnd)
                 {
                     case 0:
@@ -380,12 +400,17 @@ public class Shoot_GameManager : MonoBehaviour
                         await Task.Delay(4000);
                         islandSizeCtrl.CloseIsland();
                         break;
+                    case 3:
+                        await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.8f, 30, 1.75f, 25, 0.65f);
+                        break;
                 }
                 await Task.Delay(1000);
                 enemy_Manager.SpawnEnemyInLineY(10);
+                
                 createEnemyInCircle.Init(6100, 5, 10);
                 createEnemyRandomPos.Init(1900, 0, 4);
                 createMetheor.Init(4000,0,2);
+                createEnemyInLine.Init(7500, 5, 10, 0.5f);
                 break;
         }
     }
@@ -393,15 +418,17 @@ public class Shoot_GameManager : MonoBehaviour
     async Task CreateEnemyAtRandomPos()
     {
         if(state != ShootGameState.playing) return;
-        if (createEnemyRandomPos.max != 0)
+        
+        AutoAttackInfo info = createEnemyRandomPos;
+        if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
         {
-            int amt = Random.Range(createEnemyRandomPos.min, createEnemyRandomPos.max + 1);
+            int amt = Random.Range(info.min, info.max + 1);
             for (int i = 0; i < amt; i++)
             {
                 enemy_Manager.SpawnEnemyAtRandomPos();
             }
         }
-        await Task.Delay(createEnemyRandomPos.delay);
+        await Task.Delay(info.delay);
         CreateEnemyAtRandomPos();
     }
 
@@ -409,11 +436,12 @@ public class Shoot_GameManager : MonoBehaviour
     {
         if(state != ShootGameState.playing) return;
 
-        if (createEnemyInCircle.max != 0)
+        AutoAttackInfo info = createEnemyInCircle;
+        if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
         {
-            enemy_Manager.SpawnEnemyInCircle(1f, Random.Range(createEnemyInCircle.min, createEnemyInCircle.max));
+            enemy_Manager.SpawnEnemyInCircle(1f, Random.Range(info.min, info.max));
         }
-        await Task.Delay(createEnemyInCircle.delay);
+        await Task.Delay(info.delay);
         CreateEnemyAtPlayerInCircle();
     }
 
@@ -421,17 +449,48 @@ public class Shoot_GameManager : MonoBehaviour
     {
         if(state != ShootGameState.playing) return;
         
-        if (createMetheor.max != 0)
+        AutoAttackInfo info = createMetheor;
+        if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
         {
-            int amt = Random.Range(createMetheor.min, createMetheor.max + 1);
+            int amt = Random.Range(info.min, info.max + 1);
             for (int i = 0; i < amt; i++)
             {
                 await Task.Delay(2000);
                 CreateMetheor();
             }
         }
-        await Task.Delay(createMetheor.delay);
+        await Task.Delay(info.delay);
         CreateMetheors();
+    }
+
+    async Task CreateEnemyInLine()
+    {
+        if(state != ShootGameState.playing) return;
+
+        AutoAttackInfo info = createEnemyInLine;
+        if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
+        {
+            enemy_Manager.SpawnEnemyInLineY(Random.Range(info.min, info.max+ 1));
+        }
+
+        await Task.Delay(info.delay);
+        CreateEnemyInLine();
+    }
+
+    async Task CreateEnemyInSpiral()
+    {
+        if(state != ShootGameState.playing) return;
+
+        AutoAttackInfo info = createEnemyInSpira;
+        if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
+        {
+            await enemy_Manager.SpawnEnemyInSpiral(0.6f * Random.Range(0.9f, 1.1f),
+                1.5f * Random.Range(0.85f, 1.3f), Random.Range(info.min, info.max+ 1)
+                , 1.5f * Random.Range(0.7f, 1.3f), 35, 0.6f * Random.Range(0.8f, 1.2f));
+        }
+
+        await Task.Delay(info.delay);
+        CreateEnemyInSpiral();
     }
     
     
@@ -529,6 +588,8 @@ public class Shoot_GameManager : MonoBehaviour
                 CreateMetheors();
                 CreateEnemyAtRandomPos();
                 CreateEnemyAtPlayerInCircle();
+                CreateEnemyInLine();
+                CreateEnemyInSpiral();
                 bullet_Manager.StartSpawnBulletTimer();
                 break;
             case ShootGameState.dead:
@@ -577,12 +638,14 @@ public class Shoot_GameManager : MonoBehaviour
     class AutoAttackInfo
     {
         public int delay, min, max;
+        public float probability;
 
-        public void Init(int _delay, int _min, int _max)
+        public void Init(int _delay, int _min, int _max, float _probability = 1)
         {
             delay = _delay;
             min = _min;
             max = _max;
+            probability = _probability;
         }
     }
 }
