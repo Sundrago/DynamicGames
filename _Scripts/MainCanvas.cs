@@ -7,7 +7,7 @@ public class MainCanvas : MonoBehaviour
 {
     [SerializeField] SFXCTRL sfx;
     [SerializeField] transition_test transition;
-    [SerializeField] GameObject build, land, jump, main;
+    [SerializeField] GameObject build, land, jump, shoot,main;
     [SerializeField] LeaderboardManger leaderboard;
     [SerializeField] List<DragSprite> dragSprites;
 
@@ -35,6 +35,11 @@ public class MainCanvas : MonoBehaviour
             case "jump" : 
                 transition.canvas_B = jump;
                 sfx.PlayBGM(0);
+                sfx.PlaySfx(2);
+                break;
+            case "shoot" : 
+                transition.canvas_B = shoot;
+                sfx.PlayBGM(5);
                 sfx.PlaySfx(2);
                 break;
             case "leaderboard" :

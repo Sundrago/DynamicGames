@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class transition_test : MonoBehaviour
 {
-    public GameObject canvas_A, canvas_B, canvas_transition, rocket, build, jump;
+    public GameObject canvas_A, canvas_B, canvas_transition, rocket, build, jump, shoot;
     public bool ReturnToMenu = false;
     public bool OnTransition = false;
+
+    [SerializeField]
+    private GameObject adj;
 
     public void StartTransition()
     {
@@ -17,11 +20,13 @@ public class transition_test : MonoBehaviour
 
     public void OnTransitionPoint()
     {
+        adj.gameObject.SetActive(true);
         if(ReturnToMenu)
         {
             if(rocket.activeInHierarchy) rocket.GetComponent<RocketPhysics>().ClearGame();
             if(build.activeInHierarchy) build.GetComponent<BuildGameEventHandler>().ClearGame();
             if(jump.activeInHierarchy) jump.GetComponent<Jump_StageCtrl>().ClearGame();
+            if(shoot.activeInHierarchy) shoot.GetComponent<Shoot_GameManager>().ClearGame();
 
             canvas_A.SetActive(false);
             canvas_B.SetActive(true);
@@ -29,7 +34,7 @@ public class transition_test : MonoBehaviour
             OnTransition = false;
 
             if(canvas_B.GetComponent<MainCanvas>() != null) {
-            canvas_B.GetComponent<MainCanvas>().WentBackHome();
+                canvas_B.GetComponent<MainCanvas>().WentBackHome();
             }
 
             return;

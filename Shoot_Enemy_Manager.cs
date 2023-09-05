@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -115,9 +116,8 @@ public class Shoot_Enemy_Manager : MonoBehaviour
     }
     
     
-    public void SpawnEnemyInLineY(int count)
+    public void SpawnEnemyInLineY(int count, float normalY = -0.9f)
     {
-        float normalY = -0.9f;
         for (int i = 0; i < count; i++)
         {
             float normalX = 2f / (count + 1) * (i+1) - 1f;
@@ -147,6 +147,7 @@ public class Shoot_Enemy_Manager : MonoBehaviour
         {
             enemy.state = enemy_stats.gameOver;
         }
+        SpawingOnSpiral = false;
     }
 
     public void KillAll()
@@ -155,5 +156,6 @@ public class Shoot_Enemy_Manager : MonoBehaviour
         {
             DestroyEnemy(enemy_list[i]);
         }
+        SpawingOnSpiral = false;
     }
 }

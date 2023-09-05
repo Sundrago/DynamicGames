@@ -8,6 +8,8 @@ public class Shoot_FX : MonoBehaviour
 {
     [SerializeField] FXType type;
     [SerializeField] float distance;
+    [SerializeField]
+    private AudioCtrl audioCtrl;
 
     private float updateDistance;
 
@@ -15,15 +17,17 @@ public class Shoot_FX : MonoBehaviour
     Transform player;
     
 
-    private void Start()
+    private void Awake()
     {
         enemy_Manager = Shoot_Enemy_Manager.Instance;
         player = Shoot_GameManager.Instacne.player;
+        audioCtrl = AudioCtrl.Instance;
     }
 
     private void OnEnable()
     {
         updateDistance = distance;
+        if (type == FXType.Bomb) KillEnemyIfInDistance();
     }
 
     private void KillEnemyIfInDistance()
@@ -38,6 +42,7 @@ public class Shoot_FX : MonoBehaviour
                     enemy.KillEnemy(0.5f);
                     enemy.transform.DOMove(gameObject.transform.position, Random.Range(1f, 2.5f))
                         .SetEase(Ease.InSine);
+                    audioCtrl.PlaySFXbyTag(SFX_tag.enemy_dead_blackHole);
                 }
             }
         }
@@ -57,7 +62,7 @@ public class Shoot_FX : MonoBehaviour
     {
         if(Time.frameCount % 10 == 0)
         {
-            if (type == FXType.blackhole) KillEnemyIfInDistance();
+            if (type == FXType.blackhole || type == FXType.Bomb) KillEnemyIfInDistance();
             else if(type == FXType.ShadowBomb) KillPlayerIfInDistance();
         }
     }

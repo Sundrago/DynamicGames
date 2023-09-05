@@ -41,7 +41,8 @@ public class IslandSizeCtrl : MonoBehaviour
         }
         else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone11ProMax)
         {
-            smallsized = i12ProMax;
+            smallsized = i14ProMax;
+            // smallsized = i12ProMax;
         }
         else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone12)
         {
@@ -107,7 +108,7 @@ public class IslandSizeCtrl : MonoBehaviour
     
     public void OpenIsland()
     {
-        rect.DOSizeDelta(new Vector2(smallsized.sizeDelta.x, i14Pro.sizeDelta.x), 1.5f)
+        rect.DOSizeDelta(new Vector2(smallsized.sizeDelta.x, i14Pro.sizeDelta.x), 1f)
             .SetEase(Ease.OutExpo)
             .OnUpdate(()=> {
                 Vector2 pos = rect.anchoredPosition;

@@ -120,7 +120,7 @@ public class FXManager : MonoBehaviour
 public enum FXType
 {
     Bomb, SmallExplosion, ItemHit, ShadowMissile, ShadowBomb, empty, bulletB1, bulletB2, bulletC1, bulletC2, bulletD1, bulletD2,
-    bulletE1, bulletE2, shield, shield_pop, blackhole, deadExplosion
+    bulletE1, bulletE2, shield, shield_pop, blackhole, deadExplosion, spin,
 }
 
 [Serializable]

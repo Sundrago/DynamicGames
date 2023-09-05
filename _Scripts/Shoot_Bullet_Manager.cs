@@ -12,8 +12,12 @@ public class BulletInfo
 {
     [PreviewField(Alignment = ObjectFieldAlignment.Center)]
     public Sprite sprite;
+    
+    [VerticalGroup("fx")]
     public FXType fx;
-
+    [VerticalGroup("fx")]
+    public SFX_tag sfx = SFX_tag.shootA;
+    
     [VerticalGroup("value")]
     public int points = 1;
     [VerticalGroup("value")]
@@ -22,6 +26,7 @@ public class BulletInfo
     public float radius;
     [VerticalGroup("value")]
     public int intervalInMeleSec = 150;
+    
 }
 
 public class Shoot_Bullet_Manager : MonoBehaviour
@@ -38,6 +43,8 @@ public class Shoot_Bullet_Manager : MonoBehaviour
     [SerializeField] Shoot_joystick joystick;
     [SerializeField] Shoot_GameManager gameManager;
     [SerializeField] Transform player;
+    [SerializeField]
+    private AudioCtrl audioCtrl;
 
     [SerializeField] int defaultCapacity, maxCapacity;
     private ObjectPool<Shoot_bullet> bullet_pool;
@@ -102,6 +109,7 @@ public class Shoot_Bullet_Manager : MonoBehaviour
         bullet.gameObject.transform.position = _position;
         float angle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg;
         bullet.gameObject.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
+        audioCtrl.PlaySFXbyTag(bulletInfos[currentBullet].sfx);
     }
 
     public void UpgradeBullet()
@@ -201,6 +209,7 @@ public class Shoot_Bullet_Manager : MonoBehaviour
                     enemy.KillEnemy();
                     KillBullet(bullet);
                     FXManager.Instance.CreateFX(FXType.SmallExplosion, bullet.transform);
+                    audioCtrl.PlaySFXbyTag(SFX_tag.enemy_dead_explostion);
                     break;
                 }
             }

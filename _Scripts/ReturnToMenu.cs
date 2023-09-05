@@ -9,6 +9,7 @@ public class ReturnToMenu : MonoBehaviour
 
     public void ReturnToMenuClkcked()
     {
+        print("backbtnClcied");
         if(!TransitionCanvas.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("transition_idle")) return;
 
         sfx.PlaySfx(3);

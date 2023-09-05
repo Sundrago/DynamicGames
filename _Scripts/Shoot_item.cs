@@ -13,10 +13,11 @@ public class Shoot_item : MonoBehaviour
     
     [SerializeField] Sprite[] item_imgs;
     [SerializeField] Shoot_GameManager gameManager;
-
+    [SerializeField]
+    private AudioCtrl audioCtrl;
 
     private Vector2 screenBounds;
-    private List<Shoot_item_prefab> items = new List<Shoot_item_prefab>();
+    public List<Shoot_item_prefab> items = new List<Shoot_item_prefab>();
     private int totalItemCount = 0;
 
     void Start()
@@ -27,20 +28,21 @@ public class Shoot_item : MonoBehaviour
     public void SpawnItem()
     {
         if (gameManager.state != Shoot_GameManager.ShootGameState.playing) return;
-        if (items.Count >= 2) return;
+        if (items.Count >= 3) return;
         // if(gameManager.stage * 2.5f < totalItemCount) return;
 
         Shoot_item_prefab new_item = Instantiate(itemPrefab, gameObject.transform);
-        int rnd = Random.Range(0, 4);
-
-        if (rnd == 1 && gameManager.shield != null) rnd = 0;
-        else if (rnd == 2)
+        int rnd = Random.Range(0, 5);
+        itemType type = (itemType)rnd;
+        
+        if (type == itemType.shield && gameManager.shield != null) type = GetRandomSingleItem();
+        else if (type == itemType.bounce)
         {
             float chance = bullet_Manager.bounceCount * 0.25f;
-            if (Random.Range(0f, 1f) < chance) rnd = 0;
+            if (Random.Range(0f, 1f) < chance) type = GetRandomSingleItem();
         }
         
-        new_item.Init(GetRandomPosOnScreen(), (itemType)rnd, item_imgs[rnd]);
+        new_item.Init(GetRandomPosOnScreen(), type, item_imgs[(int)type]);
         new_item.transform.DOScale(new Vector3(0, 0, 0), 1f)
             .From();
         new_item.gameObject.SetActive(true);
@@ -48,17 +50,23 @@ public class Shoot_item : MonoBehaviour
 
         totalItemCount += 1;
     }
+    
+    itemType GetRandomSingleItem()
+    {
+        return (itemType)Random.Range(2, 4);
+    }
 
     public void UpdateItem(Shoot_item_prefab item)
     {
         if (gameManager.state != Shoot_GameManager.ShootGameState.playing) return;
-        int rnd = Random.Range(0, 4);
+        int rnd = Random.Range(0, 5);
 
-        if (rnd == 1 && gameManager.shield != null) rnd = 0;
-        else if (rnd == 2)
+        itemType type = (itemType)rnd;
+        if (type == itemType.shield && gameManager.shield != null) type = GetRandomSingleItem();
+        else if (type == itemType.bounce)
         {
             float chance = bullet_Manager.bounceCount * 0.25f;
-            if (Random.Range(0f, 1f) < chance) rnd = 0;
+            if (Random.Range(0f, 1f) < chance) type = GetRandomSingleItem();
         }
         
         item.Init(item.transform.localPosition, (itemType)rnd, item_imgs[rnd]);
@@ -136,7 +144,7 @@ public class Shoot_item : MonoBehaviour
     private void GotItem(Shoot_item_prefab obj)
     {
         itemType type = obj.type;
-
+        audioCtrl.PlaySFXbyTag(SFX_tag.gotItem);
         switch (type)
         {
             case itemType.weapon:
@@ -151,6 +159,13 @@ public class Shoot_item : MonoBehaviour
                 break;
             case itemType.blackHole:
                 FXManager.Instance.CreateFX(FXType.blackhole, obj.transform);
+                audioCtrl.PlaySFXbyTag(SFX_tag.blackhole);
+                break;
+            case itemType.spin:
+                GameObject fx = FXManager.Instance.CreateFX(FXType.spin, player.transform);
+                audioCtrl.PlaySFXbyTag(SFX_tag.spin);
+                fx.transform.SetParent(player.transform, true);
+                gameManager.SetSpinMode(7f);
                 break;
         }
     }
@@ -165,4 +180,4 @@ public class Shoot_item : MonoBehaviour
         totalItemCount = 0;
     }
 }
-    public enum itemType { weapon, shield, bounce, blackHole }
+    public enum itemType { weapon, bounce, shield, blackHole, spin, }
