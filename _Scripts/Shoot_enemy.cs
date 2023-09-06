@@ -119,8 +119,8 @@ public class Shoot_enemy : MonoBehaviour
                 KillEnemy();
                 return;
             }
-            gameObject.transform.position += direction.normalized * velocity * Time.deltaTime;
         }
+        gameObject.transform.position += direction.normalized * velocity * Time.deltaTime;
     }
 
     public void KillEnemy(float delay = 0)

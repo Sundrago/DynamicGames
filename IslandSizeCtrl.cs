@@ -41,8 +41,8 @@ public class IslandSizeCtrl : MonoBehaviour
         }
         else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone11ProMax)
         {
-            smallsized = i14ProMax;
-            // smallsized = i12ProMax;
+            //smallsized = i14ProMax;
+            smallsized = i12ProMax;
         }
         else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone12)
         {
