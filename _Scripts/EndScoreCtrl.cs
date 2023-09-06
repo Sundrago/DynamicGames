@@ -92,4 +92,9 @@ public class EndScoreCtrl : MonoBehaviour
     public void OpenLeaderboardAt() {
         leaderboard.OpenLeaderboardAt((leaderboard_ids)(int)currentGameType);
     }
+
+    public int GetHighScore(GameType gameType)
+    {
+        return PlayerPrefs.GetInt("highscore_" + gameType.ToString());
+    }
 }

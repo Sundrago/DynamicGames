@@ -22,6 +22,7 @@ public class SFXCTRL : MonoBehaviour
     }
 
     public void PlayBGM(int idx, bool shortTransition = false) {
+        print("bgm idx : " +idx );
         if(shortTransition) {
             if(currentBgm != -1)    
             AudioOut(bgms[currentBgm], 1f);
@@ -40,13 +41,16 @@ public class SFXCTRL : MonoBehaviour
         return currentBgm;
     }
 
-    private void AudioIn(AudioSource audio, float duration = 3f) {
+    private void AudioIn(AudioSource audio, float duration = 3f)
+    {
+        DOTween.Kill(audio);
         audio.volume = 0;
         audio.DOFade(PlayerPrefs.GetFloat("settings_music"), duration);
         audio.Play();
     }
 
     private void AudioOut(AudioSource audio, float duratioin = 4f) {
+        DOTween.Kill(audio);
         audio.DOFade(0f, duratioin)
             .OnComplete(()=>{audio.Stop();});
     }

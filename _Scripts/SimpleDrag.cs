@@ -1,29 +1,39 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-
 public class SimpleDrag : MonoBehaviour
 {
-    Vector2 startPosition;
+    [SerializeField]
+    private RectTransform rectTransform;
+    [SerializeField]
+    private float tolerance;
+    
+    Vector2 startMousePosition, startObjectPosition;
     bool isDrag = false;
 
     public void OnMouseDown()
     {
-        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-        startPosition = eventDataCurrentPosition.position;
-
+        startMousePosition = Input.mousePosition;
+        startObjectPosition = rectTransform.anchoredPosition;
+        
         isDrag = true;
     }
 
-    void OnMouseDrag()
+    private void LateUpdate()
     {
-        if (isDrag)
+        if(!isDrag) return;
+
+        if (Vector2.Distance(startMousePosition, Input.mousePosition) > tolerance)
         {
-            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            isDrag = false;
+            return;
         }
+        
+        Vector2 mouseOffset = startMousePosition - (Vector2)Input.mousePosition;
+        rectTransform.anchoredPosition = startObjectPosition - mouseOffset;
     }
 
     private void OnMouseUp()

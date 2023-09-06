@@ -6,7 +6,6 @@ public class IslandPositionAdj : MonoBehaviour
 {
     [SerializeField] GameObject[] Adjs;
     [SerializeField] GameObject guide;
-    [SerializeField] GameObject asdf;
     // Start is called before the first frame update
     void Start()
     {
@@ -53,10 +52,10 @@ public class IslandPositionAdj : MonoBehaviour
         }
         else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone11ProMax)
         {
-            foreach (GameObject adj in Adjs)
-            {
-                adj.GetComponent<RectTransform>().localPosition = guide.GetComponent<RectTransform>().localPosition;
-            }
+            // foreach (GameObject adj in Adjs)
+            // {
+            //     adj.GetComponent<RectTransform>().localPosition = guide.GetComponent<RectTransform>().localPosition;
+            // }
         }
         else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone12)
         {

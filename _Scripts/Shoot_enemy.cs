@@ -112,7 +112,7 @@ public class Shoot_enemy : MonoBehaviour
             }
         }
 
-        if (state == enemy_stats.spawning) {
+        if (state == enemy_stats.ready) {
             if (Vector2.Distance(player.position, gameObject.transform.position) < 0.125f)
             {
                 Shoot_GameManager.Instacne.GetAttack();

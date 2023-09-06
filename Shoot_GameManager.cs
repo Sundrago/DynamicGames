@@ -26,6 +26,8 @@ public class Shoot_GameManager : MonoBehaviour
     [SerializeField] SFXCTRL sfx;
     [SerializeField]
     private GameObject adj_transition_notch;
+    [SerializeField]
+    private shoot_guide_hand hand;
 
     public static Shoot_GameManager Instacne;
     
@@ -67,6 +69,8 @@ public class Shoot_GameManager : MonoBehaviour
         createEnemyInLine.Init(1300,0,0);
         createEnemyInSpira.Init(1400,0,0);
         createItem.Init(3700,1,1, 0.5f);
+        
+        hand.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -856,6 +860,8 @@ public class Shoot_GameManager : MonoBehaviour
                 joystick.vecNormal = Vector3.zero;
                 stageFinished = 0;
                 currentStagePlaying = -1;
+                if(endScore.GetHighScore(GameType.shoot) < 200) hand.Show();
+                else hand.gameObject.SetActive(false);
                 break;
             case ShootGameState.playing:
                 CreateMetheors();
@@ -867,6 +873,7 @@ public class Shoot_GameManager : MonoBehaviour
                 bullet_Manager.StartSpawnBulletTimer();
                 stageFinished = 0;
                 currentStagePlaying = -1;
+                if(hand.gameObject.activeSelf) hand.Hide();
                 break;
             case ShootGameState.dead:
                 joystick.Reset();
@@ -936,6 +943,7 @@ public class Shoot_GameManager : MonoBehaviour
         createEnemyInLine.Init(1300,0,0);
         createEnemyInSpira.Init(1400,0,0);
         createItem.Init(3700,1,1, 0.5f);
+        hand.gameObject.SetActive(false);
     }
 
     async Task Greetings()

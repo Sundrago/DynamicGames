@@ -53,6 +53,7 @@ public class AudioCtrl : SerializedMonoBehaviour
 
     public void PlayBGM(SFX_tag tag)
     {
+        print("PLAY BGM : " + tag.ToString());
         foreach (AudioData data in audioDatas)
         {
             if (data.tag == tag)
