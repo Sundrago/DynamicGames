@@ -67,7 +67,7 @@ public class EndScoreCtrl : MonoBehaviour
             socre_text_ui.gameObject.transform.DOShakeScale(1f).SetDelay(1.8f)
                 .OnPlay(()=>{socre_text_ui.text = "NEW BEST!";});
 
-            leaderboard.ReportScore(score, (leaderboard_ids)(int)gameType);
+            leaderboard.ReportScore(score, gameType);
         }
 
         gameObject.transform.localPosition = Vector3.zero;
@@ -90,7 +90,7 @@ public class EndScoreCtrl : MonoBehaviour
     }
 
     public void OpenLeaderboardAt() {
-        leaderboard.OpenLeaderboardAt((leaderboard_ids)(int)currentGameType);
+        leaderboard.OpenLeaderboardAt(currentGameType);
     }
 
     public int GetHighScore(GameType gameType)
