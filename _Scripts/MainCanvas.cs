@@ -9,6 +9,8 @@ public class MainCanvas : MonoBehaviour
     [SerializeField] transition_test transition;
     [SerializeField] GameObject build, land, jump, shoot,main;
     [SerializeField] LeaderboardManger leaderboard;
+    [SerializeField]
+    private RankingManager rangkingManager;
     [SerializeField] List<DragSprite> dragSprites;
 
     private GameObject currentGameBtn = null;
@@ -21,6 +23,11 @@ public class MainCanvas : MonoBehaviour
 
     public void GotoGame(string name, GameObject gamebtn) {
         DOTween.Kill(gamebtn.transform);
+        
+        currentGameBtn = gamebtn;
+        GameObject miniisland = currentGameBtn.GetComponent<DragSprite>().miniisland;
+        if(DOTween.IsTweening(miniisland.transform)) return;
+        
         switch(name) {
             case "build" : 
                 transition.canvas_B = build;
@@ -46,12 +53,12 @@ public class MainCanvas : MonoBehaviour
                 leaderboard.OpenLeaderboard();
                 break;
         }
-        currentGameBtn = gamebtn;
+        
 
         currentGameBtn.GetComponent<Rigidbody2D>().isKinematic = true;
         if(currentGameBtn.GetComponent<DragSprite>().miniisland != null) {
             print("mini anim");
-            GameObject miniisland = currentGameBtn.GetComponent<DragSprite>().miniisland;
+            miniisland = currentGameBtn.GetComponent<DragSprite>().miniisland;
             miniisland.SetActive(true);
             miniisland.transform.localScale = new Vector3(0.2f, 0.2f, 1);
             miniisland.transform.DOScale(new Vector3(100,100,100), 1f)
@@ -81,6 +88,8 @@ public class MainCanvas : MonoBehaviour
                     miniisland.SetActive(false);
                     currentGameBtn.GetComponent<DragSprite>().Off();
                     currentGameBtn = null;
+                    leaderboard.Start();
+                    // StartCoroutine(rangkingManager.UpdatetRanks());
                 });
         }
     }

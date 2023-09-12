@@ -98,6 +98,7 @@ public class Shoot_Bullet_Manager : MonoBehaviour
     {
         bounceCount = 0;
         currentBullet = 0;
+        bullet_pool.Clear();
     }
 
     public void SepawnBullet(Vector2 _position, Vector2 _direction)
@@ -123,7 +124,7 @@ public class Shoot_Bullet_Manager : MonoBehaviour
 
     private void KillBullet(Shoot_bullet bullet)
     {
-        if(bullet.fx != null && bullet.fx.activeSelf) FXManager.Instance.KillFX(bullet.fx.GetComponent<FX>());
+        // if(bullet.fx != null && bullet.fx.activeSelf) FXManager.Instance.KillFX(bullet.fx.GetComponent<FX>());
         if(bullet.gameObject.activeSelf) bullet_pool.Release(bullet);
     }
 
@@ -132,7 +133,7 @@ public class Shoot_Bullet_Manager : MonoBehaviour
         fx_pool.Release(fx);
     }
 
-    void Update()
+    void LateUpdate()
     {
         for(int i = bullets.Count - 1; i >= 0; i--)
         {
@@ -158,7 +159,7 @@ public class Shoot_Bullet_Manager : MonoBehaviour
                 fx.Play();
 
                 KillBullet(bullet);
-                return;
+                continue;
             }
 
             //touches boundaries
@@ -195,7 +196,11 @@ public class Shoot_Bullet_Manager : MonoBehaviour
                 ++bullet.bounceCount;
             }
 
-            if (bullet.bounceCount > bounceCount || bullet.startTime +5f < Time.time) KillBullet(bullet);
+            if (bullet.bounceCount > bounceCount || bullet.startTime + 5f < Time.time)
+            {
+                KillBullet(bullet);
+                continue;
+            }
 
             //hit enemy
             List<Shoot_enemy> enemy_list = enemy_Manager.enemy_list;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,9 +18,16 @@ public class EndScoreCtrl : MonoBehaviour
     [SerializeField] Image bg;
     [SerializeField] LeaderboardManger leaderboard;
 
+    public static EndScoreCtrl Instance;
+
     private int curretBgm = -1;
     private GameType currentGameType;
-    
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     public void ShowScore(int score, GameType gameType){
         gameObject.SetActive(true);
         currentGameType = gameType;
@@ -66,8 +74,9 @@ public class EndScoreCtrl : MonoBehaviour
         if(score > highScore) {
             socre_text_ui.gameObject.transform.DOShakeScale(1f).SetDelay(1.8f)
                 .OnPlay(()=>{socre_text_ui.text = "NEW BEST!";});
-
-            leaderboard.ReportScore(score, gameType);
+            
+            string id = "score_" + gameType;
+            Social.ReportScore(score, id, ReportScoreRequestComplete);
         }
 
         gameObject.transform.localPosition = Vector3.zero;
@@ -76,6 +85,18 @@ public class EndScoreCtrl : MonoBehaviour
             .From();
         bg.DOFade(0f, 0.5f)
             .From();
+    }
+
+    void ReportScoreRequestComplete(bool success)
+    {
+        if (success)
+        {
+            Debug.Log("Reporting score in leaderboard " + currentGameType.ToString() + "success");
+        }
+        else
+        {
+            Debug.Log("Reporting score in leaderboard " + currentGameType.ToString() + "failed");
+        }
     }
 
     void UpdateScoreUI(int score) {
@@ -91,6 +112,21 @@ public class EndScoreCtrl : MonoBehaviour
 
     public void OpenLeaderboardAt() {
         leaderboard.OpenLeaderboardAt(currentGameType);
+    }
+
+    public void BackToHome()
+    {
+        switch (currentGameType)
+        {
+            case GameType.build :
+                break;
+            case GameType.jump :
+                break;
+            case GameType.land :
+                break;
+            case GameType.shoot :
+                break;
+        }
     }
 
     public int GetHighScore(GameType gameType)

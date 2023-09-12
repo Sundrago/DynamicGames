@@ -9,10 +9,25 @@ public class Shoot_bullet : MonoBehaviour
     public float startTime;
     public float radius;
 
-    public GameObject fx;
+    public GameObject fx = null;
+    public BulletInfo info = new BulletInfo();
 
-    public void Init(BulletInfo info, Vector2 _direction)
+    public void Init(BulletInfo _info, Vector2 _direction)
     {
+        if (info == _info)
+        {
+            startTime = Time.time;
+            bounceCount = 0;
+            direction = _direction;
+            return;
+        }
+        info = _info;
+        
+        if (fx != null)
+        {
+            FXManager.Instance.KillFX(fx.GetComponent<FX>());
+        }
+        
         gameObject.GetComponent<SpriteRenderer>().sprite = info.sprite;
         if (info.fx != FXType.empty)
         {
