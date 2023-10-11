@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -134,12 +135,12 @@ public class DragSprite : MonoBehaviour
 
             if (forceRightSide || gameObject.transform.position.x <= 0)
             {
-                text.alignment = TextAlignmentOptions.Left;
+                text.alignment = TextAlignmentOptions.MidlineLeft;
                 text.transform.localPosition = new Vector3(16.5f, text.transform.localPosition.y, text.transform.localPosition.z);
             }
             else
             {
-                text.alignment = TextAlignmentOptions.Right;
+                text.alignment = TextAlignmentOptions.MidlineRight;
                 text.transform.localPosition = new Vector3(-16.5f, text.transform.localPosition.y, text.transform.localPosition.z);
             } 
         }
@@ -225,5 +226,15 @@ public class DragSprite : MonoBehaviour
         gameObject.transform.DOMove(initialPos, 0.75f).SetEase(Ease.OutCubic);
         gameObject.transform.DORotate(initialRotation, 0.5f).SetEase(Ease.OutCubic)
             .OnComplete(()=>{Off();});
+    }
+
+    private void Update()
+    {
+        if(Time.frameCount % 60 != 0) return;
+        if (gameObject.transform.localPosition.y < -3000)
+        {
+            gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            gameObject.transform.localPosition = Vector3.zero;
+        }
     }
 }

@@ -98,7 +98,12 @@ public class Shoot_Bullet_Manager : MonoBehaviour
     {
         bounceCount = 0;
         currentBullet = 0;
-        bullet_pool.Clear();
+        // bullet_pool.Clear();
+        
+        for(int i = bullets.Count-1; i>=0; i--)
+        {
+            KillBullet(bullets[i]);
+        }
     }
 
     public void SepawnBullet(Vector2 _position, Vector2 _direction)

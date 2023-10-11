@@ -59,7 +59,7 @@ public class Gacha_TicketsHolder : MonoBehaviour
         {
             case 0:
                 //
-                return;
+                endScore.TicketAnimFinished();
                 break;
             case 1:
                 TicketAnim(1);
@@ -212,7 +212,9 @@ public class Gacha_TicketsHolder : MonoBehaviour
                 }
                 DOVirtual.DelayedCall(2.2f, TicketAnimFinished);
                 break;
-            
+            default:
+                TicketAnimFinished();
+                break;
         }
     }
 
@@ -225,7 +227,11 @@ public class Gacha_TicketsHolder : MonoBehaviour
     [Button]
     public void CollectTicketBtnClicked()
     {
-        if(status != ticketStatus.waiting) return;
+        if (status != ticketStatus.waiting)
+        {
+            DOVirtual.DelayedCall(2f, TicketAnimFinished);
+            return;
+        }
         status = ticketStatus.reaping;
         
         audioCtrl.PlaySFXbyTag(SFX_tag.reap);

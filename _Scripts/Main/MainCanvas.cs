@@ -9,14 +9,13 @@ public class MainCanvas : MonoBehaviour
     [SerializeField] transition_test transition;
     [SerializeField] GameObject build, land, jump, shoot,main;
     [SerializeField] LeaderboardManger leaderboard;
-    [SerializeField]
-    private RankingManager rangkingManager;
-    [SerializeField]
-    private GachaponManager gachaponManager;
-    [SerializeField]
-    private PetDrawer petDrawer;
+    [SerializeField] private RankingManager rangkingManager;
+    [SerializeField] private GachaponManager gachaponManager;
+    [SerializeField] private PetDrawer petDrawer;
+    [SerializeField] private AskForUserReview askForUserReview;
     [SerializeField] List<DragSprite> dragSprites;
-
+    [SerializeField] private GameObject ranking_ui;
+    
     private GameObject currentGameBtn = null;
 
     void Start()
@@ -26,13 +25,13 @@ public class MainCanvas : MonoBehaviour
     }
 
     public void GotoGame(string name, GameObject gamebtn) {
+        if(ranking_ui.activeSelf) return;
+        
         DOTween.Kill(gamebtn.transform);
-        
         currentGameBtn = gamebtn;
-        
         GameObject miniisland = currentGameBtn.GetComponent<DragSprite>().miniisland;
         if(miniisland != null)
-        if(DOTween.IsTweening(miniisland.transform)) return;
+            if(DOTween.IsTweening(miniisland.transform)) return;
         
         switch(name) {
             case "build" : 
@@ -67,6 +66,9 @@ public class MainCanvas : MonoBehaviour
                 break;
             case "friends" :
                 petDrawer.ShowPanel();
+                break;
+            case "review" :
+                askForUserReview.ShowPanel();
                 break;
         }
         
@@ -113,6 +115,7 @@ public class MainCanvas : MonoBehaviour
 
     public void Offall(GameObject except = null) {
         foreach(DragSprite dragSprite in dragSprites) {
+            if(dragSprite == null) continue;
             if(dragSprite.gameObject == except) continue;
             dragSprite.Off();
         }
@@ -120,6 +123,7 @@ public class MainCanvas : MonoBehaviour
 
     public void ReturnToOriginalPos() {
         foreach(DragSprite dragSprite in dragSprites) {
+            if(dragSprite == null) continue;
             dragSprite.ReturnToOriginalPos();
         }
     }

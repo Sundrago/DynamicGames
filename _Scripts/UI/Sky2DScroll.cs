@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,15 +9,26 @@ using DG.Tweening;
 public class Sky2DScroll : MonoBehaviour
 {
     [SerializeField] float scrollSpeed;
+    [SerializeField]
+    private bool initSelf = false;
     private GameObject child;
     private RectTransform rect;
+
+    private void Start()
+    {
+        if (initSelf)
+        {
+            Init(GetComponent<Image>().sprite, scrollSpeed, 0f);
+        }
+    }
 
     public void Init(Sprite _sprite, float _scrollSpeed, float _transitionTime)
     {
         scrollSpeed = _scrollSpeed;
         
         rect = GetComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(Screen.height * 1.78f, Screen.height);
+        
+        if(!initSelf) rect.sizeDelta = new Vector2(Screen.height * 1.78f, Screen.height);
         GetComponent<Image>().sprite = _sprite;
 
         //create child

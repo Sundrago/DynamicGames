@@ -52,8 +52,8 @@ public class Jump_StageCtrl : MonoBehaviour
                 pauseGame =false;
             }
         } else {
-            float max = footstepY_velcoity_max * (score+40f)/40f;
-            float min = footstepY_velocity_min * (score+40f)/40f;
+            float max = footstepY_velcoity_max * (score+80)/80;
+            float min = footstepY_velocity_min * (score+80)/80;
 
             if(player.transform.position.y > -0.25f) {
                 if(velocity < max) {
@@ -64,6 +64,8 @@ public class Jump_StageCtrl : MonoBehaviour
                     velocity += (min - velocity) * friction * Mathf.Abs(-player.transform.position.y - 0.25f)/2;
                 }
             }
+            Time.timeScale = (1 + 0.01f * score);
+            
             Vector3 updatePos = footstepHolder.transform.localPosition;
             updatePos.y -= velocity * Time.deltaTime;
             footstepHolder.transform.localPosition = updatePos;
@@ -101,6 +103,7 @@ public class Jump_StageCtrl : MonoBehaviour
     }
 
     public void ShowScore(){
+        Time.timeScale = 1f;
         sfx.PlaySfx(0);
         EndScoreCtrl.Instance.ShowScore(score, GameType.jump);
         SetupGame();
@@ -446,7 +449,9 @@ public class Jump_StageCtrl : MonoBehaviour
         }
     }
 
-    public void StartGame() {
+    public void StartGame()
+    {
+        Time.timeScale = 1f;
         score = 0;
         jump_scrl.targetRotation = cylindar.transform.localEulerAngles;
         UpdateScoreUI(score);
@@ -468,6 +473,7 @@ public class Jump_StageCtrl : MonoBehaviour
         player.GetComponent<Rigidbody>().velocity = Vector3.zero;
         player.transform.localPosition = new Vector3(0f, -5f, 1.25f);
         EndScoreCtrl.Instance.HideScore();
+        Time.timeScale = 1f;
     }
 
     public void BeginFirstGame(){

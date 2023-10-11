@@ -17,6 +17,8 @@ public class BuildGameEventHandler : MonoBehaviour
 
     [SerializeField] GameObject leftEdgeObj, rightEdgeObj;
     [SerializeField] GameObject surfaceMovement;
+    [SerializeField]
+    private BuildSFXManager sfxManager;
 
     private List<GameObject> stageItems = new List<GameObject>();
     private List<Vector2> stageItemsPos = new List<Vector2>();
@@ -45,7 +47,7 @@ public class BuildGameEventHandler : MonoBehaviour
     }
 
     public void StartGame() {
-        LoadStage(0, true);
+        LoadStage(true);
         currentScore = 0;
         highScore = 0;
         firstHitHeight = islandTop.GetComponent<RectTransform>().localPosition.y - islandTop.GetComponent<RectTransform>().sizeDelta.y;
@@ -83,12 +85,12 @@ public class BuildGameEventHandler : MonoBehaviour
                 GameObject item = stageItems[i];
                 if(item.transform.localPosition.y > Screen.height / 2f + 100)
                 {
+                    sfxManager.PlayFailSfx();
                     stageItems.Remove(item);
                     Destroy(item);
                     deathLight.intensity += 0.35f;
                     fallCount += 1;
                     shaker.GetComponent<Animator>().SetTrigger("small");
-
                     hearts.GetComponent<HeartsCtrl>().SetHearts(5-fallCount);
                     if(fallCount == 1) hearts.GetComponent<HeartsCtrl>().Show(true);
 
@@ -103,16 +105,84 @@ public class BuildGameEventHandler : MonoBehaviour
         }
     }
 
-    public void LoadStage(int idx, bool newGame = false)
+    public void LoadStage(bool newGame = false)
     {
         if(newGame)
         {
+            currentStageIdx = 0;
             currentScore = 0;
             highScore = 0;
             UpdateScoreUI(true);
         }
+        int idx = Random.Range(0, stageManager.stages.Count);
 
-        moveSpeed = Mathf.Lerp(3,20, stageItems.Count > 100 ? 1 : stageItems.Count / 100f);
+        switch (currentStageIdx)
+        {
+            case 0:
+                idx = 0;
+                break;
+            case 1:
+                idx = 1;
+                break;
+            case 2:
+                idx = 0;
+                break;
+            case 3:
+                idx = 0;
+                break;
+            case 4:
+                break;
+            case 5:
+                idx = 0;
+                break;
+            case 6:
+                idx = 1;
+                break;
+            case 7:
+                idx = 2;
+                break;
+            case 8:
+                idx = 1;
+                break;
+            case 9:
+                idx = 0;
+                break;
+            case 10:
+                break;
+            case 11:
+                idx = 2;
+                break;
+            case 12:
+                idx = 1;
+                break;
+            case 13:
+                idx = 0;
+                break;
+            case 14:
+                break;
+            case 15:
+                idx = 2;
+                break;
+            case 16:
+                idx = 3;
+                break;
+            case 17:
+                idx = 2;
+                break;
+            case 18:
+                idx = 3;
+                break;
+            case 19:
+                break;
+            case 20:
+                idx = 2;
+                break;
+            default:
+                idx = 3;
+                break;
+        }
+
+        moveSpeed = Mathf.Lerp(1.5f,20, stageItems.Count > 150 ? 1 : stageItems.Count / 150f);
         print(moveSpeed);
         currentItems = new List<GameObject>();
         currentItemPos = new List<Vector2>();
@@ -133,7 +203,7 @@ public class BuildGameEventHandler : MonoBehaviour
         rightAmount = (rightEdgeObj.GetComponent<RectTransform>().localPosition.x + rightEdgeObj.GetComponent<RectTransform>().sizeDelta.x/2 - rightEdge);
 
         horizonMove = true;
-        currentStageIdx = idx;
+        currentStageIdx += 1;
         fallCount = 0;
         hearts.GetComponent<HeartsCtrl>().Show(false);
 
@@ -218,7 +288,7 @@ public class BuildGameEventHandler : MonoBehaviour
         }
 
         firstHit = false;
-        LoadStage(currentStageIdx == 0 ? 1 : 0);
+        LoadStage();
 
         //calculate score
         int score = 0;
@@ -258,7 +328,7 @@ public class BuildGameEventHandler : MonoBehaviour
     {
         ClearGame();
         mainCanvas.GetComponent<Animator>().SetTrigger("retry");
-        LoadStage(0, true);
+        LoadStage(true);
     }
 
     public void ClearGame()

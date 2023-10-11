@@ -10,7 +10,9 @@ public class jump_player3D : MonoBehaviour
 
     [SerializeField] float jumpforce, posYAdd;
     [SerializeField] float holdTime;
-
+    [SerializeField]
+    private SpriteAnimator spriteAnimator;
+    
     void Update()
     {
         if(Time.frameCount % 5 != 0) return;
@@ -34,6 +36,8 @@ public class jump_player3D : MonoBehaviour
 
             GetComponent<Rigidbody>().velocity = Vector3.zero;
             GetComponent<Rigidbody>().AddForce(new Vector3(0,jumpforce,0));
+
+            spriteAnimator.RestartWithNoLoop();
             
             int footidx = -1;
             if(int.TryParse(other.gameObject.transform.parent.gameObject.name, out footidx)) {

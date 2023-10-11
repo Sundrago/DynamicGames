@@ -9,7 +9,6 @@ using UnityEngine.UI;
 
 public class PetDrawer : SerializedMonoBehaviour
 {
-    [SerializeField] private float panelHeight;
     [SerializeField] private PetManager petManager;
     [SerializeField] private PetDrawerItem petDrawerItem_prefab;
     public Dictionary<PetType, PetDrawerItem> drawerItems = new Dictionary<PetType, PetDrawerItem>();
@@ -20,9 +19,11 @@ public class PetDrawer : SerializedMonoBehaviour
     [SerializeField] private RectTransform contents;
     [SerializeField] private Image bgBtn;
 
+    private float panelHeight;
 
     private void Start()
     {
+        panelHeight = gameObject.GetComponent<RectTransform>().sizeDelta.y;
         UpdateItems();
         gameObject.SetActive(false);
     }
@@ -86,9 +87,9 @@ public class PetDrawer : SerializedMonoBehaviour
     public void SlideToItemByIdx(PetType _petType)
     {
         PetDrawerItem item = drawerItems[_petType];
-        float contentsHeight = item.GetComponent<RectTransform>().anchoredPosition.y + 175;
-        contents.DOAnchorPosY(contentsHeight, 0.5f)
-            .SetEase(Ease.OutExpo);
+        float contentsHeight = (item.GetComponent<RectTransform>().anchoredPosition.y + 175) * -1;
+        // contents.DOAnchorPosY(contentsHeight, 0.1f)
+        //     .SetEase(Ease.OutExpo);
     }
 
     [Button]

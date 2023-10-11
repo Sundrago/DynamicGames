@@ -148,7 +148,7 @@ public class Shoot_Enemy_Manager : MonoBehaviour
             enemy.state = enemy_stats.gameOver;
         }
         SpawingOnSpiral = false;
-        enemy_pool.Clear();
+        // enemy_pool.Clear();
     }
 
     public void KillAll()
@@ -160,6 +160,6 @@ public class Shoot_Enemy_Manager : MonoBehaviour
             // enemy_list.RemoveAt(i);
         }
         SpawingOnSpiral = false;
-        enemy_pool.Clear();
+        // enemy_pool.Clear();
     }
 }

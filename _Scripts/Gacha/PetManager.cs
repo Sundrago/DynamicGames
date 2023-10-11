@@ -13,6 +13,9 @@ public class PetManager : MonoBehaviour
 
     [SerializeField]
     private GameObject newPetSparcle_prefab;
+
+    [SerializeField]
+    private AskForUserReview askForUserReview;
     
     private void Awake()
     {
@@ -45,6 +48,14 @@ public class PetManager : MonoBehaviour
         int totalCount = PlayerPrefs.GetInt("PetTotalCount") + 1;
         PlayerPrefs.SetInt("PetTotalCount", totalCount);
         PlayerPrefs.Save();
+
+        if (totalCount >= 2)
+        {
+            if (askForUserReview != null)
+            {
+                askForUserReview.CubeFall();
+            }
+        } 
 
         if (count == 1)
         {
@@ -99,4 +110,4 @@ public class Petdata
         type = _type;
     }
 }
-public enum PetType {Cocoa, Brownie, Fluffy, Foxy} //Caramel
+public enum PetType {Cocoa, Brownie, Fluffy, Foxy, MrPinchy, Krabs, Dash } //Caramel

@@ -113,6 +113,7 @@ public class Ranking_UI : MonoBehaviour
                     score_text_ui.text = percent + "%";
                 })
                 .OnComplete(() => {
+                    canSkip = true;
                     sfx.ChangeBGMVolume(1f, 3f);
                 });
         }
@@ -163,7 +164,11 @@ public class Ranking_UI : MonoBehaviour
     {
         if (gameObject.activeSelf == false) return;
         if(DOTween.IsTweening(tierBoard_ui.gameObject.transform)) return;
-        if(!canSkip) return;
+        if (!canSkip)
+        {
+            DOVirtual.DelayedCall(2f, () => {canSkip = true;});
+            return;
+        }
         
         BG.DOFade(0, 0.5f);
         tierBoard_ui.gameObject.transform.position = Vector3.zero;

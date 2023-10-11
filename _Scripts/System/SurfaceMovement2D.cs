@@ -57,14 +57,12 @@ public class SurfaceMovement2D : MonoBehaviour
     [SerializeField] float longTransition = 0.3f;
     [SerializeField] float hitCheckInterval = 0.5f;
     [SerializeField] int searchComplexity = 5;
-    [SerializeField]
-    private BoxColliderHolder boxColliderHolder;
 
     private Pet pet;
     private List<AvailableCorner> availables;
     private List<SquareElement> SquareElements;
 
-    private BoxCollider2D[] squares;
+    private GameObject[] squares;
     private CurrentCorner currentCorner = new CurrentCorner();
     private CurrentCorner oldCorner = new CurrentCorner();
     private Transition transition = new Transition();
@@ -150,15 +148,15 @@ public class SurfaceMovement2D : MonoBehaviour
         gameObject.transform.position = Bezier(transition.normal, transition.p1, transition.p2, transition.p3);
         gameObject.transform.rotation = Quaternion.Lerp(transition.r1, transition.r2, transition.normal);
 
-        Debug.DrawLine(transition.p1, transition.p2, Color.magenta, 0.1f);
-        Debug.DrawLine(transition.p2, transition.p3, Color.magenta, 0.1f);
+        // Debug.DrawLine(transition.p1, transition.p2, Color.magenta, 0.1f);
+        // Debug.DrawLine(transition.p2, transition.p3, Color.magenta, 0.1f);
     }
 
     public Vector2 Bezier(float t, Vector2 a, Vector2 b, Vector2 c)
     {
         Vector2 ab = Vector2.Lerp(a, b, t);
         Vector2 bc = Vector2.Lerp(b, c, t);
-        Debug.DrawLine(ab, bc, Color.magenta, 0.1f);
+        // Debug.DrawLine(ab, bc, Color.magenta, 0.1f);
         return Vector2.Lerp(ab, bc, t);
     }
 
@@ -228,10 +226,10 @@ public class SurfaceMovement2D : MonoBehaviour
             Vector2 closest = SquareElements[i].obj.GetComponent<BoxCollider2D>().ClosestPoint(position);
 
             if (closest == position) {
-                Debug.DrawLine(position, squares[i].transform.position, Color.red, 2f);
+                // Debug.DrawLine(position, squares[i].transform.position, Color.red, 2f);
                 return true;
             } else {
-                Debug.DrawLine(position, squares[i].transform.position, new Color(1,1,1,0.2f), 0.25f);
+                // Debug.DrawLine(position, squares[i].transform.position, new Color(1,1,1,0.2f), 0.25f);
             }
         }
         return false;
@@ -256,6 +254,11 @@ public class SurfaceMovement2D : MonoBehaviour
         } else { 
             availables = new List<AvailableCorner>();
             GetAvailable(searchComplexity);
+            if (availables.Count == 0)
+            {
+                Debug.LogWarning("there is no where : " + availables.Count);
+                return; 
+            }
             availables = availables.OrderBy(x => x.dist).ToList();
             //sort available list by
 
@@ -269,21 +272,22 @@ public class SurfaceMovement2D : MonoBehaviour
                 if(availables[nextIdx].sqrElm.obj == oldCorner.obj && availables[nextIdx].cornerIdx == oldCorner.cornerIdx && nextIdx - 1 < availables.Count)
                     nextIdx += 1;
             }
+
+            
+            if (nextIdx >= availables.Count)
+            {
+                nextIdx = 0;
+            }
             
             if(Random.Range(0f, 1f) < 0.1f) nextIdx = Random.Range(0, nextIdx + 1);
             if(availables[nextIdx].dist > 0.5f) nextIdx = 0;
 
             oldCorner.obj = currentCorner.obj;
             oldCorner.cornerIdx = currentCorner.cornerIdx;
-
-            if(nextIdx >= availables.Count) {
-                Debug.LogWarning("there is no where : " + availables.Count);
-                return; 
-            } else {
-                currentCorner.obj = availables[nextIdx].sqrElm.obj;
-                currentCorner.cornerIdx = availables[nextIdx].cornerIdx;
-                //currentCorner.normal = availables[nextIdx].normal;
-            }
+            
+            currentCorner.obj = availables[nextIdx].sqrElm.obj;
+            currentCorner.cornerIdx = availables[nextIdx].cornerIdx;
+            //currentCorner.normal = availables[nextIdx].normal;
         }
 
         //Setup Next Move
@@ -379,13 +383,13 @@ public class SurfaceMovement2D : MonoBehaviour
         SquareElements = new List<SquareElement>();
         Vector2 playerPos = gameObject.transform.position;
 
-        foreach (BoxCollider2D square in squares)
+        foreach (GameObject square in squares)
         {
             SquareElement elem = new SquareElement();
 
-            Vector2 closest = square.ClosestPoint(playerPos);
+            Vector2 closest = square.GetComponent<BoxCollider2D>().ClosestPoint(playerPos);
             elem.dist = Vector2.Distance(playerPos, closest);
-            elem.obj = square.gameObject;
+            elem.obj = square;
             SquareElements.Add(elem);
         }
 
@@ -408,7 +412,7 @@ public class SurfaceMovement2D : MonoBehaviour
 
     void GetSquarePointsData(int idx)
     {
-        Debug.DrawLine(gameObject.transform.position, SquareElements[idx].obj.transform.position, Color.blue, 1f);
+        // Debug.DrawLine(gameObject.transform.position, SquareElements[idx].obj.transform.position, Color.blue, 1f);
         if (SquareElements[idx].obj == null) return;
 
         SquareElements[idx].cornerPoints = GetCornerPoint(SquareElements[idx].obj.GetComponent<SpriteRenderer>());
@@ -454,28 +458,28 @@ public class SurfaceMovement2D : MonoBehaviour
 
             bool isAvailable = (leftAvailalble || rightAvailable);
             
-            //DEBUG!
-            Vector2 checkpointA = Vector2.Lerp(A,B,normalPoint-noramlHeight) - delta_height;
-            Vector2 checkpointB = Vector2.Lerp(A,B,normalPoint+noramlHeight) - delta_height;
+            // DEBUG!
+            //  Vector2 checkpointA = Vector2.Lerp(A,B,normalPoint-noramlHeight) - delta_height;
+            //  Vector2 checkpointB = Vector2.Lerp(A,B,normalPoint+noramlHeight) - delta_height;
+            //
+            //  if(isAvailable) Debug.DrawLine(checkpointA, checkpointB, Color.red, 1f);
+            //  else Debug.DrawLine(checkpointA, checkpointB, Color.yellow, 1f);
+            //  Debug.DrawLine(closetPoint, checkpointA, leftAvailalble ? Color.red : Color.yellow, 1f);
+            //  Debug.DrawLine(closetPoint, checkpointB, rightAvailable ? Color.red : Color.yellow, 1f);
             
-            if(isAvailable) Debug.DrawLine(checkpointA, checkpointB, Color.red, 1f);
-            else Debug.DrawLine(checkpointA, checkpointB, Color.yellow, 1f);
-            Debug.DrawLine(closetPoint, checkpointA, leftAvailalble ? Color.red : Color.yellow, 1f);
-            Debug.DrawLine(closetPoint, checkpointB, rightAvailable ? Color.red : Color.yellow, 1f);
-
-            if (isAvailable) {
-
-                AvailableCorner available = new AvailableCorner();
-                available.sqrElm = SquareElements[idx];
-                available.cornerIdx = i;
-                available.dist = SquareElements[idx].dists[i];
-
-                available.leftAvailalble = leftAvailalble;
-                available.rightAvailable = rightAvailable;
-                available.normal = normalPoint;
-
-                availables.Add(available);
-            }
+             if (isAvailable) {
+            
+                 AvailableCorner available = new AvailableCorner();
+                 available.sqrElm = SquareElements[idx];
+                 available.cornerIdx = i;
+                 available.dist = SquareElements[idx].dists[i];
+            
+                 available.leftAvailalble = leftAvailalble;
+                 available.rightAvailable = rightAvailable;
+                 available.normal = normalPoint;
+            
+                 availables.Add(available);
+             }
         }
     }
 
@@ -499,9 +503,9 @@ public class SurfaceMovement2D : MonoBehaviour
 
         Vector2 point = Vector2.Lerp(A,B,normal) - delta_height;
 
-        foreach(BoxCollider2D obj in squares)
+        foreach(GameObject obj in squares)
         {
-            Vector2 closest = obj.ClosestPoint(point);
+            Vector2 closest = obj.GetComponent<BoxCollider2D>().ClosestPoint(point);
             if (closest == point) return false;
 
             closest = island.GetComponent<BoxCollider2D>().ClosestPoint(point);
@@ -512,8 +516,7 @@ public class SurfaceMovement2D : MonoBehaviour
 
     public void LoadSquare()
     {
-        squares = boxColliderHolder.squares;
-        // squares = GameObject.FindGameObjectsWithTag("square");
+        squares = GameObject.FindGameObjectsWithTag("square");
         //print("SQRS.COUNT : " + squares.Length);
         if(squares.Length == 0)
         {

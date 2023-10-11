@@ -8,7 +8,7 @@ public enum SFX_tag
 {
     enemy_dead_explostion, enemy_dead_blackHole, enemy_dead_spin, shootA, shootB, shootC, shootD, shootE, blackhole, spin, gotItem, shiealdPop, rank_goup, rank_goupFinish, rank_same
     , ticket1, ticket2, ticket3, ticket4, ticket6, ticket12, ticketfail, ticketJackpot, scoreSlider, reap, ticketGen, gacha_drop, gacha_rotateLever, gacha_capsules, gacha_simple_bgm
-    , gachaCapsuleOpen, gacha_newItem, gacha_item, gacha_newOpen, notEnoughMoney, insertCoin, coinInJar, gotCoin, rocket_clear, rocket_newLevel,
+    , gachaCapsuleOpen, gacha_newItem, gacha_item, gacha_newOpen, notEnoughMoney, insertCoin, coinInJar, gotCoin, rocket_clear, rocket_newLevel, cube_fall
 }
 
 public class AudioCtrl : SerializedMonoBehaviour

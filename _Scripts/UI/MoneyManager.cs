@@ -103,7 +103,7 @@ public class MoneyManager : MonoBehaviour
                 startValue = gachaCoinCount;
                 gachaCoinCount += amount;
                 PlayerPrefs.SetInt("gachaCoinCount", gachaCoinCount);
-                gachaCoinCount_ui.transform.localScale = Vector3.one;
+                gachaCoinHolder_ui.transform.localScale = Vector3.one;
                 gachaCoinHolder_ui.transform.DOPunchScale(Vector3.one * 0.1f, 0.5f);
                 
                 endValue = startValue + amount;
@@ -236,14 +236,14 @@ public class MoneyManager : MonoBehaviour
 
     public void ShowPanel()
     {
-        gameObject.transform.DOLocalMoveY(0, 1f)
+        gameObject.transform.DOLocalMoveY(0, 2f)
             .SetEase(Ease.OutExpo);
         UpdateUI();
     }
 
     public void HidePanel()
     {
-        gameObject.transform.DOLocalMoveY(1000, 1f)
+        gameObject.transform.DOLocalMoveY(1000, 2f)
             .SetEase(Ease.OutExpo);
     }
 

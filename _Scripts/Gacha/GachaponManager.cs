@@ -139,6 +139,7 @@ public class GachaponManager : MonoBehaviour
     [Button]
     public void ShowPanel()
     {
+        if(gameObject.activeSelf) return;
         if(DOTween.IsTweening(bg)) return;
         SetBtnActive();
         

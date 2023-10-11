@@ -19,6 +19,7 @@ public class SettingsPanel : MonoBehaviour
     }
 
     public void ShowPanel() {
+        if(gameObject.activeSelf) return;
         gameObject.transform.position = Vector3.zero;
         gameObject.transform.eulerAngles = Vector3.zero;
 
