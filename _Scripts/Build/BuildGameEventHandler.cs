@@ -20,6 +20,9 @@ public class BuildGameEventHandler : MonoBehaviour
     [SerializeField]
     private BuildSFXManager sfxManager;
 
+    [SerializeField]
+    private Transform dropEdgeY;
+    
     private List<GameObject> stageItems = new List<GameObject>();
     private List<Vector2> stageItemsPos = new List<Vector2>();
     private List<GameObject> currentItems = new List<GameObject>();
@@ -83,7 +86,7 @@ public class BuildGameEventHandler : MonoBehaviour
             for (int i = stageItems.Count - 1; i >= 0; i--)
             {
                 GameObject item = stageItems[i];
-                if(item.transform.localPosition.y > Screen.height / 2f + 100)
+                if(item.transform.localPosition.y > dropEdgeY.localPosition.y)
                 {
                     sfxManager.PlayFailSfx();
                     stageItems.Remove(item);
@@ -226,6 +229,7 @@ public class BuildGameEventHandler : MonoBehaviour
         if (!horizonMove) return;
 
         horizonMove = false;
+        falling = true;
         for (int i = currentItems.Count-1; i >= 0; i--)
         {
             GameObject item = currentItems[i];
@@ -237,7 +241,6 @@ public class BuildGameEventHandler : MonoBehaviour
             currentItemPos.RemoveAt(i);
         }
         //if (surfaceMovement.activeSelf) surfaceMovement.GetComponent<SurfaceMovement2D>().LoadSquare();
-        falling = true;
 
         hearts.GetComponent<HeartsCtrl>().SetHearts(5);
     }

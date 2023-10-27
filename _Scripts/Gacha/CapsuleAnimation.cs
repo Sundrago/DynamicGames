@@ -47,7 +47,7 @@ public class CapsuleAnimation : MonoBehaviour
         item.sprite = data.image;
         item.transform.localPosition = new Vector2(0, relativePosY);
         item.transform.localScale = data.obj.GetComponent<Pet>().spriteRenderer.gameObject.transform.localScale.y * Vector3.one;
-        isNew = (PetManager.Instance.GetPetCountByType(type) == 0);
+        isNew = (PetManager.Instance.GetPetCount(type) == 0);
     }
     private void Start()
     {
@@ -201,7 +201,7 @@ public class CapsuleAnimation : MonoBehaviour
         
         targetItemPos = petDrawer.GetItemTransformByType(type);
         midPos = Vector3.Lerp(itemObj.transform.position, targetItemPos.position, 0.5f);
-        petDrawer.ShowPanel(false);
+        petDrawer.ShowPanel(false, true);
         petDrawer.SlideToItemByIdx(type);
         
         itemObj.DOMove(midPos, 0.4f)

@@ -5,6 +5,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using DG.Tweening;
 using Unity.VisualScripting;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class PetDrawer : SerializedMonoBehaviour
@@ -18,7 +19,11 @@ public class PetDrawer : SerializedMonoBehaviour
     [SerializeField] private float startHeight = 300;
     [SerializeField] private RectTransform contents;
     [SerializeField] private Image bgBtn;
-
+    [SerializeField] private float sliderOffset;
+    [SerializeField] private float heightOffset;
+    [FormerlySerializedAs("petInfo")]
+    [SerializeField] private PetInfo_UI petInfoUI;
+    
     private float panelHeight;
 
     private void Start()
@@ -26,6 +31,7 @@ public class PetDrawer : SerializedMonoBehaviour
         panelHeight = gameObject.GetComponent<RectTransform>().sizeDelta.y;
         UpdateItems();
         gameObject.SetActive(false);
+        petInfoUI.gameObject.SetActive(false);
     }
 
     private void UpdateItems()
@@ -46,6 +52,11 @@ public class PetDrawer : SerializedMonoBehaviour
         return drawerItems[_type].transform;
     }
 
+    public void PetItenClicked(PetType _petType)
+    {
+        petInfoUI.ShowPanel(_petType);
+    }
+    
 #if UNITY_EDITOR
     [Button]
     
@@ -77,7 +88,7 @@ public class PetDrawer : SerializedMonoBehaviour
             drawerItems.Add(data.type, item);
         }
 
-        int contentsHeight = ((petManager.petdatas.Count - petManager.petdatas.Count % 4) / 4 + 1) * height;
+        float contentsHeight = ((petManager.petdatas.Count - petManager.petdatas.Count % 4) / 4 + 1) * height + heightOffset;
         if (petManager.petdatas.Count % 4 == 0) contentsHeight -= height;
         contents.sizeDelta = new Vector2(contents.sizeDelta.x, contentsHeight);
     }
@@ -87,18 +98,21 @@ public class PetDrawer : SerializedMonoBehaviour
     public void SlideToItemByIdx(PetType _petType)
     {
         PetDrawerItem item = drawerItems[_petType];
-        float contentsHeight = (item.GetComponent<RectTransform>().anchoredPosition.y + 175) * -1;
-        // contents.DOAnchorPosY(contentsHeight, 0.1f)
-        //     .SetEase(Ease.OutExpo);
+        float contentsHeight = (item.GetComponent<RectTransform>().anchoredPosition.y) * -1 + sliderOffset - panelHeight / 2f;
+        // contents.anchoredPosition = new Vector2(0, contentsHeight);
+        
+        contents.DOAnchorPosY(contentsHeight, 0.1f)
+            .SetEase(Ease.OutExpo);
     }
 
     [Button]
-    public void ShowPanel(bool updateItem = true)
+    public void ShowPanel(bool updateItem = true, bool small = false)
     {
         if(gameObject.activeSelf) return;
         if(DOTween.IsTweening(bgBtn)) return;
 
         if (updateItem) UpdateItems();
+        if (!small) contents.anchoredPosition = Vector2.zero;
         
         gameObject.SetActive(true);
         RectTransform rect = gameObject.GetComponent<RectTransform>();
@@ -107,12 +121,13 @@ public class PetDrawer : SerializedMonoBehaviour
         rect.sizeDelta = new Vector2(rect.sizeDelta.x, 0);
         bgBtn.color = Color.clear;
 
-        rect.DOAnchorPosY(panelHeight/2f, 0.5f)
+        rect.DOAnchorPosY(small ? panelHeight/2f : panelHeight, 0.5f)
             .SetEase(Ease.OutExpo);
-        rect.DOSizeDelta(new Vector2(rect.sizeDelta.x, panelHeight), 0.5f)
+        rect.DOSizeDelta(new Vector2(rect.sizeDelta.x, small ? panelHeight : panelHeight * 2f), 0.5f)
             .SetEase(Ease.OutExpo);
         bgBtn.DOFade(0.3f, 0.55f);
         
+        petInfoUI.Hidden();
     }
 
     [Button]
@@ -122,7 +137,7 @@ public class PetDrawer : SerializedMonoBehaviour
         
         RectTransform rect = gameObject.GetComponent<RectTransform>();
         
-        rect.DOAnchorPosY(-panelHeight/2f, 0.3f)
+        rect.DOAnchorPosY(-rect.sizeDelta.y/2f, 0.3f)
             .SetEase(Ease.InExpo);
         rect.DOSizeDelta(new Vector2(rect.sizeDelta.x, 0), 0.3f)
             .SetEase(Ease.InExpo);
@@ -130,5 +145,6 @@ public class PetDrawer : SerializedMonoBehaviour
             .OnComplete(() => {
                 gameObject.SetActive(false);
             });
+        petInfoUI.HidePanel();
     }
 }

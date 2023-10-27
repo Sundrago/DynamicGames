@@ -143,9 +143,10 @@ public class Shoot_Enemy_Manager : MonoBehaviour
     }
 
     public void GameOver() {
-        foreach(Shoot_enemy enemy in enemy_list)
+
+        for (int i = 0; i < enemy_list.Count; i++)
         {
-            enemy.state = enemy_stats.gameOver;
+            enemy_list[i].state = enemy_stats.gameOver;
         }
         SpawingOnSpiral = false;
         // enemy_pool.Clear();

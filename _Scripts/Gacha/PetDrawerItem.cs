@@ -8,6 +8,8 @@ using Sirenix.OdinInspector;
 
 public class PetDrawerItem : MonoBehaviour
 {
+    [SerializeField]
+    private PetDrawer drawer;
     [SerializeField] private Image image_ui, image_mask;
     [SerializeField] private TextMeshProUGUI name_ui, level_ui;
     [SerializeField] private RectMask2D rectMask2D;
@@ -15,7 +17,7 @@ public class PetDrawerItem : MonoBehaviour
     private GameObject sliderobj;
     private PetType type;
     private string name;
-    
+    private int petLevel = 0;
     
     public void Init(PetType _type, Sprite _sprite, string _name, float size = 300f, float relativePosY = 0)
     {
@@ -38,7 +40,7 @@ public class PetDrawerItem : MonoBehaviour
     public void UpdateItem(PetType _type)
     {
         type = _type;
-        int petCount = PetManager.Instance.GetPetCountByType(type);
+        int petCount = PetManager.Instance.GetPetCount(type);
         print(type + " : " +  petCount);
         if (petCount == 0)
         {
@@ -51,10 +53,11 @@ public class PetDrawerItem : MonoBehaviour
         }
         else
         {
+            petLevel = PetManager.Instance.GetPetLevel(type);
             image_ui.color = Color.white;
             name_ui.text = type.ToString();
             sliderobj.SetActive(true);
-            SetSlider(petCount);
+            SetSlider(PetManager.Instance.GetPetExp(type));
             image_mask.gameObject.SetActive(false);
             level_ui.gameObject.SetActive(true);
         }
@@ -62,7 +65,8 @@ public class PetDrawerItem : MonoBehaviour
     
     public void UpdateItemWithAnim()
     {
-        int petCount = PetManager.Instance.GetPetCountByType(type);
+        int petCount = PetManager.Instance.GetPetCount(type);
+        petLevel = PetManager.Instance.GetPetLevel(type);
         image_ui.color = Color.white;
         name_ui.text = type.ToString();
         sliderobj.SetActive(true);
@@ -72,14 +76,19 @@ public class PetDrawerItem : MonoBehaviour
             });
 
         level_ui.gameObject.SetActive(true);
-        DOVirtual.Float(petCount - 1F, petCount, 0.5F, SetSlider).SetEase(Ease.OutExpo);
+        DOVirtual.Float(PetManager.Instance.GetPetExp(type) - 1F, PetManager.Instance.GetPetExp(type), 0.5F, SetSlider).SetEase(Ease.OutExpo);
+    }
+
+    public void BtnClicked()
+    {
+        drawer.PetItenClicked(type);
     }
     
     [Button]
     public void SetSlider(float amt)
     {
-        float value = amt / 10f;
+        float value = amt / (petLevel * 5f);
         rectMask2D.padding = new Vector4(0, 0, 190 - 190 * value, 0);
-        level_ui.text = Mathf.Round(amt) + "/10";
+        level_ui.text = Mathf.Round(amt) + "/" + petLevel * 5;
     }
 }

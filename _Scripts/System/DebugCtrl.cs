@@ -66,4 +66,9 @@ public class DebugCtrl : MonoBehaviour
     {
         MoneyManager.Instance.AddTicket(MoneyManager.RewardType.Ticket, 50);
     }
+    
+    public void RemoveData()
+    {
+        PlayerPrefs.DeleteAll();
+    }
 }

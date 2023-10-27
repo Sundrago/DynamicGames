@@ -27,6 +27,8 @@ public class GachaponManager : MonoBehaviour
     private Transform ticketbtn, coinBtn;
     [SerializeField]
     private Image ticketActive, coinActive;
+    [SerializeField]
+    private Transform ticketGlow, coinGlow;
     
     private bool isAnimPlaying = false;
 
@@ -208,6 +210,31 @@ public class GachaponManager : MonoBehaviour
         
         ticketActive.DOFade(isTicketActive, 0.3f);
         coinActive.DOFade(isCoinActive, 0.3f);
+
+        if (isTicketActive == 1 && !DOTween.IsTweening(ticketGlow))
+        {
+            ticketGlow.localPosition = new Vector3(-400, 0, 0);
+            ticketGlow.DOLocalMoveX(400, 1);
+        }
+        
+        if (isCoinActive == 1 && !DOTween.IsTweening(coinGlow))
+        {
+            coinGlow.localPosition = new Vector3(-400, 0, 0);
+            coinGlow.DOLocalMoveX(400, 1);
+        }
+
+        if (isCoinActive == 1 && !DOTween.IsTweening(coinBtn.gameObject.transform))
+        {
+            coinBtn.gameObject.transform.DOPunchScale(new Vector3(0.1f, 0.1f, 0), 0.5f, 1)
+                .SetLoops(-1, LoopType.Restart)
+                .SetEase(Ease.OutQuad);
+        }
+        
+        if (isCoinActive == 0 && DOTween.IsTweening(coinBtn.gameObject.transform))
+        {
+            DOTween.Kill(coinBtn.gameObject.transform);
+            coinBtn.gameObject.transform.localScale = Vector3.one;
+        }
         
         guideText.gameObject.SetActive(isTicketActive == 0 && isCoinActive == 0 && isAnimPlaying == false);
     }

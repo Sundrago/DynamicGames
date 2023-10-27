@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 namespace MyUtility
@@ -24,7 +25,11 @@ namespace MyUtility
 
         public static DateTime StringToDateTime(string dateTimeString)
         {
-            return System.DateTime.ParseExact(PlayerPrefs.GetString("dateTimeString"), format, provider);
+            DateTime dateTime;
+            bool success = DateTime.TryParseExact(dateTimeString, format, provider, DateTimeStyles.None, out dateTime);
+
+            if (success) return dateTime;
+            return DateTime.Now;
         }
     }
 }

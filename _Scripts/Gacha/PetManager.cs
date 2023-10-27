@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using MyUtility;
 
 public class PetManager : MonoBehaviour
 {
@@ -23,6 +24,19 @@ public class PetManager : MonoBehaviour
         UpdatePetObjActive();
     }
 
+    private void Start()
+    {
+        foreach (PetType _type in Enum.GetValues((typeof(PetType))))
+        {
+            if (GetPetCount(_type) > 0 && !PlayerPrefs.HasKey("PetBirthDate_" + _type))
+            {
+                SetPetBirthDateAndLevel(_type);
+            }
+            
+            print(_type + " : " + GetPetAge(_type));
+        }
+    }
+
     public Petdata GetPetDataByType(PetType type)
     {
         foreach (Petdata data in petdatas)
@@ -35,11 +49,85 @@ public class PetManager : MonoBehaviour
         return null;
     }
 
-    public int GetPetCountByType(PetType _type)
+    private void SetPetBirthDateAndLevel(PetType _type)
+    {
+        PlayerPrefs.SetString("PetBirthDate_" + _type, Converter.DateTimeToString(DateTime.Now));
+        PlayerPrefs.SetInt("PetLevel_" + _type, 1);
+        PlayerPrefs.Save();
+    }
+
+    public string GetPetAge(PetType _type)
+    {
+        if (!PlayerPrefs.HasKey("PetBirthDate_" + _type))
+            return null;
+
+        print(PlayerPrefs.GetString("PetBirthDate_" + _type));
+        DateTime birth = Converter.StringToDateTime(PlayerPrefs.GetString("PetBirthDate_" + _type));
+
+        TimeSpan age = DateTime.Now - birth;
+
+        if (age.TotalDays >= 2f)
+        {
+            return Math.Floor(age.TotalDays) + " days";
+        } else if (age.TotalDays >= 1f)
+        {
+            return "1 day";
+        }
+        else
+        {
+            if (age.TotalHours >= 1f)
+            {
+                return Math.Floor(age.TotalHours) + " hours";
+            }
+            else return "1 hour";
+        }
+    }
+    
+    public int GetPetCount(PetType _type)
     {
         return PlayerPrefs.GetInt("PetCount_" + _type);
     }
 
+    public int GetPetLevel(PetType _type)
+    {
+        return PlayerPrefs.GetInt("PetLevel_" + _type);
+    }
+
+    public int GetPetExp(PetType _type)
+    {
+        int count = GetPetCount(_type);
+        int level = GetPetLevel(_type);
+
+        int totalExpSpan = 0;
+        for (int i = 0; i < level; i++)
+        {
+            totalExpSpan += 5 * i;
+        }
+
+        return count - totalExpSpan;
+    }
+
+    public bool PetLevelUP(PetType _type)
+    {
+        int exp = GetPetExp(_type);
+        int level = GetPetLevel(_type);
+
+        print("PetLevelUP " + _type + " : " + exp + "/" + level * 5);
+        
+        if (exp >= level * 5)
+        {
+            PlayerPrefs.SetInt("PetLevel_" + _type, PlayerPrefs.GetInt("PetLevel_" + _type) + 1);
+            return true;
+        }
+
+        return false;
+    }
+
+    public void GotNewPet(PetType _type)
+    {
+        SetPetBirthDateAndLevel(_type);
+    }
+    
     public void AddPetCountByType(PetType _type)
     {
         int count = PlayerPrefs.GetInt("PetCount_" + _type) + 1;
@@ -49,7 +137,7 @@ public class PetManager : MonoBehaviour
         PlayerPrefs.SetInt("PetTotalCount", totalCount);
         PlayerPrefs.Save();
 
-        if (totalCount >= 2)
+        if (totalCount >= 3)
         {
             if (askForUserReview != null)
             {
@@ -59,6 +147,7 @@ public class PetManager : MonoBehaviour
 
         if (count == 1)
         {
+            GotNewPet(_type);
             GameObject fx = Instantiate(newPetSparcle_prefab, GetPetDataByType(_type).obj.transform, true);
             fx.transform.localPosition = Vector3.zero;
             fx.SetActive(true);
@@ -73,7 +162,7 @@ public class PetManager : MonoBehaviour
     {
         foreach (Petdata data in petdatas)
         {
-            data.obj.SetActive(GetPetCountByType(data.type) != 0);
+            data.obj.SetActive(GetPetCount(data.type) != 0);
         }
     }
     
