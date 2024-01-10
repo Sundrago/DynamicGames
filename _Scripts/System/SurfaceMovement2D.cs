@@ -125,7 +125,7 @@ public class SurfaceMovement2D : MonoBehaviour
         }
 
         //Update P3
-        currentCorner.cornerPoints = GetCornerPoint(currentCorner.obj.GetComponent<SpriteRenderer>());
+        currentCorner.cornerPoints = GetCornerPoint(currentCorner.obj);
         currentCorner.pointA = currentCorner.cornerPoints[currentCorner.cornerIdx];
         currentCorner.pointB = currentCorner.cornerPoints[currentCorner.cornerIdx == 3 ? 0 : currentCorner.cornerIdx + 1];
         transition.p3 = Vector2.Lerp(currentCorner.pointA, currentCorner.pointB, currentCorner.normal);
@@ -169,7 +169,7 @@ public class SurfaceMovement2D : MonoBehaviour
             FindNearCorner();
             return;
         }
-        currentCorner.cornerPoints = GetCornerPoint(currentCorner.obj.GetComponent<SpriteRenderer>());
+        currentCorner.cornerPoints = GetCornerPoint(currentCorner.obj);
         currentCorner.pointA = currentCorner.cornerPoints[currentCorner.cornerIdx];
         currentCorner.pointB = currentCorner.cornerPoints[currentCorner.cornerIdx == 3 ? 0 : currentCorner.cornerIdx + 1];
 
@@ -238,7 +238,7 @@ public class SurfaceMovement2D : MonoBehaviour
     void InitializeCurrentCorner(CurrentCorner currentCorner)
     {
         //currentCorner.normal = 0;
-        currentCorner.cornerPoints = GetCornerPoint(currentCorner.obj.GetComponent<SpriteRenderer>());
+        currentCorner.cornerPoints = GetCornerPoint(currentCorner.obj);
         currentCorner.pointA = currentCorner.cornerPoints[currentCorner.cornerIdx];
         currentCorner.pointB = currentCorner.cornerPoints[currentCorner.cornerIdx == 3 ? 0 : currentCorner.cornerIdx + 1];
     }
@@ -291,7 +291,7 @@ public class SurfaceMovement2D : MonoBehaviour
         }
 
         //Setup Next Move
-        currentCorner.cornerPoints = GetCornerPoint(currentCorner.obj.GetComponent<SpriteRenderer>());
+        currentCorner.cornerPoints = GetCornerPoint(currentCorner.obj);
         currentCorner.pointA = currentCorner.cornerPoints[currentCorner.cornerIdx];
         currentCorner.pointB = currentCorner.cornerPoints[currentCorner.cornerIdx == 3 ? 0 : currentCorner.cornerIdx + 1];
 
@@ -396,13 +396,26 @@ public class SurfaceMovement2D : MonoBehaviour
         SquareElements = SquareElements.OrderBy(x => x.dist).ToList();
     }
 
-    public Vector2[] GetCornerPoint(SpriteRenderer renderer)
+    public Vector2[] GetCornerPoint(GameObject obj)
     {
-        Vector2 topRight = renderer.transform.TransformPoint(renderer.sprite.bounds.max);
-        Vector2 topLeft = renderer.transform.TransformPoint(new Vector3(renderer.sprite.bounds.max.x, renderer.sprite.bounds.min.y, 0));
-        Vector2 botLeft = renderer.transform.TransformPoint(renderer.sprite.bounds.min);
-        Vector2 botRight = renderer.transform.TransformPoint(new Vector3(renderer.sprite.bounds.min.x, renderer.sprite.bounds.max.y, 0));
-        return new Vector2[] { topRight, topLeft, botLeft, botRight };
+        SquareBlockCtrl sqr = obj.GetComponent<SquareBlockCtrl>();
+        if (sqr != null)
+        {
+            Vector2 tr = sqr.tr.transform.position;
+            Vector2 tl = sqr.tl.transform.position;
+            Vector2 br = sqr.br.transform.position;
+            Vector2 bl = sqr.bl.transform.position;
+            return new Vector2[] { tl, tr, br, bl };
+        }
+        else
+        {
+            SpriteRenderer renderer = obj.GetComponent<SpriteRenderer>();
+            Vector2 topRight = renderer.transform.TransformPoint(renderer.sprite.bounds.max);
+            Vector2 topLeft = renderer.transform.TransformPoint(new Vector3(renderer.sprite.bounds.max.x, renderer.sprite.bounds.min.y, 0));
+            Vector2 botLeft = renderer.transform.TransformPoint(renderer.sprite.bounds.min);
+            Vector2 botRight = renderer.transform.TransformPoint(new Vector3(renderer.sprite.bounds.min.x, renderer.sprite.bounds.max.y, 0));
+            return new Vector2[] { topRight, topLeft, botLeft, botRight };
+        }
     }
 
     public float GetDistFromPointToLine(Vector2 P0, Vector2 P1, Vector2 P2)
@@ -415,7 +428,7 @@ public class SurfaceMovement2D : MonoBehaviour
         // Debug.DrawLine(gameObject.transform.position, SquareElements[idx].obj.transform.position, Color.blue, 1f);
         if (SquareElements[idx].obj == null) return;
 
-        SquareElements[idx].cornerPoints = GetCornerPoint(SquareElements[idx].obj.GetComponent<SpriteRenderer>());
+        SquareElements[idx].cornerPoints = GetCornerPoint(SquareElements[idx].obj);
 
         SquareElements[idx].closestPointOnLine = new Vector2[4];
         SquareElements[idx].closestPointOnLine[0] = GetClosestPointOnLineSegment(gameObject.transform.position, SquareElements[idx].cornerPoints[0], SquareElements[idx].cornerPoints[1]);
@@ -459,13 +472,13 @@ public class SurfaceMovement2D : MonoBehaviour
             bool isAvailable = (leftAvailalble || rightAvailable);
             
             // DEBUG!
-            //  Vector2 checkpointA = Vector2.Lerp(A,B,normalPoint-noramlHeight) - delta_height;
-            //  Vector2 checkpointB = Vector2.Lerp(A,B,normalPoint+noramlHeight) - delta_height;
-            //
-            //  if(isAvailable) Debug.DrawLine(checkpointA, checkpointB, Color.red, 1f);
-            //  else Debug.DrawLine(checkpointA, checkpointB, Color.yellow, 1f);
-            //  Debug.DrawLine(closetPoint, checkpointA, leftAvailalble ? Color.red : Color.yellow, 1f);
-            //  Debug.DrawLine(closetPoint, checkpointB, rightAvailable ? Color.red : Color.yellow, 1f);
+            Vector2 checkpointA = Vector2.Lerp(A,B,normalPoint-noramlHeight) - delta_height;
+            Vector2 checkpointB = Vector2.Lerp(A,B,normalPoint+noramlHeight) - delta_height;
+            
+            if(isAvailable) Debug.DrawLine(checkpointA, checkpointB, Color.red, 1f);
+            else Debug.DrawLine(checkpointA, checkpointB, Color.yellow, 1f);
+            Debug.DrawLine(closetPoint, checkpointA, leftAvailalble ? Color.red : Color.yellow, 1f);
+            Debug.DrawLine(closetPoint, checkpointB, rightAvailable ? Color.red : Color.yellow, 1f);
             
              if (isAvailable) {
             
@@ -502,14 +515,20 @@ public class SurfaceMovement2D : MonoBehaviour
         if(normal < 0f || normal > 1f) return false;
 
         Vector2 point = Vector2.Lerp(A,B,normal) - delta_height;
-
+        // Debug.DrawLine(A, point, Color.magenta, 1f);
+        // Debug.DrawLine(B, point, Color.magenta, 1f);
+        
         foreach(GameObject obj in squares)
         {
             Vector2 closest = obj.GetComponent<BoxCollider2D>().ClosestPoint(point);
-            if (closest == point) return false;
+            if (closest == point)
+            {
+                Debug.DrawLine(obj.transform.position, point, Color.magenta, 1f);
+                return false;
+            }
 
-            closest = island.GetComponent<BoxCollider2D>().ClosestPoint(point);
-            if (closest == point) return false;
+            // closest = island.GetComponent<BoxCollider2D>().ClosestPoint(point);
+            // if (closest == point) return false;
         }
         return true;
     }
@@ -517,7 +536,7 @@ public class SurfaceMovement2D : MonoBehaviour
     public void LoadSquare()
     {
         squares = GameObject.FindGameObjectsWithTag("square");
-        //print("SQRS.COUNT : " + squares.Length);
+        print("SQRS.COUNT : " + squares.Length);
         if(squares.Length == 0)
         {
             onIsland = true;

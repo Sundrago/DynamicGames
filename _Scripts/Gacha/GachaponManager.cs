@@ -126,6 +126,7 @@ public class GachaponManager : MonoBehaviour
         status = gachaponStatus.idle;
         sfx.ChangeBGMVolume(1f);
         RnadomizePonCapsule();
+        TutorialManager.Instancee.TutorialF_Check();
 
         DOVirtual.DelayedCall(0.5f, HidePanel);
     }
@@ -137,26 +138,32 @@ public class GachaponManager : MonoBehaviour
         gachapon.transform.localEulerAngles = Vector3.zero;
         gachapon.DOPunchRotation(new Vector3(0, 0, 2), 0.5f);
     }
-    
+
     [Button]
     public void ShowPanel()
     {
-        if(gameObject.activeSelf) return;
-        if(DOTween.IsTweening(bg)) return;
+        if (gameObject.activeSelf) return;
+        if (DOTween.IsTweening(bg)) return;
+
+        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
         SetBtnActive();
-        
+
         RnadomizePonCapsule();
         gachapon.transform.position = Vector3.zero;
         gachapon.transform.eulerAngles = Vector3.zero;
-        
+
         gachapon.transform.DOLocalMoveY(-2500f, 0.8f)
             .From()
             .SetEase(Ease.OutExpo);
-        gachapon.transform.DORotate(new Vector3(0f,0f,30f), 0.8f)
+        gachapon.transform.DORotate(new Vector3(0f, 0f, 30f), 0.8f)
             .From()
-            .SetEase(Ease.OutBack);
+            .SetEase(Ease.OutBack)
+            .OnComplete(() =>
+            {
+                TutorialManager.Instancee.TutorialE_check();
+            });
 
-        bg.DOFade(0.2f, 1f);
+    bg.DOFade(0.2f, 1f);
         gameObject.SetActive(true);
     }
 
@@ -170,13 +177,19 @@ public class GachaponManager : MonoBehaviour
         }
         
         if(DOTween.IsTweening(bg)) return;
+        
+        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.UI_CLOSE);
         gachapon.transform.position = Vector3.zero;
         gachapon.transform.eulerAngles = Vector3.zero;
 
         bg.DOFade(0, 1f);
         gachapon.transform.DOLocalMoveY(-3000f, 1f)
             .SetEase(Ease.InOutExpo)
-            .OnComplete(()=>{gameObject.SetActive(false);});
+            .OnComplete(() =>
+            {
+                gameObject.SetActive(false);
+                MainCanvas.Instance.Offall();
+            });
         gachapon.transform.DORotate(new Vector3(0f,0f,10), 0.8f)
             .SetEase(Ease.OutExpo);
     }
@@ -245,10 +258,14 @@ public class GachaponManager : MonoBehaviour
         {
             MoneyManager.Instance.Coin2DAnim(MoneyManager.RewardType.GachaCoin, ticketbtn.transform.position, 1);
             AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.gotCoin);
+            TutorialManager.Instancee.TicketBtnClicked();
+            SetBtnActive();
+            return;
         }
         
         if (!MoneyManager.Instance.HasEnoughTicket(MoneyManager.RewardType.Ticket, 50))
         {
+            AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.notEnoughMoney);
             if (!DOTween.IsTweening(ticketbtn)) ticketbtn.DOPunchPosition(new Vector3(10, 0, 0), 0.5f);
         }
         SetBtnActive();
@@ -256,12 +273,22 @@ public class GachaponManager : MonoBehaviour
 
     public void CoinBtnClicked()
     {
-        if(!isAnimPlaying && status == gachaponStatus.idle && MoneyManager.Instance.SubtractTicket(MoneyManager.RewardType.GachaCoin, 1)) Coin2DAnim();
+        if (!isAnimPlaying && status == gachaponStatus.idle &&
+            MoneyManager.Instance.SubtractTicket(MoneyManager.RewardType.GachaCoin, 1))
+        {
+            Coin2DAnim();
+            AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup2);
+            TutorialManager.Instancee.CoinBtnClicked();
+            return;
+        }
         
         if (!MoneyManager.Instance.HasEnoughTicket(MoneyManager.RewardType.GachaCoin, 1))
         {
+            AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.notEnoughMoney);
             if (!DOTween.IsTweening(coinBtn)) coinBtn.DOPunchPosition(new Vector3(10, 0, 0), 0.5f);
         }
+        
+        
         SetBtnActive();
     }
 

@@ -227,6 +227,9 @@ public class Gacha_TicketsHolder : MonoBehaviour
     [Button]
     public void CollectTicketBtnClicked()
     {
+        Vector3 pos = Input.mousePosition;
+        pos = Camera.main.ScreenToWorldPoint(pos);
+        
         if (status != ticketStatus.waiting)
         {
             DOVirtual.DelayedCall(2f, TicketAnimFinished);
@@ -234,6 +237,9 @@ public class Gacha_TicketsHolder : MonoBehaviour
         }
         status = ticketStatus.reaping;
         
+        if(DOTween.IsTweening(rect)) return;
+        
+        money.Coin2DAnim(MoneyManager.RewardType.Ticket, pos, count);
         audioCtrl.PlaySFXbyTag(SFX_tag.reap);
         rect.DOAnchorPosY(GetPosY(count + 1), 0.25f)
             .SetEase(Ease.OutExpo)
@@ -242,7 +248,7 @@ public class Gacha_TicketsHolder : MonoBehaviour
                 rect.DOAnchorPosY(GetPosY(count + 8), 0.75f)
                     .SetEase(Ease.InQuart)
                     .OnComplete(() => {
-                        money.AddTicket(MoneyManager.RewardType.Ticket , count);
+                        // money.AddTicket(MoneyManager.RewardType.Ticket , count);
                         CreateTicektsObj(0);
                         gameObject.SetActive(false);
                         status = ticketStatus.idle;

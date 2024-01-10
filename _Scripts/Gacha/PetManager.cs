@@ -137,13 +137,15 @@ public class PetManager : MonoBehaviour
         PlayerPrefs.SetInt("PetTotalCount", totalCount);
         PlayerPrefs.Save();
 
-        if (totalCount >= 3)
-        {
-            if (askForUserReview != null)
-            {
-                askForUserReview.CubeFall();
-            }
-        } 
+        if(totalCount == 1) TutorialManager.Instancee.TutorialD_Check();
+        
+        // if (totalCount >= 3)
+        // {
+        //     if (askForUserReview != null)
+        //     {
+        //         // askForUserReview.CubeFall();
+        //     }
+        // } 
 
         if (count == 1)
         {

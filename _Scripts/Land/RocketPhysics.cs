@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public class RocketPhysics : MonoBehaviour
 {
@@ -13,6 +14,10 @@ public class RocketPhysics : MonoBehaviour
     //[SerializeField] EndScoreCtrl endScore;
     [SerializeField] GameObject rocket, rocket_dummy, big_island, puff_l, puff_r, puff_fail, circleCanvas;
     [SerializeField] GameObject RocketCanvas, shake;
+    [SerializeField] private GameObject tutorial;
+    [SerializeField] private Image tutorialA, tutorialB;
+    [SerializeField] private TextMeshProUGUI tutorialText, clearText;
+    [SerializeField] private IslandSizeCtrl islandSizeCtrl;
 
     [SerializeField]
     private ParticleSystem thrustFX, thrustFX2, thrust_left, thrust_right;
@@ -48,6 +53,11 @@ public class RocketPhysics : MonoBehaviour
 
     void Start()
     {
+        tutorialA.color = new Color(1, 1, 1, 0);
+        tutorialB.color = new Color(1, 1, 1, 0);
+        clearText.color = new Color(1, 1, 1, 0);
+        tutorial.SetActive(false);
+        
         Application.targetFrameRate = 60;
         thrustEmission = thrustFX.emission;
         thrustEmission2 = thrustFX2.emission;
@@ -57,6 +67,7 @@ public class RocketPhysics : MonoBehaviour
         initialRocketPos = rocket.transform.position;
         rb2D = rocket.GetComponent<Rigidbody2D>();
         rocket.GetComponent<Animator>().SetTrigger("hide");
+        tutorial.SetActive(false);
     }
 
     void Update()
@@ -178,6 +189,7 @@ public class RocketPhysics : MonoBehaviour
                         shake.transform.DOPunchPosition(new Vector3(3f, 3f, 0f), 2.5f, 7)
                             .OnComplete(() => {
                                 shake.GetComponent<Animator>().enabled = true;
+                                HideTutorial(2);
                             });
                         isInitialLaunch = false;
                     } else 
@@ -240,7 +252,10 @@ public class RocketPhysics : MonoBehaviour
         rocket_dummy.transform.position = rocket.transform.position;
         rocket_dummy.transform.rotation = rocket.transform.rotation;
         rocket_dummy.SetActive(true);
-        big_island.GetComponent<Animator>().SetTrigger("show");
+        // big_island.GetComponent<Animator>().SetTrigger("show");
+        islandSizeCtrl.OpenIsland();
+        clearText.DOFade(1, 1f)
+            .OnComplete(ResetRocket);
 
         puff_l.transform.position = new Vector2(rocket.transform.position.x - 0.5f, puff_l.transform.position.y);
         puff_r.transform.position = new Vector2(rocket.transform.position.x + 0.5f, puff_r.transform.position.y);
@@ -281,7 +296,9 @@ public class RocketPhysics : MonoBehaviour
         print("ResetRocket");
         rocket.GetComponent<Animator>().enabled = true;
         rocket.GetComponent<Animator>().SetTrigger("reset");
-        big_island.GetComponent<Animator>().SetTrigger("hide");
+        // big_island.GetComponent<Animator>().SetTrigger("hide");
+        islandSizeCtrl.CloseIsland();
+        clearText.DOFade(0, 1f);
         resetAnimPlaying = true;
         holdTransition = true;
         SetThrustParticleFXEmission(false);
@@ -325,6 +342,12 @@ public class RocketPhysics : MonoBehaviour
         currentLevel = idx;
         LoadCircles(stageManager.stages[idx-1].GetComponent<stage_holder>().items);
         stage_level.SetLevel(idx);
+        
+        if(idx > 1) HideTutorial(1);
+        else
+        {
+            if(EndScoreCtrl.Instance.GetHighScore(GameType.land) <= 1) ShowTutorial();
+        }
     }
 
     private void LoadCircles(List<GameObject> newCircles)
@@ -397,5 +420,34 @@ public class RocketPhysics : MonoBehaviour
         score = 0;
         EndScoreCtrl.Instance.HideScore();
         isInitialLaunch = true;
+    }
+
+    private void ShowTutorial()
+    {
+        if(tutorial.activeSelf) return;
+        
+        tutorial.SetActive(true);
+        DOTween.Kill(tutorialA);
+        DOTween.Kill(tutorialB);
+        DOTween.Kill(tutorialText);
+        tutorialText.DOFade(0.6f, 2f);
+        tutorialA.DOFade(0.6f, 2f);
+        tutorialB.DOFade(0.6f, 2f);
+    }
+
+    private void HideTutorial(float duration)
+    {
+        if (!tutorial.activeSelf) return;
+        
+        DOTween.Kill(tutorialA);
+        DOTween.Kill(tutorialB);
+        DOTween.Kill(tutorialText);
+        tutorialText.DOFade(0, duration);
+        tutorialA.DOFade(0, duration);
+        tutorialB.DOFade(0, duration)
+            .OnComplete(() =>
+            {
+                tutorial.SetActive(false);
+            });
     }
 }

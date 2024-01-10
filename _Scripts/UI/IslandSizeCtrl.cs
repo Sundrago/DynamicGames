@@ -7,10 +7,10 @@ using Sirenix.OdinInspector;
 
 public class IslandSizeCtrl : MonoBehaviour
 {
-    [SerializeField] RectTransform i14Pro, i14ProMax, i13Pro, i13ProMax, i12ProMax, i12Pro12, i11, iXSMax, iXSXRX;
+    [SerializeField] RectTransform i14Pro, i14ProMax, i13Pro, i13ProMax, i12ProMax, i12Pro12, i11, iXSMax, iXSXRX, i15ProMax;
     [SerializeField] Image[] faceImgs;
 
-    [SerializeField] private RectTransform smallsized;
+    [SerializeField] public RectTransform smallsized;
     private RectTransform rect;
 
     private void Awake()
@@ -41,8 +41,8 @@ public class IslandSizeCtrl : MonoBehaviour
         }
         else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone11ProMax)
         {
-            smallsized = i14ProMax;
-            // smallsized = i12ProMax;
+            // smallsized = i14ProMax;
+            smallsized = i12ProMax;
         }
         else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone12)
         {
@@ -85,10 +85,19 @@ public class IslandSizeCtrl : MonoBehaviour
             else if (modelID == "iPhone14,8") smallsized = i12Pro12;
             else if (modelID == "iPhone15,2") smallsized = i14Pro;
             else if (modelID == "iPhone15,3") smallsized = i14ProMax;
+            else if (modelID == "iPhone16,1") smallsized = i14Pro;
+            else if (modelID == "iPhone16,2") smallsized = i15ProMax;
             else smallsized = i14Pro;
         }
     }
 
+    
+    /*
+     * iPhone15,4 : iPhone 15
+       iPhone15,5 : iPhone 15 Plus
+       iPhone16,1 : iPhone 15 Pro
+       iPhone16,2 : iPhone 15 Pro Max
+     */
     public void Start()
     {
         rect = GetComponent<RectTransform>();
@@ -108,7 +117,7 @@ public class IslandSizeCtrl : MonoBehaviour
     
     public void OpenIsland()
     {
-        rect.DOSizeDelta(new Vector2(smallsized.sizeDelta.x, i14Pro.sizeDelta.x), 1f)
+        rect.DOSizeDelta(new Vector2(smallsized.sizeDelta.x, smallsized.sizeDelta.x), 1f)
             .SetEase(Ease.OutExpo)
             .OnUpdate(()=> {
                 Vector2 pos = rect.anchoredPosition;
@@ -143,7 +152,7 @@ public class IslandSizeCtrl : MonoBehaviour
     private void OpenTest()
     {
         rect = GetComponent<RectTransform>();
-        rect.sizeDelta = new Vector2(smallsized.sizeDelta.x, i14Pro.sizeDelta.x);
+        rect.sizeDelta = new Vector2(smallsized.sizeDelta.x, smallsized.sizeDelta.x);
         Vector2 pos = rect.anchoredPosition;
         pos.y = rect.sizeDelta.y * -1f / 2f + smallsized.anchoredPosition.y + smallsized.sizeDelta.y / 2f;
         rect.anchoredPosition = pos;

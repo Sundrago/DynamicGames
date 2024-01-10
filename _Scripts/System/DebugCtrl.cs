@@ -9,13 +9,14 @@ public class DebugCtrl : MonoBehaviour
     [SerializeField] private LeaderboardManger leaderboardManger;
     [SerializeField] private Gacha_TicketsHolder gachaTicketsHolder;
     [SerializeField] private SFXCTRL sfx;
-    [SerializeField]
-    private GameObject debug_front_window;
+    [SerializeField] private GameObject IslandSizeRemote;
+    [SerializeField] private GameObject debug_front_window;
     private int hiddenBtnClickCount = 0;
 
     private void Start()
     {
         gameObject.SetActive(false);
+        IslandSizeRemote.SetActive(false);
     }
 
     public void hiddenBtnClicked()
@@ -70,5 +71,10 @@ public class DebugCtrl : MonoBehaviour
     public void RemoveData()
     {
         PlayerPrefs.DeleteAll();
+    }
+
+    public void ShowIslandSizeRemote()
+    {
+        IslandSizeRemote.SetActive(true);
     }
 }

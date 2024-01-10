@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
 using TMPro;
 using DG.Tweening;
@@ -20,6 +21,10 @@ public class BuildGameEventHandler : MonoBehaviour
     [SerializeField]
     private BuildSFXManager sfxManager;
 
+    [SerializeField] private GameObject tutorial;
+    [SerializeField] private Image tutorialA, tutorialB;
+    [SerializeField] private TextMeshProUGUI tutorialText;
+    
     [SerializeField]
     private Transform dropEdgeY;
     
@@ -57,8 +62,39 @@ public class BuildGameEventHandler : MonoBehaviour
 
         print(islandTop.GetComponent<RectTransform>().localPosition.y);
         print(islandTop.GetComponent<RectTransform>().sizeDelta.y);
+
+        if (EndScoreCtrl.Instance.GetHighScore(GameType.build) < 5) ShowTutorial();
     }
 
+    private void ShowTutorial()
+    {
+        if(tutorial.activeSelf) return;
+        
+        tutorial.SetActive(true);
+        DOTween.Kill(tutorialA);
+        DOTween.Kill(tutorialB);
+        DOTween.Kill(tutorialText);
+        tutorialText.DOFade(0.6f, 2f);
+        tutorialA.DOFade(0.6f, 2f);
+        tutorialB.DOFade(0.6f, 2f);
+    }
+
+    private void HideTutorial(float duration)
+    {
+        if (!tutorial.activeSelf) return;
+        
+        DOTween.Kill(tutorialA);
+        DOTween.Kill(tutorialB);
+        DOTween.Kill(tutorialText);
+        tutorialText.DOFade(0, duration);
+        tutorialA.DOFade(0, duration);
+        tutorialB.DOFade(0, duration)
+            .OnComplete(() =>
+            {
+                tutorial.SetActive(false);
+            });
+    }
+    
     // Update is called once per frame
     void Update()
     {
@@ -227,7 +263,7 @@ public class BuildGameEventHandler : MonoBehaviour
     public void StopHorizonMove()
     {
         if (!horizonMove) return;
-
+        HideTutorial(1f);
         horizonMove = false;
         falling = true;
         for (int i = currentItems.Count-1; i >= 0; i--)

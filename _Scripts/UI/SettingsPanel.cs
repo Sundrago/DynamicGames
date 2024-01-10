@@ -20,6 +20,8 @@ public class SettingsPanel : MonoBehaviour
 
     public void ShowPanel() {
         if(gameObject.activeSelf) return;
+        
+        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.UI_OPEN);
         gameObject.transform.position = Vector3.zero;
         gameObject.transform.eulerAngles = Vector3.zero;
 
@@ -32,8 +34,8 @@ public class SettingsPanel : MonoBehaviour
             .From()
             .SetEase(Ease.OutBack);
         
-        music_slider.value = PlayerPrefs.GetFloat("settings_music");
-        sfx_slider.value = PlayerPrefs.GetFloat("settings_sfx");
+        music_slider.value = PlayerPrefs.GetFloat("settings_music", 0.5f);
+        sfx_slider.value = PlayerPrefs.GetFloat("settings_sfx", 1f);
 
         music_slider.GetComponent<SliderCtrl>().OnValueChange();
         sfx_slider.GetComponent<SliderCtrl>().OnValueChange();
@@ -42,6 +44,7 @@ public class SettingsPanel : MonoBehaviour
     }
 
     public void HidePanel() {
+        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.UI_SELECT);
         SetVolume();
         gameObject.transform.position = Vector3.zero;
         gameObject.transform.eulerAngles = Vector3.zero;

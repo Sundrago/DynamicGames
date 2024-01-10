@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +18,12 @@ public class MainCanvas : MonoBehaviour
     [SerializeField] private GameObject ranking_ui;
     
     private GameObject currentGameBtn = null;
+    public static MainCanvas Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -24,7 +31,7 @@ public class MainCanvas : MonoBehaviour
         sfx.PlayBGM(3);
     }
 
-    public void GotoGame(string name, GameObject gamebtn) {
+    public void GotoGame(BlockStatusManager.BlockType blockType, GameObject gamebtn) {
         if(ranking_ui.activeSelf) return;
         
         DOTween.Kill(gamebtn.transform);
@@ -33,45 +40,51 @@ public class MainCanvas : MonoBehaviour
         if(miniisland != null)
             if(DOTween.IsTweening(miniisland.transform)) return;
         
-        switch(name) {
-            case "build" : 
+        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.click);
+        
+        switch(blockType) {
+            case BlockStatusManager.BlockType.build : 
                 transition.canvas_B = build;
                 sfx.PlayBGM(1);
                 sfx.PlaySfx(2);
                 MoneyManager.Instance.HidePanel();
                 break;
-            case "land" : 
+            case BlockStatusManager.BlockType.land : 
                 transition.canvas_B = land;
                 sfx.PlayBGM(2);
                 sfx.PlaySfx(2);
                 MoneyManager.Instance.HidePanel();
                 break;
-            case "jump" : 
+            case BlockStatusManager.BlockType.jump : 
                 transition.canvas_B = jump;
                 sfx.PlayBGM(0);
                 sfx.PlaySfx(2);
                 MoneyManager.Instance.HidePanel();
                 break;
-            case "shoot" : 
+            case BlockStatusManager.BlockType.shoot : 
                 transition.canvas_B = shoot;
                 sfx.PlayBGM(5);
                 sfx.PlaySfx(2);
                 MoneyManager.Instance.HidePanel();
                 break;
-            case "leaderboard" :
+            case BlockStatusManager.BlockType.leaderboard :
                 leaderboard.OpenLeaderboard();
                 break;
-            case "gacha" :
+            case BlockStatusManager.BlockType.gacha :
                 gachaponManager.ShowPanel();
                 break;
-            case "friends" :
+            case BlockStatusManager.BlockType.friends :
                 petDrawer.ShowPanel();
                 break;
-            case "review" :
+            case BlockStatusManager.BlockType.review :
                 askForUserReview.ShowPanel();
                 break;
+            case BlockStatusManager.BlockType.tutorial :
+                TutorialManager.Instancee.tutorial_01();
+                break;
         }
-        
+
+        if (blockType != BlockStatusManager.BlockType.tutorial) TutorialManager.Instancee.HideCursor();
 
         currentGameBtn.GetComponent<Rigidbody2D>().isKinematic = true;
         if(currentGameBtn.GetComponent<DragSprite>().miniisland != null) {
@@ -109,6 +122,7 @@ public class MainCanvas : MonoBehaviour
                     currentGameBtn = null;
                     leaderboard.Start();
                     StartCoroutine(rangkingManager.UpdatetRanks());
+                    TutorialManager.Instancee.TutorialD_Check();
                 });
         }
     }
@@ -117,13 +131,23 @@ public class MainCanvas : MonoBehaviour
         foreach(DragSprite dragSprite in dragSprites) {
             if(dragSprite == null) continue;
             if(dragSprite.gameObject == except) continue;
+            if(!dragSprite.gameObject.activeSelf) continue;
             dragSprite.Off();
         }
     }
 
+    public void Offall() {
+        foreach(DragSprite dragSprite in dragSprites) {
+            if(dragSprite == null) continue;
+            if(!dragSprite.gameObject.activeSelf) continue;
+            dragSprite.Off();
+        }
+    }
+    
     public void ReturnToOriginalPos() {
         foreach(DragSprite dragSprite in dragSprites) {
             if(dragSprite == null) continue;
+            if(!dragSprite.gameObject.activeSelf) continue;
             dragSprite.ReturnToOriginalPos();
         }
     }

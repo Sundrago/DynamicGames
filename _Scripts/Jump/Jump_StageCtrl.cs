@@ -13,7 +13,7 @@ public class Jump_StageCtrl : MonoBehaviour
     [SerializeField] SFXCTRL sfx;
     [SerializeField] TextMeshProUGUI score_ui, highscore_ui;
     [SerializeField] GameObject player, footstepHolder;
-    [SerializeField] GameObject tutorial;
+    [SerializeField] GameObject tutorial, tutorial_cursor, tutorial_text;
     [SerializeField] jump_scrollBTN jump_scrl;
 
     [SerializeField] GameObject footstep_posA, footstep_posB, footstep_posC;
@@ -46,8 +46,10 @@ public class Jump_StageCtrl : MonoBehaviour
     {
         //Update Y Speed
         if(pauseGame) {
-            if(player.transform.position.y > -0.25) {
-                tutorial.GetComponent<Image>().DOFade(0f,0.5f)
+            if(player.transform.position.y > -0.25)
+            {
+                tutorial_text.transform.DOScale(Vector3.zero, 0.5f);
+                tutorial_cursor.GetComponent<Image>().DOFade(0f,0.5f)
                 .OnComplete(()=>{tutorial.SetActive(false);});
                 pauseGame =false;
             }
@@ -483,8 +485,10 @@ public class Jump_StageCtrl : MonoBehaviour
         EndScoreCtrl.Instance.HideScore();
         gameObject.transform.DOScale(new Vector3(1f,1f,1f), 1.5f)
         .OnComplete(()=>{
-            tutorial.GetComponent<Image>().DOFade(0.5f,0.5f);
+            tutorial_cursor.GetComponent<Image>().DOFade(0.5f,0.5f);
+            tutorial_text.transform.DOScale(Vector3.one, 0.5f);
             tutorial.SetActive(true);
+            TutorialManager.Instancee.tutorialC2_Check();
         });
         
         SetupGame();

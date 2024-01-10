@@ -13,11 +13,6 @@ public class SFXCTRL : MonoBehaviour
 
     void Start()
     {
-        if(!PlayerPrefs.HasKey("settings_music")) {
-            PlayerPrefs.SetFloat("settings_music", 1f);
-            PlayerPrefs.SetFloat("settings_sfx", 0.5f);
-        }
-
         SetVolume();
     }
 
@@ -53,14 +48,14 @@ public class SFXCTRL : MonoBehaviour
     {
         AudioSource audio = bgms[currentBgm];
         DOTween.Kill(audio);
-        audio.DOFade(PlayerPrefs.GetFloat("settings_music") * volume, duration);
+        audio.DOFade(PlayerPrefs.GetFloat("settings_music", 0.5f) * volume, duration);
     }
 
     private void AudioIn(AudioSource audio, float duration = 3f, float volume = 1f)
     {
         DOTween.Kill(audio);
         audio.volume = 0;
-        audio.DOFade(PlayerPrefs.GetFloat("settings_music") * volume, duration);
+        audio.DOFade(PlayerPrefs.GetFloat("settings_music", 0.5f) * volume, duration);
         audio.Play();
     }
 
@@ -76,12 +71,12 @@ public class SFXCTRL : MonoBehaviour
     }
 
     public void PlaySfx(int idx) {
-        sfxs_2[idx].volume = PlayerPrefs.GetFloat("settings_sfx");
+        sfxs_2[idx].volume = PlayerPrefs.GetFloat("settings_sfx", 1f);
         sfxs_2[idx].Play();
     }
 
     public void SetVolume() {
         if(currentBgm != -1)
-            bgms[currentBgm].volume = PlayerPrefs.GetFloat("settings_music");
+            bgms[currentBgm].volume = PlayerPrefs.GetFloat("settings_music", 0.5f);
     }
 }

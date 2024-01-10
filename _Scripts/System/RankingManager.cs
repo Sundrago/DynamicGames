@@ -50,7 +50,7 @@ public class RankingManager : SerializedMonoBehaviour
             else
             {
                 int displayed = PlayerPrefs.GetInt("previousTier_" + gameType);
-                SpriteRenderer badgeSpriteRenderer = badge.GetComponent<SpriteRenderer>();
+                Image badgeSpriteRenderer = badge.GetComponent<Image>();
                 badgeSpriteRenderer.sprite = rankSprites[tier];
                 if (!badge.activeSelf)
                 {
@@ -72,13 +72,17 @@ public class RankingManager : SerializedMonoBehaviour
 
     public Tiers GetTierByGameType(GameType gameType)
     {
+        if (!PlayerPrefs.HasKey("rank_" + gameType))
+        {
+            PlayerPrefs.SetInt("rank_" + gameType, -1);
+        }
         int rank = PlayerPrefs.GetInt("rank_" + gameType);
         int totalPlayerCount = GetTotalPlayerCountByGameType(gameType);
         print("rank :" + rank);
         print("totalCount :" + totalPlayerCount);
         
         Tiers tier;
-        if (totalPlayerCount == 0 | rank == -1)
+        if (totalPlayerCount == 0 || rank == -1)
             tier = Tiers.undefined;
         else tier = GetTiersFromRank(GetPercent(rank, totalPlayerCount));
 

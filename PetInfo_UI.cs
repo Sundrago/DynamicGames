@@ -9,6 +9,8 @@ using TMPro;
 
 public class PetInfo_UI : MonoBehaviour
 {
+    public static PetInfo_UI Instance;
+    
     [SerializeField]
     private Image previewImage;
 
@@ -30,6 +32,7 @@ public class PetInfo_UI : MonoBehaviour
     private float yPosOffset = 0;
     
     private SpriteRenderer spriteRenderer;
+    private Transform petObj;
     private PetType type;
 
     [SerializeField]
@@ -42,6 +45,12 @@ public class PetInfo_UI : MonoBehaviour
     //     sliderSizeDeltaX = expSlider_ui.gameObject.GetComponent<RectTransform>().sizeDelta.x;
     // }
 
+    private void Awake()
+    {
+        Instance = this;
+        gameObject.SetActive(false);
+    }
+
     private void Update()
     {
         if (Time.frameCount % 5 == 0)
@@ -52,16 +61,30 @@ public class PetInfo_UI : MonoBehaviour
             if(previewImage.sprite != spriteRenderer.sprite)
                 previewImage.sprite = spriteRenderer.sprite;
             previewImage.gameObject.transform.localScale = spriteRenderer.gameObject.transform.localScale * scaleOffset;
+            if (petObj.localScale.y * spriteRenderer.transform.localScale.x < 0)
+                previewImage.gameObject.transform.localScale = new Vector3(
+                    previewImage.gameObject.transform.localScale.x * -1, previewImage.gameObject.transform.localScale.y,
+                    1);
         }
     }
 
-    [Button]
+    
     public void SetTarget(PetType _type)
     {
         type = _type;
 
+        //link with UIMover
+        if (gameObject.GetComponent<PetInfoUIMover>() != null)
+        {
+            gameObject.GetComponent<PetInfoUIMover>().targetPetPos =
+                PetManager.Instance.GetPetDataByType(_type).obj.GetComponent<Pet>().centerPoint;
+            
+            // gameObject.GetComponent<PetInfoUIMover>().petSelectionIcon.gameObject.SetActive(petObj.gameObject.activeSelf);
+        }
+        
         //preview Image
-        spriteRenderer = PetManager.Instance.GetPetDataByType(_type).obj.GetComponent<Pet>().spriteRenderer;
+        petObj = PetManager.Instance.GetPetDataByType(_type).obj.transform;
+        spriteRenderer = petObj.GetComponent<Pet>().spriteRenderer;
         previewImage.sprite = spriteRenderer.sprite;
         previewImage.gameObject.transform.localScale = spriteRenderer.gameObject.transform.localScale * scaleOffset;
         previewImage.gameObject.transform.localPosition = new Vector3(0, spriteRenderer.gameObject.transform.localPosition.y * yPosOffsetScale + yPosOffset, 0);
@@ -110,10 +133,14 @@ public class PetInfo_UI : MonoBehaviour
         }
     }
 
+    [Button]
     public void ShowPanel(PetType _type)
     {
         SetTarget(_type);
-        if(gameObject.activeSelf) return;
+        if (gameObject.activeSelf)
+        {
+            return;
+        }
         panel.localPosition = new Vector3(0, -1500, 0);
         panel.DOLocalMoveY(0, 0.5f).SetEase(Ease.OutExpo);
         gameObject.SetActive(true);
@@ -125,8 +152,12 @@ public class PetInfo_UI : MonoBehaviour
         if (DOTween.IsTweening(panel) || gameObject.activeSelf == false)
             return;
         
-        panel.DOLocalMoveY(-1500, longTransition? 1f : 0.5f).SetEase(Ease.OutExpo)
-            .OnComplete(()=>{gameObject.SetActive(false);});
+        panel.DOLocalMoveY(-2500, longTransition? 1f : 0.5f).SetEase(Ease.OutExpo)
+            .OnComplete(() =>
+            {
+                gameObject.SetActive(false);
+                MainCanvas.Instance.Offall();
+            });
     }
 
     public void Hidden()

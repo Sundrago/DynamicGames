@@ -7,7 +7,7 @@ using UnityEngine.SocialPlatforms.GameCenter;
 using UnityEngine.Networking;
 using MyUtility;
 using System.Threading.Tasks;
-
+using Sirenix.OdinInspector;
 using TMPro;
 using Random = System.Random;
 //public enum leaderboard_ids {score_land, score_jump, score_build, score_shoot};
@@ -43,6 +43,7 @@ public class LeaderboardManger : MonoBehaviour
         return null;
     }
 
+    [Button]
     public void ReportScore(int score, GameType gameType)
     {
         string id = "score_" + gameType;
@@ -50,7 +51,7 @@ public class LeaderboardManger : MonoBehaviour
         Social.ReportScore(score, id, success => {
             if (!success)
             {
-                PlayerPrefs.SetInt("rank_" + gameType, -1);
+                // PlayerPrefs.SetInt("rank_" + gameType, -1);
                 Debug.Log("Reporting score " + score + " to leaderboard " + id.ToString() + ": failed");
                 return;
             }
@@ -59,17 +60,17 @@ public class LeaderboardManger : MonoBehaviour
             leaderboard.LoadScores(success => {
                 if (!success)
                 {
-                    //debugString += "\nLoading score in leaderboard " + id.ToString() + ": failed";
-                    //PlayerPrefs.SetInt("rank_" + gameType.ToString(), -1);
+                    Debug.Log("Loading score " + score + " to leaderboard " + id.ToString() + ": failed");
+                    return;
                 }
                 int rank = leaderboard.localUserScore.rank;
+                rangking_ui.gameObject.SetActive(true);
+                StartCoroutine(rangking_ui.ShowRankingUI(gameType, true));
+                
                 if(rank < PlayerPrefs.GetInt("rank_" + gameType))
                 {
                     PlayerPrefs.SetInt("rank_" + gameType, rank);
-                    // rangking_ui.gameObject.SetActive(true);
-                    // StartCoroutine(rangking_ui.ShowRankingUI(rank, gameType));
                 }
-                
             });
         });
     }
@@ -153,6 +154,10 @@ public class LeaderboardManger : MonoBehaviour
                         int rank = leaderboard.localUserScore.rank;
                         if(debug_randomRank) rank = UnityEngine.Random.Range(100,0);
                         PlayerPrefs.SetInt("rank_" + gameType.ToString(), rank);
+                        
+                        int highScorePref = PlayerPrefs.GetInt("highscore_" + gameType);
+                        int highScoreGC = (int)leaderboard.localUserScore.value;
+                        if(highScorePref < highScoreGC) PlayerPrefs.SetInt("highscore_" + gameType, highScoreGC);
 
                         if (leaderboards.Count == Enum.GetValues(typeof(GameType)).Length)
                             gameCenterStatus = LoadStatus.success;

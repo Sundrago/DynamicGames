@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 
 namespace MyUtility
 {
@@ -30,6 +31,21 @@ namespace MyUtility
 
             if (success) return dateTime;
             return DateTime.Now;
+        }
+    }
+    
+    static class Localize {
+        public static string GetLocalizedString(string input)
+        {
+            if (input.Contains('[') && input.Contains(']'))
+            {
+                string[] sliced = input.Split('[', ']');
+                string key = sliced[input.IndexOf('[') + 1];
+                return LocalizationSettings.StringDatabase.GetLocalizedString("UI", key);
+            }
+            
+            Debug.Log("LocaleCodeNotFound for string : " + input);
+            return input;
         }
     }
 }

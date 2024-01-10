@@ -15,6 +15,10 @@ public class Pet : SerializedMonoBehaviour
     private float defaultInterval = 0.2f;
     [SerializeField]
     public SpriteRenderer spriteRenderer;
+
+    [SerializeField] private PetInfo_UI petinfo;
+    [SerializeField] public Transform centerPoint;
+    
     
     [TitleGroup("CallBacks", alignment: TitleAlignments.Centered)]
     [SerializeField, BoxGroup("CallBacks/IDLE")]
@@ -312,5 +316,12 @@ public class Pet : SerializedMonoBehaviour
             motionID = ID;
             weight = 1f;
         }
+    }
+    
+    //Click Event
+    void OnMouseDown()
+    {
+        print(type);
+        petinfo.ShowPanel(type);
     }
 }
