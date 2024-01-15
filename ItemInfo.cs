@@ -64,10 +64,29 @@ public class ItemInfo : MonoBehaviour
     {
         DOTween.Kill(descr);
         DOTween.Kill(descr_ui);
+        descr.gameObject.SetActive(true);
+        descr_ui.gameObject.SetActive(true);
         descr.DOFade(0.3f, 0.5f);
         descr_ui.DOFade(0.7f, 0.5f);
-        
         descr.DOFade(0f, 1f).SetDelay(3f);
         descr_ui.DOFade(0f, 1f).SetDelay(3f);;
+    }
+
+    private void Start()
+    {
+        Hide();
+    }
+    
+    public void Hide()
+    {
+        DOTween.Kill(descr);
+        DOTween.Kill(descr_ui);
+        DOTween.Kill(itemImage);
+        DOTween.Kill(itemImageBright);
+        itemImage.DOFade(0, 0.5f);
+        itemImageBright.DOFade(0, 0.5f);
+        descr.DOFade(0, 0.5f);
+        descr_ui.DOFade(0, 0.5f);
+        itemCount_ui.text = "";
     }
 }

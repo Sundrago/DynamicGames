@@ -23,6 +23,7 @@ public class Shoot_item : MonoBehaviour
     void Start()
     {
         screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
+        KillAll();
     }
 
     public void SpawnItem()
@@ -149,12 +150,15 @@ public class Shoot_item : MonoBehaviour
         {
             case itemType.weapon:
                 bullet_Manager.UpgradeBullet();
+                gameManager.itemInfo_atk.Init(-1, bullet_Manager.currentBullet);
                 break;
             case itemType.shield:
                 gameManager.GetShield();
+                gameManager.itemInfo_shield.Init(-1, 0);
                 break;
             case itemType.bounce:
                 bullet_Manager.bounceCount += 1;
+                gameManager.itemInfo_bounce.Init(-1, bullet_Manager.bounceCount);
                 if (bullet_Manager.bounceCount > 3) bullet_Manager.bounceCount = 3;
                 break;
             case itemType.blackHole:
@@ -166,11 +170,17 @@ public class Shoot_item : MonoBehaviour
                 audioCtrl.PlaySFXbyTag(SFX_tag.spin);
                 fx.transform.SetParent(player.transform, true);
                 gameManager.SetSpinMode(7f);
+                gameManager.itemInfo_spin.Init(7);
                 break;
         }
     }
     public void KillAll()
     {
+        gameManager.itemInfo_atk.Hide();
+        gameManager.itemInfo_shield.Hide();
+        gameManager.itemInfo_bounce.Hide();
+        gameManager.itemInfo_spin.Hide();
+        
         for (int i = items.Count - 1; i >= 0; i--)
         {
             Destroy(items[i].transform.gameObject);
@@ -179,5 +189,7 @@ public class Shoot_item : MonoBehaviour
 
         totalItemCount = 0;
     }
+
+
 }
     public enum itemType { weapon, bounce, shield, blackHole, spin, }

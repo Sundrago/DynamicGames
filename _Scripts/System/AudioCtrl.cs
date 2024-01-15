@@ -46,7 +46,7 @@ public class AudioCtrl : SerializedMonoBehaviour
     
     public void PlaySFXbyTag(SFX_tag tag)
     {
-        if(lastSfxtag == tag && Time.time - lastsfxPlayTime < 0.25f) return;
+        if(lastSfxtag == tag && Time.time - lastsfxPlayTime < 0.15f) return;
         lastsfxPlayTime = Time.time;
         lastSfxtag = tag;
         
@@ -86,6 +86,16 @@ public class AudioCtrl : SerializedMonoBehaviour
                 return;
             }
         }
+    }
+
+    public void PauseBGM()
+    {
+        bgm_source.Pause();
+    }
+
+    public void UnPauseBgm()
+    {
+        bgm_source.Play();
     }
 
 #if UNITY_EDITOR

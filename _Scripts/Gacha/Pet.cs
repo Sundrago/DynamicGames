@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using Unity.VisualScripting;
+using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(SurfaceMovement2D))]
@@ -52,7 +54,7 @@ public class Pet : SerializedMonoBehaviour
 
     [SerializeField, TitleGroup("Sprites", alignment: TitleAlignments.Centered)]
     Dictionary<string, List<Sprite>> sprites = new Dictionary<string, List<Sprite>>();
-    private SurfaceMovement2D surfaceMovement2D;
+    public SurfaceMovement2D surfaceMovement2D;
     
     private enum PetStatus { Idle, Move, JumpStart, JumpEnd, Hit};
     private PetStatus status;
@@ -68,6 +70,7 @@ public class Pet : SerializedMonoBehaviour
     
     private void UpdateStatus(PetStatus _status)
     {
+        print(type + " : " + _status);
         if(status == _status) return;
         status = _status;
 
@@ -137,7 +140,7 @@ public class Pet : SerializedMonoBehaviour
         if (petMotions[motionID].isMovement) surfaceMovement2D.ContinueMovement(petMotions[motionID].movementSpeed * Random.Range(0.8f, 1.2f));
         else surfaceMovement2D.PauseMovement();
         
-        // print(type + " : " + motionID);
+        print(type + " : " + motionID);
     }
 
     private void Awake()
@@ -321,7 +324,29 @@ public class Pet : SerializedMonoBehaviour
     //Click Event
     void OnMouseDown()
     {
-        print(type);
-        petinfo.ShowPanel(type);
+        surfaceMovement2D.enabled = false;
+        // print(type);
+        // petinfo.ShowPanel(type);
+    }
+
+    private Vector3 initPos;
+
+    private void OnMouseDrag()
+    {
+        // print("OnMouseDrag");
+        gameObject.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    }
+
+    private void OnMouseUp()
+    {
+        surfaceMovement2D.enabled = true;
+        BlockStatusManager.Instance.PetDrop(Camera.main.ScreenToWorldPoint(Input.mousePosition), this);
+    }
+
+    public void SettoIdle()
+    {
+        statusTimer = Time.time + 5f;
+        motionTimer = Time.time + 5f;
+        UpdateStatus(PetStatus.Idle);
     }
 }

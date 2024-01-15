@@ -17,7 +17,7 @@ public class BlockStatusManager : MonoBehaviour
 
     public enum BlockType
     {
-        shoot, jump, land, build, leaderboard, gacha, friends, tutorial, locale, review
+        shoot, jump, land, build, leaderboard, gacha, friends, tutorial, locale, review, tv
     }
 
     [SerializeField, TableList] private List<BlockStatusData> BlockStatusDatas = new List<BlockStatusData>();
@@ -296,5 +296,40 @@ public class BlockStatusManager : MonoBehaviour
         public SquareBlockCtrl obj;
         [ReadOnly]
         public BlockStatus status;
+    }
+
+    public void PetDrop(Vector3 pos, Pet pet)
+    {
+        float distMin = float.MaxValue;
+        BlockStatusData minData = null;
+
+        foreach (BlockStatusData data in BlockStatusDatas)
+        {
+            if(!data.obj.gameObject.activeSelf) continue;
+            
+            float dist = Vector2.Distance(data.obj.gameObject.transform.position, pos);
+            if (dist < distMin)
+            {
+                distMin = dist;
+                minData = data;
+            }
+        }
+
+        if (distMin < 0.3f)
+        {
+            GameObject obj = minData.obj.gameObject;
+            MainCanvas.Instance.Offall(obj);
+
+            DragSprite dragSprite = obj.GetComponent<DragSprite>();
+            
+            dragSprite.BtnClicked();
+            pet.surfaceMovement2D.ForceLandOnSquare(dragSprite.miniisland);
+            pet.SettoIdle();
+        }
+        else
+        {
+            pet.surfaceMovement2D.FindNearCorner();
+        }
+        print("PetDrop : " + minData.type + " : " + distMin);
     }
 }

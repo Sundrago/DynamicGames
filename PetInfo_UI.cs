@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Sirenix.OdinInspector;
 using DG.Tweening;
 using TMPro;
+using MyUtility;
 
 public class PetInfo_UI : MonoBehaviour
 {
@@ -112,7 +113,7 @@ public class PetInfo_UI : MonoBehaviour
         name_ui.text = _type.ToString();
         level_ui.text = "Level : " + level;
         age_ui.text = "Age : " + PetManager.Instance.GetPetAge(_type);
-        skills_ui.text = "Skills : not found yet";
+        skills_ui.text = MyUtility.Localize.GetLocalizedString("[descr_" + _type + "]");
 
         float expNormal = exp / (level * 5f);
         expSlider_ui.padding = new Vector4(0, 0, sliderSizeDeltaX - sliderSizeDeltaX * expNormal, 0);
@@ -145,6 +146,7 @@ public class PetInfo_UI : MonoBehaviour
         panel.DOLocalMoveY(0, 0.5f).SetEase(Ease.OutExpo);
         gameObject.SetActive(true);
         updateText.gameObject.SetActive(false);
+        skills_ui.text = MyUtility.Localize.GetLocalizedString("[descr_" + _type + "]");
     }
 
     public void HidePanel(bool longTransition = false)

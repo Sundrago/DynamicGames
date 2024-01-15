@@ -189,7 +189,7 @@ public class UnlockBtnManager : MonoBehaviour
 
     public void Hide(bool forceHide = false)
     {
-        print("hide");
+        // print("hide");
         if (!forceHide)
         {
             if(isHidden) return;

@@ -1,8 +1,11 @@
 using UnityEngine;
 using TMPro;
 using DG.Tweening;
+using Firebase.Analytics;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
+using Firebase;
+using Firebase.Analytics;
 
 public enum GameType {land, jump, build, shoot};
 
@@ -60,6 +63,8 @@ public class EndScoreCtrl : MonoBehaviour
 
     public void ShowScore(int score, GameType gameType)
     {
+        FirebaseAnalytics.LogEvent("Score", gameType.ToString()+"_score", score);
+        
         MoneyManager.Instance.ShowPanel();
         PlayerPrefs.SetInt("totalScoreCount", PlayerPrefs.GetInt("totalScoreCount") + 1);
         PlayerPrefs.Save();

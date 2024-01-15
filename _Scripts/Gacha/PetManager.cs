@@ -5,6 +5,7 @@ using DG.Tweening;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using MyUtility;
+using Firebase.Analytics;
 
 public class PetManager : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class PetManager : MonoBehaviour
 
     [SerializeField]
     private AskForUserReview askForUserReview;
+
+    private int petCount;
     
     private void Awake()
     {
@@ -26,15 +29,30 @@ public class PetManager : MonoBehaviour
 
     private void Start()
     {
+        petCount = 0;
         foreach (PetType _type in Enum.GetValues((typeof(PetType))))
         {
             if (GetPetCount(_type) > 0 && !PlayerPrefs.HasKey("PetBirthDate_" + _type))
             {
                 SetPetBirthDateAndLevel(_type);
             }
-            
+
+            if (GetPetCount(_type) > 0) petCount += 1;
             print(_type + " : " + GetPetAge(_type));
         }
+        FirebaseAnalytics.LogEvent("Pets", "petCount", petCount);
+    }
+
+    public int GetPetCount()
+    {
+        petCount = 0;
+        foreach (PetType _type in Enum.GetValues((typeof(PetType))))
+        {
+            if (GetPetCount(_type) > 0) petCount += 1;
+            print(_type + " : " + GetPetAge(_type));
+        }
+
+        return petCount;
     }
 
     public Petdata GetPetDataByType(PetType type)
@@ -201,4 +219,4 @@ public class Petdata
         type = _type;
     }
 }
-public enum PetType {Cocoa, Brownie, Fluffy, Foxy, MrPinchy, Krabs, Dash } //Caramel
+public enum PetType { Cocoa, Brownie, Fluffy, Foxy, MrPinchy, Krabs, Dash, Batcat, Butter } //Caramel

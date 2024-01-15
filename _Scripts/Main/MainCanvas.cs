@@ -82,13 +82,16 @@ public class MainCanvas : MonoBehaviour
             case BlockStatusManager.BlockType.tutorial :
                 TutorialManager.Instancee.tutorial_01();
                 break;
+            case BlockStatusManager.BlockType.tv :
+                Ads.Instance.WatchAdsBtnClicked();
+                break;
         }
 
         if (blockType != BlockStatusManager.BlockType.tutorial) TutorialManager.Instancee.HideCursor();
 
         currentGameBtn.GetComponent<Rigidbody2D>().isKinematic = true;
         if(currentGameBtn.GetComponent<DragSprite>().miniisland != null) {
-            print("mini anim");
+            // print("mini anim");
             miniisland = currentGameBtn.GetComponent<DragSprite>().miniisland;
             miniisland.SetActive(true);
             miniisland.transform.localScale = new Vector3(0.2f, 0.2f, 1);

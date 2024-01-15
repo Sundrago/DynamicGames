@@ -79,9 +79,14 @@ public class SurfaceMovement2D : MonoBehaviour
     private bool onIsland = false;
     private bool pause = false;
 
-    private void Start()
+    private void Awake()
     {
         pet = GetComponent<Pet>();
+    }
+
+    private void Start()
+    {
+       
     }
     public void StartMovement()
     {
@@ -110,7 +115,7 @@ public class SurfaceMovement2D : MonoBehaviour
         if (currentCorner.obj == null)
         {
             //print("obj destroyed");
-            LoadSquare();
+            // LoadSquare();
             FindNearCorner();
             return;
         }
@@ -165,7 +170,7 @@ public class SurfaceMovement2D : MonoBehaviour
         if(currentCorner.obj == null)
         {
             //print("obj destroyed");
-            LoadSquare();
+            // LoadSquare();
             FindNearCorner();
             return;
         }
@@ -201,7 +206,7 @@ public class SurfaceMovement2D : MonoBehaviour
             if (CheckIfHeadHit())
             {
                 onIsland = false;
-                //print("headHit");
+                print("headHit");
                 FindNearCorner();
                 return;
             }
@@ -243,9 +248,9 @@ public class SurfaceMovement2D : MonoBehaviour
         currentCorner.pointB = currentCorner.cornerPoints[currentCorner.cornerIdx == 3 ? 0 : currentCorner.cornerIdx + 1];
     }
 
-    void FindNearCorner()
+    public void FindNearCorner()
     {
-        //print("findnearCornter");
+        print("findnearCornter");
         LoadSquare();
         if (onIsland)
         {
@@ -536,7 +541,7 @@ public class SurfaceMovement2D : MonoBehaviour
     public void LoadSquare()
     {
         squares = GameObject.FindGameObjectsWithTag("square");
-        print("SQRS.COUNT : " + squares.Length);
+        print("LoadSquare SQRS.COUNT : " + squares.Length);
         if(squares.Length == 0)
         {
             onIsland = true;
@@ -557,5 +562,31 @@ public class SurfaceMovement2D : MonoBehaviour
         pause = false;
         float dist = Vector2.Distance(currentCorner.pointA, currentCorner.pointB);
         moveSpeed = moveVelocity / dist * Random.Range(0.8f,1.2f);   
+    }
+
+    // private void OnEnable()
+    // {
+    //     FindNearCorner();
+    // }
+
+    public void ForceLandOnSquare(GameObject targetSquare)
+    {
+        // squares = new GameObject[1];
+        // squares[0] = targetSquare;
+        // Vector3 targetPos = targetSquare.gameObject.transform.position;
+        //
+        // SquareElements = new List<SquareElement>();
+        // SquareElement elem = new SquareElement();
+        // Vector2 closest = targetSquare.GetComponent<BoxCollider2D>().ClosestPoint(targetPos);
+        // elem.dist = Vector2.Distance(targetPos, closest);
+        // elem.obj = targetSquare;
+        // SquareElements.Add(elem);
+
+        currentCorner.obj = targetSquare;
+        currentCorner.cornerIdx = 3;
+        currentCorner.normal = Random.Range(0.4f, 0.6f);
+        onTransition = false;
+
+        headHitCheckTime = Time.time + 5f;
     }
 }

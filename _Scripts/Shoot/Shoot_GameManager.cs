@@ -26,7 +26,10 @@ public class Shoot_GameManager : MonoBehaviour
     [SerializeField] SFXCTRL sfx;
     [SerializeField] private GameObject adj_transition_notch;
     [SerializeField] private shoot_guide_hand hand;
+    [SerializeField] public ItemInfo itemInfo_atk, itemInfo_shield, itemInfo_bounce, itemInfo_spin;
 
+    [SerializeField]
+    private GameObject tutorial;
     public static Shoot_GameManager Instacne;
     
     private AutoAttackInfo createEnemyInCircle = new AutoAttackInfo();
@@ -69,6 +72,7 @@ public class Shoot_GameManager : MonoBehaviour
         createItem.Init(3700,1,1, 0.5f);
         
         hand.gameObject.SetActive(false);
+        tutorial.SetActive(false);
     }
 
     // Update is called once per frame
@@ -1180,8 +1184,16 @@ public class Shoot_GameManager : MonoBehaviour
                 joystick.vecNormal = Vector3.zero;
                 stageFinished = 0;
                 currentStagePlaying = -1;
-                if(EndScoreCtrl.Instance.GetHighScore(GameType.shoot) < 200) hand.Show();
-                else hand.gameObject.SetActive(false);
+                if (EndScoreCtrl.Instance.GetHighScore(GameType.shoot) < 200)
+                {
+                    hand.Show();
+                    tutorial.SetActive(true);
+                }
+                else
+                {
+                    hand.gameObject.SetActive(false);
+                    tutorial.SetActive(false);
+                }
                 break;
             case ShootGameState.playing:
                 CreateMetheors();
@@ -1193,7 +1205,11 @@ public class Shoot_GameManager : MonoBehaviour
                 bullet_Manager.StartSpawnBulletTimer();
                 stageFinished = 0;
                 currentStagePlaying = -1;
-                if(hand.gameObject.activeSelf) hand.Hide();
+                if (hand.gameObject.activeSelf)
+                {
+                    hand.Hide();
+                    tutorial.SetActive(false);
+                }
                 break;
             case ShootGameState.dead:
                 joystick.Reset();
@@ -1213,6 +1229,7 @@ public class Shoot_GameManager : MonoBehaviour
     private void DestroyShield()
     {
         if (shield == null) return;
+        itemInfo_shield.Hide();
         fXManager.CreateFX(FXType.shield_pop, shield.gameObject.transform);
         fXManager.CreateFX(FXType.Bomb, shield.gameObject.transform);
         fXManager.KillFX(shield);
@@ -1236,7 +1253,11 @@ public class Shoot_GameManager : MonoBehaviour
         enemy_Manager.GameOver();
         face.SetTrigger("idle");
         islandSizeCtrl.CloseIsland();
-        EndScoreCtrl.Instance.ShowScore(score.GetScore(), GameType.shoot) ;
+        EndScoreCtrl.Instance.ShowScore(score.GetScore(), GameType.shoot);
+        itemInfo_atk.Hide();
+        itemInfo_shield.Hide();
+        itemInfo_bounce.Hide();
+        itemInfo_spin.Hide();
         joystick.gameObject.SetActive(false);
     }
 
@@ -1264,6 +1285,7 @@ public class Shoot_GameManager : MonoBehaviour
         createEnemyInSpira.Init(1400,0,0);
         createItem.Init(3700,1,1, 0.5f);
         hand.gameObject.SetActive(false);
+        tutorial.gameObject.SetActive(false);
     }
 
     async Task Greetings()

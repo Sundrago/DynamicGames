@@ -267,6 +267,7 @@ public class TutorialManager : MonoBehaviour
 
     public void CoinBtnClicked()
     {
+        if(!cursor.activeSelf) return;
         tutorialStatus = "pet";
         HideCursor();
     }
@@ -295,7 +296,15 @@ public class TutorialManager : MonoBehaviour
     {
         main.ReturnToOriginalPos();
         BlockStatusManager.Instance.RevealBlock(BlockStatusManager.BlockType.friends);
-        PopupTextManager.Instance.ShowOKPopup("[tutorial_F03]튜토리얼은 여기까지다옹!", tutorial_F04, "[DEFAULT_YES]네!");
+        BlockStatusManager.Instance.RevealBlock(BlockStatusManager.BlockType.tv);
+        
+        PopupTextManager.Instance.ShowOKPopup("[tutorial_F03]튜토리얼은 여기까지다옹!", tutorial_F03A, "[DEFAULT_YES]네!");
+        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
+    }
+    
+    public void tutorial_F03A()
+    {
+        PopupTextManager.Instance.ShowOKPopup("[tutorial_F03A]티켓이 부족하면 광고를 보고 받을 수도 있다옹", tutorial_F04, "[DEFAULT_YES]네!");
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
     }
     
@@ -307,12 +316,12 @@ public class TutorialManager : MonoBehaviour
 
     public void tutorial_F05()
     {
-        MoneyManager.Instance.AddTicket(MoneyManager.RewardType.Ticket, 20);
+        // MoneyManager.Instance.AddTicket(MoneyManager.RewardType.Ticket, 20);
     }
     
     public void TutorialF_Check()
     {
-        if(tutorialStatus!="pet") return;
+        if(tutorialStatus !="pet") return;
         DOVirtual.DelayedCall(2f, () =>
         {
             tutorial_F01();
