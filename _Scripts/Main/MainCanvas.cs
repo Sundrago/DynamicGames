@@ -16,13 +16,19 @@ public class MainCanvas : MonoBehaviour
     [SerializeField] private AskForUserReview askForUserReview;
     [SerializeField] List<DragSprite> dragSprites;
     [SerializeField] private GameObject ranking_ui;
+    [SerializeField] private TitleDrag title;
+
+    [SerializeField] private Jump_GameManager jumpGameManager;
+    [SerializeField] private Shoot_GameManager shootGameManager;
     
     private GameObject currentGameBtn = null;
     public static MainCanvas Instance;
 
+
     private void Awake()
     {
         Instance = this;
+        
     }
 
     void Start()
@@ -44,24 +50,30 @@ public class MainCanvas : MonoBehaviour
         
         switch(blockType) {
             case BlockStatusManager.BlockType.build : 
+                PetInGameManager.Instance.EnterGame(GameType.build);
                 transition.canvas_B = build;
                 sfx.PlayBGM(1);
                 sfx.PlaySfx(2);
                 MoneyManager.Instance.HidePanel();
                 break;
             case BlockStatusManager.BlockType.land : 
+                PetInGameManager.Instance.EnterGame(GameType.land);
                 transition.canvas_B = land;
                 sfx.PlayBGM(2);
                 sfx.PlaySfx(2);
                 MoneyManager.Instance.HidePanel();
                 break;
             case BlockStatusManager.BlockType.jump : 
+                PetInGameManager.Instance.EnterGame(GameType.jump);
+                jumpGameManager.ClearGame();
                 transition.canvas_B = jump;
                 sfx.PlayBGM(0);
                 sfx.PlaySfx(2);
                 MoneyManager.Instance.HidePanel();
                 break;
             case BlockStatusManager.BlockType.shoot : 
+                PetInGameManager.Instance.EnterGame(GameType.shoot);
+                shootGameManager.ClearGame();
                 transition.canvas_B = shoot;
                 sfx.PlayBGM(5);
                 sfx.PlaySfx(2);
@@ -91,7 +103,6 @@ public class MainCanvas : MonoBehaviour
 
         currentGameBtn.GetComponent<Rigidbody2D>().isKinematic = true;
         if(currentGameBtn.GetComponent<DragSprite>().miniisland != null) {
-            // print("mini anim");
             miniisland = currentGameBtn.GetComponent<DragSprite>().miniisland;
             miniisland.SetActive(true);
             miniisland.transform.localScale = new Vector3(0.2f, 0.2f, 1);
@@ -109,6 +120,7 @@ public class MainCanvas : MonoBehaviour
 
     public void WentBackHome() {
         MoneyManager.Instance.ShowPanel();
+        PetInGameManager.Instance.ExitGame();
         sfx.PlayBGM(3);
         if(currentGameBtn == null) return;
         currentGameBtn.GetComponent<Rigidbody2D>().isKinematic = true;
@@ -147,7 +159,9 @@ public class MainCanvas : MonoBehaviour
         }
     }
     
-    public void ReturnToOriginalPos() {
+    public void ReturnToOriginalPos()
+    {
+        title.ReturnToOriginalPos();
         foreach(DragSprite dragSprite in dragSprites) {
             if(dragSprite == null) continue;
             if(!dragSprite.gameObject.activeSelf) continue;

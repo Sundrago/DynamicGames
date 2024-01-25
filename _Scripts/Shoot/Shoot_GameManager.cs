@@ -8,28 +8,31 @@ using DG.Tweening;
 using Sirenix.OdinInspector;
 using TMPro;
 
-public class Shoot_GameManager : MonoBehaviour
+public class Shoot_GameManager : SerializedMonoBehaviour
 {
-    [SerializeField] Animator door_left, door_right;
-    [SerializeField] Shoot_Enemy_Manager enemy_Manager;
-    [SerializeField] Shoot_Bullet_Manager bullet_Manager;
+    [SerializeField] private Animator door_left, door_right;
+    [SerializeField] private Shoot_Enemy_Manager enemy_Manager;
+    [SerializeField] private Shoot_Bullet_Manager bullet_Manager;
     [SerializeField] public Transform player, island;
-    [SerializeField] FXManager fXManager;
-    [SerializeField] Shoot_joystick joystick;
-    [SerializeField] Shoot_item shoot_Item;
+    [SerializeField] private FXManager fXManager;
+    [SerializeField] private Shoot_joystick joystick;
+    [SerializeField] private Shoot_item shoot_Item;
 
-    [SerializeField] Animator face;
-    [SerializeField] IslandSizeCtrl islandSizeCtrl;
+    [SerializeField] private Animator face;
+    [SerializeField] private IslandSizeCtrl islandSizeCtrl;
     //[SerializeField] EndScoreCtrl endScore;
-    [SerializeField] ShootScoreManager score;
-    [SerializeField] Transform startPosition, loadPosition;
-    [SerializeField] SFXCTRL sfx;
+    [SerializeField] private Shoot_ScoreManager score;
+    [SerializeField] private Transform startPosition, loadPosition;
+    [SerializeField] private SFXCTRL sfx;
     [SerializeField] private GameObject adj_transition_notch;
     [SerializeField] private shoot_guide_hand hand;
     [SerializeField] public ItemInfo itemInfo_atk, itemInfo_shield, itemInfo_bounce, itemInfo_spin;
-
-    [SerializeField]
-    private GameObject tutorial;
+    [SerializeField] private GameObject tutorial;
+    
+    [SerializeField] private SpriteAnimator playerRenderer;
+    [SerializeField] private GameObject playerPlaceHolder;
+    [SerializeField] private PetManager petManager;
+    
     public static Shoot_GameManager Instacne;
     
     private AutoAttackInfo createEnemyInCircle = new AutoAttackInfo();
@@ -1329,6 +1332,36 @@ public class Shoot_GameManager : MonoBehaviour
             probability = _probability;
         }
     }
+    
+    [Button]
+    public void SetPlayer(bool playAsPet, Pet pet = null)
+    {
+        playerPlaceHolder.SetActive(!playAsPet);
+        playerRenderer.gameObject.SetActive(playAsPet);
+        
+        if (playAsPet)
+        {
+            playerRenderer.sprites = pet.GetShipAnim();
+            playerRenderer.GetComponent<SpriteRenderer>().sprite = playerRenderer.sprites[0];
+
+            playerRenderer.gameObject.transform.localRotation = pet.spriteRenderer.transform.localRotation;
+
+            if (CustomPetPos.ContainsKey(pet.GetType()))
+            {
+                playerRenderer.gameObject.transform.localPosition = CustomPetPos[pet.GetType()];
+            }
+            else
+            {
+                playerRenderer.gameObject.transform.localPosition = pet.spriteRenderer.transform.localPosition;
+            }
+            playerRenderer.gameObject.transform.localScale = pet.spriteRenderer.transform.localScale;
+
+            playerRenderer.interval = 0.9f / playerRenderer.sprites.Length;
+        }
+    }
+
+    [SerializeField]
+    Dictionary<PetType, Vector3> CustomPetPos;
 }
 
 

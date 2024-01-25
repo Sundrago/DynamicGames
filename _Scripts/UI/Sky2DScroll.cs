@@ -61,6 +61,12 @@ public class Sky2DScroll : MonoBehaviour
                 rect.anchoredPosition.x - rect.sizeDelta.x,
                 rect.anchoredPosition.y
             );
+        } else if (scrollSpeed < 0 && rect.anchoredPosition.x < 0)
+        {
+            rect.anchoredPosition = new Vector2(
+                rect.anchoredPosition.x + rect.sizeDelta.x * 2f,
+                rect.anchoredPosition.y
+            );
         }
     }
 }

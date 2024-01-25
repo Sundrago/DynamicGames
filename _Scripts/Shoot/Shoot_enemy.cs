@@ -9,7 +9,7 @@ public enum enemy_stats {prewarm, spawning, ready, despawning, gameOver};
 public class Shoot_enemy : MonoBehaviour
 {
     [SerializeField]
-    private ShootScoreManager score;
+    private Shoot_ScoreManager score;
     public enemy_stats state;
     [SerializeField]
     private Shoot_GameManager shootGameManager;

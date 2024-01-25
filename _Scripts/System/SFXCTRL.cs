@@ -40,6 +40,16 @@ public class SFXCTRL : MonoBehaviour
         currentBgm = idx;
     }
 
+    public void PauseBGM()
+    {
+        AudioOut(bgms[currentBgm], 1f);
+    }
+
+    public void UnPauseBGM()
+    {
+        AudioIn(bgms[currentBgm], 0.5f);
+    }
+
     public int GetCurrentBgm() {
         return currentBgm;
     }

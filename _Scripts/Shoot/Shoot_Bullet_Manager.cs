@@ -36,7 +36,7 @@ public class Shoot_Bullet_Manager : MonoBehaviour
 
     [SerializeField] Boundaries island_Boundaries;
     [SerializeField] GameObject island;
-    [SerializeField] ShootScoreManager score;
+    [SerializeField] Shoot_ScoreManager score;
     [SerializeField] ParticleSystem _FX_islandHit;
     [SerializeField] Shoot_bullet _bullet;
     [SerializeField] public int currentBullet = 0;

@@ -9,16 +9,14 @@ using Firebase.Analytics;
 
 public class PetManager : MonoBehaviour
 {
-    [SerializeField, TableList]
-    public List<Petdata> petdatas;
+    [SerializeField, TableList] public List<Petdata> petdatas;
     public static PetManager Instance;
 
-    [SerializeField]
-    private GameObject newPetSparcle_prefab;
-
-    [SerializeField]
-    private AskForUserReview askForUserReview;
-
+    [SerializeField] private GameObject newPetSparcle_prefab;
+    [SerializeField] public PetDialogue petDialoguePrefab;
+    [SerializeField] public Transform petDialogueHolder;
+    [SerializeField] private AskForUserReview askForUserReview;
+    
     private int petCount;
     
     private void Awake()
@@ -40,7 +38,9 @@ public class PetManager : MonoBehaviour
             if (GetPetCount(_type) > 0) petCount += 1;
             print(_type + " : " + GetPetAge(_type));
         }
-        FirebaseAnalytics.LogEvent("Pets", "petCount", petCount);
+        // FirebaseAnalytics.LogEvent("Pets", "petCount", petCount);
+
+        PetDialogueManager.Instance.PlayWeatherDialogue();
     }
 
     public int GetPetCount()
@@ -141,9 +141,32 @@ public class PetManager : MonoBehaviour
         return false;
     }
 
-    public void GotNewPet(PetType _type)
+    public void GotNewPetFX(PetType _type)
     {
-        SetPetBirthDateAndLevel(_type);
+        GameObject fx = Instantiate(newPetSparcle_prefab, GetPetDataByType(_type).obj.transform, true);
+        fx.transform.localPosition = Vector3.zero;
+        fx.SetActive(true);
+        DOVirtual.DelayedCall(20, () => {
+            Destroy(fx);
+        });
+        
+        List<Pet> pets = new List<Pet>();
+        foreach (var petdata in petdatas)
+        {
+            if (petdata.obj.activeSelf)
+            {
+                pets.Add(petdata.obj.GetComponent<Pet>());
+            }
+        }
+
+        foreach (var pet in pets)
+        {
+            float thres = pets.Count < 3 ? 1 : 3f / pets.Count;
+            if (UnityEngine.Random.Range(0f, 1f) < thres)
+                pet.OnNewFriend();
+        }
+        
+        GetPetDataByType(_type).obj.GetComponent<Pet>().OnIdle();
     }
     
     public void AddPetCountByType(PetType _type)
@@ -167,13 +190,7 @@ public class PetManager : MonoBehaviour
 
         if (count == 1)
         {
-            GotNewPet(_type);
-            GameObject fx = Instantiate(newPetSparcle_prefab, GetPetDataByType(_type).obj.transform, true);
-            fx.transform.localPosition = Vector3.zero;
-            fx.SetActive(true);
-            DOVirtual.DelayedCall(20, () => {
-                Destroy(fx);
-            });
+            SetPetBirthDateAndLevel(_type);
         }
         UpdatePetObjActive();
     }
@@ -219,4 +236,4 @@ public class Petdata
         type = _type;
     }
 }
-public enum PetType { Cocoa, Brownie, Fluffy, Foxy, MrPinchy, Krabs, Dash, Batcat, Butter } //Caramel
+public enum PetType { Cocoa, Brownie, Fluffy, Foxy, MrPinchy, Krabs, Dash, Batcat, Butter,Matata,Gcat, Kune, Lo, Ve, Default } //Caramel

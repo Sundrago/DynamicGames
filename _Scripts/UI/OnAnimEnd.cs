@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class OnAnimEnd : MonoBehaviour
 {
-    [SerializeField] RocketPhysics rocket;
+    [SerializeField] Land_GameManager rocket;
     public string idx;
 
     public void AnimEndEvent()

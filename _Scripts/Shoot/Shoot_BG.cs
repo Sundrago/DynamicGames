@@ -6,8 +6,7 @@ using UnityEngine;
 
 public class Shoot_BG : MonoBehaviour
 {
-    [SerializeField]
-    private Transform player;
+    [SerializeField]  private Transform player;
     [SerializeField] float offsetAmount;
     private Vector3 originalPos;
 

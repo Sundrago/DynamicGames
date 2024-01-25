@@ -24,6 +24,8 @@ public class CapsuleAnimation : MonoBehaviour
     private GameObject isNewFx, isOldFx;
     private List<float> particleRateOverTimes;
 
+    [SerializeField] private NewPetAnim newPetAnim;
+
     [SerializeField]
     private float sizeFactor, posFactor;
     private Transform targetItemPos;
@@ -85,7 +87,6 @@ public class CapsuleAnimation : MonoBehaviour
     public void ReadyAnim()
     {
         isAnimPlaying = true;
-        status = CapsuleStatus.ready;
         UpdateItemImage();
         gameObject.SetActive(true);
         foreach (Image img in capsuleImages)
@@ -104,7 +105,6 @@ public class CapsuleAnimation : MonoBehaviour
         item_white.color = new Color(1,1,1,0.3f);
         item.GetComponent<Mask>().showMaskGraphic = false;
         PauseParticles();
-        isAnimPlaying = false;
 
         gameObject.transform.localEulerAngles = Vector3.zero;
         
@@ -113,7 +113,12 @@ public class CapsuleAnimation : MonoBehaviour
             .From();
         gameObject.transform.DOLocalRotate(new Vector3(0,0,-30f), 1f)
             .From()
-            .OnComplete(() => {
+            .OnComplete(() =>
+            {
+                gameObject.transform.DOScale(1.05f, 0.2f)
+                    .SetEase(Ease.InOutQuad)
+                    .SetLoops(-1, LoopType.Yoyo);
+                status = CapsuleStatus.ready;
                 isAnimPlaying = false;
             });
     }
@@ -134,7 +139,8 @@ public class CapsuleAnimation : MonoBehaviour
             
             case CapsuleStatus.inactive:
                 petDrawer.HidePanel();
-                gachaponManager.CapsuleAnimFinished();
+                gachaponManager.CapsuleAnimFinished(isNew);
+                PetManager.Instance.GotNewPetFX(type);
                 gameObject.SetActive(false);
                 break;
         }
@@ -143,6 +149,9 @@ public class CapsuleAnimation : MonoBehaviour
     [Button]
     private void OpenAnim()
     {
+        DOTween.Kill(gameObject.transform);
+        gameObject.transform.localScale = Vector3.one;
+        
         status = CapsuleStatus.opened;
         isAnimPlaying = true;
         StartParticles();
@@ -151,6 +160,7 @@ public class CapsuleAnimation : MonoBehaviour
         if (isNew) DOVirtual.DelayedCall(0.15f, () => {
             AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.gacha_newOpen);
         });
+        
         
         gameObject.transform.DOShakePosition(2, new Vector3(15, 30, 1), 7, 50);
         gameObject.transform.DOShakeRotation(1.5f, new Vector3(0, 0, 3), 10, 50);
@@ -171,6 +181,7 @@ public class CapsuleAnimation : MonoBehaviour
             .OnComplete(() => {
                 item_white.DOFade(1, 0.2f)
                     .OnComplete(() => {
+                        newPetAnim.Init(type);
                         item.GetComponent<Mask>().showMaskGraphic = true;
                     });
             });

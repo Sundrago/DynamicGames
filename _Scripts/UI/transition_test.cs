@@ -23,9 +23,9 @@ public class transition_test : MonoBehaviour
         adj.gameObject.SetActive(true);
         if(ReturnToMenu)
         {
-            if(rocket.activeInHierarchy) rocket.GetComponent<RocketPhysics>().ClearGame();
-            if(build.activeInHierarchy) build.GetComponent<BuildGameEventHandler>().ClearGame();
-            if(jump.activeInHierarchy) jump.GetComponent<Jump_StageCtrl>().ClearGame();
+            if(rocket.activeInHierarchy) rocket.GetComponent<Land_GameManager>().ClearGame();
+            if(build.activeInHierarchy) build.GetComponent<Build_GameManager>().ClearGame();
+            if(jump.activeInHierarchy) jump.GetComponent<Jump_GameManager>().ClearGame();
             if(shoot.activeInHierarchy) shoot.GetComponent<Shoot_GameManager>().ClearGame();
 
             canvas_A.SetActive(false);

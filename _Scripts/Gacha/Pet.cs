@@ -12,7 +12,7 @@ using Random = UnityEngine.Random;
 public class Pet : SerializedMonoBehaviour
 {
     [SerializeField]
-    private PetType type;
+    public PetType type;
     [SerializeField]
     private float defaultInterval = 0.2f;
     [SerializeField]
@@ -55,6 +55,8 @@ public class Pet : SerializedMonoBehaviour
     [SerializeField, TitleGroup("Sprites", alignment: TitleAlignments.Centered)]
     Dictionary<string, List<Sprite>> sprites = new Dictionary<string, List<Sprite>>();
     public SurfaceMovement2D surfaceMovement2D;
+
+    [SerializeField] private Sprite[] inGameJumpAnim, inGameInSpaceShip;
     
     private enum PetStatus { Idle, Move, JumpStart, JumpEnd, Hit};
     private PetStatus status;
@@ -65,12 +67,13 @@ public class Pet : SerializedMonoBehaviour
     
     private float statusTimer;
     private float motionTimer;
+    private PetDialogue petDialogue = null;
 
     private float jumpStartDuration, jumpEndDuration, hitDuration;
     
     private void UpdateStatus(PetStatus _status)
     {
-        print(type + " : " + _status);
+        // print(type + " : " + _status);
         if(status == _status) return;
         status = _status;
 
@@ -121,7 +124,7 @@ public class Pet : SerializedMonoBehaviour
             startWeight += options[i].weight;
         }
 
-        print("GetMotionID FAILED");
+        // print("GetMotionID FAILED");
         return null;
     }
 
@@ -140,7 +143,7 @@ public class Pet : SerializedMonoBehaviour
         if (petMotions[motionID].isMovement) surfaceMovement2D.ContinueMovement(petMotions[motionID].movementSpeed * Random.Range(0.8f, 1.2f));
         else surfaceMovement2D.PauseMovement();
         
-        print(type + " : " + motionID);
+        // print(type + " : " + motionID);
     }
 
     private void Awake()
@@ -320,33 +323,192 @@ public class Pet : SerializedMonoBehaviour
             weight = 1f;
         }
     }
-    
-    //Click Event
+
+    private float mouseDownTime;
+    private bool showDragDialogue;
     void OnMouseDown()
     {
+        showDragDialogue = false;
         surfaceMovement2D.enabled = false;
+        mouseDownTime = Time.time;
         // print(type);
         // petinfo.ShowPanel(type);
     }
 
     private Vector3 initPos;
-
     private void OnMouseDrag()
     {
-        // print("OnMouseDrag");
+        if (Time.time - mouseDownTime < 0.15f) return;
+        if (Time.time - mouseDownTime > 0.3f && !showDragDialogue)
+        {
+            OnDragStart();
+            showDragDialogue = true;
+        }
         gameObject.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
 
     private void OnMouseUp()
     {
         surfaceMovement2D.enabled = true;
-        BlockStatusManager.Instance.PetDrop(Camera.main.ScreenToWorldPoint(Input.mousePosition), this);
+
+        if (Time.time - mouseDownTime < 0.3f)
+        {
+            OnTouch();
+        }
+        else BlockStatusManager.Instance.PetDrop(Camera.main.ScreenToWorldPoint(Input.mousePosition), this);
     }
 
-    public void SettoIdle()
+    public void SettoIdle(float holdDuration)
     {
-        statusTimer = Time.time + 5f;
-        motionTimer = Time.time + 5f;
+        statusTimer = Time.time + holdDuration;
+        motionTimer = Time.time + holdDuration;
         UpdateStatus(PetStatus.Idle);
+    }
+    
+    public Sprite[] GetJumpAnim()
+    {
+        return inGameJumpAnim;
+    }
+    
+    public Sprite[] GetShipAnim()
+    {
+        return inGameInSpaceShip;
+    }
+
+    public PetType GetType()
+    {
+        return type;
+    }
+
+# if UNITY_EDITOR
+    [Button]
+    private void CopyJumpAnim()
+    {
+        List<Sprite> spritesList = new List<Sprite>();
+        List<Sprite> jumpEndAnim = new List<Sprite>();
+        spritesList = sprites[onJumpStartAction[0].motionID];
+        jumpEndAnim = hasExitAnimation ? sprites[onJumpEndAction[0].motionID] : null;
+        
+        spritesList.AddRange(jumpEndAnim);
+            
+        inGameJumpAnim = new Sprite[spritesList.Count];
+        for (int i = 0; i < spritesList.Count; i++)
+        {
+            inGameJumpAnim[i] = spritesList[i];
+        }
+    }
+#endif
+    
+    public void ShowDialogue(string text, bool forceShow = false)
+    {
+        if (petDialogue == null)
+            petDialogue = Instantiate(PetManager.Instance.petDialoguePrefab, PetManager.Instance.petDialogueHolder);
+        petDialogue.Init(text, gameObject.transform, forceShow);
+    }
+
+    public void OnHit()
+    {
+        string dialogue = PetDialogueManager.Instance.GetOnHitText(type);
+        if(string.IsNullOrEmpty(dialogue)) return;
+        ShowDialogue(dialogue);
+    }
+
+    private void OnTouch()
+    {
+        string dialogue = PetDialogueManager.Instance.GetIdleText(type);
+        if(string.IsNullOrEmpty(dialogue)) return;
+        ShowDialogue(dialogue);
+        // ShowDialogue("<pend>고소공포증 있어요. 고소할게요.");
+        // petinfo.ShowPanel(type); //Click
+    }
+
+    public void OnIdle()
+    {
+        string dialogue = PetDialogueManager.Instance.GetIdleText(type);
+        if(string.IsNullOrEmpty(dialogue)) return;
+        ShowDialogue(dialogue);
+    }
+
+    private void OnDragStart()
+    {
+        string dialogue = PetDialogueManager.Instance.GetOnDragText(type);
+        if(string.IsNullOrEmpty(dialogue)) return;
+        ShowDialogue(dialogue, true);
+    }
+
+    public void OnGameEnter(GameType gameType)
+    {
+        string dialogue = PetDialogueManager.Instance.GetGameEnterString(type, gameType);
+        if(string.IsNullOrEmpty(dialogue)) return;
+        ShowDialogue(dialogue, true);
+    }
+    
+    public void OnGameExit(GameType gameType)
+    {
+        string dialogue = PetDialogueManager.Instance.GetGameExitString(type, gameType);
+        if(string.IsNullOrEmpty(dialogue)) return;
+        ShowDialogue(dialogue, true);
+    }
+    
+    public void OnTitle()
+    {
+        string dialogue = PetDialogueManager.Instance.GetOnTitleString(type);
+        if(string.IsNullOrEmpty(dialogue)) return;
+        ShowDialogue(dialogue, true);
+    }
+    
+    public void OnIsland()
+    {
+        string dialogue = PetDialogueManager.Instance.GetOnIslandString(type);
+        if(string.IsNullOrEmpty(dialogue)) return;
+        if (petDialogue == null)
+            petDialogue = Instantiate(PetManager.Instance.petDialoguePrefab, PetManager.Instance.petDialogueHolder);
+        petDialogue.Init(dialogue, gameObject.transform, true, -0.4f, 5f);
+    }
+
+    public void OnShake()
+    {
+        string dialogue = PetDialogueManager.Instance.GetShakeString(type);
+        if(string.IsNullOrEmpty(dialogue)) return;
+        ShowDialogue(dialogue, true);
+    }
+
+    public void OnNewFriend()
+    {
+        string dialogue = PetDialogueManager.Instance.GetNewFriendString(type);
+        if(string.IsNullOrEmpty(dialogue)) return;
+        ShowDialogue(dialogue, true);
+    }
+
+    public Sprite[] GetWalkAnim()
+    {
+        Sprite[] walkAnim = new Sprite[sprites["walk"].Count];
+
+        for (int i = 0; i < sprites["walk"].Count; i++)
+        {
+            walkAnim[i] = sprites["walk"][i];
+        }
+
+        return walkAnim;
+    }
+
+    public Sprite[] GetRandomIdleAnim()
+    {
+        int rnd = Random.Range(0, onIdleAction.Count);
+        List<Sprite> idleAnim = sprites[onIdleAction[rnd].motionID];
+        
+        Sprite[] walkAnim = new Sprite[idleAnim.Count];
+
+        for (int i = 0; i < idleAnim.Count; i++)
+        {
+            walkAnim[i] = idleAnim[i];
+        }
+
+        return walkAnim;
+    }
+
+    public float GetInterval()
+    {
+        return defaultInterval;
     }
 }

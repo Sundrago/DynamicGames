@@ -16,13 +16,13 @@ public class SendGameReady : MonoBehaviour
         switch(type)
         {
             case "build":
-                eventHandler.GetComponent<BuildGameEventHandler>().StartGame();
+                eventHandler.GetComponent<Build_GameManager>().StartGame();
                 break;
             case "rocket":
-                eventHandler.GetComponent<RocketPhysics>().StartGame();
+                eventHandler.GetComponent<Land_GameManager>().StartGame();
                 break;
             case "jump":
-                eventHandler.GetComponent<Jump_StageCtrl>().BeginFirstGame();
+                eventHandler.GetComponent<Jump_GameManager>().BeginFirstGame();
                 break;
         }
         

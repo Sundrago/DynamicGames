@@ -7,25 +7,25 @@ using Sirenix.OdinInspector;
 using Firebase;
 using Firebase.Analytics;
 
-public enum GameType {land, jump, build, shoot};
+public enum GameType {land, jump, build, shoot, Null};
 
 public class EndScoreCtrl : MonoBehaviour
 {
     [Title("LAND")]
     [SerializeField]
-    private RocketPhysics land_manager;
+    private Land_GameManager land_manager;
     [SerializeField]
     private ReturnToMenu land_return;
     
     [Title("JUMP")]
     [SerializeField]
-    private Jump_StageCtrl jump_manager;
+    private Jump_GameManager jump_manager;
     [SerializeField]
     private ReturnToMenu jump_return;
     
     [Title("BUILD")]
     [SerializeField]
-    private BuildGameEventHandler build_manager;
+    private Build_GameManager build_manager;
     [SerializeField]
     private ReturnToMenu build_return;
     
@@ -63,7 +63,7 @@ public class EndScoreCtrl : MonoBehaviour
 
     public void ShowScore(int score, GameType gameType)
     {
-        FirebaseAnalytics.LogEvent("Score", gameType.ToString()+"_score", score);
+        // FirebaseAnalytics.LogEvent("Score", gameType.ToString()+"_score", score);
         
         MoneyManager.Instance.ShowPanel();
         PlayerPrefs.SetInt("totalScoreCount", PlayerPrefs.GetInt("totalScoreCount") + 1);

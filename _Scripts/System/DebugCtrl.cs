@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class DebugCtrl : MonoBehaviour
@@ -11,6 +12,9 @@ public class DebugCtrl : MonoBehaviour
     [SerializeField] private SFXCTRL sfx;
     [SerializeField] private GameObject IslandSizeRemote;
     [SerializeField] private GameObject debug_front_window;
+    [SerializeField] private FontChanger fontChanger;
+    [SerializeField] private TMP_Dropdown localeSelector;
+    
     private int hiddenBtnClickCount = 0;
 
     private void Start()
@@ -76,5 +80,21 @@ public class DebugCtrl : MonoBehaviour
     public void ShowIslandSizeRemote()
     {
         IslandSizeRemote.SetActive(true);
+    }
+
+    public void UnlockAllPets()
+    {
+        foreach (PetType type in Enum.GetValues(typeof(PetType)))
+        {
+            if (PetManager.Instance.GetPetCount(type) == 0)
+            {
+                PetManager.Instance.AddPetCountByType(type);
+            }
+        }
+    }
+
+    public void ChangeLanguage()
+    {
+        fontChanger.FontSelected(localeSelector.value);
     }
 }

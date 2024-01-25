@@ -48,6 +48,7 @@ public struct Transition
     public float normal;
 }
 
+
 [RequireComponent(typeof(Pet))]
 public class SurfaceMovement2D : MonoBehaviour
 {
@@ -58,12 +59,19 @@ public class SurfaceMovement2D : MonoBehaviour
     [SerializeField] float hitCheckInterval = 0.5f;
     [SerializeField] int searchComplexity = 5;
 
+    public enum LandingPlace
+    {
+        block, title, island
+    }
+
+    public LandingPlace currentPlace = LandingPlace.block;
+    
     private Pet pet;
     private List<AvailableCorner> availables;
     private List<SquareElement> SquareElements;
 
     private GameObject[] squares;
-    private CurrentCorner currentCorner = new CurrentCorner();
+    public CurrentCorner currentCorner = new CurrentCorner();
     private CurrentCorner oldCorner = new CurrentCorner();
     private Transition transition = new Transition();
 
@@ -174,6 +182,11 @@ public class SurfaceMovement2D : MonoBehaviour
             FindNearCorner();
             return;
         }
+        if (Time.frameCount % 10 == 0)
+        {
+            if(currentCorner.obj.name == "TITLE") SetCurrentPlace(LandingPlace.title);
+            else if(currentCorner.obj.name == "ISALND") SetCurrentPlace(LandingPlace.island);
+        }
         currentCorner.cornerPoints = GetCornerPoint(currentCorner.obj);
         currentCorner.pointA = currentCorner.cornerPoints[currentCorner.cornerIdx];
         currentCorner.pointB = currentCorner.cornerPoints[currentCorner.cornerIdx == 3 ? 0 : currentCorner.cornerIdx + 1];
@@ -206,7 +219,7 @@ public class SurfaceMovement2D : MonoBehaviour
             if (CheckIfHeadHit())
             {
                 onIsland = false;
-                print("headHit");
+                // print("headHit");
                 FindNearCorner();
                 return;
             }
@@ -230,8 +243,16 @@ public class SurfaceMovement2D : MonoBehaviour
             Vector2 position = headObj.transform.position;
             Vector2 closest = SquareElements[i].obj.GetComponent<BoxCollider2D>().ClosestPoint(position);
 
-            if (closest == position) {
-                // Debug.DrawLine(position, squares[i].transform.position, Color.red, 2f);
+            if (closest == position)
+            {
+                Rigidbody2D rb2D = SquareElements[i].obj.GetComponent<Rigidbody2D>();
+                if (rb2D != null)
+                {
+                    float velocity = Mathf.Abs(SquareElements[i].obj.GetComponent<Rigidbody2D>().velocity.x) +
+                                     Mathf.Abs(SquareElements[i].obj.GetComponent<Rigidbody2D>().velocity.y);
+                    if (velocity >= 0.01f) pet.OnHit();
+                }
+                // print();
                 return true;
             } else {
                 // Debug.DrawLine(position, squares[i].transform.position, new Color(1,1,1,0.2f), 0.25f);
@@ -250,7 +271,7 @@ public class SurfaceMovement2D : MonoBehaviour
 
     public void FindNearCorner()
     {
-        print("findnearCornter");
+        // print("findnearCornter");
         LoadSquare();
         if (onIsland)
         {
@@ -541,7 +562,7 @@ public class SurfaceMovement2D : MonoBehaviour
     public void LoadSquare()
     {
         squares = GameObject.FindGameObjectsWithTag("square");
-        print("LoadSquare SQRS.COUNT : " + squares.Length);
+        // print("LoadSquare SQRS.COUNT : " + squares.Length);
         if(squares.Length == 0)
         {
             onIsland = true;
@@ -564,12 +585,28 @@ public class SurfaceMovement2D : MonoBehaviour
         moveSpeed = moveVelocity / dist * Random.Range(0.8f,1.2f);   
     }
 
+    private void SetCurrentPlace(LandingPlace place)
+    {
+        if(currentPlace == place) return;
+        currentPlace = place;
+
+        switch (currentPlace)
+        {
+            case LandingPlace.title:
+                pet.OnTitle();
+                break;
+            case LandingPlace.island:
+                pet.OnIsland();
+                break;
+        }
+    }
+    
     // private void OnEnable()
     // {
     //     FindNearCorner();
     // }
 
-    public void ForceLandOnSquare(GameObject targetSquare)
+    public void ForceLandOnSquare(GameObject targetSquare, float holdDuration)
     {
         // squares = new GameObject[1];
         // squares[0] = targetSquare;
@@ -587,6 +624,6 @@ public class SurfaceMovement2D : MonoBehaviour
         currentCorner.normal = Random.Range(0.4f, 0.6f);
         onTransition = false;
 
-        headHitCheckTime = Time.time + 5f;
+        headHitCheckTime = Time.time + holdDuration;
     }
 }

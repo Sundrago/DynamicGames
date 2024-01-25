@@ -7,7 +7,7 @@ using DG.Tweening;
 using TMPro;
 using Unity.VisualScripting;
 
-public class DragSprite : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler
+public class DragSprite : MonoBehaviour//, IDragHandler, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField] TextMeshPro[] title;
     [SerializeField] GameObject UIFX;
@@ -29,7 +29,6 @@ public class DragSprite : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoi
     private bool showtitle = false;
     private float mouseDownTime;
     private SquareBlockCtrl squareBlockCtrl = null;
-
     private bool started = false;
     private void Awake()
     {
@@ -80,18 +79,102 @@ public class DragSprite : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoi
             myUIFX.GetComponent<EnergyUIFXCtrl>().InitiateFX(gameObject);
         }
     }
+    //
+    // public void OnDrag(PointerEventData data)
+    // {
+    //     if(!drag) return;
+    //
+    //     Vector2 mousePosition = Camera.main.ScreenToWorldPoint(data.position);
+    //     Vector3 targetPos = Vector3.Lerp(this.transform.position, mousePosition, 0.3f);
+    //     targetPos.z = initialPos.z;
+    //     this.transform.position = targetPos;
+    //
+    //     if (rb2d != null)
+    //     {
+    //         float velocity = MathF.Abs(rb2d.velocity.x) + Mathf.Abs(rb2d.velocity.y);
+    //         print(velocity);
+    //     }
+    // }
+    //
+    // public void OnPointerUp(PointerEventData data)
+    // {
+    //     gameObject.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+    //     gameObject.GetComponent<Rigidbody2D>().angularVelocity = 0f;
+    //     HideTitle();
+    //     gameObject.GetComponent<Rigidbody2D>().isKinematic = false;
+    //
+    //     bool selected = false;
+    //     
+    //     if(Time.time - mouseDownTime > 1f) {
+    //         if(DOTween.IsTweening(gameObject.transform)) DOTween.Kill(gameObject.transform);
+    //         DOVirtual.Float(0f,1f,0.5f,GravityUpdate).SetEase(Ease.InQuart);
+    //         btnSelected = false;
+    //     }
+    //     
+    //     if (drag & (Vector2.Distance(startPosition, data.position) < 20f))
+    //     {
+    //         if (Time.time - mouseDownTime < 0.4f)
+    //         {
+    //             selected = true;
+    //             BtnClicked();
+    //             transform.DOScale(gameObject.transform.localScale, 30f).OnComplete(()=> {
+    //                 if (myUIFX != null)
+    //                 {
+    //                     myUIFX.GetComponent<EnergyUIFXCtrl>().DestroyFX();
+    //                 }
+    //             });
+    //         }
+    //     }
+    //
+    //     if(!selected) {
+    //         btnSelected = false;
+    //         transform.DOScale(gameObject.transform.localScale, 3f).OnComplete( ()=> {
+    //             if (myUIFX != null)
+    //             {
+    //                 myUIFX.GetComponent<EnergyUIFXCtrl>().DestroyFX();
+    //             }
+    //         });
+    //         
+    //     }
+    //     
+    //     if(squareBlockCtrl!=null) squareBlockCtrl.PunchLock();
+    //     drag = false;
+    // }
+
+    private Vector2 mouseDeltaPos;
     
-    public void OnDrag(PointerEventData data)
+   public void OnMouseDown()
+    {
+        main.Offall(gameObject);
+        if(DOTween.IsTweening(gameObject.transform)) DOTween.Kill(gameObject.transform);
+
+        startPosition = Input.mousePosition;
+        
+        drag = true;
+        mouseDownTime = Time.time;
+        
+        gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+        gameObject.GetComponent<Rigidbody2D>().angularVelocity = 0f;
+
+        mouseDeltaPos = startPosition;
+        InstantiateEnergyFX();
+    }
+
+    void OnMouseDrag()
     {
         if(!drag) return;
 
-        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(data.position);
+        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 targetPos = Vector3.Lerp(this.transform.position, mousePosition, 0.3f);
         targetPos.z = initialPos.z;
-        this.transform.position = targetPos; 
+        this.transform.position = targetPos;
+
+        float delta = Vector2.Distance(mouseDeltaPos, Input.mousePosition);
+        mouseDeltaPos = Input.mousePosition;
+        if (delta > 30f) OnShake();
     }
-    
-    public void OnPointerUp(PointerEventData data)
+
+    private void OnMouseUp()
     {
         gameObject.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         gameObject.GetComponent<Rigidbody2D>().angularVelocity = 0f;
@@ -106,17 +189,14 @@ public class DragSprite : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoi
             btnSelected = false;
         }
         
-        if (drag & (Vector2.Distance(startPosition, data.position) < 20f))
+        if (drag & (Vector2.Distance(startPosition, Input.mousePosition) < 20f))
         {
             if (Time.time - mouseDownTime < 0.4f)
             {
                 selected = true;
                 BtnClicked();
                 transform.DOScale(gameObject.transform.localScale, 30f).OnComplete(()=> {
-                    if (myUIFX != null)
-                    {
-                        myUIFX.GetComponent<EnergyUIFXCtrl>().DestroyFX();
-                    }
+                    KillFX();
                 });
             }
         }
@@ -124,88 +204,13 @@ public class DragSprite : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoi
         if(!selected) {
             btnSelected = false;
             transform.DOScale(gameObject.transform.localScale, 3f).OnComplete( ()=> {
-                if (myUIFX != null)
-                {
-                    myUIFX.GetComponent<EnergyUIFXCtrl>().DestroyFX();
-                }
+                KillFX();
             });
             
         }
         
         if(squareBlockCtrl!=null) squareBlockCtrl.PunchLock();
         drag = false;
-    }
-    
-   public void OnMouseDown()
-    {
-        // if (EventSystem.current.IsPointerOverGameObject()) return;
-        //
-        // main.Offall(gameObject);
-        // if(DOTween.IsTweening(gameObject.transform)) DOTween.Kill(gameObject.transform);
-        //
-        // PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-        // eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-        // startPosition = eventDataCurrentPosition.position;
-        //
-        // drag = true;
-        // mouseDownTime = Time.time;
-        //
-        // gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
-        // gameObject.GetComponent<Rigidbody2D>().angularVelocity = 0f;
-        //
-        // if(UIFX != null) {
-        //     if(myUIFX != null) {
-        //         myUIFX.GetComponent<EnergyUIFXCtrl>().DestroyFX();
-        //     }
-        //     myUIFX = Instantiate(UIFX, UIFX.transform.parent.transform);
-        //     myUIFX.GetComponent<EnergyUIFXCtrl>().InitiateFX(gameObject);
-        // }
-    }
-
-    void OnMouseDrag()
-    {
-        // if (drag)
-        // {
-        //     Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //     Vector3 targetPos = Vector3.Lerp(this.transform.position, mousePosition, 0.3f);
-        //     targetPos.z = initialPos.z;
-        //     this.transform.position = targetPos; 
-        //     if(Time.time - mouseDownTime > 0.3f) {
-        //
-        //         ShowTitle();
-        //
-        //         float targetAngle = this.transform.eulerAngles.z % 360;
-        //         if(targetAngle < 180) targetAngle = this.transform.eulerAngles.z - this.transform.eulerAngles.z % 360;
-        //         else targetAngle = this.transform.eulerAngles.z + (360 - this.transform.eulerAngles.z % 360);
-        //         this.transform.eulerAngles = Vector3.Lerp(gameObject.transform.localEulerAngles, new Vector3(0,0,targetAngle), 0.1f);
-        //     }
-        // }
-    }
-
-    private void OnMouseUp()
-    {
-        // gameObject.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-        // gameObject.GetComponent<Rigidbody2D>().angularVelocity = 0f;
-        // HideTitle();
-        // gameObject.GetComponent<Rigidbody2D>().isKinematic = false;
-        // if(Time.time - mouseDownTime > 1f) {
-        //     if(DOTween.IsTweening(gameObject.transform)) DOTween.Kill(gameObject.transform);
-        //     DOVirtual.Float(0f,1f,0.5f,GravityUpdate).SetEase(Ease.InQuart);
-        // }
-        //
-        // if (drag & Vector2.Distance(startPosition, new Vector2(Input.mousePosition.x, Input.mousePosition.y)) < 15f)
-        // {
-        //     if (Time.time - mouseDownTime < 0.4f && EventSystem.current.IsPointerOverGameObject() == false)
-        //         BtnClicked();
-        // }
-        //
-        // DOVirtual.DelayedCall(3f, () => {
-        //     if (myUIFX != null)
-        //     {
-        //         myUIFX.GetComponent<EnergyUIFXCtrl>().DestroyFX();
-        //     }
-        // });
-        // drag = false;
     }
 
     void GravityUpdate(float gravity) {
@@ -292,10 +297,7 @@ public class DragSprite : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoi
                         if (DOTween.IsTweening(gameObject.transform)) DOTween.Kill(gameObject.transform);
                         DOVirtual.Float(0f, 1f, 0.75f, GravityUpdate).SetEase(Ease.InQuart);
                     }
-                    if (myUIFX != null)
-                    {
-                        myUIFX.GetComponent<EnergyUIFXCtrl>().DestroyFX();
-                    }
+                    KillFX();
                     btnSelected = false;
                     UnlockBtnManager.Instance.Hide();
                 });
@@ -323,9 +325,7 @@ public class DragSprite : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoi
         UnlockBtnManager.Instance.Hide();
         HideTitle();
         btnSelected = false;
-        if(myUIFX != null) {
-            myUIFX.GetComponent<EnergyUIFXCtrl>().DestroyFX();
-        }
+        KillFX();
     }
 
     public void ReturnToOriginalPos() {
@@ -362,5 +362,37 @@ public class DragSprite : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoi
     {
         if (squareBlockCtrl != null)
             squareBlockCtrl.UnLock();
+    }
+
+    private float lastShake = 0;
+    private void OnShake()
+    {
+        if(Time.time < lastShake + 4) return;
+        lastShake = Time.time;
+        
+        List<Pet> pets = new List<Pet>();
+        foreach (var petdata in PetManager.Instance.petdatas)
+        {
+            if (petdata.obj.activeSelf)
+            {
+                if(petdata.obj.GetComponent<SurfaceMovement2D>().currentCorner.obj == this.gameObject)
+                    pets.Add(petdata.obj.GetComponent<Pet>());
+            }
+        }
+
+        foreach (var pet in pets)
+        {
+            float thres = pets.Count < 3 ? 1 : 2.5f / pets.Count;
+            if(UnityEngine.Random.Range(0f, 1f) < thres)
+                pet.OnShake();
+        }
+    }
+
+    public void KillFX()
+    {
+        if (myUIFX != null)
+        {
+            myUIFX.GetComponent<EnergyUIFXCtrl>().DestroyFX();
+        }
     }
 }

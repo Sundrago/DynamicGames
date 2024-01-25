@@ -6,21 +6,23 @@ using UnityEngine.EventSystems;
 
 public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
-    [SerializeField] GameObject joystickUI, joysyick_knob, targetObj;
-    [SerializeField] Boundaries boundaries;
-    [SerializeField] Shoot_Bullet_Manager bullet_Manager;
-    [SerializeField] ParticleSystem ThrustFx;
-    [SerializeField] Shoot_GameManager gameManager;
+    [SerializeField] private GameObject joystickUI, joysyick_knob, targetObj;
+    [SerializeField] private Boundaries boundaries;
+    [SerializeField] private Shoot_Bullet_Manager bullet_Manager;
+    [SerializeField] private ParticleSystem ThrustFx;
+    [SerializeField] private Shoot_GameManager gameManager;
 
-    [SerializeField] float max_radius = 1f;
-    [SerializeField] float clamp_max_velocity = 75f;
-    [SerializeField] float moveSpeed = 10f;
-    [SerializeField] float joystick_inensity = 1;
+    [SerializeField] private float max_radius = 1f;
+    [SerializeField] private float clamp_max_velocity = 75f;
+    [SerializeField] private float moveSpeed = 10f;
+    [SerializeField] private float joystick_inensity = 1;
 
-    [SerializeField] float friction = 0.98f;
-    [SerializeField] float maxSpeed = 5f;
-    [SerializeField] float velocity = 0.5f;
+    [SerializeField] private float friction = 0.98f;
+    [SerializeField] private float maxSpeed = 5f;
+    [SerializeField] private float velocity = 0.5f;
 
+    [SerializeField] private SpriteAnimator player;
+    
     public Vector3 vecNormal;
     private Vector3 speed = Vector3.zero;
     private Vector2 initialPoint;
@@ -36,6 +38,7 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
         emmision = ThrustFx.emission;
 
         emmision.rateOverTimeMultiplier = 0;
+        player.PauseAnim();
     }
 
     void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
@@ -62,6 +65,7 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
     {
         Reset();
+        player.PauseAnim();
     }
 
     void LateUpdate()
@@ -106,6 +110,9 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
         targetObj.transform.rotation = Quaternion.Lerp(targetObj.transform.rotation, Quaternion.Euler(new Vector3(0f, 0f, angle)), 0.5f);
 
         joystick_inensity = Vector2.Distance(Vector2.zero, joysyick_knob.transform.localPosition) / 50f;
+        
+        if (vecNormal.x + vecNormal.y > 0.2f) player.UnPauseAnim();
+        else player.PauseAnim();
     }
     
     public void Reset()
