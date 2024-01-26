@@ -319,8 +319,8 @@ public class BlockStatusManager : MonoBehaviour
         {
             GameObject obj = minData.obj.gameObject;
             MainCanvas.Instance.Offall(obj);
-            minData.obj.dragSprite.BtnClicked();
             PetInGameManager.Instance.PetSelected(minData, pet);
+            minData.obj.dragSprite.BtnClicked();
         }
         else
         {
@@ -331,5 +331,15 @@ public class BlockStatusManager : MonoBehaviour
             pet.surfaceMovement2D.FindNearCorner();
         }
         // print("PetDrop : " + minData.type + " : " + distMin);
+    }
+    
+    public GameType GetGameType(BlockType blockType)
+    {
+        foreach (GameType gameType in Enum.GetValues(typeof(GameType)))
+        {
+            if (gameType.ToString() == blockType.ToString()) return gameType;
+        }
+
+        return GameType.Null;
     }
 }

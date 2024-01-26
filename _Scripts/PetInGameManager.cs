@@ -14,9 +14,9 @@ public class PetInGameManager : MonoBehaviour
     [SerializeField] private Build_GameManager build;
     
     private BlockStatusManager.BlockStatusData blockData = null;
-    private Pet pet;
+    public Pet pet = null;
     private float selectedTime;
-    private bool enterGameWithPet = false;
+    public bool enterGameWithPet = false;
     private GameType gameType;
     
     private void Awake()
@@ -32,6 +32,9 @@ public class PetInGameManager : MonoBehaviour
         
         pet.surfaceMovement2D.ForceLandOnSquare(blockData.obj.dragSprite.miniisland, 5f);
         pet.SettoIdle(5f);
+
+        GameType petGameType = BlockStatusManager.Instance.GetGameType(blockData.type);
+        if(petGameType!=GameType.Null) pet.OnGameEnter(petGameType);
     }
 
     public void EnterGame(GameType type)
@@ -55,7 +58,7 @@ public class PetInGameManager : MonoBehaviour
                 break;
         }
         
-        pet.OnGameEnter(type);
+        // if(pet!=null && enterGameWithPet) pet.OnGameEnter(type);
         gameType = type;
     }
 

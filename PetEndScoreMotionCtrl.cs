@@ -19,7 +19,7 @@ public class PetEndScoreMotionCtrl : MonoBehaviour
     {
         Pet pet = petManager.GetPetDataByType(type).obj.GetComponent<Pet>();
         
-        spriteAnimator.sprites = pet.GetRandomIdleAnim();
+        pet.SetSpriteAnimatorIdleAnimation(spriteAnimator);
         typewriter.ShowText(petDialogueManager.GetPetScoreString(type, scoreType));
         typewriter.StartShowingText(true);
 

@@ -40,9 +40,9 @@ public class FontChanger : MonoBehaviour
             case "ko":
                 myFont = ko;
                 break;
-            case "en":
-                myFont = en;
-                break;
+            // case "en":
+            //     myFont = en;
+            //     break;
             default:
                 myFont = zh;
                 break;
@@ -54,7 +54,7 @@ public class FontChanger : MonoBehaviour
             {
                 text.font = myFont;
                 // if (code == "ar" || code == "ko" || code == "ja")
-                //     text.fontStyle = FontStyles.Bold;
+                text.fontStyle = FontStyles.Bold;
                 // else
                 //     text.fontStyle = FontStyles.Normal;
             }

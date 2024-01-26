@@ -49,6 +49,8 @@ public class EndScoreCtrl : MonoBehaviour
     private Button retartBtn, LeaderboardBtn, backtoMenuBtn;
 
     public static EndScoreCtrl Instance;
+
+    [SerializeField] private PetEndScoreMotionCtrl petEndScoreMotionCtrl;
     
 
     private int curretBgm = -1;
@@ -64,7 +66,6 @@ public class EndScoreCtrl : MonoBehaviour
     public void ShowScore(int score, GameType gameType)
     {
         // FirebaseAnalytics.LogEvent("Score", gameType.ToString()+"_score", score);
-        
         MoneyManager.Instance.ShowPanel();
         PlayerPrefs.SetInt("totalScoreCount", PlayerPrefs.GetInt("totalScoreCount") + 1);
         PlayerPrefs.Save();
@@ -91,6 +92,23 @@ public class EndScoreCtrl : MonoBehaviour
         slider_high_score.DOFade(1f, 0f);
         slider_indicator_high.DOFade(1f, 0f);
         socre_text_ui.text = "GAME OVER";
+        
+        //Init Pet Motions
+        if (PetInGameManager.Instance.enterGameWithPet)
+        {
+            PetDialogueManager.PetScoreType petScoreType;
+            if (score >= previouseHighScore) petScoreType = PetDialogueManager.PetScoreType.score_newBest;
+            else if(score > previouseHighScore * 3f / 4f) petScoreType = PetDialogueManager.PetScoreType.score_excelent;
+            else if(score > previouseHighScore *  2f / 4f) petScoreType = PetDialogueManager.PetScoreType.score_great;
+            else if(score > previouseHighScore *  1f / 4f) petScoreType = PetDialogueManager.PetScoreType.score_good;
+            else petScoreType = PetDialogueManager.PetScoreType.score_bad;
+            
+            petEndScoreMotionCtrl.Init(PetInGameManager.Instance.pet.type, petScoreType);
+        }
+        else
+        {
+            petEndScoreMotionCtrl.gameObject.SetActive(false);
+        }
 
         //Sldier Anim
         float score_normal = (float)score/(float)highScore;

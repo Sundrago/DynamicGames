@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
+using Random = UnityEngine.Random;
 
 namespace MyUtility
 {
@@ -44,7 +45,53 @@ namespace MyUtility
                 return LocalizationSettings.StringDatabase.GetLocalizedString("UI", key);
             }
             
-            Debug.Log("LocaleCodeNotFound for string : " + input);
+            // Debug.Log("LocaleCodeNotFound for string : " + input);
+            return input;
+        }
+        
+        public static string GetLocalizedPetDialogue(string input)
+        {
+            if (input.Contains("<LOTTERY>"))
+            {
+                DateTime date =DateTime.Now;
+                int weekOfMonth=(date.Day + ((int)date.DayOfWeek)) / 7 + 1;
+                
+                string lottery;
+                float rnd = Random.Range(0f, 1f);
+                if (rnd < 0.33f)
+                {
+                    Random.InitState(date.Year * date.Month + weekOfMonth);
+                    lottery = Random.Range(1, 70).ToString();
+                    Random.InitState(date.Year * date.Month + weekOfMonth + 10);
+                    lottery += " " + Random.Range(1, 70);
+                }
+                else if(rnd < 0.66)
+                {
+                    Random.InitState(date.Year * date.Month + weekOfMonth + 11);
+                    lottery = Random.Range(1, 70).ToString();
+                    Random.InitState(date.Year * date.Month + weekOfMonth + 12);
+                    lottery += " " + Random.Range(1, 70);
+                    Random.InitState(date.Year * date.Month + weekOfMonth + 13);
+                    lottery += " " + Random.Range(1, 70);
+                }
+                else
+                {
+                    Random.InitState(date.Year * date.Month + weekOfMonth + 14);
+                    lottery = Random.Range(1, 27).ToString();
+                }
+
+                Random.InitState((int)(Time.time * 1000f));
+                return lottery;
+            }
+            
+            if (input.Contains('[') && input.Contains(']'))
+            {
+                string[] sliced = input.Split('[', ']');
+                string key = sliced[input.IndexOf('[') + 1];
+                return LocalizationSettings.StringDatabase.GetLocalizedString("PetDialogue", key);
+            }
+            
+            // Debug.Log("LocaleCodeNotFound for string : " + input);
             return input;
         }
     }

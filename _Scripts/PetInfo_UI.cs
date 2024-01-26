@@ -16,7 +16,7 @@ public class PetInfo_UI : MonoBehaviour
     private Image previewImage;
 
     [SerializeField]
-    private TextMeshProUGUI name_ui, level_ui, age_ui, skills_ui;
+    private TextMeshProUGUI name_ui, level_ui, age_ui, skills_ui, from_ui;
     [SerializeField]
     private TextMeshProUGUI exp_ui;
     [SerializeField]
@@ -99,6 +99,7 @@ public class PetInfo_UI : MonoBehaviour
             level_ui.text = "????";
             age_ui.text = "????";
             skills_ui.text = "????";
+            from_ui.text = "????";
             
             expSlider_ui.padding = new Vector4(0, 0, sliderSizeDeltaX, 0);
             exp_ui.text = "?";
@@ -113,7 +114,8 @@ public class PetInfo_UI : MonoBehaviour
         name_ui.text = _type.ToString();
         level_ui.text = "Level : " + level;
         age_ui.text = "Age : " + PetManager.Instance.GetPetAge(_type);
-        skills_ui.text = MyUtility.Localize.GetLocalizedString("[descr_" + _type + "]");
+        from_ui.text = "From : " + PetDialogueManager.Instance.GetFrom(_type);
+        skills_ui.text = PetDialogueManager.Instance.GetDescr(_type);
 
         float expNormal = exp / (level * 5f);
         expSlider_ui.padding = new Vector4(0, 0, sliderSizeDeltaX - sliderSizeDeltaX * expNormal, 0);
@@ -146,7 +148,6 @@ public class PetInfo_UI : MonoBehaviour
         panel.DOLocalMoveY(0, 0.5f).SetEase(Ease.OutExpo);
         gameObject.SetActive(true);
         updateText.gameObject.SetActive(false);
-        skills_ui.text = MyUtility.Localize.GetLocalizedString("[descr_" + _type + "]");
     }
 
     public void HidePanel(bool longTransition = false)

@@ -202,6 +202,39 @@ public class PetManager : MonoBehaviour
             data.obj.SetActive(GetPetCount(data.type) != 0);
         }
     }
+
+    [Button]
+    private void JsonTest()
+    {
+        // print(JsonUtility.ToJson(data));
+
+        string json = "{}";
+        PetSaveData data = JsonUtility.FromJson<PetSaveData>(json);
+        print(data.exp);
+    }
+    private PetSaveData LoadData(PetType _type)
+    {
+        if(PlayerPrefs.HasKey("PetSaveData_" + _type))
+        {
+            string data = PlayerPrefs.GetString("PetSaveData_" + _type);
+        }
+            return new PetSaveData();
+    }
+
+    private void SaveData()
+    {
+        //data = "
+    }
+    
+    public class PetSaveData
+    {
+        public bool isActive;
+        public float x;
+        public float y;
+        public int level;
+        public string birthDate;
+        public int exp;
+    }
     
 #if UNITY_EDITOR
     [Button]
@@ -210,6 +243,11 @@ public class PetManager : MonoBehaviour
         foreach (PetType type in Enum.GetValues(typeof(PetType)))
         {
             if(GetPetDataByType(type) == null) petdatas.Add(new Petdata(type));
+        }
+
+        foreach (var data in petdatas)
+        {
+            if (data.image == null) data.image = data.obj.GetComponent<Pet>().spriteRenderer.sprite;
         }
     }
     
@@ -223,6 +261,7 @@ public class PetManager : MonoBehaviour
     }
 #endif
 }
+
 
 [Serializable]
 public class Petdata

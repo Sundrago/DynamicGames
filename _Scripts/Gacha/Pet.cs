@@ -470,14 +470,14 @@ public class Pet : SerializedMonoBehaviour
     {
         string dialogue = PetDialogueManager.Instance.GetShakeString(type);
         if(string.IsNullOrEmpty(dialogue)) return;
-        ShowDialogue(dialogue, true);
+        ShowDialogue(dialogue);
     }
 
     public void OnNewFriend()
     {
         string dialogue = PetDialogueManager.Instance.GetNewFriendString(type);
         if(string.IsNullOrEmpty(dialogue)) return;
-        ShowDialogue(dialogue, true);
+        ShowDialogue(dialogue);
     }
 
     public Sprite[] GetWalkAnim()
@@ -492,7 +492,7 @@ public class Pet : SerializedMonoBehaviour
         return walkAnim;
     }
 
-    public Sprite[] GetRandomIdleAnim()
+    public void SetSpriteAnimatorIdleAnimation(SpriteAnimator spriteAnimator)
     {
         int rnd = Random.Range(0, onIdleAction.Count);
         List<Sprite> idleAnim = sprites[onIdleAction[rnd].motionID];
@@ -504,7 +504,9 @@ public class Pet : SerializedMonoBehaviour
             walkAnim[i] = idleAnim[i];
         }
 
-        return walkAnim;
+        spriteAnimator.sprites = walkAnim;
+        if(!petMotions[onIdleAction[rnd].motionID].loop) spriteAnimator.RestartWithNoLoop();
+        spriteAnimator.interval = petMotions[onIdleAction[rnd].motionID].interval;
     }
 
     public float GetInterval()

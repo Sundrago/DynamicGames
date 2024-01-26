@@ -44,7 +44,11 @@ public class CapsuleAnimation : MonoBehaviour
     private void UpdateItemImage()
     {
         if (PetManager.Instance.GetPetCount() == 0) type = PetType.Fluffy;
-        else type = (PetType)UnityEngine.Random.Range(0, Enum.GetValues(typeof(PetType)).Length);
+        else
+        {
+            int rnd = UnityEngine.Random.Range(0, PetManager.Instance.petdatas.Count);
+            type = PetManager.Instance.petdatas[rnd].type;
+        }
         Petdata data = PetManager.Instance.GetPetDataByType(type);
         float relativePosY = data.obj.GetComponent<Pet>().spriteRenderer.gameObject.transform.localPosition.y  * posFactor;
         item.sprite = data.image;

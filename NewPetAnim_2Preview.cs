@@ -6,7 +6,6 @@ using TMPro;
 using DG.Tweening;
 using Febucci.UI;
 using Sirenix.OdinInspector;
-using UnityEditor.Localization.Plugins.XLIFF.V20;
 
 public class NewPetAnim_2Preview : MonoBehaviour
 {

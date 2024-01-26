@@ -108,6 +108,7 @@ public class Jump_GameManager : MonoBehaviour
     }
 
     public void ShowScore(){
+        player.SetActive(false);
         Time.timeScale = 1f;
         sfx.PlaySfx(0);
         EndScoreCtrl.Instance.ShowScore(score, GameType.jump);
@@ -456,6 +457,7 @@ public class Jump_GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        player.SetActive(true);
         Time.timeScale = 1f;
         score = 0;
         jump_scrl.targetRotation = cylindar.transform.localEulerAngles;
@@ -482,6 +484,7 @@ public class Jump_GameManager : MonoBehaviour
     }
 
     public void BeginFirstGame(){
+        player.SetActive(true);
         gameObject.transform.parent.gameObject.SetActive(true);
         tutorial.SetActive(false);
         firstGame = true;
@@ -503,8 +506,7 @@ public class Jump_GameManager : MonoBehaviour
         });
         firstGame = false;
     }
-
-    [Button]
+    
     public void SetPlayer(bool playAsPet, Pet pet = null)
     {
         playerPlaceHolder.SetActive(!playAsPet);
