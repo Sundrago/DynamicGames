@@ -15,13 +15,14 @@ public class PetInfoUIMover : MonoBehaviour
 
     [SerializeField] private float lerpA, lerpB;
     [SerializeField] public Transform petSelectionIcon;
+    [SerializeField] private Camera camera;
     void Update()
     {
         if (targetPetPos != null)
         {
-            print(targetPetPos.position.y + " : " + targetPetPos.position.y/Screen.height);
+            // print(targetPetPos.position.y + " : " + targetPetPos.position.y/Screen.height);
             
-            Vector3 pos = Camera.main.WorldToScreenPoint(targetPetPos.position);
+            Vector3 pos = camera.WorldToScreenPoint(targetPetPos.position);
             Vector3 panelTargetPos = new Vector3(gameObject.transform.position.x, pos.y + (targetPetPos.position.y < Screen.height/2f ? -offsetY : +offsetY), 0);
             // Vector3 pointTargetPos = new Vector3(Mathf.Clamp(pos.x, constraint_left.position.x, constraint_right.position.x), pointMarker.transform.position.y, 0);
             

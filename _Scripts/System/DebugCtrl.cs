@@ -75,6 +75,8 @@ public class DebugCtrl : MonoBehaviour
     public void RemoveData()
     {
         PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
+        PetManager.Instance.RemoveData();
     }
 
     public void ShowIslandSizeRemote()

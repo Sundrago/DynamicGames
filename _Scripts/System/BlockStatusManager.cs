@@ -315,7 +315,9 @@ public class BlockStatusManager : MonoBehaviour
             }
         }
 
-        if (distMin < 0.3f && !minData.obj.isNotGame)
+        if(distMin > 0.3f) return;
+        
+        if (!minData.obj.isNotGame && !minData.obj.isLocked)
         {
             GameObject obj = minData.obj.gameObject;
             MainCanvas.Instance.Offall(obj);

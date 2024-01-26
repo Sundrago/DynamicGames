@@ -19,6 +19,7 @@ public class Pet : SerializedMonoBehaviour
     public SpriteRenderer spriteRenderer;
 
     [SerializeField] private PetInfo_UI petinfo;
+    [SerializeField] public SurfaceMovement2D surfaceMovement2D;
     [SerializeField] public Transform centerPoint;
     
     
@@ -54,7 +55,6 @@ public class Pet : SerializedMonoBehaviour
 
     [SerializeField, TitleGroup("Sprites", alignment: TitleAlignments.Centered)]
     Dictionary<string, List<Sprite>> sprites = new Dictionary<string, List<Sprite>>();
-    public SurfaceMovement2D surfaceMovement2D;
 
     [SerializeField] private Sprite[] inGameJumpAnim, inGameInSpaceShip;
     
@@ -131,9 +131,19 @@ public class Pet : SerializedMonoBehaviour
     private void UpdateMotion(string _motionID)
     {
         if(motionID == _motionID) return;
-        motionID = _motionID;
+
+        if (string.IsNullOrEmpty(_motionID))
+        {
+            int rnd = Random.Range(0, petMotions.Count);
+            motionID = petMotions.ElementAt(rnd).Key;
+        }
+        else
+        {
+            motionID = _motionID;
+        }
         motionFrame = 0;
 
+        // print(motionID);
         if (petMotions[motionID].overideInterval) interval = petMotions[motionID].interval;
         else interval = defaultInterval;
 
@@ -441,6 +451,7 @@ public class Pet : SerializedMonoBehaviour
         string dialogue = PetDialogueManager.Instance.GetGameEnterString(type, gameType);
         if(string.IsNullOrEmpty(dialogue)) return;
         ShowDialogue(dialogue, true);
+        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.playWithPet);
     }
     
     public void OnGameExit(GameType gameType)
@@ -452,6 +463,8 @@ public class Pet : SerializedMonoBehaviour
     
     public void OnTitle()
     {
+        if(Time.time<3) return;
+        
         string dialogue = PetDialogueManager.Instance.GetOnTitleString(type);
         if(string.IsNullOrEmpty(dialogue)) return;
         ShowDialogue(dialogue, true);
@@ -459,6 +472,8 @@ public class Pet : SerializedMonoBehaviour
     
     public void OnIsland()
     {
+        if(Time.time<3) return;
+        
         string dialogue = PetDialogueManager.Instance.GetOnIslandString(type);
         if(string.IsNullOrEmpty(dialogue)) return;
         if (petDialogue == null)

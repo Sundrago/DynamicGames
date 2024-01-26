@@ -57,22 +57,24 @@ namespace MyUtility
                 int weekOfMonth=(date.Day + ((int)date.DayOfWeek)) / 7 + 1;
                 
                 string lottery;
+                int maxN = PlayerPrefs.GetString("language") == "ko" ? 46 : 70;
+                
                 float rnd = Random.Range(0f, 1f);
                 if (rnd < 0.33f)
                 {
                     Random.InitState(date.Year * date.Month + weekOfMonth);
-                    lottery = Random.Range(1, 70).ToString();
+                    lottery = Random.Range(1, maxN).ToString();
                     Random.InitState(date.Year * date.Month + weekOfMonth + 10);
-                    lottery += " " + Random.Range(1, 70);
+                    lottery += " " + Random.Range(1, maxN);
                 }
                 else if(rnd < 0.66)
                 {
                     Random.InitState(date.Year * date.Month + weekOfMonth + 11);
-                    lottery = Random.Range(1, 70).ToString();
+                    lottery = Random.Range(1, maxN).ToString();
                     Random.InitState(date.Year * date.Month + weekOfMonth + 12);
-                    lottery += " " + Random.Range(1, 70);
+                    lottery += " " + Random.Range(1, maxN);
                     Random.InitState(date.Year * date.Month + weekOfMonth + 13);
-                    lottery += " " + Random.Range(1, 70);
+                    lottery += " " + Random.Range(1, maxN);
                 }
                 else
                 {

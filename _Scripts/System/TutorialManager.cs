@@ -274,7 +274,7 @@ public class TutorialManager : MonoBehaviour
 
     public void TutorialE_check()
     {
-        if(PlayerPrefs.GetInt("PetTotalCount") != 0) return;
+        if(PetManager.Instance.GetTotalPetCount() != 0) return;
         tutorial_E01();
     }
     

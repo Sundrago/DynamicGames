@@ -7,7 +7,7 @@ using Sirenix.OdinInspector;
 using MyUtility;
 using Firebase.Analytics;
 
-public class PetManager : MonoBehaviour
+public class PetManager : SerializedMonoBehaviour
 {
     [SerializeField, TableList] public List<Petdata> petdatas;
     public static PetManager Instance;
@@ -15,43 +15,44 @@ public class PetManager : MonoBehaviour
     [SerializeField] private GameObject newPetSparcle_prefab;
     [SerializeField] public PetDialogue petDialoguePrefab;
     [SerializeField] public Transform petDialogueHolder;
-    [SerializeField] private AskForUserReview askForUserReview;
+    [SerializeField, ReadOnly] private Dictionary<PetType, PetSaveData> petSaveDatas = new Dictionary<PetType, PetSaveData>();
+    // [SerializeField] private AskForUserReview askForUserReview;
     
     private int petCount;
     
     private void Awake()
     {
         Instance = this;
-        UpdatePetObjActive();
+        StartCoroutine(LoadData());
     }
 
     private void Start()
     {
         petCount = 0;
-        foreach (PetType _type in Enum.GetValues((typeof(PetType))))
-        {
-            if (GetPetCount(_type) > 0 && !PlayerPrefs.HasKey("PetBirthDate_" + _type))
-            {
-                SetPetBirthDateAndLevel(_type);
-            }
-
-            if (GetPetCount(_type) > 0) petCount += 1;
-            print(_type + " : " + GetPetAge(_type));
-        }
-        // FirebaseAnalytics.LogEvent("Pets", "petCount", petCount);
+        // foreach (PetType _type in Enum.GetValues((typeof(PetType))))
+        // {
+        //     if (GetPetCount(_type) > 0 && !PlayerPrefs.HasKey("PetBirthDate_" + _type))
+        //     {
+        //         SetPetBirthDateAndLevel(_type);
+        //     }
+        //
+        //     if (GetPetCount(_type) > 0) petCount += 1;
+        //     print(_type + " : " + GetPetAge(_type));
+        // }
+        
+        // FirebaseAnalytics.LogEvent("Pets", "petCount", GetTotalPetCount());
 
         PetDialogueManager.Instance.PlayWeatherDialogue();
     }
 
-    public int GetPetCount()
+    public int GetTotalPetCount()
     {
         petCount = 0;
         foreach (PetType _type in Enum.GetValues((typeof(PetType))))
         {
-            if (GetPetCount(_type) > 0) petCount += 1;
-            print(_type + " : " + GetPetAge(_type));
+            if (GetPetSaveData(_type).count > 0) petCount += 1;
+            // print(_type + " : " + GetPetAge(_type));
         }
-
         return petCount;
     }
 
@@ -67,20 +68,16 @@ public class PetManager : MonoBehaviour
         return null;
     }
 
-    private void SetPetBirthDateAndLevel(PetType _type)
-    {
-        PlayerPrefs.SetString("PetBirthDate_" + _type, Converter.DateTimeToString(DateTime.Now));
-        PlayerPrefs.SetInt("PetLevel_" + _type, 1);
-        PlayerPrefs.Save();
-    }
+    // private void SetPetBirthDateAndLevel(PetType _type)
+    // {
+    //     PlayerPrefs.SetString("PetBirthDate_" + _type, Converter.DateTimeToString(DateTime.Now));
+    //     PlayerPrefs.SetInt("PetLevel_" + _type, 1);
+    //     PlayerPrefs.Save();
+    // }
 
     public string GetPetAge(PetType _type)
     {
-        if (!PlayerPrefs.HasKey("PetBirthDate_" + _type))
-            return null;
-
-        print(PlayerPrefs.GetString("PetBirthDate_" + _type));
-        DateTime birth = Converter.StringToDateTime(PlayerPrefs.GetString("PetBirthDate_" + _type));
+        DateTime birth = Converter.StringToDateTime(GetPetSaveData(_type).birthDate);
 
         TimeSpan age = DateTime.Now - birth;
 
@@ -103,12 +100,12 @@ public class PetManager : MonoBehaviour
     
     public int GetPetCount(PetType _type)
     {
-        return PlayerPrefs.GetInt("PetCount_" + _type);
+        return GetPetSaveData(_type).count;
     }
 
     public int GetPetLevel(PetType _type)
     {
-        return PlayerPrefs.GetInt("PetLevel_" + _type);
+        return GetPetSaveData(_type).level;
     }
 
     public int GetPetExp(PetType _type)
@@ -134,7 +131,7 @@ public class PetManager : MonoBehaviour
         
         if (exp >= level * 5)
         {
-            PlayerPrefs.SetInt("PetLevel_" + _type, PlayerPrefs.GetInt("PetLevel_" + _type) + 1);
+            GetPetSaveData(_type).level += 1;
             return true;
         }
 
@@ -171,14 +168,10 @@ public class PetManager : MonoBehaviour
     
     public void AddPetCountByType(PetType _type)
     {
-        int count = PlayerPrefs.GetInt("PetCount_" + _type) + 1;
-        PlayerPrefs.SetInt("PetCount_" + _type, count);
-        
-        int totalCount = PlayerPrefs.GetInt("PetTotalCount") + 1;
-        PlayerPrefs.SetInt("PetTotalCount", totalCount);
-        PlayerPrefs.Save();
+        PetSaveData data = GetPetSaveData(_type);
+        data.count += 1;
 
-        if(totalCount == 1) TutorialManager.Instancee.TutorialD_Check();
+        if(GetTotalPetCount() == 1) TutorialManager.Instancee.TutorialD_Check();
         
         // if (totalCount >= 3)
         // {
@@ -188,52 +181,116 @@ public class PetManager : MonoBehaviour
         //     }
         // } 
 
-        if (count == 1)
+        if (data.count == 1)
         {
-            SetPetBirthDateAndLevel(_type);
+            data.level = 1;
+            data.birthDate = Converter.DateTimeToString(DateTime.Now);
         }
-        UpdatePetObjActive();
+
+        StartCoroutine(LoadData());
     }
 
-    public void UpdatePetObjActive()
-    {
-        foreach (Petdata data in petdatas)
-        {
-            data.obj.SetActive(GetPetCount(data.type) != 0);
-        }
-    }
+    // public void UpdatePetObjActive()
+    // {
+    //     foreach (Petdata data in petdatas)
+    //     {
+    //         data.obj.SetActive(GetPetCount(data.type) != 0);
+    //     }
+    // }
 
-    [Button]
-    private void JsonTest()
+    // [Button]
+    // private void JsonTest()
+    // {
+    //     // print(JsonUtility.ToJson(data));
+    //
+    //     string json = "{}";
+    //     PetSaveData data = JsonUtility.FromJson<PetSaveData>(json);
+    //     print(data);
+    // }
+    
+    private PetSaveData GetPetSaveData(PetType _type)
     {
-        // print(JsonUtility.ToJson(data));
-
-        string json = "{}";
-        PetSaveData data = JsonUtility.FromJson<PetSaveData>(json);
-        print(data.exp);
-    }
-    private PetSaveData LoadData(PetType _type)
-    {
+        if (petSaveDatas.ContainsKey(_type)) return petSaveDatas[_type];
+        
         if(PlayerPrefs.HasKey("PetSaveData_" + _type))
         {
             string data = PlayerPrefs.GetString("PetSaveData_" + _type);
+            print(data);
+            petSaveDatas.Add(_type, JsonUtility.FromJson<PetSaveData>(data));
         }
-            return new PetSaveData();
+        else
+        {
+            PetSaveData data = new PetSaveData();
+            data.count = PlayerPrefs.GetInt("PetCount_" + _type, 0);
+            data.x = 0f;
+            data.y = 0f;
+            data.level = PlayerPrefs.GetInt("PetLevel_" + _type, 0);
+            data.birthDate = PlayerPrefs.GetString("PetBirthDate_" + _type, Converter.DateTimeToString(DateTime.Now));
+            data.isActive = true;
+
+            petSaveDatas.Add(_type, data);
+        }
+
+        return petSaveDatas[_type];
     }
 
     private void SaveData()
     {
-        //data = "
+        foreach (Petdata petdata in petdatas)
+        {
+            PetSaveData data = GetPetSaveData(petdata.type);
+            data.x = petdata.obj.transform.position.x;
+            data.y = petdata.obj.transform.position.y;
+            PlayerPrefs.SetString("PetSaveData_" + petdata.type, JsonUtility.ToJson(data));
+        }
+        // print("PetSaveData : saved!");
+        PlayerPrefs.Save();
     }
-    
+
+    private IEnumerator LoadData()
+    {
+        foreach (Petdata petdata in petdatas)
+        {
+            PetSaveData data = GetPetSaveData(petdata.type);
+            print(petdata.type + " : " + data.count);
+            if (data.count > 0)
+            {
+                petdata.obj.transform.position = new Vector3(data.x, data.y, petdata.obj.transform.position.z);
+                petdata.obj.SetActive(true);
+            }
+            else
+            {
+                petdata.obj.SetActive(false);
+            }
+        }
+
+        yield return null;
+    }
+
+    public void RemoveData()
+    {
+        petSaveDatas = new Dictionary<PetType, PetSaveData>();
+        LoadData();
+    }
+
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus) SaveData();
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveData();
+    }
+
     public class PetSaveData
     {
+        public int count;
         public bool isActive;
         public float x;
         public float y;
         public int level;
         public string birthDate;
-        public int exp;
     }
     
 #if UNITY_EDITOR
@@ -248,15 +305,6 @@ public class PetManager : MonoBehaviour
         foreach (var data in petdatas)
         {
             if (data.image == null) data.image = data.obj.GetComponent<Pet>().spriteRenderer.sprite;
-        }
-    }
-    
-    [Button]
-    private void GetImage()
-    {
-        foreach (Petdata data in petdatas)
-        {
-            if (data.image == null) data.image = data.obj.GetComponent<PetAnim>().idles[0];
         }
     }
 #endif

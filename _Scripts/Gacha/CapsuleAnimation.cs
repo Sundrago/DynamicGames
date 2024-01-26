@@ -43,7 +43,7 @@ public class CapsuleAnimation : MonoBehaviour
     
     private void UpdateItemImage()
     {
-        if (PetManager.Instance.GetPetCount() == 0) type = PetType.Fluffy;
+        if (PetManager.Instance.GetTotalPetCount() == 0) type = PetType.Fluffy;
         else
         {
             int rnd = UnityEngine.Random.Range(0, PetManager.Instance.petdatas.Count);

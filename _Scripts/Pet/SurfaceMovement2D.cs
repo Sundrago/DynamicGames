@@ -94,7 +94,7 @@ public class SurfaceMovement2D : MonoBehaviour
 
     private void Start()
     {
-       
+        currentCorner.direction = Random.value > 0.5f;
     }
     public void StartMovement()
     {
@@ -601,10 +601,10 @@ public class SurfaceMovement2D : MonoBehaviour
         }
     }
     
-    // private void OnEnable()
-    // {
-    //     FindNearCorner();
-    // }
+    private void OnEnable()
+    {
+        FindNearCorner();
+    }
 
     public void ForceLandOnSquare(GameObject targetSquare, float holdDuration)
     {
