@@ -133,7 +133,7 @@ public class GachaponManager : MonoBehaviour
         status = gachaponStatus.idle;
         sfx.ChangeBGMVolume(1f);
         RnadomizePonCapsule();
-        TutorialManager.Instancee.TutorialF_Check();
+        TutorialManager.Instancee.GotPet();
 
         if(isnew)DOVirtual.DelayedCall(0.5f, HidePanel);
     }
@@ -169,7 +169,7 @@ public class GachaponManager : MonoBehaviour
             .SetEase(Ease.OutBack)
             .OnComplete(() =>
             {
-                TutorialManager.Instancee.TutorialE_check();
+                TutorialManager.Instancee.GachaponPanelOpend();
             });
 
     bg.DOFade(0.2f, 1f);

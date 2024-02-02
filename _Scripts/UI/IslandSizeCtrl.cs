@@ -15,6 +15,8 @@ public class IslandSizeCtrl : MonoBehaviour
 
     private void Awake()
     {
+        smallsized = i14Pro;
+#if UNITY_IOS
         if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhoneX)
         {
             smallsized = iXSXRX;
@@ -89,6 +91,7 @@ public class IslandSizeCtrl : MonoBehaviour
             else if (modelID == "iPhone16,2") smallsized = i15ProMax;
             else smallsized = i14Pro;
         }
+#endif
     }
 
     

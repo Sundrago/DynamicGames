@@ -86,17 +86,7 @@ public class PetDialogue : MonoBehaviour
         {
             if (Time.time > endTime)
             {
-                status = DialogueStatus.disappear;
-                typewriter.StartDisappearingText();
-                bgImage.DOFade(0, 2f).OnComplete(
-                    ()=>
-                    {
-                        status = DialogueStatus.hidden;
-                        gameObject.SetActive(false);
-                    });
-                main_ui.DOFade(0, 2.5f);
-                topTail.DOFade(0, 2.5f);
-                btmTail.DOFade(0, 2.5f);
+                Hide();
             }
         }
         
@@ -110,5 +100,27 @@ public class PetDialogue : MonoBehaviour
         }
 
         tails.transform.position = new Vector3(targetTransform.position.x, tails.transform.position.y, 0);
+    }
+
+    public void Hide()
+    {
+        if(status!=DialogueStatus.appear) return;
+        
+        DOTween.Kill(main_ui);
+        DOTween.Kill(bgImage);
+        DOTween.Kill(topTail);
+        DOTween.Kill(btmTail);
+        
+        status = DialogueStatus.disappear;
+        typewriter.StartDisappearingText();
+        bgImage.DOFade(0, 2f).OnComplete(
+            ()=>
+            {
+                status = DialogueStatus.hidden;
+                gameObject.SetActive(false);
+            });
+        main_ui.DOFade(0, 2.5f);
+        topTail.DOFade(0, 2.5f);
+        btmTail.DOFade(0, 2.5f);
     }
 }

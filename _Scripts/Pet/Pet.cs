@@ -70,6 +70,7 @@ public class Pet : SerializedMonoBehaviour
     private PetDialogue petDialogue = null;
 
     private float jumpStartDuration, jumpEndDuration, hitDuration;
+    public bool ignoreIdleDialogue = false;
     
     private void UpdateStatus(PetStatus _status)
     {
@@ -370,9 +371,9 @@ public class Pet : SerializedMonoBehaviour
 
     public void SettoIdle(float holdDuration)
     {
+        UpdateStatus(PetStatus.Idle);
         statusTimer = Time.time + holdDuration;
         motionTimer = Time.time + holdDuration;
-        UpdateStatus(PetStatus.Idle);
     }
     
     public Sprite[] GetJumpAnim()
@@ -434,6 +435,7 @@ public class Pet : SerializedMonoBehaviour
 
     public void OnIdle()
     {
+        if(ignoreIdleDialogue) return;
         string dialogue = PetDialogueManager.Instance.GetIdleText(type);
         if(string.IsNullOrEmpty(dialogue)) return;
         ShowDialogue(dialogue);
@@ -451,7 +453,6 @@ public class Pet : SerializedMonoBehaviour
         string dialogue = PetDialogueManager.Instance.GetGameEnterString(type, gameType);
         if(string.IsNullOrEmpty(dialogue)) return;
         ShowDialogue(dialogue, true);
-        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.playWithPet);
     }
     
     public void OnGameExit(GameType gameType)

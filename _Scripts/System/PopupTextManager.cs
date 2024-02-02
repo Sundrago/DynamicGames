@@ -80,7 +80,8 @@ public class PopupTextManager : MonoBehaviour
 
     public void HidePanel()
     {
-        if(DOTween.IsTweening(panel)) return;
+        if (DOTween.IsTweening(panel)) return;
+        
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.UI_CLOSE);
         bgImage.DOFade(0, 0.25f);
         panel.DOScale(0.8f, 0.25f).SetEase(Ease.OutExpo);
@@ -97,6 +98,7 @@ public class PopupTextManager : MonoBehaviour
     public void ShowPanel()
     {
         if (DOTween.IsTweening(panel)) DOTween.Kill(panel);
+        if (DOTween.IsTweening(bgImage)) DOTween.Kill(bgImage);
 
         panel.localScale = new Vector3(0.7f, 0.7f, 1);
         panel.localPosition = Vector3.zero;
@@ -114,7 +116,13 @@ public class PopupTextManager : MonoBehaviour
 
     public void BtnClicked(int idx)
     {
+        if (DOTween.IsTweening(panel)) return;
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.UI_SELECT);
+        
+        okay_btn.gameObject.SetActive(false);
+        yes_btn.gameObject.SetActive(false);
+        no_btn.gameObject.SetActive(false);
+        
         switch (idx)
         {
             case 0:

@@ -357,8 +357,8 @@ public class SurfaceMovement2D : MonoBehaviour
 
         if (!currentCorner.direction)
         {
-            gameObject.transform.localScale = new Vector3(-1, -1f, 1f);
-        } else gameObject.transform.localScale = new Vector3(-1f, 1f, 1f);
+            gameObject.transform.localScale = new Vector3(- Mathf.Abs(gameObject.transform.localScale.x), - Mathf.Abs(gameObject.transform.localScale.y), Mathf.Abs(gameObject.transform.localScale.z));
+        } else gameObject.transform.localScale = new Vector3(- Mathf.Abs(gameObject.transform.localScale.x), Mathf.Abs(gameObject.transform.localScale.y), Mathf.Abs(gameObject.transform.localScale.z));
 
         //Setup Transition
         float transitionDist = Mathf.Abs(Vector2.Distance(gameObject.transform.position, closest));

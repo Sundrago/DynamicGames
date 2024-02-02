@@ -137,7 +137,7 @@ public class MainCanvas : MonoBehaviour
                     currentGameBtn = null;
                     leaderboard.Start();
                     StartCoroutine(rangkingManager.UpdatetRanks());
-                    TutorialManager.Instancee.TutorialD_Check();
+                    TutorialManager.Instancee.WentBackHome();
                 });
         }
     }

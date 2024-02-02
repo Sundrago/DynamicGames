@@ -1,15 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using MyUtility;
 using Firebase.Analytics;
+using UnityEngine.EventSystems;
+using Random = UnityEngine.Random;
 
 public class PetManager : SerializedMonoBehaviour
 {
-    [SerializeField, TableList] public List<Petdata> petdatas;
+    // [SerializeField, TableList] public List<Petdata> petDatass;
+
+    [SerializeField] private Dictionary<PetType, PetData> petDatas;
+    
     public static PetManager Instance;
 
     [SerializeField] private GameObject newPetSparcle_prefab;
@@ -29,19 +35,6 @@ public class PetManager : SerializedMonoBehaviour
     private void Start()
     {
         petCount = 0;
-        // foreach (PetType _type in Enum.GetValues((typeof(PetType))))
-        // {
-        //     if (GetPetCount(_type) > 0 && !PlayerPrefs.HasKey("PetBirthDate_" + _type))
-        //     {
-        //         SetPetBirthDateAndLevel(_type);
-        //     }
-        //
-        //     if (GetPetCount(_type) > 0) petCount += 1;
-        //     print(_type + " : " + GetPetAge(_type));
-        // }
-        
-        // FirebaseAnalytics.LogEvent("Pets", "petCount", GetTotalPetCount());
-
         PetDialogueManager.Instance.PlayWeatherDialogue();
     }
 
@@ -56,16 +49,34 @@ public class PetManager : SerializedMonoBehaviour
         return petCount;
     }
 
-    public Petdata GetPetDataByType(PetType type)
+    public PetData GetPetDataByType(PetType type)
     {
-        foreach (Petdata data in petdatas)
+        if (petDatas.ContainsKey(type)) return petDatas[type];
+        else return null;
+    }
+
+    public int GetPetDataCount()
+    {
+        return petDatas.Count;
+    }
+
+    public List<PetData> GetActivePetDatas()
+    {
+        List<PetData> pets = new List<PetData>();
+        foreach (var entry in petDatas)
         {
-            if (data.type == type)
+            if (entry.Value.obj.activeSelf)
             {
-                return data;
+                pets.Add(entry.Value);
             }
         }
-        return null;
+        return pets;
+    }
+
+    public PetData GetRandomPetData(int idx = -1)
+    {
+        if (idx == -1) idx = Random.Range(0, petDatas.Count);
+        return petDatas.ElementAt(idx).Value;
     }
 
     // private void SetPetBirthDateAndLevel(PetType _type)
@@ -146,41 +157,28 @@ public class PetManager : SerializedMonoBehaviour
         DOVirtual.DelayedCall(20, () => {
             Destroy(fx);
         });
-        
-        List<Pet> pets = new List<Pet>();
-        foreach (var petdata in petdatas)
-        {
-            if (petdata.obj.activeSelf)
-            {
-                pets.Add(petdata.obj.GetComponent<Pet>());
-            }
-        }
+
+        List<PetData> pets = GetActivePetDatas();
 
         foreach (var pet in pets)
         {
             float thres = pets.Count < 3 ? 1 : 3f / pets.Count;
             if (UnityEngine.Random.Range(0f, 1f) < thres)
-                pet.OnNewFriend();
+                pet.component.OnNewFriend();
         }
         
         GetPetDataByType(_type).obj.GetComponent<Pet>().OnIdle();
+    }
+
+    public Dictionary<PetType, PetData> GetPetDatas()
+    {
+        return petDatas;
     }
     
     public void AddPetCountByType(PetType _type)
     {
         PetSaveData data = GetPetSaveData(_type);
         data.count += 1;
-
-        if(GetTotalPetCount() == 1) TutorialManager.Instancee.TutorialD_Check();
-        
-        // if (totalCount >= 3)
-        // {
-        //     if (askForUserReview != null)
-        //     {
-        //         // askForUserReview.CubeFall();
-        //     }
-        // } 
-
         if (data.count == 1)
         {
             data.level = 1;
@@ -189,24 +187,6 @@ public class PetManager : SerializedMonoBehaviour
 
         StartCoroutine(LoadData());
     }
-
-    // public void UpdatePetObjActive()
-    // {
-    //     foreach (Petdata data in petdatas)
-    //     {
-    //         data.obj.SetActive(GetPetCount(data.type) != 0);
-    //     }
-    // }
-
-    // [Button]
-    // private void JsonTest()
-    // {
-    //     // print(JsonUtility.ToJson(data));
-    //
-    //     string json = "{}";
-    //     PetSaveData data = JsonUtility.FromJson<PetSaveData>(json);
-    //     print(data);
-    // }
     
     private PetSaveData GetPetSaveData(PetType _type)
     {
@@ -223,7 +203,7 @@ public class PetManager : SerializedMonoBehaviour
             PetSaveData data = new PetSaveData();
             data.count = PlayerPrefs.GetInt("PetCount_" + _type, 0);
             data.x = 0f;
-            data.y = 0f;
+            data.y = -1f;
             data.level = PlayerPrefs.GetInt("PetLevel_" + _type, 0);
             data.birthDate = PlayerPrefs.GetString("PetBirthDate_" + _type, Converter.DateTimeToString(DateTime.Now));
             data.isActive = true;
@@ -236,8 +216,9 @@ public class PetManager : SerializedMonoBehaviour
 
     private void SaveData()
     {
-        foreach (Petdata petdata in petdatas)
+        foreach (var entry in petDatas)
         {
+            PetData petdata = entry.Value;
             PetSaveData data = GetPetSaveData(petdata.type);
             data.x = petdata.obj.transform.position.x;
             data.y = petdata.obj.transform.position.y;
@@ -249,8 +230,9 @@ public class PetManager : SerializedMonoBehaviour
 
     private IEnumerator LoadData()
     {
-        foreach (Petdata petdata in petdatas)
+        foreach (var entry in petDatas)
         {
+            PetData petdata = entry.Value;
             PetSaveData data = GetPetSaveData(petdata.type);
             print(petdata.type + " : " + data.count);
             if (data.count > 0)
@@ -293,18 +275,38 @@ public class PetManager : SerializedMonoBehaviour
         public string birthDate;
     }
     
+    
 #if UNITY_EDITOR
     [Button]
-    private void AddPetTypeToList()
+    private void ImportPetsFromScene()
     {
+        GameObject[] pets = GameObject.FindGameObjectsWithTag("PET");
         foreach (PetType type in Enum.GetValues(typeof(PetType)))
         {
-            if(GetPetDataByType(type) == null) petdatas.Add(new Petdata(type));
+            if (!petDatas.ContainsKey(type))
+            {
+                foreach (var obj in pets)
+                {
+                    if (obj.GetComponent<Pet>().type == type)
+                    {
+                        petDatas.Add(type, new PetData());
+                        petDatas[type].obj = obj;
+                        break;
+                    }
+                }
+            }
         }
-
-        foreach (var data in petdatas)
+    }
+    [Button]
+    private void UpdatePetDatas()
+    {
+        foreach (var entry in petDatas)
         {
-            if (data.image == null) data.image = data.obj.GetComponent<Pet>().spriteRenderer.sprite;
+            PetData data = entry.Value;
+            if(entry.Value.obj == null) continue;
+            data.component = data.obj.GetComponent<Pet>();
+            data.type = data.component.type;
+            data.image = data.component.spriteRenderer.sprite;
         }
     }
 #endif
@@ -312,15 +314,11 @@ public class PetManager : SerializedMonoBehaviour
 
 
 [Serializable]
-public class Petdata
+public class PetData
 {
-    public PetType type;
-    public Sprite image;
     public GameObject obj;
-
-    public Petdata(PetType _type)
-    {
-        type = _type;
-    }
+    [ReadOnly] public PetType type;
+    [ReadOnly] public Pet component;
+    [ReadOnly] public Sprite image;
 }
-public enum PetType { Cocoa, Brownie, Fluffy, Foxy, MrPinchy, Krabs, Dash, Batcat, Butter,Matata,Gcat, Kune, Lo, Ve, Default } //Caramel
+public enum PetType { Fluffy, Cocoa, Brownie, Foxy, MrPinchy, Krabs, Dash, Batcat, Butter,Matata,Gcat, Kune, Lo, Ve, Default } //Caramel

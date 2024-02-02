@@ -52,8 +52,8 @@ public class Gacha_TicketsHolder : MonoBehaviour
         if (score >= previouseHighScore) ticketCount += 1;
         
         //bonus
-        if(PlayerPrefs.GetInt("totalTicketCount") < 10 && score >= midScore/2f) ticketCount += 1;
-        if(PlayerPrefs.GetInt("totalTicketCount") < 50 && score >= midScore) ticketCount += 1;
+        if(PlayerPrefs.GetInt("totalTicketCount") < 500 && score >= midScore/2f) ticketCount += 1;
+        if(PlayerPrefs.GetInt("totalTicketCount") < 200 && score >= midScore) ticketCount += 1;
 
         switch (ticketCount)
         {

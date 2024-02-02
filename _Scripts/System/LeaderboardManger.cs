@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
+#if UNITY_IOS
 using UnityEngine.SocialPlatforms.GameCenter;
+#endif
 using UnityEngine.Networking;
 using MyUtility;
 using System.Threading.Tasks;
@@ -83,7 +85,9 @@ public class LeaderboardManger : MonoBehaviour
     public void OpenLeaderboardAt(GameType gameType)
     {
         string id = "score_" + gameType;
+#if UNITY_IOS
         GameCenterPlatform.ShowLeaderboardUI(id.ToString(), TimeScope.AllTime);
+#endif
     }
 
     public void Start()

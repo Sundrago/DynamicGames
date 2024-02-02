@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using MyUtility;
 using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
@@ -18,35 +19,66 @@ public class TutorialManager : MonoBehaviour
      */
     
     public static TutorialManager Instancee;
-    [SerializeField] private GameObject gachaBlock, tutorialBlock, jumpBlock, pet_ticketBtn, pet_coinBtn, unlockBtn, keyBtn;
+    [SerializeField] private GameObject gachaBlock, tutorialBlock, jumpBlock, pet_ticketBtn, pet_coinBtn, unlockBtn, keyBtn, firendsBlock;
     [SerializeField] private MainCanvas main;
     [SerializeField] private GameObject cursor;
     [SerializeField] private Image cursor_image;
+    [SerializeField] private ExclamationMark exclamationMark_prefab;
+    [SerializeField] private Transform mainCanvas;
     
-    private string tutorialStatus = "begin";
+    // private string tutorialStatus = "begin";
+    private enum TutorialStatus
+    {
+        Begin,A,B,B_key,C,C_EnterGame,D,E,E_Gacha, E_Coin,F,G, G_FriendBlockClosed, G_EnterGameWithPet_drag, G_EnterGameWithPet_select, G_EnterGameWithPet_play, finished
+    }
+
+    private TutorialStatus status = TutorialStatus.finished;
     
     private void Awake()
     {
         Instancee = this;
-        // PlayerPrefs.DeleteAll();
-         
+    }
+
+    private void Start()
+    {
+        if(Time.time<2f) return;
+
+        if (!gachaBlock.gameObject.activeSelf && BlockStatusManager.Instance.IsAllGameLocked() &&
+            MoneyManager.Instance.GetCount(MoneyManager.RewardType.Ticket) == 0 && status == TutorialStatus.finished)
+        {
+            status = TutorialStatus.B;
+        }
+        
+        if (firendsBlock.gameObject.activeSelf && PetManager.Instance.GetPetCount(PetType.Fluffy) > 0 &&
+            PlayerPrefs.GetInt("tutorialG", 0) == 0 && status == TutorialStatus.finished)
+        {
+            StartTutorialG();
+        }
+
+        if (!firendsBlock.gameObject.activeSelf && status != TutorialStatus.F && PetManager.Instance.GetTotalPetCount() > 0 && 
+            PlayerPrefs.GetInt("tutorialF", 0) == 0 && status == TutorialStatus.finished)
+        {
+            status = TutorialStatus.F;
+            GotPet();
+        }
     }
 
     private void Update()
     {
         if(Time.frameCount%30 == 0) CursorUpdate();
+        else if(Time.frameCount%155 == 0) Start();
     }
 
     private void CursorUpdate()
     {
-        if (tutorialBlock.activeSelf && tutorialStatus == "begin")
+        if (tutorialBlock.activeSelf && status == TutorialStatus.Begin)
         {
             ShowCursor(tutorialBlock.transform);
-            tutorialStatus = null;
+            status = TutorialStatus.A;
             return;
         }
 
-        if (tutorialStatus == "key")
+        if (status == TutorialStatus.B_key)
         {
             if(unlockBtn.activeSelf) ShowCursor(keyBtn.transform);
             else ShowCursor(jumpBlock.transform);
@@ -78,19 +110,19 @@ public class TutorialManager : MonoBehaviour
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup1);
     }
     
-    public void tutorial_02()
+    private void tutorial_02()
     {
         PopupTextManager.Instance.ShowOKPopup("[tutorial_2]<rainb>다이나믹 게임천국</rainb>에서 다양한 미니게임을 즐겨보세옹!", tutorial_03);
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
     }
     
-    public void tutorial_03()
+    private void tutorial_03()
     {
         PopupTextManager.Instance.ShowYesNoPopup("[tutorial_3]준비되었다면 미니게임을 불러올까요?", tutorial_04);
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
     }
     
-    public void tutorial_04()
+    private void tutorial_04()
     {
         HideCursor();
         BlockStatusManager.Instance.ExplodeBlock(BlockStatusManager.BlockType.tutorial);
@@ -107,6 +139,7 @@ public class TutorialManager : MonoBehaviour
         {
            ShowCursor(jumpBlock.transform);
         });
+        status = TutorialStatus.B;
     }
     
     
@@ -115,24 +148,26 @@ public class TutorialManager : MonoBehaviour
     public void tutorial_B01()
     {
         PopupTextManager.Instance.ShowOKPopup("[tutorial_B01]잠겨있는 게임을 열려면 <pend>열쇠</pend>가 필요하다옹!", tutorial_B02, "[tutorial_B02]열쇠요?");
+        jumpBlock.GetComponent<DragSprite>().hold = true;
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
     }
-    public void tutorial_B02()
+    private void tutorial_B02()
     {
         PopupTextManager.Instance.ShowOKPopup("[tutorial_B03]열쇠를 선물로 준다옹! 원하는 게임을 언락해보라옹!", tutorial_B03, "[tutorial_B04]고마워요!");
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup1);
     }
 
-    public void tutorial_B03()
+    private void tutorial_B03()
     {
-        tutorialStatus = "key";
+        status = TutorialStatus.B_key;
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.gotCoin);
         MoneyManager.Instance.Coin2DAnim(MoneyManager.RewardType.Key, Vector3.zero, 1);
     }
 
     private int tutorialB_check = 0;
-    public void tutorialB_Check()
+    public void DragSpriteBtnClicked()
     {
+        if(status != TutorialStatus.B) return;
         if (BlockStatusManager.Instance.IsAllGameLocked() &&
             MoneyManager.Instance.GetCount(MoneyManager.RewardType.Key) == 0)
         {
@@ -143,96 +178,98 @@ public class TutorialManager : MonoBehaviour
 
     public void GameUnlocked()
     {
-        if(tutorialStatus!="key") return;
-        tutorialStatus = null;
+        if(status != TutorialStatus.B_key) return;
+        status = TutorialStatus.C;
         HideCursor();
         DOVirtual.DelayedCall(4.5f, tutorial_C01);
     }
     
     //tutorial_C
     [Button]
-    public void tutorial_C01()
+    private void tutorial_C01()
     {
         PopupTextManager.Instance.ShowOKPopup("[tutorial_C01]축하한다옹!! 첫 게임을 언락했다옹!", tutorial_C02, "[ask4review_3]네!");
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup1);
     }
     
-    public void tutorial_C02()
+    private void tutorial_C02()
     {
         PopupTextManager.Instance.ShowOKPopup("[tutorial_C02]언락한 게임을 터치해서 플레이해보자옹!", null, "[DEFAULT_OKAY]좋아요!");
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
-        tutorialStatus = "enterGame";
+        status = TutorialStatus.C_EnterGame;
         ShowCursor(jumpBlock.transform);
     }
     
     //tutorial_C_2
-    public void tutorialC2_Check()
+    public void JumpGameEntered()
     {
         HideCursor();
-        if(tutorialStatus == "enterGame")
+        jumpBlock.GetComponent<DragSprite>().hold = false;
+        if(status == TutorialStatus.C_EnterGame)
             DOVirtual.DelayedCall(0.5f,tutorial_C02_2);
     }
     
-    public void tutorial_C02_2()
+    private void tutorial_C02_2()
     {
         PopupTextManager.Instance.ShowOKPopup("[tutorial_C02_2]첫 게임으로 들어왔다옹!! 높은 점수를 얻고 티켓을 모으라옹!", null, "[tutorial_C02_2a]가보자구!");
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
-        tutorialStatus = null;
+        status = TutorialStatus.D;
     }
     
     //tutorial_D
     [Button]
-    public void tutorial_D01()
+    private void tutorial_D01()
     {
         PopupTextManager.Instance.ShowOKPopup("[tutorial_D01]우왕, 게임을 플레이하고 티켓을 얻었다옹!", tutorial_D02, "[DEFAULT_YES]네!");
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup1);
     }
     
-    public void tutorial_D02()
+    private void tutorial_D02()
     {
         PopupTextManager.Instance.ShowOKPopup("[tutorial_D02]티켓으로는 새로운 게임을 언락하거나 갓챠에서 펫을 뽑을 수 있다옹!", tutorial_D03, "[DEFAULT_YES]네!");
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
     }
     
-    public void tutorial_D03()
+    private void tutorial_D03()
     {
         PopupTextManager.Instance.ShowOKPopup("[tutorial_D03]리더보드 블록과 갓챠 블록을 주겠다옹!", tutorial_D04);
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
     }
 
-    public void tutorial_D04()
+    private void tutorial_D04()
     {
         main.ReturnToOriginalPos();
         BlockStatusManager.Instance.RevealBlock(BlockStatusManager.BlockType.gacha);
         BlockStatusManager.Instance.RevealBlock(BlockStatusManager.BlockType.leaderboard);
+        status = TutorialStatus.E;
     }
     
-    public void TutorialD_Check()
+    public void WentBackHome()
     {
-        if(gachaBlock.activeSelf) return;
-        tutorial_D01();
+        if(status == TutorialStatus.D || !gachaBlock.gameObject.activeSelf) tutorial_D01();
+        if (status == TutorialStatus.G_EnterGameWithPet_play) tutorial_G08();
     }
 
     //E
-    public void tutorial_E01()
+    private void tutorial_E01()
     {
         PopupTextManager.Instance.ShowOKPopup("[tutorial_E01]펫 가챠에서는 펫을 뽑을 수 있다옹!", tutorial_E02, "[tutorial_E01a]펫이요?");
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup1);
     }
     
-    public void tutorial_E02()
+    private void tutorial_E02()
     {
         PopupTextManager.Instance.ShowOKPopup("[tutorial_E02]귀여운 펫을 모아보라옹!", tutorial_E03, "[tutorial_E02a]얼마에요?");
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
     }
     
-    public void tutorial_E03()
+    private void tutorial_E03()
     {
         PopupTextManager.Instance.ShowOKPopup("[tutorial_E03]갓챠에서 펫을 한번 뽑는데는 티켓 50장이 필요하다옹", tutorial_E04, "[tutorial_E03a]해볼래요!");
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
     }
     
-    public void tutorial_E04()
+    private void tutorial_E04()
     {
         int ticketCount = MoneyManager.Instance.GetCount(MoneyManager.RewardType.Ticket);
 
@@ -248,10 +285,10 @@ public class TutorialManager : MonoBehaviour
         ShowCursor(pet_ticketBtn.transform);
     }
 
-    public void tutorial_E05()
+    private void tutorial_E05()
     {
         int ticketCount = MoneyManager.Instance.GetCount(MoneyManager.RewardType.Ticket);
-        tutorialStatus = "gacha";
+        status = TutorialStatus.E_Gacha;
         if (ticketCount < 50)
         {
             MoneyManager.Instance.Coin2DAnim(MoneyManager.RewardType.Ticket, Vector3.zero, 50 - ticketCount);
@@ -260,19 +297,19 @@ public class TutorialManager : MonoBehaviour
 
     public void TicketBtnClicked()
     {
-        if(!cursor.activeSelf) return;
-        if(tutorialStatus!="gacha") return;
+        if(status!=TutorialStatus.E_Gacha) return;
+        status = TutorialStatus.E_Coin;
         ShowCursor(pet_coinBtn.transform);
     }
 
     public void CoinBtnClicked()
     {
-        if(!cursor.activeSelf) return;
-        tutorialStatus = "pet";
+        if(status!=TutorialStatus.E_Coin) return;
+        status = TutorialStatus.F;
         HideCursor();
     }
 
-    public void TutorialE_check()
+    public void GachaponPanelOpend()
     {
         if(PetManager.Instance.GetTotalPetCount() != 0) return;
         tutorial_E01();
@@ -286,46 +323,212 @@ public class TutorialManager : MonoBehaviour
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup1);
     }
     
-    public void tutorial_F02()
+    private void tutorial_F02()
     {
-        PopupTextManager.Instance.ShowOKPopup("[tutorial_F02]펫 정보를 볼 수 있는 프렌즈 블록이다옹!", tutorial_F03, "[DEFAULT_YES]네!");
+        PopupTextManager.Instance.ShowOKPopup("[tutorial_F02]펫 정보를 볼 수 있는 프렌즈 블록이다옹!", tutorial_F03A, "[DEFAULT_YES]네!");
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
     }
     
-    public void tutorial_F03()
+    private void tutorial_F03()
     {
-        main.ReturnToOriginalPos();
-        BlockStatusManager.Instance.RevealBlock(BlockStatusManager.BlockType.friends);
-        BlockStatusManager.Instance.RevealBlock(BlockStatusManager.BlockType.tv);
+        
         
         PopupTextManager.Instance.ShowOKPopup("[tutorial_F03]튜토리얼은 여기까지다옹!", tutorial_F03A, "[DEFAULT_YES]네!");
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
     }
     
-    public void tutorial_F03A()
+    private void tutorial_F03A()
     {
+        main.ReturnToOriginalPos();
+        BlockStatusManager.Instance.RevealBlock(BlockStatusManager.BlockType.friends);
+        BlockStatusManager.Instance.RevealBlock(BlockStatusManager.BlockType.tv);
+        
         PopupTextManager.Instance.ShowOKPopup("[tutorial_F03A]티켓이 부족하면 광고를 보고 받을 수도 있다옹", tutorial_F04, "[DEFAULT_YES]네!");
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
     }
     
-    public void tutorial_F04()
+    private void tutorial_F04()
     {
         PopupTextManager.Instance.ShowOKPopup("[tutorial_F04]게임을 플레이하면서 더 많은 게임을 언락하고 새로운 펫을 뽑아보라옹!", tutorial_F05);
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
+        status = TutorialStatus.finished;
+        PlayerPrefs.SetInt("tutorialF", 1);
     }
 
-    public void tutorial_F05()
+    private void tutorial_F05()
     {
         // MoneyManager.Instance.AddTicket(MoneyManager.RewardType.Ticket, 20);
     }
     
-    public void TutorialF_Check()
+    public void GotPet()
     {
-        if(tutorialStatus !="pet") return;
-        DOVirtual.DelayedCall(2f, () =>
+        if(status == TutorialStatus.F || !firendsBlock.gameObject.activeSelf)
         {
-            tutorial_F01();
-        });
-        tutorialStatus = null;
+            DOVirtual.DelayedCall(2f, () =>
+            {
+                tutorial_F01();
+            });
+            Start();
+            return;
+        }
+        
+    }
+
+    [Button]
+    public void StartTutorialG()
+    {
+        PetData fluffy = PetManager.Instance.GetPetDataByType(PetType.Fluffy);
+        ExclamationMark exclamation = Instantiate(exclamationMark_prefab, mainCanvas);
+        exclamation.Init(fluffy.obj.transform, tutorial_G01);
+        fluffy.component.ignoreIdleDialogue = true;
+        status = TutorialStatus.G;
+    }
+    
+    [Button]
+    public void tutorial_G01()
+    {
+        PopupTextManager.Instance.ShowOKPopup("[tutorial_G01]안냥! 우리 게임에서 펫으로 플레이할 수 있다는 걸 알고 있었냥?", tutorial_G02, "[tutorial_G01a]정말? 어떻게?");
+        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup1);
+    }
+    
+    private void tutorial_G02()
+    {
+        PopupTextManager.Instance.ShowOKPopup("[tutorial_G02]쉽다냥! 펫을 손가락으로 드래그해서 블록 위에 놓아보라냥.", tutorial_G03, "[tutorial_G02a]오 신기하다!");
+        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
+    }
+    
+    private void tutorial_G03()
+    {
+        PopupTextManager.Instance.ShowOKPopup("[tutorial_G03]연습으로 나를 드래그해서 프렌즈 블록 위에 올려보라냥!", tutorial_G04, "[tutorial_G03a]좋아, 해볼게!");
+        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
+        status = TutorialStatus.G;
+    }
+
+    private void tutorial_G04()
+    {
+        PreviewIsland.Instance.Open(0);
+        Transform fluffy = PetManager.Instance.GetPetDataByType(PetType.Fluffy).obj.transform;
+        if (fluffy.position.y > 0)
+        {
+            fluffy.GetComponent<SurfaceMovement2D>().enabled = false;
+            fluffy.position = new Vector3(0, -1, 0);
+            fluffy.GetComponent<SurfaceMovement2D>().enabled = true;
+        }
+    }
+
+    private void tutorial_G05()
+    {
+        PopupTextManager.Instance.ShowOKPopup("[tutorial_G05]잘했다냥!! 펫을 Friends 블록에 드롭하면 펫에 대한 정보를 바로 확인할 수 있다냥", tutorial_G06, "[tutorial_G05a]오호라!");
+        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
+    }
+    public void PetDrop(BlockStatusManager.BlockType type)
+    {
+        if (status == TutorialStatus.G && type == BlockStatusManager.BlockType.friends)
+        {
+            PreviewIsland.Instance.Close();
+            status = TutorialStatus.G_FriendBlockClosed;
+            AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup2);
+            PetManager.Instance.GetPetDataByType(PetType.Fluffy).obj.GetComponent<Pet>()
+                .ShowDialogue(Localize.GetLocalizedString("[fluffy_tutorial0]보기보다 똑똑하구냥"), true);
+        }
+
+        if (status == TutorialStatus.G_EnterGameWithPet_drag)
+        {
+            bool flag = false;
+            foreach (GameType gameType in Enum.GetValues(typeof(GameType)))
+            {
+                if (type.ToString() == gameType.ToString())
+                {
+                    flag = true;
+                    break;
+                }
+            }
+
+            if (flag)
+            {
+                tutorial_G07();
+                PetManager.Instance.GetPetDataByType(PetType.Fluffy).obj.GetComponent<Pet>()
+                    .ShowDialogue(Localize.GetLocalizedString("[fluffy_tutorial1]가보자냥~!"), true);
+                DOVirtual.DelayedCall(6f, () =>
+                {
+                    if (status == TutorialStatus.G_EnterGameWithPet_select)
+                    {
+                        status = TutorialStatus.G_EnterGameWithPet_drag;
+                        PreviewIsland.Instance.Open(1);
+                    }
+                });
+            }
+        }
+    }
+
+    public void FriendsPanelClosed()
+    {
+        if (status == TutorialStatus.G_FriendBlockClosed)
+        {
+            tutorial_G05();
+        }
+        Start();
+    }
+    private void tutorial_G06()
+    {
+        PopupTextManager.Instance.ShowOKPopup("[tutorial_G06]이뿐만 아니라 펫으로 게임을 플레이할 수도 있다냥!!", tutorial_G06A, "[tutorial_G01a]정말? 어떻게?");
+        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
+    }
+    
+    private void tutorial_G06A()
+    {
+        PopupTextManager.Instance.ShowOKPopup("[tutorial_G06A]나를 게임 블록 위에 드롭해보라냥!!", tutorial_G06B, "[tutorial_G03a]좋아 해볼게!");
+        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
+        status = TutorialStatus.G_EnterGameWithPet_drag;
+    }
+    
+    private void tutorial_G06B()
+    {
+        PreviewIsland.Instance.Open(1);
+    }
+    
+    private void tutorial_G07()
+    {
+        PreviewIsland.Instance.Open(2);
+        status = TutorialStatus.G_EnterGameWithPet_select;
+    }
+
+    private void tutorial_G08()
+    {
+        PopupTextManager.Instance.ShowOKPopup("[tutorial_G08]잘했다냥! 이렇게 펫을 게임 블록 위에 올려서 원하는 펫으로 플레이 할 수 있다냥!", tutorial_G09, "[tutorial_G08a]고마워");
+        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup1);
+    }
+    
+    private void tutorial_G09()
+    {
+        PopupTextManager.Instance.ShowOKPopup("[tutorial_G09]튜토리얼은 여기까지다냥. 앞으로도 새로운 기능이 업데이트 되면 또 알려주겠다냥!", tutorial_G10, "[tutorial_G09a]최고야");
+        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup3);
+    }
+    
+    private void tutorial_G10()
+    {
+        PopupTextManager.Instance.ShowOKPopup("[tutorial_G10]선물로 티켓 30장을 주겠다냥. 다이나믹 아일랜드에서 재미있는 시간 보내라냥!", tutorial_G11, "[tutorial_G08a]고마워");
+        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup2);
+        status = TutorialStatus.finished;
+        PetManager.Instance.GetPetDataByType(PetType.Fluffy).obj.GetComponent<Pet>().ignoreIdleDialogue = false;
+        PlayerPrefs.SetInt("tutorialG", 1);
+    }
+    
+    private void tutorial_G11()
+    {
+        MoneyManager.Instance.Coin2DAnim(MoneyManager.RewardType.Ticket, Vector3.zero, 30);
+        PetManager.Instance.GetPetDataByType(PetType.Fluffy).obj.GetComponent<Pet>()
+            .ShowDialogue(Localize.GetLocalizedString("[fluffy_tutorial2]다른 친구들도 보고싶다냥"), true);
+    }
+
+    public void EnteredGameWithPet()
+    {
+        if (status == TutorialStatus.G_EnterGameWithPet_select || status == TutorialStatus.G_EnterGameWithPet_drag)
+        {
+            status = TutorialStatus.G_EnterGameWithPet_play;
+            PreviewIsland.Instance.Close();
+        }
+        
+        print("EnteredGameWithPet");
     }
 }

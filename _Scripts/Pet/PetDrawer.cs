@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using DG.Tweening;
@@ -59,7 +60,6 @@ public class PetDrawer : SerializedMonoBehaviour
     
 #if UNITY_EDITOR
     [Button]
-    
     private void SetDrawer()
     {
         foreach (KeyValuePair<PetType, PetDrawerItem> item in drawerItems)
@@ -69,11 +69,13 @@ public class PetDrawer : SerializedMonoBehaviour
             Destroy(item.Value.gameObject);
         }
         drawerItems = new Dictionary<PetType, PetDrawerItem>();
-        
+
+        var petDatas = petManager.GetPetDatas();
         //create
-        for (int i = 0; i<petManager.petdatas.Count; i++)
+        for (int i = 0; i<petDatas.Count; i++)
         {
-            Petdata data = petManager.petdatas[i];
+
+            PetData data = petDatas.ElementAt(i).Value;
             PetDrawerItem item = Instantiate(petDrawerItem_prefab, draweritemHolder);
 
             int x = i % 4;
@@ -88,8 +90,8 @@ public class PetDrawer : SerializedMonoBehaviour
             drawerItems.Add(data.type, item);
         }
 
-        float contentsHeight = ((petManager.petdatas.Count - petManager.petdatas.Count % 4) / 4 + 1) * height + heightOffset;
-        if (petManager.petdatas.Count % 4 == 0) contentsHeight -= height;
+        float contentsHeight = ((petDatas.Count - petDatas.Count % 4) / 4 + 1) * height + heightOffset;
+        if (petDatas.Count % 4 == 0) contentsHeight -= height;
         contents.sizeDelta = new Vector2(contents.sizeDelta.x, contentsHeight);
     }
 #endif

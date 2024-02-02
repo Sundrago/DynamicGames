@@ -143,6 +143,7 @@ public class SquareBlockCtrl : MonoBehaviour
             {
                 DoShineFX(2f);
             });
+        gameObject.transform.DOPunchScale(Vector3.one * 5, 0.7f, 5).SetDelay(0.5f);
         lockImage.DOFade(0f, 0.5f).SetDelay(0.5f);
         isLocked = false;
     }

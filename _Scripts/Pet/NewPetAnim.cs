@@ -49,7 +49,7 @@ public class NewPetAnim : MonoBehaviour
         float anim2Delay = 5.2f;
         DOVirtual.DelayedCall(anim2Delay, () =>
         {
-            PetAnim2Preview.Init(type.ToString().ToUpper(), PetDialogueManager.Instance.GetDescrString(type), PetDialogueManager.Instance.GetRank(type));
+            PetAnim2Preview.Init(type.ToString().ToUpper(), PetDialogueManager.Instance.GetDescrString(type), PetDialogueManager.Instance.GetRank(type).ToString());
         });
         DOVirtual.Float(1f, 0.55f, 1f, (x) =>
         {

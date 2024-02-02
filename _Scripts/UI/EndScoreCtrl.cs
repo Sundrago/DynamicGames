@@ -51,11 +51,13 @@ public class EndScoreCtrl : MonoBehaviour
     public static EndScoreCtrl Instance;
 
     [SerializeField] private PetEndScoreMotionCtrl petEndScoreMotionCtrl;
-    
+    [SerializeField] private NewHighScoreFX newHighScoreFX;
 
     private int curretBgm = -1;
     private GameType currentGameType;
     private bool newHighscore;
+    private float startTime;
+    private GameType startGameType;
 
     private void Awake()
     {
@@ -63,9 +65,22 @@ public class EndScoreCtrl : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    public void StartGame(GameType _gameType)
+    {
+        startTime = Time.time;
+        startGameType = _gameType;
+        print("startTime : " +startTime);
+    }
+
     public void ShowScore(int score, GameType gameType)
     {
-        // FirebaseAnalytics.LogEvent("Score", gameType.ToString()+"_score", score);
+#if UNITY_IOS && !UNITY_EDITOR
+        FirebaseAnalytics.LogEvent("Score", gameType.ToString()+"_score", score);
+        if (startGameType == gameType) {  
+            FirebaseAnalytics.LogEvent("Score", gameType.ToString()+"_playTime", Time.time-startTime);
+        }
+#endif
+        print("duration : " + (Time.time-startTime));
         MoneyManager.Instance.ShowPanel();
         PlayerPrefs.SetInt("totalScoreCount", PlayerPrefs.GetInt("totalScoreCount") + 1);
         PlayerPrefs.Save();
@@ -237,5 +252,10 @@ public class EndScoreCtrl : MonoBehaviour
         retartBtn.interactable = setActive;
         LeaderboardBtn.interactable = setActive;
         backtoMenuBtn.interactable = setActive;
+    }
+
+    public void ShowNewHighFX()
+    {
+        newHighScoreFX.StartFX();
     }
 }

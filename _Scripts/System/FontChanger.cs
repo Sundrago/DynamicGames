@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
-// using Sirenix.OdinInspector;
+using Sirenix.OdinInspector;
 using TMPro;
 
 public class FontChanger : MonoBehaviour
@@ -16,10 +16,12 @@ public class FontChanger : MonoBehaviour
     public TMPro.TMP_FontAsset en;
     TMPro.TMP_FontAsset myFont;
 
+    public TMPro.TMP_FontAsset lunapixel;
+    
     public List<Button> btns = new List<Button>();
 
     
-    // [Button]
+    [Button]
     public void ChangeFonts()
     {
         texts = GameObject.FindObjectsOfType<TMPro.TMP_Text>(true);
@@ -34,27 +36,27 @@ public class FontChanger : MonoBehaviour
             Locale currentSelectedLocale = LocalizationSettings.SelectedLocale;
             code = currentSelectedLocale.Identifier.Code;
         }
-        
-        switch (code)
-        {
-            case "ko":
-                myFont = ko;
-                break;
-            // case "en":
-            //     myFont = en;
-            //     break;
-            default:
-                myFont = zh;
-                break;
-        }
+        //
+        // switch (code)
+        // {
+        //     case "ko":
+        //         myFont = ko;
+        //         break;
+        //     // case "en":
+        //     //     myFont = en;
+        //     //     break;
+        //     default:
+        //         myFont = zh;
+        //         break;
+        // }
 
         foreach (TMPro.TMP_Text text in texts)
         {
             if (text.gameObject.tag == "localizeText")
             {
-                text.font = myFont;
+                text.font = lunapixel;
                 // if (code == "ar" || code == "ko" || code == "ja")
-                text.fontStyle = FontStyles.Bold;
+                text.fontStyle = FontStyles.Normal;
                 // else
                 //     text.fontStyle = FontStyles.Normal;
             }

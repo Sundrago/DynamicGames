@@ -27,16 +27,17 @@ public class Jump_GameManager : MonoBehaviour
     [SerializeField] private SpriteAnimator playerRenderer;
     [SerializeField] private GameObject playerPlaceHolder;
     [SerializeField] private PetManager petManager;
-
+    
     public List<GameObject> footsteps = new List<GameObject>();
     public int score, highScore;
-
+    private bool highFXShown;
+    
     private int totalStepCount = 0;
     private bool firstGame = false;
     private bool pauseGame = false;
     private float velocity;
     private float height = -0.3f;
-
+    
     void Start()
     {
         title.color = new Color(1f,1f,1f,0f);
@@ -403,12 +404,20 @@ public class Jump_GameManager : MonoBehaviour
         score_ui.transform.DOShakeScale(0.5f,0.1f);
 
         highScore = PlayerPrefs.GetInt("highscore_jump");
+        
         if(score > highScore) {
+            if (!highFXShown && highScore > 0)
+            {
+                highFXShown = true;
+                EndScoreCtrl.Instance.ShowNewHighFX();
+            }
             highscore_ui.transform.localScale = new Vector3(1,1,1);
             highscore_ui.transform.DOShakeScale(0.75f,0.15f);
             highScore = score;
         }
         highscore_ui.text = highScore.ToString();
+
+        
     }
 
     public void SetupGame() {
@@ -436,7 +445,8 @@ public class Jump_GameManager : MonoBehaviour
         player.transform.DOLocalMove(new Vector3(0f,-1.5f,1.25f), 2f)
         .SetEase(Ease.OutBack);    
 
-        if(firstGame) {
+        if(firstGame)
+        {
             cylindar.transform.localEulerAngles = new Vector3(0f,210f,0f);
             jump_scrl.targetRotation = cylindar.transform.localEulerAngles;
             title.gameObject.SetActive(true);
@@ -460,12 +470,14 @@ public class Jump_GameManager : MonoBehaviour
         player.SetActive(true);
         Time.timeScale = 1f;
         score = 0;
+        highFXShown = false;
         jump_scrl.targetRotation = cylindar.transform.localEulerAngles;
         UpdateScoreUI(score);
         DOTween.Kill(cylindar.transform);
         player.GetComponent<Rigidbody>().isKinematic = false;
         EndScoreCtrl.Instance.HideScore();
         jump_scrl.gameObject.SetActive(true);
+        EndScoreCtrl.Instance.StartGame(GameType.jump);
     }
 
     public void ClearGame(){
@@ -497,7 +509,7 @@ public class Jump_GameManager : MonoBehaviour
                 tutorial_text.transform.DOScale(Vector3.one, 0.5f);
                 tutorial.SetActive(true);
             }
-            TutorialManager.Instancee.tutorialC2_Check();
+            TutorialManager.Instancee.JumpGameEntered();
         });
         
         SetupGame();

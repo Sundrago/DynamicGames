@@ -19,6 +19,7 @@ public class DragSprite : MonoBehaviour//, IDragHandler, IPointerDownHandler, IP
     [SerializeField] private BlockStatusManager.BlockType blockType;
 
     public bool btnSelected = false;
+    public bool hold = false;
     public GameObject miniisland;
 
     private Vector2 startPosition;
@@ -261,13 +262,13 @@ public class DragSprite : MonoBehaviour//, IDragHandler, IPointerDownHandler, IP
 
     public void BtnClicked() {
         print("BtnClicked");
-        
+        InstantiateEnergyFX();
         if(btnSelected) {
             if (squareBlockCtrl != null && squareBlockCtrl.isLocked == true && !squareBlockCtrl.isNotGame)
             {
                 UnlockBtnManager.Instance.Init(this);
                 AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.unable);
-                TutorialManager.Instancee.tutorialB_Check();
+                TutorialManager.Instancee.DragSpriteBtnClicked();
                 btnSelected = false;
             }
             else
@@ -281,7 +282,7 @@ public class DragSprite : MonoBehaviour//, IDragHandler, IPointerDownHandler, IP
         {
             if(DOTween.IsTweening(gameObject.transform)) DOTween.Kill(gameObject.transform);
             gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
-            gameObject.transform.DOMove(new Vector3(-0.4f,0.9f,gameObject.transform.position.z), 2f)
+            gameObject.transform.DOMove(new Vector3(-0.4f,0.6f,gameObject.transform.position.z), 2f)
             .SetEase(Ease.OutBack);
             gameObject.transform.DORotate(new Vector3(0f,0,0f), 2f)
             .SetEase(Ease.OutBack);
@@ -290,6 +291,7 @@ public class DragSprite : MonoBehaviour//, IDragHandler, IPointerDownHandler, IP
                 .OnComplete(() => {
                     if (gameObject.GetComponent<Rigidbody2D>() != null)
                     {
+                        if(hold) return;
                         gameObject.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
                         gameObject.GetComponent<Rigidbody2D>().angularVelocity = 0f;
                         HideTitle();
@@ -314,6 +316,7 @@ public class DragSprite : MonoBehaviour//, IDragHandler, IPointerDownHandler, IP
     }
 
     public void Off(){
+        if(hold) return;
         DOTween.Kill(gameObject.transform);
         if (gameObject.GetComponent<Rigidbody2D>().isKinematic)
         {
@@ -371,7 +374,7 @@ public class DragSprite : MonoBehaviour//, IDragHandler, IPointerDownHandler, IP
         lastShake = Time.time;
         
         List<Pet> pets = new List<Pet>();
-        foreach (var petdata in PetManager.Instance.petdatas)
+        foreach (var petdata in PetManager.Instance.GetActivePetDatas())
         {
             if (petdata.obj.activeSelf)
             {

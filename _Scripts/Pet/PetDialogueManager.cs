@@ -94,11 +94,11 @@ public class PetDialogueManager : SerializedMonoBehaviour
         {
             if(SkyboxManager.Instance.weatherIdx != data.idx) continue;
 
-            Petdata petdata = PetManager.Instance.GetPetDataByType(data.type);
+            PetData petdata = PetManager.Instance.GetPetDataByType(data.type);
             if(petdata == null) continue;
             
             if(!petdata.obj.activeSelf) continue;
-            petdata.obj.GetComponent<Pet>().ShowDialogue(MyUtility.Localize.GetLocalizedPetDialogue(data.data));
+            petdata.component.ShowDialogue(MyUtility.Localize.GetLocalizedPetDialogue(data.data));
         }
     }
     
@@ -192,12 +192,6 @@ public class PetDialogueManager : SerializedMonoBehaviour
         return MyUtility.Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].descr);
     }
 
-    public string GetRank(PetType _type)
-    {
-        if (string.IsNullOrEmpty(petDialogueDatas[_type].rank.ToString())) return null;
-        return MyUtility.Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].rank.ToString());
-    }
-
     public string GetDescr(PetType _type)
     {
         if (string.IsNullOrEmpty(petDialogueDatas[_type].descr.ToString())) return null;
@@ -208,6 +202,12 @@ public class PetDialogueManager : SerializedMonoBehaviour
     {
         if (string.IsNullOrEmpty(petDialogueDatas[_type].from.ToString())) return null;
         return MyUtility.Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].from.ToString());
+    }
+    
+    public char GetRank(PetType _type)
+    {
+
+        return petDialogueDatas[_type].rank;
     }
     
     public enum PetScoreType
@@ -255,16 +255,12 @@ public class PetDialogueManager : SerializedMonoBehaviour
         {
             yield return new WaitForSeconds(Random.Range(5f,15f));
 
-            List<GameObject> activePet = new List<GameObject>();
-            foreach (var petData in PetManager.Instance.petdatas)
-            {
-                if(petData.obj.activeSelf) activePet.Add(petData.obj);
-            }
+            List<PetData> activePet = PetManager.Instance.GetActivePetDatas();
 
             if (activePet.Count != 0)
             {
                 int rnd = Random.Range(0, activePet.Count);
-                activePet[rnd].GetComponent<Pet>().OnIdle();
+                activePet[rnd].component.OnIdle();
             }
         }
     }

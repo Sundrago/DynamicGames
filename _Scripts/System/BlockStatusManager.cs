@@ -26,6 +26,7 @@ public class BlockStatusManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        
     }
 
     private void Start()
@@ -323,16 +324,19 @@ public class BlockStatusManager : MonoBehaviour
             MainCanvas.Instance.Offall(obj);
             PetInGameManager.Instance.PetSelected(minData, pet);
             minData.obj.dragSprite.BtnClicked();
+            AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.playWithPet);
         }
         else
         {
             if (minData.type == BlockType.friends)
             {
                 petinfo.ShowPanel(pet.type);
+                AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.playWithPet);
+
             }
-            pet.surfaceMovement2D.FindNearCorner();
         }
-        // print("PetDrop : " + minData.type + " : " + distMin);
+
+        TutorialManager.Instancee.PetDrop(minData.type);
     }
     
     public GameType GetGameType(BlockType blockType)

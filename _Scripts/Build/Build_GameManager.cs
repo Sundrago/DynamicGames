@@ -418,10 +418,11 @@ public class Build_GameManager : MonoBehaviour
     [Button]
     public void SetPlayer(bool playAsPet, Pet pet = null)
     {
-        if(player != null) Destroy(player);
+        if(player != null) Destroy(player.gameObject);
         if (playAsPet)
         {
             player = Instantiate(pet, playerHolder);
+            player.gameObject.transform.localScale *= 350f; 
             player.gameObject.SetActive(true);
         }
     }

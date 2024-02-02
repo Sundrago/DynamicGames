@@ -115,8 +115,10 @@ public class AskForUserReview : MonoBehaviour
 
     public void LeaveReviewBtnClicked()
     {
+#if UNITY_IOS
         UnityEngine.iOS.Device.RequestStoreReview();
         Application.OpenURL("https://apps.apple.com/us/app/dynamic-games-games-on-island/id6443782791");
+# endif
         HidePanel();;
     }
 

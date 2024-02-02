@@ -43,13 +43,13 @@ public class CapsuleAnimation : MonoBehaviour
     
     private void UpdateItemImage()
     {
-        if (PetManager.Instance.GetTotalPetCount() == 0) type = PetType.Fluffy;
+        if (PetManager.Instance.GetTotalPetCount() == 0 | PetManager.Instance.GetPetCount(PetType.Fluffy)==0) type = PetType.Fluffy;
         else
         {
-            int rnd = UnityEngine.Random.Range(0, PetManager.Instance.petdatas.Count);
-            type = PetManager.Instance.petdatas[rnd].type;
+            int rnd = UnityEngine.Random.Range(0, PetManager.Instance.GetPetDataCount());
+            type = PetManager.Instance.GetRandomPetData().type;
         }
-        Petdata data = PetManager.Instance.GetPetDataByType(type);
+        PetData data = PetManager.Instance.GetPetDataByType(type);
         float relativePosY = data.obj.GetComponent<Pet>().spriteRenderer.gameObject.transform.localPosition.y  * posFactor;
         item.sprite = data.image;
         item.transform.localPosition = new Vector2(0, relativePosY);
@@ -144,7 +144,7 @@ public class CapsuleAnimation : MonoBehaviour
             case CapsuleStatus.inactive:
                 petDrawer.HidePanel();
                 gachaponManager.CapsuleAnimFinished(isNew);
-                PetManager.Instance.GotNewPetFX(type);
+                if(isNew) PetManager.Instance.GotNewPetFX(type);
                 gameObject.SetActive(false);
                 break;
         }
@@ -185,7 +185,7 @@ public class CapsuleAnimation : MonoBehaviour
             .OnComplete(() => {
                 item_white.DOFade(1, 0.2f)
                     .OnComplete(() => {
-                        newPetAnim.Init(type);
+                        if(isNew && PetDialogueManager.Instance.GetRank(type) == 'S') newPetAnim.Init(type);
                         item.GetComponent<Mask>().showMaskGraphic = true;
                     });
             });

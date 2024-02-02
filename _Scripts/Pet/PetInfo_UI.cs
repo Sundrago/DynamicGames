@@ -16,7 +16,7 @@ public class PetInfo_UI : MonoBehaviour
     private Image previewImage;
 
     [SerializeField]
-    private TextMeshProUGUI name_ui, level_ui, age_ui, skills_ui, from_ui;
+    private TextMeshProUGUI name_ui, level_ui, age_ui, skills_ui, from_ui, rank_ui;
     [SerializeField]
     private TextMeshProUGUI exp_ui;
     [SerializeField]
@@ -96,10 +96,11 @@ public class PetInfo_UI : MonoBehaviour
         {
             previewImage.color = Color.black;
             name_ui.text = "????";
-            level_ui.text = "????";
-            age_ui.text = "????";
+            level_ui.text = "| ????";
+            age_ui.text = "| ????";
             skills_ui.text = "????";
-            from_ui.text = "????";
+            from_ui.text = "| ????";
+            rank_ui.text = "| ????";
             
             expSlider_ui.padding = new Vector4(0, 0, sliderSizeDeltaX, 0);
             exp_ui.text = "?";
@@ -112,10 +113,11 @@ public class PetInfo_UI : MonoBehaviour
         int level = PetManager.Instance.GetPetLevel(_type);
         
         name_ui.text = _type.ToString();
-        level_ui.text = "Level : " + level;
-        age_ui.text = "Age : " + PetManager.Instance.GetPetAge(_type);
-        from_ui.text = "From : " + PetDialogueManager.Instance.GetFrom(_type);
+        level_ui.text = "| Level : " + level;
+        age_ui.text = "| Age : " + PetManager.Instance.GetPetAge(_type);
+        from_ui.text = "| From : " + PetDialogueManager.Instance.GetFrom(_type);
         skills_ui.text = PetDialogueManager.Instance.GetDescr(_type);
+        rank_ui.text = "| Rank : " + PetDialogueManager.Instance.GetRank(_type);
 
         float expNormal = exp / (level * 5f);
         expSlider_ui.padding = new Vector4(0, 0, sliderSizeDeltaX - sliderSizeDeltaX * expNormal, 0);
@@ -158,6 +160,7 @@ public class PetInfo_UI : MonoBehaviour
         panel.DOLocalMoveY(-4000, longTransition? 1.5f : 0.75f).SetEase(Ease.InOutExpo)
             .OnComplete(() =>
             {
+                TutorialManager.Instancee.FriendsPanelClosed();
                 gameObject.SetActive(false);
                 MainCanvas.Instance.Offall();
             });

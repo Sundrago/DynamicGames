@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using MyUtility;
+
+#if UNITY_IOS
 using Unity.Advertisement.IosSupport;
+#endif
 
 public class Ads : MonoBehaviour
 {

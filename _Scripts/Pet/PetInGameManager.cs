@@ -30,8 +30,8 @@ public class PetInGameManager : MonoBehaviour
         pet = _pet;
         selectedTime = Time.time;
         
-        pet.surfaceMovement2D.ForceLandOnSquare(blockData.obj.dragSprite.miniisland, 5f);
-        pet.SettoIdle(5f);
+        pet.surfaceMovement2D.ForceLandOnSquare(blockData.obj.dragSprite.miniisland, 6f);
+        pet.SettoIdle(6f);
 
         GameType petGameType = BlockStatusManager.Instance.GetGameType(blockData.type);
         if(petGameType!=GameType.Null) pet.OnGameEnter(petGameType);
@@ -40,21 +40,25 @@ public class PetInGameManager : MonoBehaviour
     public void EnterGame(GameType type)
     {
         if (blockData == null) enterGameWithPet = false;
-        else enterGameWithPet = (blockData.type.ToString() == type.ToString() && Time.time < selectedTime + 5f);
+        else enterGameWithPet = (blockData.type.ToString() == type.ToString() && Time.time < selectedTime + 6.5f);
 
         switch (type)
         {
             case GameType.build:
                 build.SetPlayer(enterGameWithPet, pet);
+                TutorialManager.Instancee.EnteredGameWithPet();
                 break;
             case GameType.land:
                 land.SetPlayer(enterGameWithPet, pet);
+                TutorialManager.Instancee.EnteredGameWithPet();
                 break;
             case GameType.jump:
                 jump.SetPlayer(enterGameWithPet, pet);
+                TutorialManager.Instancee.EnteredGameWithPet();
                 break;
             case GameType.shoot:
                 shoot.SetPlayer(enterGameWithPet, pet);
+                TutorialManager.Instancee.EnteredGameWithPet();
                 break;
         }
         

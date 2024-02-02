@@ -48,11 +48,11 @@ public class TitleDrag : MonoBehaviour
         isDrag = false;
 
         List<Pet> petsOnTitle = new List<Pet>();
-        foreach (var petdata in PetManager.Instance.petdatas)
+        foreach (var petdata in PetManager.Instance.GetActivePetDatas())
         {
             if (petdata.obj.activeSelf && petdata.obj.GetComponent<SurfaceMovement2D>().currentPlace == SurfaceMovement2D.LandingPlace.title)
             {
-                petsOnTitle.Add(petdata.obj.GetComponent<Pet>()); 
+                petsOnTitle.Add(petdata.component); 
             }
         }
 
