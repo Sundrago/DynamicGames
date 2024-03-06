@@ -9,7 +9,7 @@ public enum SFX_tag
     enemy_dead_explostion, enemy_dead_blackHole, enemy_dead_spin, shootA, shootB, shootC, shootD, shootE, blackhole, spin, gotItem, shiealdPop, rank_goup, rank_goupFinish, rank_same
     , ticket1, ticket2, ticket3, ticket4, ticket6, ticket12, ticketfail, ticketJackpot, scoreSlider, reap, ticketGen, gacha_drop, gacha_rotateLever, gacha_capsules, gacha_simple_bgm
     , gachaCapsuleOpen, gacha_newItem, gacha_item, gacha_newOpen, notEnoughMoney, insertCoin, coinInJar, gotCoin, rocket_clear, rocket_newLevel, cube_fall, sparkle, key, block_explode
-    , unable, block_reveal, popup1, popup2, popup3, earnCoin, earnTicket, earnKey, UI_OPEN, UI_CLOSE, UI_SELECT, click, playWithPet, highScore,
+    , unable, block_reveal, popup1, popup2, popup3, earnCoin, earnTicket, earnKey, UI_OPEN, UI_CLOSE, UI_SELECT, click, playWithPet, highScore,showScore, ticketFin, ticketStart,
 }
 
 public class AudioCtrl : SerializedMonoBehaviour
@@ -46,7 +46,7 @@ public class AudioCtrl : SerializedMonoBehaviour
     
     public void PlaySFXbyTag(SFX_tag tag)
     {
-        if(lastSfxtag == tag && Time.time - lastsfxPlayTime < 0.15f) return;
+        if(lastSfxtag == tag && Time.time - lastsfxPlayTime < 0.1f) return;
         lastsfxPlayTime = Time.time;
         lastSfxtag = tag;
         

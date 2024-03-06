@@ -33,6 +33,11 @@ namespace MyUtility
             if (success) return dateTime;
             return DateTime.Now;
         }
+
+        public static int GetWeekOfMonth(DateTime date)
+        {
+            return date.Year * 1000 + date.Month * 10 + (date.Day + ((int)date.DayOfWeek)) / 7 + 1;
+        }
     }
     
     static class Localize {

@@ -163,4 +163,13 @@ public class Shoot_Enemy_Manager : MonoBehaviour
         SpawingOnSpiral = false;
         // enemy_pool.Clear();
     }
+
+    public void Revibe()
+    {
+        for (int i = 0; i < enemy_list.Count; i++)
+        {
+            enemy_list[i].state = enemy_stats.ready;
+        }
+        SpawingOnSpiral = false;
+    }
 }

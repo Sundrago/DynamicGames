@@ -1,15 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class transition_test : MonoBehaviour
+public class TransitionManager : MonoBehaviour
 {
     public GameObject canvas_A, canvas_B, canvas_transition, rocket, build, jump, shoot;
     public bool ReturnToMenu = false;
     public bool OnTransition = false;
 
+    public static TransitionManager Instance;
+    
     [SerializeField]
     private GameObject adj;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     public void StartTransition()
     {

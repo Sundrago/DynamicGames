@@ -52,7 +52,36 @@ public class Land_GameManager : SerializedMonoBehaviour
     [SerializeField]
     private AudioSource sfx_launch, sfx_middle, sfx_small;
     private bool isInitialLaunch = true;
-
+    private bool hasRevibed = false;
+    
+    //
+    // private enum GameStatus
+    // {
+    //     pre, playing, dead, revibe 
+    //     
+    // }
+    //
+    // private GameStatus status;
+    //
+    // private void SetStatus(GameStatus _status)
+    // {
+    //     if(status != _status) return;
+    //
+    //     status = _status;
+    //     switch (status)
+    //     {
+    //         case GameStatus.pre:
+    //             break;
+    //         case GameStatus.playing:
+    //             break;
+    //         case GameStatus.dead:
+    //             Failed();
+    //             break;
+    //         case GameStatus.revibe:
+    //             break;
+    //     }
+    // }
+    //
     void Start()
     {
         tutorialA.color = new Color(1, 1, 1, 0);
@@ -150,7 +179,6 @@ public class Land_GameManager : SerializedMonoBehaviour
             rb2D.constraints = RigidbodyConstraints2D.FreezeAll;
             playing = false;
             Succeed();
-            print("success");
         }
 
         //failed
@@ -158,8 +186,8 @@ public class Land_GameManager : SerializedMonoBehaviour
         {
             playing = false;
             rb2D.constraints = RigidbodyConstraints2D.FreezeAll;
+            // SetStatus(GameStatus.dead);
             Failed();
-            print("fail");
         }
     }
 
@@ -277,30 +305,38 @@ public class Land_GameManager : SerializedMonoBehaviour
     {
         playerRenderer.PauseAnim();
         puff_fail.GetComponent<Animator>().SetTrigger("puff_9");
-        print(failPosition.x);
         puff_fail.transform.position = failPosition;
         puff_fail.transform.rotation = rocket.transform.rotation;
-
+        
         FXManager.Instance.CreateFX(FXType.rocketHit, failPosition);
-
-        stage_level.SetLevel(1);
-
         RemovceCircles();
-        score = currentLevel;
-
-        EndScoreCtrl.Instance.ShowScore(score, GameType.land);
-
         shake.GetComponent<Animator>().SetTrigger("large");
-        RocketCanvas.GetComponent<Animator>().SetTrigger("ending");
         SetThrustParticleFXEmission(false);
         //LoadStage(0);
+        
+        if(hasRevibed) ShowScore();
+        else WatchAdsContinue.Instance.Init(Revibe, ShowScore, "Land_Revibe");
+    }
 
+    private void ShowScore()
+    {
+        stage_level.SetLevel(1);
+        score = currentLevel;
+        EndScoreCtrl.Instance.ShowScore(score, GameType.land);
+        RocketCanvas.GetComponent<Animator>().SetTrigger("ending");
+        hasRevibed = false;
+    }
+
+    private void Revibe()
+    {
+        hasRevibed = true;
+        currentLevel -= 1;
+        ResetRocket();
     }
 
     public void ResetRocket()
     {
         playerRenderer.PauseAnim();
-        print("ResetRocket");
         rocket.GetComponent<Animator>().enabled = true;
         rocket.GetComponent<Animator>().SetTrigger("reset");
         // big_island.GetComponent<Animator>().SetTrigger("hide");
@@ -412,6 +448,7 @@ public class Land_GameManager : SerializedMonoBehaviour
         RemovceCircles();
         EndScoreCtrl.Instance.HideScore();
         isInitialLaunch = true;
+        hasRevibed = false;
     }
 
     public void RestartGame()
@@ -428,6 +465,7 @@ public class Land_GameManager : SerializedMonoBehaviour
         score = 0;
         EndScoreCtrl.Instance.HideScore();
         isInitialLaunch = true;
+        hasRevibed = false;
     }
 
     private void ShowTutorial()

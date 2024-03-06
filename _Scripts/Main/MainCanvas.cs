@@ -7,7 +7,7 @@ using DG.Tweening;
 public class MainCanvas : MonoBehaviour
 {
     [SerializeField] SFXCTRL sfx;
-    [SerializeField] transition_test transition;
+    [SerializeField] TransitionManager transition;
     [SerializeField] GameObject build, land, jump, shoot,main;
     [SerializeField] LeaderboardManger leaderboard;
     [SerializeField] private RankingManager rangkingManager;

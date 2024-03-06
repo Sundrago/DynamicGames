@@ -4,8 +4,10 @@ using DG.Tweening;
 using Firebase.Analytics;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
+#if UNITY_IOS && !UNITY_EDITOR
 using Firebase;
 using Firebase.Analytics;
+#endif
 
 public enum GameType {land, jump, build, shoot, Null};
 
@@ -79,7 +81,11 @@ public class EndScoreCtrl : MonoBehaviour
         if (startGameType == gameType) {  
             FirebaseAnalytics.LogEvent("Score", gameType.ToString()+"_playTime", Time.time-startTime);
         }
+        FirebaseAnalytics.LogEvent("GamePlayed", "GamePlayed", gameType.ToString());
+        // FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventPostScore, new Parameter("GameType", score));
+        // FirebaseAnalytics.LogEvent("PlayTime", new Parameter("GameType", Time.time-startTime));
 #endif
+        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.showScore);
         print("duration : " + (Time.time-startTime));
         MoneyManager.Instance.ShowPanel();
         PlayerPrefs.SetInt("totalScoreCount", PlayerPrefs.GetInt("totalScoreCount") + 1);

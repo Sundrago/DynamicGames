@@ -33,6 +33,7 @@ public class PetDialogue : MonoBehaviour
     public void Init(string input, Transform _targetTransform, bool forceShow = false, float _offsetY = 0.4f, float duration = 5)
     {
         if(status != DialogueStatus.hidden && !forceShow) return;
+        if(!_targetTransform.gameObject.activeSelf) return;
 
         DOTween.Kill(main_ui);
         DOTween.Kill(bgImage);

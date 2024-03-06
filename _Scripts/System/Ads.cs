@@ -1,13 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+#if UNITY_IOS && !UNITY_EDITOR
+using Firebase.Analytics;
+using Unity.Advertisement.IosSupport;
+#endif
 using UnityEngine;
 using UnityEngine.UI;
 using MyUtility;
-
-#if UNITY_IOS
-using Unity.Advertisement.IosSupport;
-#endif
 
 public class Ads : MonoBehaviour
 {
@@ -15,19 +15,17 @@ public class Ads : MonoBehaviour
     [SerializeField] private Image TVICon;
     [SerializeField] private Sprite off, on;
     private int adCount = 0;
-    
-    
-    public enum AdsType
-    {
-        ticket,
-    }
 
-    private AdsType type;
+    public delegate void Callback();
+    private Callback callbackReward;
+    private Callback callbackRewardFailed;
+    [SerializeField] private SFXCTRL sfx;
+
     
     private void Awake()
     {
         Instance = this;
-    #if UNITY_IOS
+#if UNITY_IOS && !UNITY_EDITOR
         // Check the user's consent status.
         // If the status is undetermined, display the request request:
         if(ATTrackingStatusBinding.GetAuthorizationTrackingStatus() == ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED) {
@@ -42,9 +40,14 @@ public class Ads : MonoBehaviour
 
     private void Start()
     {
-        IronSource.Agent.shouldTrackNetworkState (true);
-
+        if (PlayerPrefs.GetInt("debugMode", 0) == 1)
+        {
+            IronSource.Agent.setMetaData("is_test_suite", "enable"); 
+        }
+        
+        IronSource.Agent.shouldTrackNetworkState(true);
         IronSource.Agent.init ("1c563f2d5", IronSourceAdUnits.REWARDED_VIDEO);
+        
         //Add AdInfo Rewarded Video Events
         IronSourceRewardedVideoEvents.onAdOpenedEvent += RewardedVideoOnAdOpenedEvent;
         IronSourceRewardedVideoEvents.onAdShowFailedEvent += RewardedVideoOnAdShowFailedEvent;
@@ -64,39 +67,44 @@ public class Ads : MonoBehaviour
         
         TVICon.sprite = adCount >= 3 ? off : on;
     }
-
-// The Rewarded Video ad view has opened. Your activity will loose focus.
+    
     void RewardedVideoOnAdOpenedEvent(IronSourceAdInfo adInfo){
         
     }
-// The user completed to watch the video, and should be rewarded.
-// The placement parameter will include the reward data.
-// When using server-to-server callbacks, you may ignore this event and wait for the ironSource server callback.
+
     void RewardedVideoOnAdRewardedEvent(IronSourcePlacement placement, IronSourceAdInfo adInfo){
         AudioCtrl.Instance.UnPauseBgm();
-        switch (type)
-        {
-            case AdsType.ticket:
-                PopupTextManager.Instance.ShowOKPopup("[watchedAds]티켓 10장을 받으세요!", () => { MoneyManager.Instance.Coin2DAnim(MoneyManager.RewardType.Ticket, Vector3.zero, 10);});
-                break;
-        }
-    }
-// The rewarded video ad was failed to show.
-    void RewardedVideoOnAdShowFailedEvent(IronSourceError error, IronSourceAdInfo adInfo){
+
+        sfx.UnPauseBGM();
+        if(callbackReward!=null)
+            callbackReward();
     }
 
-    public void ShowAds(AdsType _type)
+    void RewardedVideoOnAdShowFailedEvent(IronSourceError error, IronSourceAdInfo adInfo){
+        PopupTextManager.Instance.ShowOKPopup("Failed to load AD network : " + error.ToString(), new PopupTextManager.Callback(callbackRewardFailed));
+        sfx.UnPauseBGM();
+
+        if(callbackRewardFailed!=null)
+            callbackRewardFailed();
+    }
+
+    public void ShowAds(Callback _OnReward = null, Callback _OnADFailed = null, string note = null)
     {
-        print("ShowAds : " + _type);
-        type = _type;
+        print("ShowAds : " + note);
+#if UNITY_IOS && !UNITY_EDITOR
+        FirebaseAnalytics.LogEvent("Ads", "AdType", note);
+#endif
+        callbackReward = _OnReward;
+        callbackRewardFailed = _OnADFailed;
         if (IronSource.Agent.isRewardedVideoAvailable())
         {
             IronSource.Agent.showRewardedVideo("YOUR_PLACEMENT_NAME");
             AudioCtrl.Instance.PauseBGM();
+            sfx.PauseBGM();
         }
         else
         {
-            
+            PopupTextManager.Instance.ShowOKPopup("Reward Video not available. Try again later.", new PopupTextManager.Callback(callbackRewardFailed));
         }
     }
 
@@ -108,13 +116,21 @@ public class Ads : MonoBehaviour
             return;
         }
         
+        TVICon.sprite = adCount >= 3 ? off : on;
+        PlayerPrefs.SetInt("adCount",adCount);
+        
         string output = Localize.GetLocalizedString("[watchAds]") + " (" + adCount + "/3)";
         PopupTextManager.Instance.ShowYesNoPopup(output, () =>
         {
-            adCount += 1;
-            TVICon.sprite = adCount >= 3 ? off : on;
-            PlayerPrefs.SetInt("adCount",adCount);
-            ShowAds(AdsType.ticket);
+            ShowAds(DailyTicketRewards, null, "dailyTicket");
         });
+    }
+
+    public void DailyTicketRewards()
+    {
+        adCount += 1;
+        TVICon.sprite = adCount >= 3 ? off : on;
+        PlayerPrefs.SetInt("adCount",adCount);
+        PopupTextManager.Instance.ShowOKPopup("[watchedAds]티켓 10장을 받으세요!", () => { MoneyManager.Instance.Coin2DAnim(MoneyManager.RewardType.Ticket, Vector3.zero, 10);});
     }
 }

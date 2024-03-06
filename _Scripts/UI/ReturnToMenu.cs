@@ -5,17 +5,18 @@ using UnityEngine;
 public class ReturnToMenu : MonoBehaviour
 {
     [SerializeField] SFXCTRL sfx;
-    [SerializeField] GameObject FromCanvas, MainCanvas, TransitionCanvas;
+    [SerializeField] private GameObject FromCanvas, MainCanvas;
+    // [SerializeField] TransitionManager TransitionCanvas;
 
     public void ReturnToMenuClkcked()
     {
         print("backbtnClcied");
-        if(!TransitionCanvas.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("transition_idle")) return;
+        if(!TransitionManager.Instance.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("transition_idle")) return;
 
         sfx.PlaySfx(3);
-        TransitionCanvas.GetComponent<transition_test>().canvas_A = FromCanvas;
-        TransitionCanvas.GetComponent<transition_test>().canvas_B = MainCanvas;
-        TransitionCanvas.GetComponent<transition_test>().ReturnToMenu = true;
-        TransitionCanvas.GetComponent<Animator>().SetTrigger("start");
+        TransitionManager.Instance.canvas_A = FromCanvas;
+        TransitionManager.Instance.canvas_B = MainCanvas;
+        TransitionManager.Instance.ReturnToMenu = true;
+        TransitionManager.Instance.GetComponent<Animator>().SetTrigger("start");
     }
 }

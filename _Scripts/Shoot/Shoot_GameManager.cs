@@ -11,12 +11,12 @@ using TMPro;
 public class Shoot_GameManager : SerializedMonoBehaviour
 {
     [SerializeField] private Animator door_left, door_right;
-    [SerializeField] private Shoot_Enemy_Manager enemy_Manager;
+    [SerializeField] public Shoot_Enemy_Manager enemy_Manager;
     [SerializeField] private Shoot_Bullet_Manager bullet_Manager;
     [SerializeField] public Transform player, island;
     [SerializeField] private FXManager fXManager;
     [SerializeField] private Shoot_joystick joystick;
-    [SerializeField] private Shoot_item shoot_Item;
+    [SerializeField] public Shoot_item shoot_Item;
 
     [SerializeField] private Animator face;
     [SerializeField] private IslandSizeCtrl islandSizeCtrl;
@@ -32,18 +32,19 @@ public class Shoot_GameManager : SerializedMonoBehaviour
     [SerializeField] private SpriteAnimator playerRenderer;
     [SerializeField] private GameObject playerPlaceHolder;
     [SerializeField] private PetManager petManager;
+    [SerializeField] private Shoot_AI shootAI;
     
     public static Shoot_GameManager Instacne;
     
-    private AutoAttackInfo createEnemyInCircle = new AutoAttackInfo();
-    private AutoAttackInfo createEnemyRandomPos = new AutoAttackInfo();
-    private AutoAttackInfo createMetheor = new AutoAttackInfo();
-    private AutoAttackInfo createEnemyInSpira = new AutoAttackInfo();
-    private AutoAttackInfo createEnemyInLine = new AutoAttackInfo();
-    private AutoAttackInfo createItem = new AutoAttackInfo();
+    public AutoAttackInfo createEnemyInCircle = new AutoAttackInfo();
+    public AutoAttackInfo createEnemyRandomPos = new AutoAttackInfo();
+    public AutoAttackInfo createMetheor = new AutoAttackInfo();
+    public AutoAttackInfo createEnemyInSpira = new AutoAttackInfo();
+    public AutoAttackInfo createEnemyInLine = new AutoAttackInfo();
+    public AutoAttackInfo createItem = new AutoAttackInfo();
     private AudioCtrl audioCtrl;
 
-    public enum ShootGameState { ready, dead, playing }
+    public enum ShootGameState { ready, dead, playing, revibe }
 
     [ReadOnly]
     public FX shield = null;
@@ -52,6 +53,7 @@ public class Shoot_GameManager : SerializedMonoBehaviour
     public bool spinMode = false;
     private float spinTime;
     private int stageFinished, currentStagePlaying = -1;
+    private bool hasRevibed = false;
 
     private void Awake()
     {
@@ -976,123 +978,123 @@ public class Shoot_GameManager : SerializedMonoBehaviour
         currentStagePlaying = -1;
     }
 
-    async Task CreateEnemyAtRandomPos()
-    {
-        if(state != ShootGameState.playing) return;
-        
-        AutoAttackInfo info = createEnemyRandomPos;
-        if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
-        {
-            int amt = Random.Range(info.min, info.max + 1);
-            for (int i = 0; i < amt; i++)
-            {
-                enemy_Manager.SpawnEnemyAtRandomPos();
-            }
-        }
-        await Task.Delay(info.delay);
-        CreateEnemyAtRandomPos();
-    }
-
-    async Task CreateEnemyAtPlayerInCircle()
-    {
-        if(state != ShootGameState.playing) return;
-
-        AutoAttackInfo info = createEnemyInCircle;
-        if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
-        {
-            enemy_Manager.SpawnEnemyInCircle(1f, Random.Range(info.min, info.max));
-        }
-        await Task.Delay(info.delay);
-        CreateEnemyAtPlayerInCircle();
-    }
-
-    async Task CreateMetheors()
-    {
-        if(state != ShootGameState.playing) return;
-        
-        AutoAttackInfo info = createMetheor;
-        
-        if (stage <= 2)
-        {
-            await Task.Delay(info.delay);
-            CreateEnemyInLine();
-            return;
-        }
-        
-        if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
-        {
-            int amt = Random.Range(info.min, info.max + 1);
-            for (int i = 0; i < amt; i++)
-            {
-                await Task.Delay(2000);
-                CreateMetheor();
-            }
-        }
-        await Task.Delay(info.delay);
-        CreateMetheors();
-    }
-
-    async Task CreateEnemyInLine()
-    {
-        if(state != ShootGameState.playing) return;
-        AutoAttackInfo info = createEnemyInLine;
-        
-        if (stage <= 3)
-        {
-            await Task.Delay(info.delay);
-            CreateEnemyInLine();
-            return;
-        }
-
-        if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
-        {
-            enemy_Manager.SpawnEnemyInLineY(Random.Range(info.min, info.max+ 1));
-        }
-
-        await Task.Delay(info.delay);
-        CreateEnemyInLine();
-    }
-
-    async Task CreateEnemyInSpiral()
-    {
-        if(state != ShootGameState.playing) return;
-        AutoAttackInfo info = createEnemyInSpira;
-        
-        if (stage <= 3)
-        {
-            await Task.Delay(info.delay);
-            CreateEnemyInLine();
-            return;
-        }
-
-        if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
-        {
-            await enemy_Manager.SpawnEnemyInSpiral(0.6f * Random.Range(0.9f, 1.1f),
-                1.5f * Random.Range(0.85f, 1.3f), Random.Range(info.min, info.max+ 1)
-                , 1.5f * Random.Range(0.7f, 1.3f), 35, 0.6f * Random.Range(0.8f, 1.2f));
-        }
-
-        await Task.Delay(info.delay);
-        CreateEnemyInSpiral();
-    }
-
-    async Task CreateItem()
-    {
-        if(state != ShootGameState.playing) return;
-        
-        AutoAttackInfo info = createItem;
-
-        int count = shoot_Item.items.Count;
-        info.probability = (1 - 0.4f * count) * 0.85f;
-        
-        if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
-        {
-            shoot_Item.SpawnItem();
-        }
-
-        await Task.Delay(info.delay);
-        CreateItem();
-    }
+    // async Task CreateEnemyAtRandomPos()
+    // {
+    //     if(state != ShootGameState.playing) return;
+    //     
+    //     AutoAttackInfo info = createEnemyRandomPos;
+    //     if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
+    //     {
+    //         int amt = Random.Range(info.min, info.max + 1);
+    //         for (int i = 0; i < amt; i++)
+    //         {
+    //             enemy_Manager.SpawnEnemyAtRandomPos();
+    //         }
+    //     }
+    //     await Task.Delay(info.delay);
+    //     CreateEnemyAtRandomPos();
+    // }
+    //
+    // async Task CreateEnemyAtPlayerInCircle()
+    // {
+    //     if(state != ShootGameState.playing) return;
+    //
+    //     AutoAttackInfo info = createEnemyInCircle;
+    //     if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
+    //     {
+    //         enemy_Manager.SpawnEnemyInCircle(1f, Random.Range(info.min, info.max));
+    //     }
+    //     await Task.Delay(info.delay);
+    //     CreateEnemyAtPlayerInCircle();
+    // }
+    //
+    // async Task CreateMetheors()
+    // {
+    //     if(state != ShootGameState.playing) return;
+    //     
+    //     AutoAttackInfo info = createMetheor;
+    //     
+    //     if (stage <= 2)
+    //     {
+    //         await Task.Delay(info.delay);
+    //         CreateEnemyInLine();
+    //         return;
+    //     }
+    //     
+    //     if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
+    //     {
+    //         int amt = Random.Range(info.min, info.max + 1);
+    //         for (int i = 0; i < amt; i++)
+    //         {
+    //             await Task.Delay(2000);
+    //             CreateMetheor();
+    //         }
+    //     }
+    //     await Task.Delay(info.delay);
+    //     CreateMetheors();
+    // }
+    //
+    // async Task CreateEnemyInLine()
+    // {
+    //     if(state != ShootGameState.playing) return;
+    //     AutoAttackInfo info = createEnemyInLine;
+    //     
+    //     if (stage <= 3)
+    //     {
+    //         await Task.Delay(info.delay);
+    //         CreateEnemyInLine();
+    //         return;
+    //     }
+    //
+    //     if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
+    //     {
+    //         enemy_Manager.SpawnEnemyInLineY(Random.Range(info.min, info.max+ 1));
+    //     }
+    //
+    //     await Task.Delay(info.delay);
+    //     CreateEnemyInLine();
+    // }
+    //
+    // async Task CreateEnemyInSpiral()
+    // {
+    //     if(state != ShootGameState.playing) return;
+    //     AutoAttackInfo info = createEnemyInSpira;
+    //     
+    //     if (stage <= 3)
+    //     {
+    //         await Task.Delay(info.delay);
+    //         CreateEnemyInLine();
+    //         return;
+    //     }
+    //
+    //     if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
+    //     {
+    //         await enemy_Manager.SpawnEnemyInSpiral(0.6f * Random.Range(0.9f, 1.1f),
+    //             1.5f * Random.Range(0.85f, 1.3f), Random.Range(info.min, info.max+ 1)
+    //             , 1.5f * Random.Range(0.7f, 1.3f), 35, 0.6f * Random.Range(0.8f, 1.2f));
+    //     }
+    //
+    //     await Task.Delay(info.delay);
+    //     CreateEnemyInSpiral();
+    // }
+    //
+    // async Task CreateItem()
+    // {
+    //     if(state != ShootGameState.playing) return;
+    //     
+    //     AutoAttackInfo info = createItem;
+    //
+    //     int count = shoot_Item.items.Count;
+    //     info.probability = (1 - 0.4f * count) * 0.85f;
+    //     
+    //     if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
+    //     {
+    //         shoot_Item.SpawnItem();
+    //     }
+    //
+    //     await Task.Delay(info.delay);
+    //     CreateItem();
+    // }
     
     
     public void RestartGame()
@@ -1122,6 +1124,7 @@ public class Shoot_GameManager : SerializedMonoBehaviour
 
     async Task SpawnOnLeft(int count)
     {
+        if(state != ShootGameState.playing) return;
         door_left.SetTrigger("open");
         await Task.Delay(400);
         for(int i = 0; i<count; i++)
@@ -1134,6 +1137,7 @@ public class Shoot_GameManager : SerializedMonoBehaviour
 
     async Task SpawnOnRight(int count)
     {
+        if(state != ShootGameState.playing) return;
         door_right.SetTrigger("open");
         await Task.Delay(400);
         for (int i = 0; i < count; i++)
@@ -1144,8 +1148,9 @@ public class Shoot_GameManager : SerializedMonoBehaviour
         door_right.SetTrigger("close");
     }
     
-    private void CreateMetheor()
+    public void CreateMetheor()
     {
+        if(state != ShootGameState.playing) return;
         Vector3[] path = new Vector3[3];
         path[0] = island.transform.position;
         path[2] = player.transform.position;
@@ -1170,13 +1175,6 @@ public class Shoot_GameManager : SerializedMonoBehaviour
         }
     }
 
-    public void PlayerDead()
-    {
-        if (state == ShootGameState.dead) return;
-
-        state = ShootGameState.dead;
-    }
-
     private void ChangeStatus(ShootGameState _state)
     {
         if (state == _state) return;
@@ -1197,14 +1195,11 @@ public class Shoot_GameManager : SerializedMonoBehaviour
                     hand.gameObject.SetActive(false);
                     tutorial.SetActive(false);
                 }
+
+                hasRevibed = false;
                 break;
             case ShootGameState.playing:
-                CreateMetheors();
-                CreateEnemyAtRandomPos();
-                CreateEnemyAtPlayerInCircle();
-                CreateEnemyInLine();
-                CreateEnemyInSpiral();
-                CreateItem();
+                shootAI.StartTasks();
                 bullet_Manager.StartSpawnBulletTimer();
                 stageFinished = 0;
                 currentStagePlaying = -1;
@@ -1215,12 +1210,44 @@ public class Shoot_GameManager : SerializedMonoBehaviour
                 }
                 break;
             case ShootGameState.dead:
+                FXManager.Instance.CreateFX(FXType.deadExplosion, player);
+                enemy_Manager.GameOver();
+                face.SetTrigger("idle");
+                islandSizeCtrl.CloseIsland();
+                joystick.gameObject.SetActive(false);
                 joystick.Reset();
+                if(!hasRevibed) WatchAdsContinue.Instance.Init(Revibe, ShowScore, "Shoot_Revibe");
+                else ShowScore();
                 break;
 
         }
     }
 
+    private void ShowScore()
+    {
+        EndScoreCtrl.Instance.ShowScore(score.GetScore(), GameType.shoot);
+        itemInfo_atk.Hide();
+        itemInfo_shield.Hide();
+        itemInfo_bounce.Hide();
+        itemInfo_spin.Hide();
+        
+    }
+
+    private void Revibe()
+    {
+        enemy_Manager.KillAll();
+        face.SetTrigger("turnRed");
+        state = ShootGameState.playing;
+        currentStagePlaying = -1;
+        stage -= 1;
+        SetStage(stage + 1);
+        joystick.gameObject.SetActive(true);
+        shootAI.StartTasks();
+        bullet_Manager.StartSpawnBulletTimer();
+        hasRevibed = true;
+    }
+    
+    
     public void GetShield()
     {
         if (shield != null) return;
@@ -1251,17 +1278,7 @@ public class Shoot_GameManager : SerializedMonoBehaviour
         }
 
         //dead
-        FXManager.Instance.CreateFX(FXType.deadExplosion, player);
-        state = ShootGameState.dead;
-        enemy_Manager.GameOver();
-        face.SetTrigger("idle");
-        islandSizeCtrl.CloseIsland();
-        EndScoreCtrl.Instance.ShowScore(score.GetScore(), GameType.shoot);
-        itemInfo_atk.Hide();
-        itemInfo_shield.Hide();
-        itemInfo_bounce.Hide();
-        itemInfo_spin.Hide();
-        joystick.gameObject.SetActive(false);
+        ChangeStatus(ShootGameState.dead);
     }
 
     public void SetSpinMode(float duration)
@@ -1315,11 +1332,12 @@ public class Shoot_GameManager : SerializedMonoBehaviour
     public void ClearGame()
     {
         EndScoreCtrl.Instance.HideScore();
-        ChangeStatus(ShootGameState.dead);
+        state = ShootGameState.dead;
+        joystick.Reset();
         gameObject.SetActive(false);
     }
 
-    class AutoAttackInfo
+    public class AutoAttackInfo
     {
         public int delay = 1000, min = 0, max = 0;
         public float probability = 0;
@@ -1332,6 +1350,8 @@ public class Shoot_GameManager : SerializedMonoBehaviour
             probability = _probability;
         }
     }
+    
+    // ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- //
     
     [Button]
     public void SetPlayer(bool playAsPet, Pet pet = null)

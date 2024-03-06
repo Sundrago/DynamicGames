@@ -102,6 +102,7 @@ public class Gacha_TicketsHolder : MonoBehaviour
         }
     }
 
+    [Button]
     public void TicketAnim(int _count)
     {
         gameObject.SetActive(true);
@@ -213,7 +214,32 @@ public class Gacha_TicketsHolder : MonoBehaviour
                 DOVirtual.DelayedCall(2.2f, TicketAnimFinished);
                 break;
             default:
-                TicketAnimFinished();
+                float delay;
+                if(count < 10) delay = 0.18f;
+                else if (count < 20) delay = 0.15f;
+                else delay = 0.11f;
+                audioCtrl.PlaySFXbyTag(SFX_tag.ticketStart);
+                for (int i = 0; i < count; i++)
+                {
+                    if (i < count - 1)
+                    {
+                        rect.DOAnchorPosY(GetPosY(i+1), delay)
+                            .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketGen);})
+                            .SetEase(Ease.OutQuart)
+                            .SetDelay(delay * i);
+                    }
+                    else
+                    {
+                        rect.DOAnchorPosY(GetPosY(i+1), delay)
+                            .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketFin);})
+                            .SetEase(Ease.OutQuart)
+                            .SetDelay(delay * i)
+                            .OnComplete(() =>
+                            {
+                                TicketAnimFinished();
+                            });
+                    }
+                }
                 break;
         }
     }

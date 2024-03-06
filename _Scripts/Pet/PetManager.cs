@@ -203,7 +203,7 @@ public class PetManager : SerializedMonoBehaviour
             PetSaveData data = new PetSaveData();
             data.count = PlayerPrefs.GetInt("PetCount_" + _type, 0);
             data.x = 0f;
-            data.y = -1f;
+            data.y = -1.25f;
             data.level = PlayerPrefs.GetInt("PetLevel_" + _type, 0);
             data.birthDate = PlayerPrefs.GetString("PetBirthDate_" + _type, Converter.DateTimeToString(DateTime.Now));
             data.isActive = true;

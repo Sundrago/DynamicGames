@@ -27,6 +27,7 @@ public class Jump_GameManager : MonoBehaviour
     [SerializeField] private SpriteAnimator playerRenderer;
     [SerializeField] private GameObject playerPlaceHolder;
     [SerializeField] private PetManager petManager;
+    [SerializeField] private Jump_Item item_prefab;
     
     public List<GameObject> footsteps = new List<GameObject>();
     public int score, highScore;
@@ -34,30 +35,37 @@ public class Jump_GameManager : MonoBehaviour
     
     private int totalStepCount = 0;
     private bool firstGame = false;
-    private bool pauseGame = false;
     private float velocity;
     private float height = -0.3f;
+    private float revibeTimer;
+    private bool hasRevibed = false;
+    
+    private enum gameStatus { preGame, playing, dead, revibe }
+
+    private gameStatus status;
     
     void Start()
     {
         title.color = new Color(1f,1f,1f,0f);
         cylindar.transform.localEulerAngles = new Vector3(0f,210f,0f);
-        jump_scrl.targetRotation = cylindar.transform.localEulerAngles;
         tutorial.SetActive(false);
     }
 
     void Update()
     {
         //Update Y Speed
-        if(pauseGame) {
+        if(status == gameStatus.preGame) {
             if(player.transform.position.y > -0.25)
             {
                 tutorial_text.transform.DOScale(Vector3.zero, 0.5f);
                 tutorial_cursor.GetComponent<Image>().DOFade(0f,0.5f)
                 .OnComplete(()=>{tutorial.SetActive(false);});
-                pauseGame =false;
+                SetStatus(gameStatus.playing);
             }
-        } else {
+
+            UpdateFootsteps();
+
+        } else if(status == gameStatus.playing) {
             float max = footstepY_velcoity_max * (score+80)/80;
             float min = footstepY_velocity_min * (score+80)/80;
 
@@ -70,14 +78,43 @@ public class Jump_GameManager : MonoBehaviour
                     velocity += (min - velocity) * friction * Mathf.Abs(-player.transform.position.y - 0.25f)/2;
                 }
             }
-            Time.timeScale = (1 + 0.01f * score);
+            Time.timeScale = (1 + 0.008f * score);
             
             Vector3 updatePos = footstepHolder.transform.localPosition;
             updatePos.y -= velocity * Time.deltaTime;
             footstepHolder.transform.localPosition = updatePos;
-        }
+            
+            //Update Footstep Size
+            UpdateFootsteps();
 
-        //Update Footstep Size
+            //Check if game ends
+            if(player.transform.position.y < -10f) {
+                SetStatus(gameStatus.dead);
+            }
+
+            //ScoreCounter
+            if(footsteps.Count > 0) {
+                if(footsteps[0].transform.position.y <= footstep_posC.transform.position.y) {
+                    Destroy(footsteps[0]);
+                    footsteps.RemoveAt(0);
+                    if(footsteps.Count < 15) {
+                        GenerateStageByDifficulty(0.05f,0.15f,0.7f);
+                    }
+                }
+            }
+        }
+        else if(status == gameStatus.revibe)
+        {
+            if (Time.time > revibeTimer + 4f)
+            {
+                SetStatus(gameStatus.playing);
+                player.GetComponent<Rigidbody>().isKinematic = false;
+            }
+        }
+    }
+
+    private void UpdateFootsteps()
+    {
         foreach(GameObject obj in footsteps) {
             if(obj.transform.position.y >= footstep_posA.transform.position.y) {
                 obj.transform.localScale = new Vector3(0,0,0);
@@ -90,30 +127,51 @@ public class Jump_GameManager : MonoBehaviour
                 obj.transform.localScale = new Vector3(normal, normal, normal);
             }
         }
-
-        //Check if game ends
-        if(player.transform.position.y < -10f) {
-            ShowScore();
-        }
-
-        //ScoreCounter
-        if(footsteps.Count > 0) {
-            if(footsteps[0].transform.position.y <= footstep_posC.transform.position.y) {
-                Destroy(footsteps[0]);
-                footsteps.RemoveAt(0);
-                if(footsteps.Count < 15) {
-                    GenerateStageByDifficulty(0.05f,0.15f,0.7f);
-                }
-            }
-        }
     }
 
-    public void ShowScore(){
+    private void SetStatus(gameStatus _status)
+    {
+        if(status == _status) return;
+        status = _status;
+
+        switch (_status)
+        {
+            case gameStatus.preGame:
+                hasRevibed = false;
+                break;
+            case gameStatus.playing:
+                break;
+            case gameStatus.dead:
+                if(!hasRevibed) GameOver();
+                else ShowScore();
+                break;
+            case gameStatus.revibe:
+                break;
+        }
+    }
+    private void GameOver()
+    {
+        sfx.PlaySfx(0);
+        WatchAdsContinue.Instance.Init(Revibe, ShowScore, "Jump_Revibe");
+    }
+
+    private void ShowScore(){
         player.SetActive(false);
         Time.timeScale = 1f;
-        sfx.PlaySfx(0);
         EndScoreCtrl.Instance.ShowScore(score, GameType.jump);
         SetupGame();
+    }
+
+    private void Revibe()
+    {
+        SetStatus(gameStatus.revibe);
+        player.GetComponent<Rigidbody>().isKinematic = true;
+        player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        player.transform.localPosition = new Vector3(0f, -5f, 1.25f);
+        player.transform.DOLocalMove(new Vector3(0f,-1.5f,1.25f), 1.5f)
+            .SetEase(Ease.OutExpo);
+        revibeTimer = Time.time;
+        hasRevibed = true;
     }
 
     float EaseOutBack(float normal) 
@@ -370,6 +428,9 @@ public class Jump_GameManager : MonoBehaviour
             case 30:
                 nextStep = Instantiate(step30, footstepHolder.transform);
             break;
+            case 45:
+                nextStep = Instantiate(step60, footstepHolder.transform);
+                break;
             case 60:
                 nextStep = Instantiate(step60, footstepHolder.transform);
             break;
@@ -386,7 +447,7 @@ public class Jump_GameManager : MonoBehaviour
                 nextStep = Instantiate(step60, footstepHolder.transform);
             break;
         }
-
+        
         height += y;
         nextStep.transform.localEulerAngles = new Vector3(0,degree,0);
         nextStep.transform.localPosition = new Vector3(0,height,0);
@@ -396,6 +457,11 @@ public class Jump_GameManager : MonoBehaviour
 
         footsteps.Add(nextStep);
         nextStep.SetActive(true);
+        
+        // Jump_Item item = Instantiate(item_prefab, nextStep.transform, true);
+        // item.transform.position = Vector3.zero;
+        // item.transform.localPosition = new Vector3(0.25f,0.1f,0.1f);
+        // item.gameObject.SetActive(true);
     }
 
     public void UpdateScoreUI(int score) {
@@ -436,11 +502,10 @@ public class Jump_GameManager : MonoBehaviour
         footstep_posB.transform.DOMoveY(-5f, 1.5f)
             .From().SetEase(Ease.Linear)
             .SetDelay(0.5f);
-        
-        pauseGame = true;
+
+        SetStatus(gameStatus.preGame);
         player.GetComponent<Rigidbody>().isKinematic = true;
         player.GetComponent<Rigidbody>().velocity = Vector3.zero;
-
         player.transform.localPosition = new Vector3(0f, -5f, 1.25f);
         player.transform.DOLocalMove(new Vector3(0f,-1.5f,1.25f), 2f)
         .SetEase(Ease.OutBack);    
@@ -448,7 +513,7 @@ public class Jump_GameManager : MonoBehaviour
         if(firstGame)
         {
             cylindar.transform.localEulerAngles = new Vector3(0f,210f,0f);
-            jump_scrl.targetRotation = cylindar.transform.localEulerAngles;
+            jump_scrl.ResetRotation();
             title.gameObject.SetActive(true);
 
             if(DOTween.IsTweening(title)) DOTween.Kill(title);
@@ -471,7 +536,7 @@ public class Jump_GameManager : MonoBehaviour
         Time.timeScale = 1f;
         score = 0;
         highFXShown = false;
-        jump_scrl.targetRotation = cylindar.transform.localEulerAngles;
+        // jump_scrl.ResetRotation();
         UpdateScoreUI(score);
         DOTween.Kill(cylindar.transform);
         player.GetComponent<Rigidbody>().isKinematic = false;

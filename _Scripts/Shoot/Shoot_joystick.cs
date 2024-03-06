@@ -9,7 +9,7 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     [SerializeField] private GameObject joystickUI, joysyick_knob, targetObj;
     [SerializeField] private Boundaries boundaries;
     [SerializeField] private Shoot_Bullet_Manager bullet_Manager;
-    [SerializeField] private ParticleSystem ThrustFx;
+    // [SerializeField] private ParticleSystem ThrustFx;
     [SerializeField] private Shoot_GameManager gameManager;
 
     [SerializeField] private float max_radius = 1f;
@@ -26,18 +26,18 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     public Vector3 vecNormal;
     private Vector3 speed = Vector3.zero;
     private Vector2 initialPoint;
-
-    private ParticleSystem.ShapeModule shape;
-    private ParticleSystem.EmissionModule emmision;
+    //
+    // private ParticleSystem.ShapeModule shape;
+    // private ParticleSystem.EmissionModule emmision;
     private bool onDrag = false;
 
     private void Start()
     {
         joystickUI.SetActive(false);
-        shape = ThrustFx.shape;
-        emmision = ThrustFx.emission;
-
-        emmision.rateOverTimeMultiplier = 0;
+        // shape = ThrustFx.shape;
+        // emmision = ThrustFx.emission;
+        //
+        // emmision.rateOverTimeMultiplier = 0;
         player.PauseAnim();
     }
 
@@ -52,7 +52,7 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
         initialPoint = Camera.main.ScreenToWorldPoint(eventData.position);
         joystickUI.transform.position = initialPoint; // = new Vector2(initialPoint.x, initialPoint.y + joystickUI.GetComponent<RectTransform>().transform.localScale.y / 2f);
         joystickUI.SetActive(true);
-        emmision.rateOverTimeMultiplier = 60;
+        // emmision.rateOverTimeMultiplier = 60;
     }
 
     void IDragHandler.OnDrag(PointerEventData eventData)
@@ -72,8 +72,8 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     {
         if(onDrag) {
             speed += vecNormal * velocity * joystick_inensity;
-            shape.position = targetObj.transform.position;
-            shape.rotation = new Vector3(targetObj.transform.eulerAngles.z,0f,0f);
+            // shape.position = targetObj.transform.position;
+            // shape.rotation = new Vector3(targetObj.transform.eulerAngles.z,0f,0f);
         }
             
         speed *= friction;
@@ -119,7 +119,7 @@ public class Shoot_joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     {
         onDrag = false;
         joysyick_knob.transform.localPosition = Vector2.zero;
-        emmision.rateOverTimeMultiplier = 0;
+        // emmision.rateOverTimeMultiplier = 0;
         joystickUI.SetActive(false);
     }
 }

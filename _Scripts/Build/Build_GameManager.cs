@@ -45,6 +45,7 @@ public class Build_GameManager : MonoBehaviour
     private const float gravityScale = -1;
     private const float lightDecreaseFactor = 0.97f;
     private const float threshold = 0.015f;
+    private bool hasRevibed = false;
 
 
     // Start is called before the first frame update
@@ -109,7 +110,7 @@ public class Build_GameManager : MonoBehaviour
         //shake on hit
         if(falling & !firstHit & stageItems.Count > 0)
         {
-            if(stageItems[stageItems.Count-1].GetComponent<RectTransform>().localPosition.y + stageItems[stageItems.Count - 1].GetComponent<RectTransform>().localScale.y >= firstHitHeight - 100f)
+            if(stageItems[stageItems.Count-1].GetComponent<RectTransform>().localPosition.y + stageItems[stageItems.Count - 1].GetComponent<RectTransform>().localScale.y >= firstHitHeight - 50f)
             {
                 shaker.GetComponent<Animator>().SetTrigger("up");
                 firstHit = true;
@@ -358,11 +359,28 @@ public class Build_GameManager : MonoBehaviour
     private void GameFinished()
     {
         shaker.GetComponent<Animator>().SetTrigger("large");
+        
+        if(hasRevibed) ShowScore();
+        else WatchAdsContinue.Instance.Init(Revibe, ShowScore, "Build_Revibe");
+    }
+
+    private void ShowScore()
+    {
         mainCanvas.GetComponent<Animator>().SetTrigger("ending");
         EndScoreCtrl.Instance.ShowScore(highScore, GameType.build);
         hearts.GetComponent<Build_HeartsCtrl>().Show(false);
+        hasRevibed = false;
     }
 
+    private void Revibe()
+    {
+        hasRevibed = true;
+        hearts.GetComponent<Build_HeartsCtrl>().SetHearts(5);
+        fallCount = 0;
+        currentStageIdx -= 1;
+        NextStage();
+    }
+    
     public void RestartGame()
     {
         ClearGame();
@@ -390,6 +408,7 @@ public class Build_GameManager : MonoBehaviour
         stageItemsPos.Clear();
         EndScoreCtrl.Instance.HideScore();
         hearts.SetActive(false);
+        hasRevibed = false;
     }
 
     private void ThisScoreAnim(int i) {

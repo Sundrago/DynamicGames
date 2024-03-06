@@ -28,6 +28,7 @@ public class DebugCtrl : MonoBehaviour
         ++hiddenBtnClickCount;
         if (hiddenBtnClickCount > 5)
         {
+            PlayerPrefs.SetInt("debugMode", 1);
             gameObject.SetActive(true);
             debug_front_window.SetActive(true);
         }
@@ -74,9 +75,15 @@ public class DebugCtrl : MonoBehaviour
     
     public void RemoveData()
     {
+        PopupTextManager.Instance.ShowYesNoPopup("Resest all player data?", RemoveDataConfirmed);
+    }
+
+    private void RemoveDataConfirmed()
+    {
         PlayerPrefs.DeleteAll();
         PlayerPrefs.Save();
         PetManager.Instance.RemoveData();
+        Application.Quit();
     }
 
     public void ShowIslandSizeRemote()
@@ -98,5 +105,10 @@ public class DebugCtrl : MonoBehaviour
     public void ChangeLanguage()
     {
         fontChanger.FontSelected(localeSelector.value);
+    }
+
+    public void AdNetworks()
+    {
+        IronSource.Agent.launchTestSuite();
     }
 }

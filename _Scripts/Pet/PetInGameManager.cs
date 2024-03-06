@@ -18,7 +18,9 @@ public class PetInGameManager : MonoBehaviour
     private float selectedTime;
     public bool enterGameWithPet = false;
     private GameType gameType;
-    
+
+    public bool EnterGameWithPet => enterGameWithPet;
+
     private void Awake()
     {
         Instance = this;
@@ -74,4 +76,5 @@ public class PetInGameManager : MonoBehaviour
         pet.surfaceMovement2D.ForceLandOnSquare(blockData.obj.dragSprite.miniisland, 2f);
         pet.SettoIdle(2f);
     }
+    
 }

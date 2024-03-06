@@ -13,31 +13,22 @@ public class MoneyManager : MonoBehaviour
     
     [SerializeField] private GameObject ticket_prefab, gachaCoin_prefab, key_prefab;
     
-    [SerializeField]
-    private GameObject ticketHolder_ui;
-    [SerializeField]
-    private TextMeshProUGUI ticketCount_ui;
-
-
-    [SerializeField]
-    public  GameObject gachaCoinHolder_ui;
-    [SerializeField]
-    private TextMeshProUGUI gachaCoinCount_ui;
-
+    [SerializeField] private GameObject ticketHolder_ui;
+    [SerializeField] private TextMeshProUGUI ticketCount_ui;
     
-    [SerializeField]
-    public  GameObject keyHolder_ui;
-    [SerializeField]
-    private TextMeshProUGUI keyCount_ui;
+    [SerializeField] public  GameObject gachaCoinHolder_ui;
+    [SerializeField] private TextMeshProUGUI gachaCoinCount_ui;
     
-    private int ticketCount, gachaCoinCount, keyCount;
-
+    [SerializeField] public  GameObject keyHolder_ui;
+    [SerializeField] private TextMeshProUGUI keyCount_ui;
     public List<ObjectPool<GameObject>> obj_pools = new List<ObjectPool<GameObject>>();
 
+    [SerializeField] private Transform coin2DHolder;
+    [SerializeField] private TextMeshProUGUI coin2DAmountText;
 
-    [SerializeField]
-    private GachaponManager gachaponManager;
+    [SerializeField] private GachaponManager gachaponManager;
 
+    private int ticketCount, gachaCoinCount, keyCount;
 
     public enum RewardType { Ticket, GachaCoin, Key }
 
@@ -65,6 +56,8 @@ public class MoneyManager : MonoBehaviour
     }
     private void Start()
     {
+        coin2DAmountText.gameObject.SetActive(false);
+        
         ticketCount = PlayerPrefs.GetInt("ticketCount", 0);
         gachaCoinCount = PlayerPrefs.GetInt("gachaCoinCount", 0);
         keyCount = PlayerPrefs.GetInt("keyCount", 0);
@@ -80,16 +73,16 @@ public class MoneyManager : MonoBehaviour
                 switch (type)
                 {
                     case RewardType.Ticket:
-                        obj = Instantiate(ticket_prefab, gameObject.transform);
+                        obj = Instantiate(ticket_prefab, coin2DHolder);
                         break;
                     case RewardType.GachaCoin:
-                        obj = Instantiate(gachaCoin_prefab, gameObject.transform);
+                        obj = Instantiate(gachaCoin_prefab, coin2DHolder);
                         break;
                     case RewardType.Key:
-                        obj = Instantiate(key_prefab, gameObject.transform);
+                        obj = Instantiate(key_prefab, coin2DHolder);
                         break;
                     default: //CoinType.Oil:
-                        obj = Instantiate(ticket_prefab, gameObject.transform);
+                        obj = Instantiate(ticket_prefab, coin2DHolder);
                         break;
                 }
                 return obj;
@@ -307,6 +300,25 @@ public class MoneyManager : MonoBehaviour
                             }
                         });
                 });
+        }
+
+        if (type == RewardType.Ticket)
+        {
+            coin2DAmountText.text = "+" + count;
+            coin2DAmountText.color = Color.white;;
+            coin2DAmountText.transform.localScale = Vector3.one;
+
+            DOTween.Kill(coin2DAmountText.transform);
+            coin2DAmountText.transform.DOPunchScale(Vector3.one * 0.4f, 1f);
+            coin2DAmountText.DOFade(0, 1.5f)
+                .SetDelay(0.8f)
+                .OnComplete(() =>
+            {
+                coin2DAmountText.gameObject.SetActive(false);
+            });
+
+            coin2DAmountText.transform.position = startPos;
+            coin2DAmountText.gameObject.SetActive(true);
         }
     }
 

@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+#if UNITY_IOS && !UNITY_EDITOR
+using Firebase.Analytics;
+#endif
 using MyUtility;
 using UnityEngine;
 using UnityEngine.UI;
@@ -108,6 +111,9 @@ public class TutorialManager : MonoBehaviour
     {
         PopupTextManager.Instance.ShowOKPopup("[tutorial_0] <rainb>다이나믹 게임천국</rainb>에 <br>온 것을 환영한다옹!", tutorial_02, "[tutorial_1] 반가워요!");
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.popup1);
+#if UNITY_IOS && !UNITY_EDITOR
+        FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventTutorialBegin);
+#endif
     }
     
     private void tutorial_02()
@@ -512,6 +518,9 @@ public class TutorialManager : MonoBehaviour
         status = TutorialStatus.finished;
         PetManager.Instance.GetPetDataByType(PetType.Fluffy).obj.GetComponent<Pet>().ignoreIdleDialogue = false;
         PlayerPrefs.SetInt("tutorialG", 1);
+#if UNITY_IOS && !UNITY_EDITOR
+        FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventTutorialComplete);
+#endif
     }
     
     private void tutorial_G11()
