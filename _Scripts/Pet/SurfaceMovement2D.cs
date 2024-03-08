@@ -3,61 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using Unity.VisualScripting;
 using Random = UnityEngine.Random;
-
-public class SquareElement
-{
-    public GameObject obj;
-    public float dist;
-    public Vector2[] cornerPoints = null;
-    public Vector2[] closestPointOnLine;
-    public float[] dists = null;
-    public int[] shortCornerIdx = null;
-    public bool[] constraints;
-}
-
-public struct AvailableCorner
-{
-    public SquareElement sqrElm;
-    public int cornerIdx;
-    public float dist;
-    public bool leftAvailalble, rightAvailable;
-    public float normal;
-}
-
-public class CurrentCorner
-{
-    public GameObject obj = null;
-    public Vector2[] cornerPoints = null;
-    public int cornerIdx;
-    public float normal;
-    public bool direction;
-    public Vector2 pointA, pointB;
-}
-
-public struct Transition
-{
-    public Vector2 p1;
-    public Vector2 p2;
-    public Vector2 p3;
-
-    public Quaternion r1;
-    public Quaternion r2;
-
-    public float normal;
-}
-
 
 [RequireComponent(typeof(Pet))]
 public class SurfaceMovement2D : MonoBehaviour
 {
-    [SerializeField] GameObject headObj, island;
-    [SerializeField] float moveVelocity = 0.3f;
-    [SerializeField] float shortTransition = 0.3f;
-    [SerializeField] float longTransition = 0.3f;
-    [SerializeField] float hitCheckInterval = 0.5f;
-    [SerializeField] int searchComplexity = 5;
+    [SerializeField] private GameObject headObj, island;
+    [SerializeField] private float moveVelocity = 0.3f;
+    [SerializeField] private float shortTransition = 0.3f;
+    [SerializeField] private float longTransition = 0.3f;
+    [SerializeField] private float hitCheckInterval = 0.5f;
+    [SerializeField] private int searchComplexity = 5;
 
     public enum LandingPlace
     {
@@ -93,12 +49,6 @@ public class SurfaceMovement2D : MonoBehaviour
     {
         pet = GetComponent<Pet>();
     }
-
-    private void Start()
-    {
-        // currentCorner.direction = Random.value > 0.5f;
-    }
-
     public void StartMovement()
     {
         LoadSquare();
@@ -179,7 +129,7 @@ public class SurfaceMovement2D : MonoBehaviour
         gameObject.transform.rotation = Quaternion.Lerp(transition.r1, transition.r2, transition.normal);
     }
 
-    public Vector2 Bezier(float t, Vector2 a, Vector2 b, Vector2 c)
+    private Vector2 Bezier(float t, Vector2 a, Vector2 b, Vector2 c)
     {
         Vector2 ab = Vector2.Lerp(a, b, t);
         Vector2 bc = Vector2.Lerp(b, c, t);
@@ -284,7 +234,7 @@ public class SurfaceMovement2D : MonoBehaviour
         return false;
     }
 
-    void InitializeCurrentCorner(CurrentCorner currentCorner)
+    private void InitializeCurrentCorner(CurrentCorner currentCorner)
     {
         //currentCorner.normal = 0;
         currentCorner.cornerPoints = GetCornerPoint(currentCorner.obj);
@@ -293,7 +243,7 @@ public class SurfaceMovement2D : MonoBehaviour
             currentCorner.cornerPoints[currentCorner.cornerIdx == 3 ? 0 : currentCorner.cornerIdx + 1];
     }
 
-    public void FindNearCorner()
+    private void FindNearCorner()
     {
         // print("findnearCornter");
         LoadSquare();
@@ -424,7 +374,7 @@ public class SurfaceMovement2D : MonoBehaviour
         return;
     }
 
-    void GetAvailable(int target)
+    private void GetAvailable(int target)
     {
         availables = new List<AvailableCorner>();
 
@@ -446,7 +396,7 @@ public class SurfaceMovement2D : MonoBehaviour
         }
     }
 
-    void GetSquareDistSort()
+    private void GetSquareDistSort()
     {
         SquareElements = new List<SquareElement>();
         Vector2 playerPos = gameObject.transform.position;
@@ -464,7 +414,7 @@ public class SurfaceMovement2D : MonoBehaviour
         SquareElements = SquareElements.OrderBy(x => x.dist).ToList();
     }
 
-    public Vector2[] GetCornerPoint(GameObject obj)
+    private Vector2[] GetCornerPoint(GameObject obj)
     {
         var sqr = obj.GetComponent<SquareBlockCtrl>();
         if (sqr != null)
@@ -495,13 +445,13 @@ public class SurfaceMovement2D : MonoBehaviour
         return transform.TransformPoint(vec);
     }
 
-    public float GetDistFromPointToLine(Vector2 P0, Vector2 P1, Vector2 P2)
+    private float GetDistFromPointToLine(Vector2 P0, Vector2 P1, Vector2 P2)
     {
         return (Mathf.Abs(Vector2.Distance(P0, P2)) + Mathf.Abs(Vector2.Distance(P0, P1)) +
                 Mathf.Abs(Vector2.Distance(P0, P1 + P2 / 2f))) / 3f;
     }
 
-    void GetSquarePointsData(int idx)
+    private void GetSquarePointsData(int idx)
     {
         // Debug.DrawLine(gameObject.transform.position, SquareElements[idx].obj.transform.position, Color.blue, 1f);
         if (SquareElements[idx].obj == null) return;
@@ -584,7 +534,7 @@ public class SurfaceMovement2D : MonoBehaviour
         }
     }
 
-    public static Vector2 GetClosestPointOnLineSegment(Vector2 P, Vector2 A, Vector2 B)
+    private static Vector2 GetClosestPointOnLineSegment(Vector2 P, Vector2 A, Vector2 B)
     {
         Vector2 AP = P - A; //Vector from A to P   
         Vector2 AB = B - A; //Vector from A to B  
@@ -598,7 +548,7 @@ public class SurfaceMovement2D : MonoBehaviour
         else return A + AB * distance;
     }
 
-    bool CheckAvailablity(Vector2 A, Vector2 B, float normal, Vector2 delta_height)
+    private bool CheckAvailablity(Vector2 A, Vector2 B, float normal, Vector2 delta_height)
     {
         if (normal < 0f || normal > 1f) return false;
 
@@ -622,7 +572,7 @@ public class SurfaceMovement2D : MonoBehaviour
         return true;
     }
 
-    public void LoadSquare()
+    private void LoadSquare()
     {
         squares = GameObject.FindGameObjectsWithTag("square");
         // print("LoadSquare SQRS.COUNT : " + squares.Length);
@@ -680,4 +630,47 @@ public class SurfaceMovement2D : MonoBehaviour
 
         headHitCheckTime = Time.time + holdDuration;
     }
+}
+
+
+public class SquareElement
+{
+    public GameObject obj;
+    public float dist;
+    public Vector2[] cornerPoints = null;
+    public Vector2[] closestPointOnLine;
+    public float[] dists = null;
+    public int[] shortCornerIdx = null;
+    public bool[] constraints;
+}
+
+public struct AvailableCorner
+{
+    public SquareElement sqrElm;
+    public int cornerIdx;
+    public float dist;
+    public bool leftAvailalble, rightAvailable;
+    public float normal;
+}
+
+public class CurrentCorner
+{
+    public GameObject obj = null;
+    public Vector2[] cornerPoints = null;
+    public int cornerIdx;
+    public float normal;
+    public bool direction;
+    public Vector2 pointA, pointB;
+}
+
+public struct Transition
+{
+    public Vector2 p1;
+    public Vector2 p2;
+    public Vector2 p3;
+
+    public Quaternion r1;
+    public Quaternion r2;
+
+    public float normal;
 }
