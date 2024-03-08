@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using _Scripts;
 using Firebase.Analytics;
-#if UNITY_IOS && !UNITY_EDITOR
+#if !UNITY_EDITOR
 using Firebase.Analytics;
 using Unity.Advertisement.IosSupport;
 #endif
@@ -26,7 +26,7 @@ public class Ads : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-#if UNITY_IOS && !UNITY_EDITOR
+#if !UNITY_EDITOR
         if(ATTrackingStatusBinding.GetAuthorizationTrackingStatus() == ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED) {
             ATTrackingStatusBinding.RequestAuthorizationTracking();
         }
@@ -39,7 +39,7 @@ public class Ads : MonoBehaviour
 
     private void Start()
     {
-        if (PlayerPrefs.GetInt("debugMode", 0) == 1)
+        if (PlayerPrefs.GetInt(PlayerData.DEBUG_MODE, 0) == 1)
         {
             IronSource.Agent.setMetaData("is_test_suite", "enable"); 
         }
@@ -51,17 +51,17 @@ public class Ads : MonoBehaviour
         IronSourceRewardedVideoEvents.onAdRewardedEvent += RewardedVideoOnAdRewardedEvent;
         
         DateTime today = System.DateTime.Now;
-        string adDateString = PlayerPrefs.GetString("adDate", Converter.DateTimeToString(DateTime.Now.AddDays(-1)));
-        adCount = PlayerPrefs.GetInt("adCount", 0);
+        string adDateString = PlayerPrefs.GetString(PlayerData.AD_WATCHED_DATE, Converter.DateTimeToString(DateTime.Now.AddDays(-1)));
+        adCount = PlayerPrefs.GetInt(PlayerData.AD_WATCHED_COUNT, 0);
         DateTime adDate = Converter.StringToDateTime(adDateString);
         if (today.Date != adDate.Date)
         {
             adCount = 0;
-            PlayerPrefs.SetInt("adCount", adCount);
+            PlayerPrefs.SetInt(PlayerData.AD_WATCHED_COUNT, adCount);
 #if !UNITY_EDITOR
             FirebaseAnalytics.LogEvent("Ads", "DailyAdsCount", adCount);
 #endif
-            PlayerPrefs.SetString("adDate", Converter.DateTimeToString(DateTime.Now));
+            PlayerPrefs.SetString(PlayerData.AD_WATCHED_DATE, Converter.DateTimeToString(DateTime.Now));
         }
         
         TVICon.sprite = adCount >= 3 ? off : on;
@@ -86,7 +86,7 @@ public class Ads : MonoBehaviour
     public void ShowAds(Callback _OnReward = null, Callback _OnADFailed = null, string note = null)
     {
         print("ShowAds : " + note);
-#if UNITY_IOS && !UNITY_EDITOR
+#if !UNITY_EDITOR
         FirebaseAnalytics.LogEvent("Ads", "AdType", note);
 #endif
         callbackReward = _OnReward;
@@ -112,7 +112,7 @@ public class Ads : MonoBehaviour
         }
         
         TVICon.sprite = adCount >= 3 ? off : on;
-        PlayerPrefs.SetInt("adCount",adCount);
+        PlayerPrefs.SetInt(PlayerData.AD_WATCHED_COUNT,adCount);
         
         string output = Localize.GetLocalizedString("[watchAds]") + " (" + adCount + "/3)";
         PopupTextManager.Instance.ShowYesNoPopup(output, () =>
@@ -125,7 +125,7 @@ public class Ads : MonoBehaviour
     {
         adCount += 1;
         TVICon.sprite = adCount >= 3 ? off : on;
-        PlayerPrefs.SetInt("adCount",adCount);
+        PlayerPrefs.SetInt(PlayerData.AD_WATCHED_COUNT, adCount);
         PopupTextManager.Instance.ShowOKPopup("[watchedAds]티켓 10장을 받으세요!", () => { MoneyManager.Instance.Coin2DAnim(MoneyManager.RewardType.Ticket, Vector3.zero, 10);});
     }
 }
