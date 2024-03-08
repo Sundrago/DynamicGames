@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Firebase.Analytics;
 #if UNITY_IOS && !UNITY_EDITOR
 using Firebase.Analytics;
 using Unity.Advertisement.IosSupport;
@@ -20,14 +21,11 @@ public class Ads : MonoBehaviour
     private Callback callbackReward;
     private Callback callbackRewardFailed;
     [SerializeField] private SFXCTRL sfx;
-
     
     private void Awake()
     {
         Instance = this;
 #if UNITY_IOS && !UNITY_EDITOR
-        // Check the user's consent status.
-        // If the status is undetermined, display the request request:
         if(ATTrackingStatusBinding.GetAuthorizationTrackingStatus() == ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED) {
             ATTrackingStatusBinding.RequestAuthorizationTracking();
         }
@@ -48,8 +46,6 @@ public class Ads : MonoBehaviour
         IronSource.Agent.shouldTrackNetworkState(true);
         IronSource.Agent.init ("1c563f2d5", IronSourceAdUnits.REWARDED_VIDEO);
         
-        //Add AdInfo Rewarded Video Events
-        IronSourceRewardedVideoEvents.onAdOpenedEvent += RewardedVideoOnAdOpenedEvent;
         IronSourceRewardedVideoEvents.onAdShowFailedEvent += RewardedVideoOnAdShowFailedEvent;
         IronSourceRewardedVideoEvents.onAdRewardedEvent += RewardedVideoOnAdRewardedEvent;
         
@@ -59,17 +55,15 @@ public class Ads : MonoBehaviour
         DateTime adDate = Converter.StringToDateTime(adDateString);
         if (today.Date != adDate.Date)
         {
-            //new day
             adCount = 0;
             PlayerPrefs.SetInt("adCount", adCount);
+#if !UNITY_EDITOR
+            FirebaseAnalytics.LogEvent("Ads", "DailyAdsCount", adCount);
+#endif
             PlayerPrefs.SetString("adDate", Converter.DateTimeToString(DateTime.Now));
         }
         
         TVICon.sprite = adCount >= 3 ? off : on;
-    }
-    
-    void RewardedVideoOnAdOpenedEvent(IronSourceAdInfo adInfo){
-        
     }
 
     void RewardedVideoOnAdRewardedEvent(IronSourcePlacement placement, IronSourceAdInfo adInfo){
@@ -98,7 +92,7 @@ public class Ads : MonoBehaviour
         callbackRewardFailed = _OnADFailed;
         if (IronSource.Agent.isRewardedVideoAvailable())
         {
-            IronSource.Agent.showRewardedVideo("YOUR_PLACEMENT_NAME");
+            IronSource.Agent.showRewardedVideo();
             AudioCtrl.Instance.PauseBGM();
             sfx.PauseBGM();
         }
