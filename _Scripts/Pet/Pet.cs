@@ -11,45 +11,48 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(SurfaceMovement2D))]
 public class Pet : SerializedMonoBehaviour
 {
-    [SerializeField]
-    public PetType type;
-    [SerializeField]
-    private float defaultInterval = 0.2f;
-    [SerializeField]
-    public SpriteRenderer spriteRenderer;
+    [SerializeField] public PetType type;
+    [SerializeField] private float defaultInterval = 0.2f;
+    [SerializeField] public SpriteRenderer spriteRenderer;
 
     [SerializeField] private PetInfo_UI petinfo;
     [SerializeField] public SurfaceMovement2D surfaceMovement2D;
     [SerializeField] public Transform centerPoint;
-    
-    
-    [TitleGroup("CallBacks", alignment: TitleAlignments.Centered)]
-    [SerializeField, BoxGroup("CallBacks/IDLE")]
+
+
+    [TitleGroup("CallBacks", alignment: TitleAlignments.Centered)] [SerializeField, BoxGroup("CallBacks/IDLE")]
     private float idleTimeMin = 5;
+
     [SerializeField, BoxGroup("CallBacks/IDLE")]
     private float idleTimeMax = 7;
+
     [SerializeField, TableList, BoxGroup("CallBacks/IDLE")]
-    List<ActionOption> onIdleAction = new List<ActionOption>() {new ActionOption("idle")};
+    List<ActionOption> onIdleAction = new List<ActionOption>() { new ActionOption("idle") };
 
     [SerializeField, BoxGroup("CallBacks/MOVE")]
     float moveTimeMin = 5;
+
     [SerializeField, BoxGroup("CallBacks/MOVE")]
     float moveTimeMax = 7;
+
     [SerializeField, TableList, BoxGroup("CallBacks/MOVE")]
-    List<ActionOption> onMoveAction = new List<ActionOption>() {new ActionOption("walk")};
-    
+    List<ActionOption> onMoveAction = new List<ActionOption>() { new ActionOption("walk") };
+
     [SerializeField, TableList, BoxGroup("CallBacks/HIT")]
-    List<ActionOption> onHitAction = new List<ActionOption>() {new ActionOption("walk")};
+    List<ActionOption> onHitAction = new List<ActionOption>() { new ActionOption("walk") };
 
     [SerializeField, BoxGroup("CallBacks/JUMP")]
     bool hasExitAnimation;
+
     [SerializeField, TableList, BoxGroup("CallBacks/JUMP")]
-    List<ActionOption> onJumpStartAction = new List<ActionOption>() {new ActionOption("jump")};
+    List<ActionOption> onJumpStartAction = new List<ActionOption>() { new ActionOption("jump") };
+
     [SerializeField, TableList, BoxGroup("CallBacks/JUMP"), ShowIf("hasExitAnimation")]
-    List<ActionOption> onJumpEndAction = new List<ActionOption>() {new ActionOption("jump_end")};
+    List<ActionOption> onJumpEndAction = new List<ActionOption>() { new ActionOption("jump_end") };
+
     [SerializeField, BoxGroup("CallBacks/JUMP"), ShowIf("hasExitAnimation")]
     private float jumpFinishNormal = 0.5f;
-    
+
     [SerializeField, TitleGroup("Actions", alignment: TitleAlignments.Centered)]
     Dictionary<string, PetMotion> petMotions = new Dictionary<string, PetMotion>();
 
@@ -57,14 +60,22 @@ public class Pet : SerializedMonoBehaviour
     Dictionary<string, List<Sprite>> sprites = new Dictionary<string, List<Sprite>>();
 
     [SerializeField] private Sprite[] inGameJumpAnim, inGameInSpaceShip;
-    
-    private enum PetStatus { Idle, Move, JumpStart, JumpEnd, Hit};
+
+    private enum PetStatus
+    {
+        Idle,
+        Move,
+        JumpStart,
+        JumpEnd,
+        Hit
+    };
+
     private PetStatus status;
     private string motionID;
     private int motionFrame;
 
     private float interval;
-    
+
     private float statusTimer;
     private float motionTimer;
     private PetDialogue petDialogue = null;
@@ -72,89 +83,101 @@ public class Pet : SerializedMonoBehaviour
     private float jumpStartDuration, jumpEndDuration, hitDuration;
     public bool ignoreIdleDialogue = false;
     
+    private PetStatus previousStatus;
+    private string previoueMotion;
+    private float previousStatusTimer, previousMotionTimer, jumpStartTime;
+
     private void UpdateStatus(PetStatus _status)
     {
         // print(type + " : " + _status);
-        if(status == _status) return;
+        if (status == _status) return;
         status = _status;
 
         string nextMotionID;
         switch (status)
         {
-            case PetStatus.Idle :
+            case PetStatus.Idle:
                 statusTimer = Time.time + Random.Range(idleTimeMin, idleTimeMax);
                 nextMotionID = GetMotionID(onIdleAction);
                 break;
-            case PetStatus.JumpStart :
+            case PetStatus.JumpStart:
                 nextMotionID = GetMotionID(onJumpStartAction);
                 break;
-            case PetStatus.JumpEnd :
+            case PetStatus.JumpEnd:
                 nextMotionID = GetMotionID(onJumpEndAction);
                 break;
-            case PetStatus.Move :
+            case PetStatus.Move:
                 statusTimer = Time.time + Random.Range(moveTimeMin, moveTimeMax);
                 nextMotionID = GetMotionID(onMoveAction);
                 break;
-            case PetStatus.Hit :
+            case PetStatus.Hit:
                 statusTimer = Time.time + hitDuration;
                 nextMotionID = GetMotionID(onHitAction);
                 break;
-            default :
+            default:
                 statusTimer = Time.time + Random.Range(idleTimeMin, idleTimeMax);
                 nextMotionID = GetMotionID(onIdleAction);
                 break;
         }
-        
+
         UpdateMotion(nextMotionID);
     }
 
     private string GetMotionID(List<ActionOption> options)
     {
         float totalWeight = 0;
-        float startWeight = 0;
+        float rnd = Random.Range(0, 1);
         foreach (ActionOption option in options)
         {
             totalWeight += option.weight;
+            if (rnd <= totalWeight) return option.motionID;
         }
 
-        float rnd = Random.Range(0, totalWeight);
-
-        for (int i = 0; i < options.Count; i++)
-        {
-            if (rnd >= startWeight && rnd < startWeight + options[i].weight) return options[i].motionID;
-            startWeight += options[i].weight;
-        }
-
-        // print("GetMotionID FAILED");
         return null;
+    }
+
+    private void UpdateCurrentMotion(PetMotion currentMotion)
+    {
+        motionFrame = 0;
+
+        interval = currentMotion.overideInterval ? currentMotion.interval : defaultInterval;
+
+        motionTimer = Time.time + Random.Range(currentMotion.durationTimeMin, currentMotion.durationTimeMax);
+        currentMotion.SetStartTimeAndGetEndTime();
+
+        if (currentMotion.isMovement)
+            surfaceMovement2D.ContinueMovement(currentMotion.movementSpeed * Random.Range(0.8f, 1.2f));
+        else
+            surfaceMovement2D.PauseMovement();
+
+        //print(type + " : " + motionID);
+    }
+
+    private PetMotion GetCurrentMotion(string _motionID)
+    {
+        String id = motionID == _motionID ? motionID : GetMotionID(_motionID);
+        return petMotions[id];
+    }
+
+    private String GetMotionID(String _motionID)
+    {
+        return string.IsNullOrEmpty(_motionID) ? GetRandomMotionID() : _motionID;
+    }
+
+    private string GetRandomMotionID()
+    {
+        int randomMotionIndex = Random.Range(0, petMotions.Count);
+        return petMotions.ElementAt(randomMotionIndex).Key;
     }
 
     private void UpdateMotion(string _motionID)
     {
-        if(motionID == _motionID) return;
+        motionID = GetMotionID(_motionID);
+        PetMotion currentMotion = GetCurrentMotion(motionID);
 
-        if (string.IsNullOrEmpty(_motionID))
-        {
-            int rnd = Random.Range(0, petMotions.Count);
-            motionID = petMotions.ElementAt(rnd).Key;
-        }
-        else
-        {
-            motionID = _motionID;
-        }
-        motionFrame = 0;
+        if (currentMotion == null) return;
 
-        // print(motionID);
-        if (petMotions[motionID].overideInterval) interval = petMotions[motionID].interval;
-        else interval = defaultInterval;
-
-        motionTimer = Time.time + Random.Range(petMotions[motionID].durationTimeMin, petMotions[motionID].durationTimeMax);
-        petMotions[motionID].SetStartTimeAndGetEndTime();
-
-        if (petMotions[motionID].isMovement) surfaceMovement2D.ContinueMovement(petMotions[motionID].movementSpeed * Random.Range(0.8f, 1.2f));
-        else surfaceMovement2D.PauseMovement();
-        
-        // print(type + " : " + motionID);
+        UpdateCurrentMotion(currentMotion);
     }
 
     private void Awake()
@@ -179,51 +202,49 @@ public class Pet : SerializedMonoBehaviour
             //Check If Need Animation Update
             if (statusTimer < Time.time)
             {
-                if(!petMotions[motionID].canExit && motionTimer > Time.time) continue;
+                if (!petMotions[motionID].canExit && motionTimer > Time.time) continue;
                 switch (status)
                 {
-                    case PetStatus.Idle :
+                    case PetStatus.Idle:
                         UpdateStatus(PetStatus.Move);
                         break;
-                    case PetStatus.JumpStart :
+                    case PetStatus.JumpStart:
                         UpdateStatus(PetStatus.JumpEnd);
                         break;
-                    case PetStatus.JumpEnd :
+                    case PetStatus.JumpEnd:
                         UpdateStatus(PetStatus.Move);
                         break;
-                    case PetStatus.Move :
+                    case PetStatus.Move:
                         UpdateStatus(PetStatus.Idle);
                         break;
-                    case PetStatus.Hit :
+                    case PetStatus.Hit:
                         UpdateStatus(PetStatus.Move);
                         break;
-                    default :
+                    default:
                         UpdateStatus(PetStatus.Idle);
                         break;
                 }
             }
-            else if(motionTimer < Time.time)
+            else if (motionTimer < Time.time)
             {
                 string next;
-                
-                if(petMotions[motionID].nextAction == PetMotion.NextAction.idle) next = GetMotionID(onIdleAction);
+
+                if (petMotions[motionID].nextAction == PetMotion.NextAction.idle) next = GetMotionID(onIdleAction);
                 else if (petMotions[motionID].nextAction == PetMotion.NextAction.move) next = GetMotionID(onMoveAction);
                 else next = GetMotionID(petMotions[motionID].customActions);
                 UpdateMotion(next);
             }
-            
+
             //Update Anim
             if (motionFrame >= sprites[motionID].Count) motionFrame = 0;
             spriteRenderer.sprite = sprites[motionID][motionFrame];
             motionFrame += 1;
 
-            if (petMotions[motionID].loop == false && motionFrame >= sprites[motionID].Count) motionFrame = sprites[motionID].Count - 1;
+            if (petMotions[motionID].loop == false && motionFrame >= sprites[motionID].Count)
+                motionFrame = sprites[motionID].Count - 1;
         }
     }
-
-    private PetStatus previousStatus;
-    private string previoueMotion;
-    private float previousStatusTimer, previousMotionTimer, jumpStartTime;
+    
     public void JumpStart()
     {
         previousStatus = status;
@@ -244,10 +265,8 @@ public class Pet : SerializedMonoBehaviour
             statusTimer = previousStatusTimer + delay;
             motionTimer = previousMotionTimer + delay;
         }
-        else if(hasExitAnimation && normal>jumpFinishNormal) UpdateStatus(PetStatus.JumpEnd);
+        else if (hasExitAnimation && normal > jumpFinishNormal) UpdateStatus(PetStatus.JumpEnd);
     }
-    
-    // --------- --------- --------- --------- --------- --------- --------- --------- --------- //
     
     [Button]
     private void AddIdsToList()
@@ -256,7 +275,7 @@ public class Pet : SerializedMonoBehaviour
         AddActionOptions(onMoveAction);
         AddActionOptions(onHitAction);
         AddActionOptions(onJumpStartAction);
-        if(hasExitAnimation) AddActionOptions(onJumpEndAction);
+        if (hasExitAnimation) AddActionOptions(onJumpEndAction);
 
         void AddActionOptions(List<ActionOption> nextAction)
         {
@@ -266,7 +285,7 @@ public class Pet : SerializedMonoBehaviour
                 sprites.TryAdd(option.motionID, new List<Sprite>());
             }
         }
-        
+
         for (int i = 0; i < petMotions.Count; i++)
         {
             PetMotion motion = petMotions.Values.ToList()[i];
@@ -276,41 +295,48 @@ public class Pet : SerializedMonoBehaviour
             }
         }
     }
-
-    // public void MotionTest(PetMotion petmotion)
-    // {
-    //     string key = petMotions.FirstOrDefault(x => x.Value == petmotion).Key;
-    //     UpdateMotion(key);
-    // }
-    
-    // --------- --------- --------- --------- --------- --------- --------- --------- --------- //
     
     [Serializable]
     class PetMotion
     {
-        enum DurationType { Time, LoopCount };
-        public enum NextAction { idle, move, custom };
+        enum DurationType
+        {
+            Time,
+            LoopCount
+        };
+
+        public enum NextAction
+        {
+            idle,
+            move,
+            custom
+        };
+
         [SerializeField] DurationType durationMode;
 
         [ShowIf("@this.durationMode == DurationType.Time"), LabelText("duration min")]
         public float durationTimeMin;
+
         [ShowIf("@this.durationMode == DurationType.Time"), LabelText("duration max")]
         public float durationTimeMax;
 
         [SerializeField, ShowIf("@this.durationMode == DurationType.LoopCount"), LabelText("loop min")]
         private int durationCountMin;
+
         [SerializeField, ShowIf("@this.durationMode == DurationType.LoopCount"), LabelText("loop max")]
         private int durationCountMax;
 
-        [HorizontalGroup("anim")] public bool loop = true, canExit = true, overideInterval=false;
-        [ShowIf("overideInterval")]
-        public float interval;
+        [HorizontalGroup("anim")] public bool loop = true, canExit = true, overideInterval = false;
+        [ShowIf("overideInterval")] public float interval;
 
         [HorizontalGroup("movement")] public bool isMovement = false;
-        [HorizontalGroup("movement"), ShowIf("isMovement"), LabelText("speed")] public float movementSpeed = 2.5f;
 
-        
+        [HorizontalGroup("movement"), ShowIf("isMovement"), LabelText("speed")]
+        public float movementSpeed = 2.5f;
+
+
         public NextAction nextAction;
+
         [ShowIf("@nextAction == NextAction.custom")]
         public List<ActionOption> customActions = new List<ActionOption>();
 
@@ -325,6 +351,7 @@ public class Pet : SerializedMonoBehaviour
     {
         [SerializeField, HorizontalGroup("Actions"), LabelText("ID")]
         public string motionID;
+
         [SerializeField, HorizontalGroup("Actions")]
         public float weight = 1f;
 
@@ -337,6 +364,7 @@ public class Pet : SerializedMonoBehaviour
 
     private float mouseDownTime;
     private bool showDragDialogue;
+
     void OnMouseDown()
     {
         showDragDialogue = false;
@@ -347,6 +375,7 @@ public class Pet : SerializedMonoBehaviour
     }
 
     private Vector3 initPos;
+
     private void OnMouseDrag()
     {
         if (Time.time - mouseDownTime < 0.15f) return;
@@ -355,6 +384,7 @@ public class Pet : SerializedMonoBehaviour
             OnDragStart();
             showDragDialogue = true;
         }
+
         gameObject.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
 
@@ -375,12 +405,12 @@ public class Pet : SerializedMonoBehaviour
         statusTimer = Time.time + holdDuration;
         motionTimer = Time.time + holdDuration;
     }
-    
+
     public Sprite[] GetJumpAnim()
     {
         return inGameJumpAnim;
     }
-    
+
     public Sprite[] GetShipAnim()
     {
         return inGameInSpaceShip;
@@ -399,9 +429,9 @@ public class Pet : SerializedMonoBehaviour
         List<Sprite> jumpEndAnim = new List<Sprite>();
         spritesList = sprites[onJumpStartAction[0].motionID];
         jumpEndAnim = hasExitAnimation ? sprites[onJumpEndAction[0].motionID] : null;
-        
+
         spritesList.AddRange(jumpEndAnim);
-            
+
         inGameJumpAnim = new Sprite[spritesList.Count];
         for (int i = 0; i < spritesList.Count; i++)
         {
@@ -409,7 +439,7 @@ public class Pet : SerializedMonoBehaviour
         }
     }
 #endif
-    
+
     public void ShowDialogue(string text, bool forceShow = false)
     {
         if (petDialogue == null)
@@ -420,14 +450,14 @@ public class Pet : SerializedMonoBehaviour
     public void OnHit()
     {
         string dialogue = PetDialogueManager.Instance.GetOnHitText(type);
-        if(string.IsNullOrEmpty(dialogue)) return;
+        if (string.IsNullOrEmpty(dialogue)) return;
         ShowDialogue(dialogue);
     }
 
     private void OnTouch()
     {
         string dialogue = PetDialogueManager.Instance.GetIdleText(type);
-        if(string.IsNullOrEmpty(dialogue)) return;
+        if (string.IsNullOrEmpty(dialogue)) return;
         ShowDialogue(dialogue);
         // ShowDialogue("<pend>고소공포증 있어요. 고소할게요.");
         // petinfo.ShowPanel(type); //Click
@@ -435,48 +465,48 @@ public class Pet : SerializedMonoBehaviour
 
     public void OnIdle()
     {
-        if(ignoreIdleDialogue) return;
+        if (ignoreIdleDialogue) return;
         string dialogue = PetDialogueManager.Instance.GetIdleText(type);
-        if(string.IsNullOrEmpty(dialogue)) return;
+        if (string.IsNullOrEmpty(dialogue)) return;
         ShowDialogue(dialogue);
     }
 
     private void OnDragStart()
     {
         string dialogue = PetDialogueManager.Instance.GetOnDragText(type);
-        if(string.IsNullOrEmpty(dialogue)) return;
+        if (string.IsNullOrEmpty(dialogue)) return;
         ShowDialogue(dialogue, true);
     }
 
     public void OnGameEnter(GameType gameType)
     {
         string dialogue = PetDialogueManager.Instance.GetGameEnterString(type, gameType);
-        if(string.IsNullOrEmpty(dialogue)) return;
+        if (string.IsNullOrEmpty(dialogue)) return;
         ShowDialogue(dialogue, true);
     }
-    
+
     public void OnGameExit(GameType gameType)
     {
         string dialogue = PetDialogueManager.Instance.GetGameExitString(type, gameType);
-        if(string.IsNullOrEmpty(dialogue)) return;
+        if (string.IsNullOrEmpty(dialogue)) return;
         ShowDialogue(dialogue, true);
     }
-    
+
     public void OnTitle()
     {
-        if(Time.time<3) return;
-        
+        if (Time.time < 3) return;
+
         string dialogue = PetDialogueManager.Instance.GetOnTitleString(type);
-        if(string.IsNullOrEmpty(dialogue)) return;
+        if (string.IsNullOrEmpty(dialogue)) return;
         ShowDialogue(dialogue, true);
     }
-    
+
     public void OnIsland()
     {
-        if(Time.time<3) return;
-        
+        if (Time.time < 3) return;
+
         string dialogue = PetDialogueManager.Instance.GetOnIslandString(type);
-        if(string.IsNullOrEmpty(dialogue)) return;
+        if (string.IsNullOrEmpty(dialogue)) return;
         if (petDialogue == null)
             petDialogue = Instantiate(PetManager.Instance.petDialoguePrefab, PetManager.Instance.petDialogueHolder);
         petDialogue.Init(dialogue, gameObject.transform, true, -0.4f, 5f);
@@ -485,14 +515,14 @@ public class Pet : SerializedMonoBehaviour
     public void OnShake()
     {
         string dialogue = PetDialogueManager.Instance.GetShakeString(type);
-        if(string.IsNullOrEmpty(dialogue)) return;
+        if (string.IsNullOrEmpty(dialogue)) return;
         ShowDialogue(dialogue);
     }
 
     public void OnNewFriend()
     {
         string dialogue = PetDialogueManager.Instance.GetNewFriendString(type);
-        if(string.IsNullOrEmpty(dialogue)) return;
+        if (string.IsNullOrEmpty(dialogue)) return;
         ShowDialogue(dialogue);
     }
 
@@ -512,7 +542,7 @@ public class Pet : SerializedMonoBehaviour
     {
         int rnd = Random.Range(0, onIdleAction.Count);
         List<Sprite> idleAnim = sprites[onIdleAction[rnd].motionID];
-        
+
         Sprite[] walkAnim = new Sprite[idleAnim.Count];
 
         for (int i = 0; i < idleAnim.Count; i++)
@@ -521,7 +551,7 @@ public class Pet : SerializedMonoBehaviour
         }
 
         spriteAnimator.sprites = walkAnim;
-        if(!petMotions[onIdleAction[rnd].motionID].loop) spriteAnimator.RestartWithNoLoop();
+        if (!petMotions[onIdleAction[rnd].motionID].loop) spriteAnimator.RestartWithNoLoop();
         spriteAnimator.interval = petMotions[onIdleAction[rnd].motionID].interval;
     }
 
