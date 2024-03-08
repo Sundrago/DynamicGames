@@ -82,6 +82,9 @@ ExportedObj/
 *.opendb
 *.VC.db
 
+# Private Keys
+PrivateKeys.cs
+
 # Unity3D generated meta files
 @ -51,6 +54,10 @@ ExportedObj/
 *.pidb.meta

@@ -1,14 +1,12 @@
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Newtonsoft.Json;
 using System.IO;
 using System;
 using Sirenix.OdinInspector;
-using Unity.VisualScripting;
 using Random = UnityEngine.Random;
 using Sirenix.OdinInspector;
-using UnityEngine.Rendering;
 
 public class PetDialogueManager : SerializedMonoBehaviour
 {
@@ -49,7 +47,7 @@ public class PetDialogueManager : SerializedMonoBehaviour
         public string data;
     }
     
-    void Awake()
+    private void Awake()
     {
         Instance = this;
     }

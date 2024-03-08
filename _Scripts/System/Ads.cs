@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using _Scripts;
 using Firebase.Analytics;
 #if UNITY_IOS && !UNITY_EDITOR
 using Firebase.Analytics;
@@ -44,7 +45,7 @@ public class Ads : MonoBehaviour
         }
         
         IronSource.Agent.shouldTrackNetworkState(true);
-        IronSource.Agent.init ("1c563f2d5", IronSourceAdUnits.REWARDED_VIDEO);
+        IronSource.Agent.init (PrivateKeys.IronSourceAppKey, IronSourceAdUnits.REWARDED_VIDEO);
         
         IronSourceRewardedVideoEvents.onAdShowFailedEvent += RewardedVideoOnAdShowFailedEvent;
         IronSourceRewardedVideoEvents.onAdRewardedEvent += RewardedVideoOnAdRewardedEvent;
