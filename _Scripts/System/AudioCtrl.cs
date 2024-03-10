@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using PrivateKeys;
 using Sirenix.OdinInspector;
 
 public enum SFX_tag
@@ -17,10 +18,8 @@ public class AudioCtrl : SerializedMonoBehaviour
     public static AudioCtrl Instance;
 
     [SerializeField] AudioSource sfx_source, bgm_source;
-
-    [TableList(ShowIndexLabels = true)]
-    [SerializeField] List<AudioData> audioDatas;
-
+    [SerializeField] private Dictionary<SFX_tag, AudioData> audioDatas;
+    
     private float sfxVolume = 0.8f;
     private float bgmVolume = 0.8f;
     private AudioData bgmPlaying = null;
@@ -28,12 +27,6 @@ public class AudioCtrl : SerializedMonoBehaviour
     private void Awake()
     {
         Instance = this;
-        if (!PlayerPrefs.HasKey("settings_volumeInit"))
-        {
-            PlayerPrefs.SetFloat("settings_sfx", 1f);
-            PlayerPrefs.SetFloat("settings_bgm", 0.5f);
-            PlayerPrefs.SetInt("settings_volumeInit", 1);
-        }
     }
 
     private void Start()
@@ -50,42 +43,29 @@ public class AudioCtrl : SerializedMonoBehaviour
         lastsfxPlayTime = Time.time;
         lastSfxtag = tag;
         
-        sfx_source.volume = PlayerPrefs.GetFloat("settings_sfx", 1f);
-        foreach(AudioData data in audioDatas)
-        {
-            if(data.tag == tag)
-            {
-                sfx_source.PlayOneShot(data.src, data.volume * sfxVolume);
-            }
-        }
-        //sfx_source.PlayOneShot(audioClips[(int)tag]);
+        sfx_source.volume = PlayerPrefs.GetFloat(PlayerData.SFX_VOLIME, 1f);
+        sfx_source.PlayOneShot(audioDatas[tag].src, audioDatas[tag].volume * sfxVolume);
     }
 
-    public void SetVolume()
+    private void SetVolume()
     {
         sfxVolume = 1f;
-        bgmVolume = PlayerPrefs.GetFloat("settings_music", 0.5f);
-        sfx_source.volume = PlayerPrefs.GetFloat("settings_sfx", 1f);
+        bgmVolume = PlayerPrefs.GetFloat(PlayerData.BGM_VOLUME, 0.8f);
+        sfx_source.volume = PlayerPrefs.GetFloat(PlayerData.SFX_VOLIME, 0.8f);
 
-        if (bgmPlaying == null) bgm_source.volume = PlayerPrefs.GetFloat("settings_music", 0.5f);
-        else bgm_source.volume = PlayerPrefs.GetFloat("settings_music", 0.5f) * bgmPlaying.volume;
+        if (bgmPlaying == null) bgm_source.volume = PlayerPrefs.GetFloat(PlayerData.BGM_VOLUME, 0.8f);
+        else bgm_source.volume = PlayerPrefs.GetFloat(PlayerData.BGM_VOLUME, 0.8f) * bgmPlaying.volume;
     }
 
     public void PlayBGM(SFX_tag tag)
     {
-        bgmVolume = PlayerPrefs.GetFloat("settings_music", 0.5f);
-        print("PLAY BGM : " + tag.ToString());
-        foreach (AudioData data in audioDatas)
-        {
-            if (data.tag == tag)
-            {
-                bgmPlaying = data;
-                bgm_source.clip = data.src;
-                bgm_source.volume = data.volume * bgmVolume;
-                bgm_source.Play();
-                return;
-            }
-        }
+        bgmVolume = PlayerPrefs.GetFloat(PlayerData.BGM_VOLUME, 0.8f);
+        AudioData data = audioDatas[tag];
+        bgmPlaying = data;
+        bgm_source.clip = data.src;
+        bgm_source.volume = data.volume * bgmVolume;
+        bgm_source.Play();
+        return;
     }
 
     public void PauseBGM()
@@ -104,22 +84,11 @@ public class AudioCtrl : SerializedMonoBehaviour
     {
         foreach (SFX_tag sfxTag in Enum.GetValues(typeof(SFX_tag)))
         {
-            bool alreadyHasKey = false;
-            
-            for(int i = 0; i<audioDatas.Count; i++)
-            {
-                if (audioDatas[i].tag == sfxTag)
-                {
-                    alreadyHasKey = true;
-                    break;
-                }
-            }
-
+            bool alreadyHasKey = audioDatas.ContainsKey(sfxTag);
             if (!alreadyHasKey)
             {
                 AudioData newData = new AudioData();
-                newData.tag = sfxTag;
-                audioDatas.Add(newData);
+                audioDatas.Add(sfxTag, newData);
             }
         }
     }
@@ -128,7 +97,6 @@ public class AudioCtrl : SerializedMonoBehaviour
     [Serializable]
     public class AudioData
     {
-        public SFX_tag tag;
         public AudioClip src;
         [Range(0f, 1f)]
         public float volume = 0.8f;

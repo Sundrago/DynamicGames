@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using _Scripts;
 using Firebase.Analytics;
 #if !UNITY_EDITOR
 using Firebase.Analytics;
@@ -9,6 +8,7 @@ using Unity.Advertisement.IosSupport;
 #endif
 using UnityEngine;
 using UnityEngine.UI;
+using PrivateKeys;
 using MyUtility;
 
 public class Ads : MonoBehaviour
@@ -33,7 +33,7 @@ public class Ads : MonoBehaviour
 #endif
     }
 
-    void OnApplicationPause(bool isPaused) {                 
+    private void OnApplicationPause(bool isPaused) {                 
         IronSource.Agent.onApplicationPause(isPaused);
     }
 
@@ -45,7 +45,7 @@ public class Ads : MonoBehaviour
         }
         
         IronSource.Agent.shouldTrackNetworkState(true);
-        IronSource.Agent.init (PrivateKeys.IronSourceAppKey, IronSourceAdUnits.REWARDED_VIDEO);
+        IronSource.Agent.init (PrivateKey.IronSourceAppKey, IronSourceAdUnits.REWARDED_VIDEO);
         
         IronSourceRewardedVideoEvents.onAdShowFailedEvent += RewardedVideoOnAdShowFailedEvent;
         IronSourceRewardedVideoEvents.onAdRewardedEvent += RewardedVideoOnAdRewardedEvent;
@@ -67,7 +67,7 @@ public class Ads : MonoBehaviour
         TVICon.sprite = adCount >= 3 ? off : on;
     }
 
-    void RewardedVideoOnAdRewardedEvent(IronSourcePlacement placement, IronSourceAdInfo adInfo){
+    private void RewardedVideoOnAdRewardedEvent(IronSourcePlacement placement, IronSourceAdInfo adInfo){
         AudioCtrl.Instance.UnPauseBgm();
 
         sfx.UnPauseBGM();
@@ -75,7 +75,7 @@ public class Ads : MonoBehaviour
             callbackReward();
     }
 
-    void RewardedVideoOnAdShowFailedEvent(IronSourceError error, IronSourceAdInfo adInfo){
+    private void RewardedVideoOnAdShowFailedEvent(IronSourceError error, IronSourceAdInfo adInfo){
         PopupTextManager.Instance.ShowOKPopup("Failed to load AD network : " + error.ToString(), new PopupTextManager.Callback(callbackRewardFailed));
         sfx.UnPauseBGM();
 
