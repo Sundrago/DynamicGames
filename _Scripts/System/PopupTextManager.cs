@@ -1,28 +1,23 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
-using Febucci.UI;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
+using Febucci.UI;
 
 public class PopupTextManager : MonoBehaviour
 {
-    public static PopupTextManager Instance;
+    public static PopupTextManager Instance { get; private set; }
+    private Action callbackOK, callbackYES, callbackNO;
 
-    public delegate void Callback();
-    private Callback callbackOK = null;
-    private Callback callbackYES = null;
-    private Callback callbackNO = null;
+    [SerializeField] private Button okayButton, yesButton, noButton;
+    [SerializeField] private TextMeshProUGUI okayText, yesText, noText, messageText;
+    [SerializeField] private TypewriterByCharacter typeWriter;
+    [SerializeField] private List<GameObject> fluffyAnimations;
 
-    [SerializeField] private Button okay_btn, yes_btn, no_btn;
-    [SerializeField] private TextMeshProUGUI okay_text, yes_text, no_text, msg_text;
-    [SerializeField] private TypewriterByCharacter msg_type;
-    [SerializeField] private List<GameObject> fluffyAnim;
-
-    [SerializeField] private Image bgImage;
-    [SerializeField] private Transform panel;
+    [SerializeField] private Image backgroundImage;
+    [SerializeField] private Transform panelTransform;
 
     private void Awake()
     {
@@ -34,106 +29,103 @@ public class PopupTextManager : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void ShowYesNoPopup(string msg, Callback yesFunction = null, Callback noFunction = null, string yesText = "[DEFAULT_YES]", string noText = "[DEFAULT_NO]")
+    public void ShowYesNoPopup(string message, Action yesFunction = null, Action noFunction = null, string yesButtonText = "[DEFAULT_YES]", string noButtonText = "[DEFAULT_NO]")
     {
-        yes_text.text = MyUtility.Localize.GetLocalizedString(yesText);
-        no_text.text =  MyUtility.Localize.GetLocalizedString(noText);
-        msg_text.text = " " + MyUtility.Localize.GetLocalizedString(msg);
+        PreparePopup(message, yesButtonText, noButtonText);
         callbackYES = yesFunction;
         callbackNO = noFunction;
-        
-        yes_btn.interactable = false;
-        no_btn.interactable = false;
-        okay_btn.gameObject.SetActive(false);
-        yes_btn.gameObject.SetActive(true);
-        no_btn.gameObject.SetActive(true);
-        
-        ShowPanel();
-        msg_type.StartShowingText(true);
-        msg_type.ShowText(" " + MyUtility.Localize.GetLocalizedString(msg));
-        msg_type.StartShowingText();
+        ToggleButtons(false, true, true);
     }
-    public void ShowOKPopup(string msg, Callback okFunction=null, string okayText = "[DEFAULT_OKAY]")
+
+    public void ShowOKPopup(string message, Action okFunction = null, string okButtonText = "[DEFAULT_OKAY]")
     {
-        okay_text.text = MyUtility.Localize.GetLocalizedString(okayText);
-        msg_text.text = " " + MyUtility.Localize.GetLocalizedString(msg);
+        PreparePopup(message, okButtonText);
         callbackOK = okFunction;
-        
-        okay_btn.interactable = false;
-        okay_btn.gameObject.SetActive(true);
-        yes_btn.gameObject.SetActive(false);
-        no_btn.gameObject.SetActive(false);
-        
+        ToggleButtons(true, false, false);
+    }
+
+    private void PreparePopup(string message, string buttonTextYes = "", string buttonTextNo = "")
+    {
+        messageText.text = " " + MyUtility.Localize.GetLocalizedString(message);
+        okayText.text = MyUtility.Localize.GetLocalizedString(buttonTextYes);
+        yesText.text = MyUtility.Localize.GetLocalizedString(buttonTextYes);
+        noText.text = MyUtility.Localize.GetLocalizedString(buttonTextNo);  // Assuming this is not a mistake since no use case provided.
+
         ShowPanel();
-        msg_type.ShowText(" " + MyUtility.Localize.GetLocalizedString(msg));
-        msg_type.StartShowingText();
+        typeWriter.ShowText(" " + messageText.text);
+        typeWriter.StartShowingText();
+    }
+
+    private void ToggleButtons(bool showOkay, bool showYes, bool showNo)
+    {
+        okayButton.gameObject.SetActive(showOkay);
+        yesButton.gameObject.SetActive(showYes);
+        noButton.gameObject.SetActive(showNo);
+
+        okayButton.interactable = false;
+        yesButton.interactable = false;
+        noButton.interactable = false;
     }
 
     public void OnTypeWriterFinished()
     {
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.UI_OPEN);
-        print("OnTypeWriterFinished");
-        okay_btn.interactable = true;
-        yes_btn.interactable = true;
-        no_btn.interactable = true;
+        Debug.Log("OnTypeWriterFinished");
+
+        okayButton.interactable = true;
+        yesButton.interactable = true;
+        noButton.interactable = true;
     }
 
     public void HidePanel()
     {
-        if (DOTween.IsTweening(panel)) return;
-        
-        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.UI_CLOSE);
-        bgImage.DOFade(0, 0.25f);
-        panel.DOScale(0.8f, 0.25f).SetEase(Ease.OutExpo);
-        panel.DOShakePosition(0.3f, new Vector3(10, 10, 0)).SetEase(Ease.OutQuad);
-        panel.DOLocalMoveY(3000, 0.7f)
-            .SetDelay(0.15f)
-            .SetEase(Ease.InOutExpo)
-            .OnComplete(() =>
-            {
-                gameObject.SetActive(false);
-            });
-    }
+        if(!gameObject.activeSelf) return;
+        if (DOTween.IsTweening(panelTransform)) return;
 
+        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.UI_CLOSE);
+        Sequence hideSequence = DOTween.Sequence();
+        hideSequence.Append(backgroundImage.DOFade(0, 0.25f));
+        hideSequence.Join(panelTransform.DOScale(0.8f, 0.25f).SetEase(Ease.OutExpo));
+        hideSequence.Join(panelTransform.DOShakePosition(0.3f, new Vector3(10, 10, 0)).SetEase(Ease.OutQuad));
+        hideSequence.Append(panelTransform.DOLocalMoveY(3000, 0.7f).SetDelay(0.15f).SetEase(Ease.InOutExpo));
+        hideSequence.OnComplete(() => gameObject.SetActive(false));
+    }
     public void ShowPanel()
     {
-        if (DOTween.IsTweening(panel)) DOTween.Kill(panel);
-        if (DOTween.IsTweening(bgImage)) DOTween.Kill(bgImage);
+        if (DOTween.IsTweening(panelTransform)) DOTween.Kill(panelTransform);
+        if (DOTween.IsTweening(backgroundImage)) DOTween.Kill(backgroundImage);
 
-        panel.localScale = new Vector3(0.7f, 0.7f, 1);
-        panel.localPosition = Vector3.zero;
-        panel.DOScale(Vector3.one, 1f).SetEase(Ease.OutElastic);
-        
+        panelTransform.localScale = Vector3.one * 0.7f;
+        panelTransform.localPosition = Vector3.zero;
+        panelTransform.DOScale(Vector3.one, 1f).SetEase(Ease.OutElastic);
+
         gameObject.SetActive(true);
-        bgImage.DOFade(0.3f, 0.5f);
-        
-        int rnd = UnityEngine.Random.Range(0, fluffyAnim.Count);
-        for (int i = 0; i < fluffyAnim.Count; i++)
+        backgroundImage.DOFade(0.3f, 0.5f);
+
+        RandomFluffyAnimation();
+    }
+
+    private void RandomFluffyAnimation()
+    {
+        int rnd = UnityEngine.Random.Range(0, fluffyAnimations.Count);
+        for (int i = 0; i < fluffyAnimations.Count; i++)
         {
-            fluffyAnim[i].SetActive(i==rnd);
+            fluffyAnimations[i].SetActive(i == rnd);
         }
     }
 
-    public void BtnClicked(int idx)
+    public void BtnClicked(int buttonIndex)
     {
-        if (DOTween.IsTweening(panel)) return;
+        if (DOTween.IsTweening(panelTransform)) return;
+        
         AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.UI_SELECT);
+        ToggleButtons(false, false, false);  // Disable all buttons
         
-        okay_btn.gameObject.SetActive(false);
-        yes_btn.gameObject.SetActive(false);
-        no_btn.gameObject.SetActive(false);
-        
-        switch (idx)
+        switch (buttonIndex)
         {
-            case 0:
-                callbackOK?.Invoke();
-                break;
-            case 1:
-                callbackYES?.Invoke();
-                break;
-            case 2:
-                callbackNO?.Invoke();
-                break;
+            case 0: callbackOK?.Invoke(); break;
+            case 1: callbackYES?.Invoke(); break;
+            case 2: callbackNO?.Invoke(); break;
         }
         HidePanel();
     }

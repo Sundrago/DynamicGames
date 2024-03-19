@@ -117,7 +117,7 @@ public class WatchAdsContinue : MonoBehaviour
         isActive = false;
         if (callbackYes != null)
         {
-            Ads.Instance.ShowAds(WatchedAd, FailedToLoadAD, note);
+            ADManager.Instance.ShowAds(WatchedAd, FailedToLoadAD, note);
         }
     }
 

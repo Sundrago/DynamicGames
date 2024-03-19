@@ -20,6 +20,7 @@ public class MainCanvas : MonoBehaviour
 
     [SerializeField] private Jump_GameManager jumpGameManager;
     [SerializeField] private Shoot_GameManager shootGameManager;
+    [SerializeField] private DailyTicketRewardsManager dailyTicketRewardsManager; 
     
     private GameObject currentGameBtn = null;
     public static MainCanvas Instance;
@@ -95,7 +96,7 @@ public class MainCanvas : MonoBehaviour
                 TutorialManager.Instancee.tutorial_01();
                 break;
             case BlockStatusManager.BlockType.tv :
-                Ads.Instance.WatchAdsBtnClicked();
+                dailyTicketRewardsManager.WatchAdsBtnClicked();
                 break;
         }
 

@@ -6,11 +6,10 @@ public class ReturnToMenu : MonoBehaviour
 {
     [SerializeField] SFXCTRL sfx;
     [SerializeField] private GameObject FromCanvas, MainCanvas;
-    // [SerializeField] TransitionManager TransitionCanvas;
 
     public void ReturnToMenuClkcked()
     {
-        print("backbtnClcied");
+        Debug.Log("ReturnToMenuClkcked");
         if(!TransitionManager.Instance.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("transition_idle")) return;
 
         sfx.PlaySfx(3);
