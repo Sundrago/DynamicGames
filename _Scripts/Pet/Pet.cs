@@ -13,82 +13,66 @@ public class Pet : SerializedMonoBehaviour
     [SerializeField] public PetType type;
     [SerializeField] private float defaultInterval = 0.2f;
     [SerializeField] public SpriteRenderer spriteRenderer;
-
     [SerializeField] private PetInfo_UI petinfo;
     [SerializeField] public SurfaceMovement2D surfaceMovement2D;
     [SerializeField] public Transform centerPoint;
 
 
-    [TitleGroup("CallBacks", alignment: TitleAlignments.Centered)] [SerializeField, BoxGroup("CallBacks/IDLE")]
-    private float idleTimeMin = 5;
-
-    [SerializeField, BoxGroup("CallBacks/IDLE")]
-    private float idleTimeMax = 7;
-
-    [SerializeField, TableList, BoxGroup("CallBacks/IDLE")]
-    List<ActionOption> onIdleAction = new List<ActionOption>() { new ActionOption("idle") };
-
-    [SerializeField, BoxGroup("CallBacks/MOVE")]
-    float moveTimeMin = 5;
-
-    [SerializeField, BoxGroup("CallBacks/MOVE")]
-    float moveTimeMax = 7;
-
-    [SerializeField, TableList, BoxGroup("CallBacks/MOVE")]
-    List<ActionOption> onMoveAction = new List<ActionOption>() { new ActionOption("walk") };
-
-    [SerializeField, TableList, BoxGroup("CallBacks/HIT")]
-    List<ActionOption> onHitAction = new List<ActionOption>() { new ActionOption("walk") };
-
-    [SerializeField, BoxGroup("CallBacks/JUMP")]
-    bool hasExitAnimation;
-
-    [SerializeField, TableList, BoxGroup("CallBacks/JUMP")]
-    List<ActionOption> onJumpStartAction = new List<ActionOption>() { new ActionOption("jump") };
-
-    [SerializeField, TableList, BoxGroup("CallBacks/JUMP"), ShowIf("hasExitAnimation")]
-    List<ActionOption> onJumpEndAction = new List<ActionOption>() { new ActionOption("jump_end") };
-
-    [SerializeField, BoxGroup("CallBacks/JUMP"), ShowIf("hasExitAnimation")]
-    private float jumpFinishNormal = 0.5f;
-
-    [SerializeField, TitleGroup("Actions", alignment: TitleAlignments.Centered)]
+    [TitleGroup("CallBacks", alignment: TitleAlignments.Centered)] 
+    [SerializeField, BoxGroup("CallBacks/IDLE")] private float idleTimeMin = 5;
+    [SerializeField, BoxGroup("CallBacks/IDLE")] private float idleTimeMax = 7;
+    [SerializeField, TableList, BoxGroup("CallBacks/IDLE")] List<ActionOption> onIdleAction = new List<ActionOption>() { new ActionOption("idle") };
+    [SerializeField, BoxGroup("CallBacks/MOVE")] float moveTimeMin = 5;
+    [SerializeField, BoxGroup("CallBacks/MOVE")] float moveTimeMax = 7;
+    [SerializeField, TableList, BoxGroup("CallBacks/MOVE")] List<ActionOption> onMoveAction = new List<ActionOption>() { new ActionOption("walk") };
+    [SerializeField, TableList, BoxGroup("CallBacks/HIT")] List<ActionOption> onHitAction = new List<ActionOption>() { new ActionOption("walk") };
+    [SerializeField, BoxGroup("CallBacks/JUMP")] bool hasExitAnimation;
+    [SerializeField, TableList, BoxGroup("CallBacks/JUMP")] List<ActionOption> onJumpStartAction = new List<ActionOption>() { new ActionOption("jump") };
+    [SerializeField, TableList, BoxGroup("CallBacks/JUMP"), ShowIf("hasExitAnimation")] List<ActionOption> onJumpEndAction = new List<ActionOption>() { new ActionOption("jump_end") };
+    [SerializeField, BoxGroup("CallBacks/JUMP"), ShowIf("hasExitAnimation")] private float jumpFinishNormal = 0.5f;
+    
+    [SerializeField, TitleGroup("Actions", alignment: TitleAlignments.Centered)] 
     Dictionary<string, PetMotion> petMotions = new Dictionary<string, PetMotion>();
-
-    [SerializeField, TitleGroup("Sprites", alignment: TitleAlignments.Centered)]
+    
+    [SerializeField, TitleGroup("Sprites", alignment: TitleAlignments.Centered)] 
     Dictionary<string, List<Sprite>> sprites = new Dictionary<string, List<Sprite>>();
-
+    
     [SerializeField] private Sprite[] inGameJumpAnim, inGameInSpaceShip;
 
-    private enum PetStatus
-    {
-        Idle,
-        Move,
-        JumpStart,
-        JumpEnd,
-        Hit
-    };
+    private enum PetStatus { Idle, Move, JumpStart, JumpEnd, Hit }
 
-    private PetStatus status;
-    private string motionID;
+    private PetStatus status, previousStatus;
+    private string motionID, previousMotionID;
     private int motionFrame;
-
-    private float interval;
-
-    private float statusTimer;
-    private float motionTimer;
-    private PetDialogue petDialogue = null;
-
+    private float interval, statusTimer, motionTimer;
     private float jumpStartDuration, jumpEndDuration, hitDuration;
+    private float previousStatusTimer, previousMotionTimer, jumpStartTime, mouseDownTime;
+    private bool showDragDialogue;
+    private Vector3 initPos;
+    private PetDialogue petDialogue = null;
     public bool ignoreIdleDialogue = false;
     
-    private PetStatus previousStatus;
-    private string previoueMotion;
-    private float previousStatusTimer, previousMotionTimer, jumpStartTime;
+    private void Awake()
+    {
+        InitializePet();
+    }
 
+    private void OnEnable()
+    {
+        StartCoroutine(AnimationRoutine());
+    }
+
+    private void InitializePet()
+    {
+        surfaceMovement2D = GetComponent<SurfaceMovement2D>();
+        surfaceMovement2D.StartMovement();
+        interval = defaultInterval;
+        motionID = GetMotionID(onMoveAction);
+        motionFrame = 0;
+    }
+    
     private void UpdateStatus(PetStatus _status)
     {
-        // print(type + " : " + _status);
         if (status == _status) return;
         status = _status;
 
@@ -179,21 +163,9 @@ public class Pet : SerializedMonoBehaviour
         UpdateCurrentMotion(currentMotion);
     }
 
-    private void Awake()
-    {
-        surfaceMovement2D = GetComponent<SurfaceMovement2D>();
-        surfaceMovement2D.StartMovement();
-        interval = defaultInterval;
-        motionID = GetMotionID(onMoveAction);
-        motionFrame = 0;
-    }
+    
 
-    private void OnEnable()
-    {
-        StartCoroutine(Animator());
-    }
-
-    private IEnumerator Animator()
+    private IEnumerator AnimationRoutine()
     {
         for (;;)
         {
@@ -247,7 +219,7 @@ public class Pet : SerializedMonoBehaviour
     public void JumpStart()
     {
         previousStatus = status;
-        previoueMotion = motionID;
+        previousMotionID = motionID;
         previousStatusTimer = statusTimer;
         previousMotionTimer = motionTimer;
         jumpStartTime = Time.time;
@@ -259,7 +231,7 @@ public class Pet : SerializedMonoBehaviour
         if (normal > 0.95)
         {
             UpdateStatus(previousStatus);
-            UpdateMotion(previoueMotion);
+            UpdateMotion(previousMotionID);
             float delay = Time.time - jumpStartTime;
             statusTimer = previousStatusTimer + delay;
             motionTimer = previousMotionTimer + delay;
@@ -361,9 +333,6 @@ public class Pet : SerializedMonoBehaviour
         }
     }
 
-    private float mouseDownTime;
-    private bool showDragDialogue;
-
     void OnMouseDown()
     {
         showDragDialogue = false;
@@ -373,8 +342,7 @@ public class Pet : SerializedMonoBehaviour
         // petinfo.ShowPanel(type);
     }
 
-    private Vector3 initPos;
-
+    
     private void OnMouseDrag()
     {
         if (Time.time - mouseDownTime < 0.15f) return;

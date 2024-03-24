@@ -16,7 +16,7 @@ public class SendGameReady : MonoBehaviour
         switch(type)
         {
             case "build":
-                eventHandler.GetComponent<Build_GameManager>().StartGame();
+                eventHandler.GetComponent<Build_GameManager>().OnGameEnter();
                 break;
             case "rocket":
                 eventHandler.GetComponent<Land_GameManager>().StartGame();

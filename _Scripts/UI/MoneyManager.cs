@@ -275,7 +275,7 @@ public class MoneyManager : MonoBehaviour
                                             ticketHolder_ui.transform.localScale = Vector3.one;
                                         });
                                     AddTicket(RewardType.Ticket, 1);
-                                    AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.earnTicket);
+                                    AudioManager.Instance.PlaySFXbyTag(SFX_tag.earnTicket);
                                     break;
                                 case RewardType.GachaCoin:
                                     gachaCoinHolder_ui.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f)
@@ -284,7 +284,7 @@ public class MoneyManager : MonoBehaviour
                                             gachaCoinHolder_ui.transform.localScale = Vector3.one;
                                         });
                                     AddTicket(RewardType.GachaCoin, 1);
-                                    AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.earnCoin);
+                                    AudioManager.Instance.PlaySFXbyTag(SFX_tag.earnCoin);
                                     break;
                                 case RewardType.Key:
                                     keyHolder_ui.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f)
@@ -293,7 +293,7 @@ public class MoneyManager : MonoBehaviour
                                             keyHolder_ui.transform.localScale = Vector3.one;
                                         });
                                     AddTicket(RewardType.Key, 1);
-                                    AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.earnKey);
+                                    AudioManager.Instance.PlaySFXbyTag(SFX_tag.earnKey);
                                     break;
                                 default:
                                     break;

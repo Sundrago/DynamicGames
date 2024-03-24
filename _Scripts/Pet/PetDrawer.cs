@@ -113,7 +113,7 @@ public class PetDrawer : SerializedMonoBehaviour
         if(gameObject.activeSelf) return;
         if(DOTween.IsTweening(bgBtn)) return;
 
-        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.UI_OPEN);
+        AudioManager.Instance.PlaySFXbyTag(SFX_tag.UI_OPEN);
         if (updateItem) UpdateItems();
         if (!small) contents.anchoredPosition = Vector2.zero;
         
@@ -138,7 +138,7 @@ public class PetDrawer : SerializedMonoBehaviour
     {
         if(DOTween.IsTweening(bgBtn)) return;
         
-        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.UI_CLOSE);
+        AudioManager.Instance.PlaySFXbyTag(SFX_tag.UI_CLOSE);
         RectTransform rect = gameObject.GetComponent<RectTransform>();
         
         rect.DOAnchorPosY(-rect.sizeDelta.y/2f, 0.3f)

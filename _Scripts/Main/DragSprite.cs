@@ -267,7 +267,7 @@ public class DragSprite : MonoBehaviour//, IDragHandler, IPointerDownHandler, IP
             if (squareBlockCtrl != null && squareBlockCtrl.isLocked == true && !squareBlockCtrl.isNotGame)
             {
                 UnlockBtnManager.Instance.Init(this);
-                AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.unable);
+                AudioManager.Instance.PlaySFXbyTag(SFX_tag.unable);
                 TutorialManager.Instancee.DragSpriteBtnClicked();
                 btnSelected = false;
             }

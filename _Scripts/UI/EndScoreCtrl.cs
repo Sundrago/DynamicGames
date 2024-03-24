@@ -85,7 +85,7 @@ public class EndScoreCtrl : MonoBehaviour
         // FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventPostScore, new Parameter("GameType", score));
         // FirebaseAnalytics.LogEvent("PlayTime", new Parameter("GameType", Time.time-startTime));
 #endif
-        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.showScore);
+        AudioManager.Instance.PlaySFXbyTag(SFX_tag.showScore);
         print("duration : " + (Time.time-startTime));
         MoneyManager.Instance.ShowPanel();
         PlayerPrefs.SetInt("totalScoreCount", PlayerPrefs.GetInt("totalScoreCount") + 1);
@@ -97,7 +97,7 @@ public class EndScoreCtrl : MonoBehaviour
         //bgm
         curretBgm = sfx.GetCurrentBgm();
         sfx.PlayBGM(4, false, 0.2f);
-        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.scoreSlider);
+        AudioManager.Instance.PlaySFXbyTag(SFX_tag.scoreSlider);
 
         //save and load data
         int highScore = PlayerPrefs.GetInt("highscore_" + gameType.ToString());

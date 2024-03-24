@@ -18,7 +18,7 @@ public class Land_StageLevelAnim : MonoBehaviour
     public void PlayAnim()
     {
         gameObject.GetComponent<Animator>().SetTrigger("show");
-        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.rocket_newLevel);
+        AudioManager.Instance.PlaySFXbyTag(SFX_tag.rocket_newLevel);
     }
 
     public void HideAnim()

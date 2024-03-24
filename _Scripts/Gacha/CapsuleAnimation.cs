@@ -159,10 +159,10 @@ public class CapsuleAnimation : MonoBehaviour
         status = CapsuleStatus.opened;
         isAnimPlaying = true;
         StartParticles();
-        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.gachaCapsuleOpen);
+        AudioManager.Instance.PlaySFXbyTag(SFX_tag.gachaCapsuleOpen);
 
         if (isNew) DOVirtual.DelayedCall(0.15f, () => {
-            AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.gacha_newOpen);
+            AudioManager.Instance.PlaySFXbyTag(SFX_tag.gacha_newOpen);
         });
         
         
@@ -238,8 +238,8 @@ public class CapsuleAnimation : MonoBehaviour
                     .SetEase(Ease.InOutQuint);
 
                 DOVirtual.DelayedCall(0.2f, () => {
-                    if(isNew)  AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.gacha_newItem);
-                    else AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.gacha_item);
+                    if(isNew)  AudioManager.Instance.PlaySFXbyTag(SFX_tag.gacha_newItem);
+                    else AudioManager.Instance.PlaySFXbyTag(SFX_tag.gacha_item);
                     PetManager.Instance.AddPetCountByType(type);
                     petDrawer.drawerItems[type].UpdateItemWithAnim();
                 });

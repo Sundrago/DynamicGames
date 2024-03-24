@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Serialization;
 
 public class Shoot_item : MonoBehaviour
 {
@@ -13,8 +14,8 @@ public class Shoot_item : MonoBehaviour
     
     [SerializeField] Sprite[] item_imgs;
     [SerializeField] Shoot_GameManager gameManager;
-    [SerializeField]
-    private AudioCtrl audioCtrl;
+    [FormerlySerializedAs("audioCtrl")] [SerializeField]
+    private AudioManager audioManager;
 
     private Vector2 screenBounds;
     public List<Shoot_item_prefab> items = new List<Shoot_item_prefab>();
@@ -145,7 +146,7 @@ public class Shoot_item : MonoBehaviour
     private void GotItem(Shoot_item_prefab obj)
     {
         itemType type = obj.type;
-        audioCtrl.PlaySFXbyTag(SFX_tag.gotItem);
+        audioManager.PlaySFXbyTag(SFX_tag.gotItem);
         switch (type)
         {
             case itemType.weapon:
@@ -163,11 +164,11 @@ public class Shoot_item : MonoBehaviour
                 break;
             case itemType.blackHole:
                 FXManager.Instance.CreateFX(FXType.blackhole, obj.transform);
-                audioCtrl.PlaySFXbyTag(SFX_tag.blackhole);
+                audioManager.PlaySFXbyTag(SFX_tag.blackhole);
                 break;
             case itemType.spin:
                 GameObject fx = FXManager.Instance.CreateFX(FXType.spin, player.transform);
-                audioCtrl.PlaySFXbyTag(SFX_tag.spin);
+                audioManager.PlaySFXbyTag(SFX_tag.spin);
                 fx.transform.SetParent(player.transform, true);
                 gameManager.SetSpinMode(7f);
                 gameManager.itemInfo_spin.Init(7);

@@ -20,12 +20,12 @@ public class Shoot_enemy : MonoBehaviour
     private float angle;
     private Vector3 direction;
     private Vector2 screenBounds;
-    private AudioCtrl audioCtrl;
+    private AudioManager audioManager;
 
 
     private void Start()
     {
-        audioCtrl = AudioCtrl.Instance;
+        audioManager = AudioManager.Instance;
         screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
     }
 
@@ -84,7 +84,7 @@ public class Shoot_enemy : MonoBehaviour
             {
                 if (Vector2.Distance(player.position, gameObject.transform.position) < 0.45)
                 {
-                    audioCtrl.PlaySFXbyTag(SFX_tag.enemy_dead_spin);
+                    audioManager.PlaySFXbyTag(SFX_tag.enemy_dead_spin);
                     KillEnemy();
                     return;
                 }

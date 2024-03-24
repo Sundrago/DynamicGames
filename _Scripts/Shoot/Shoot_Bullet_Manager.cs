@@ -6,6 +6,7 @@ using UnityEngine.Pool;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using System.Threading.Tasks;
+using UnityEngine.Serialization;
 
 [Serializable]
 public class BulletInfo
@@ -43,8 +44,8 @@ public class Shoot_Bullet_Manager : MonoBehaviour
     [SerializeField] Shoot_joystick joystick;
     [SerializeField] Shoot_GameManager gameManager;
     [SerializeField] Transform player;
-    [SerializeField]
-    private AudioCtrl audioCtrl;
+    [FormerlySerializedAs("audioCtrl")] [SerializeField]
+    private AudioManager audioManager;
 
     [SerializeField] int defaultCapacity, maxCapacity;
     private ObjectPool<Shoot_bullet> bullet_pool;
@@ -122,7 +123,7 @@ public class Shoot_Bullet_Manager : MonoBehaviour
         bullet.gameObject.transform.position = _position;
         float angle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg;
         bullet.gameObject.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
-        audioCtrl.PlaySFXbyTag(bulletInfos[currentBullet].sfx);
+        audioManager.PlaySFXbyTag(bulletInfos[currentBullet].sfx);
     }
 
     public void UpgradeBullet()

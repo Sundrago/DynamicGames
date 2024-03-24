@@ -42,7 +42,7 @@ public class Shoot_GameManager : SerializedMonoBehaviour
     public AutoAttackInfo createEnemyInSpira = new AutoAttackInfo();
     public AutoAttackInfo createEnemyInLine = new AutoAttackInfo();
     public AutoAttackInfo createItem = new AutoAttackInfo();
-    private AudioCtrl audioCtrl;
+    private AudioManager audioManager;
 
     public enum ShootGameState { ready, dead, playing, revibe }
 
@@ -64,7 +64,7 @@ public class Shoot_GameManager : SerializedMonoBehaviour
     void Start()
     {
         Application.targetFrameRate = 60;
-        audioCtrl = AudioCtrl.Instance;
+        audioManager = AudioManager.Instance;
         
         ChangeStatus(ShootGameState.ready);
         stage = 0;
@@ -1263,7 +1263,7 @@ public class Shoot_GameManager : SerializedMonoBehaviour
         fXManager.CreateFX(FXType.shield_pop, shield.gameObject.transform);
         fXManager.CreateFX(FXType.Bomb, shield.gameObject.transform);
         fXManager.KillFX(shield);
-        audioCtrl.PlaySFXbyTag(SFX_tag.shiealdPop);
+        audioManager.PlaySFXbyTag(SFX_tag.shiealdPop);
         shield = null;
     }
 

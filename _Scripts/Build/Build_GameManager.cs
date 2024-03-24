@@ -1,447 +1,574 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Rendering.Universal;
 using TMPro;
 using DG.Tweening;
+using MyUtility;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 using Sirenix.OdinInspector;
 
-public class Build_GameManager : MonoBehaviour
+
+public class Build_GameManager : MonoBehaviour, IMiniGame
 {
-    [SerializeField] private Land_StageManager stageManager;
-    //[SerializeField] EndScoreCtrl endScore;
-    [SerializeField] private GameObject startingPosition;
-    [SerializeField] private GameObject stageHolderPanel;
-    [SerializeField] private Light2D deathLight;
-    [SerializeField] private TextMeshProUGUI currentscore_text, highscore_text, bestscore_text, thisScore_text;
-    [SerializeField] private GameObject shaker, islandTop, mainCanvas, hearts;
-
-    [SerializeField] private GameObject leftEdgeObj, rightEdgeObj;
-    [SerializeField] private GameObject surfaceMovement;
+    [Header("Managers and Controllers")] 
+    [SerializeField] private Build_StageManager stageManager;
     [SerializeField] private Build_SFXManager sfxManager;
-
-    [SerializeField] private GameObject tutorial;
-    [SerializeField] private Image tutorialA, tutorialB;
-    [SerializeField] private TextMeshProUGUI tutorialText;
+    [SerializeField] private TextAsset stageIndicesCSV;
     
-    [SerializeField] private Transform dropEdgeY, playerHolder;
+    [Header("UI Components")] [SerializeField]
+    private UiComponents uiComponents;
+
+    [Header("Stage Components")] [SerializeField]
+    private StageComponents stageComponents;
+
+    [Header("GamePlay Status")] 
+    private GameplayStatus gameplayStatus;
+
     private Pet player = null;
+    private List<StageItem> stageItems = new List<StageItem>();
+    private List<StageItem> currentItems = new List<StageItem>();
+    private int[] stageIndices;
     
-    private List<GameObject> stageItems = new List<GameObject>();
-    private List<Vector2> stageItemsPos = new List<Vector2>();
-    private List<GameObject> currentItems = new List<GameObject>();
-    private List<Vector2> currentItemPos = new List<Vector2>();
+    private const float GravityScale = -1;
+    private const float LightDecreaseFactor = 0.97f;
+    private const float Threshold = 0.015f;
+    private const int MaxHeartCount = 5;
 
-    private bool horizonMove = false;
-    private bool falling = false;
-    private bool firstHit = false;
-    private float firstHitHeight;
-    private float leftAmount, rightAmount, horizonMoveAmount;
-    private float moveSpeed;
-    private float oldTime;
-    private int currentStageIdx, currentScore, highScore, fallCount;
+    private GameStatus gameStatus;
 
-    private const float gravityScale = -1;
-    private const float lightDecreaseFactor = 0.97f;
-    private const float threshold = 0.015f;
-    private bool hasRevibed = false;
-
-
-    // Start is called before the first frame update
-    void Start()
+    private enum GameStatus
     {
-        UpdateScoreUI(true);
-        //gameObject.SetActive(false);
+        Ready,
+        HorizontalMoving,
+        VerticalMoving,
+        GameOver
     }
 
-    public void StartGame() {
-        LoadStage(true);
-        currentScore = 0;
-        highScore = 0;
-        firstHitHeight = islandTop.GetComponent<RectTransform>().localPosition.y - islandTop.GetComponent<RectTransform>().sizeDelta.y;
+    [System.Serializable]
+    public class UiComponents
+    {
+        public TextMeshProUGUI currentScoreText;
+        public TextMeshProUGUI highScoreText;
+        public TextMeshProUGUI bestScoreText;
+        public TextMeshProUGUI scoreOfThisGameText;
+        public TextMeshProUGUI tutorialText;
+        public Image tutorialImageA;
+        public Image tutorialImageB;
+        public Animator shaker;
+        public Animator mainCanvas;
+        public GameObject islandTop;
+        public GameObject tutorial;
+    }
 
-        print(islandTop.GetComponent<RectTransform>().localPosition.y);
-        print(islandTop.GetComponent<RectTransform>().sizeDelta.y);
+    [System.Serializable]
+    public class StageComponents
+    {
+        public GameObject startingPosition;
+        public GameObject stageHolderPanel;
+        public RectTransform leftEdgeObject;
+        public RectTransform rightEdgeObject;
+        public Light2D deathLight;
+        public Transform dropBoundaryY;
+        public Transform playerHolder;
+        public Build_HeartsCtrl hearts;
+    }
 
-        if (EndScoreCtrl.Instance.GetHighScore(GameType.build) < 5) ShowTutorial();
+    [System.Serializable]
+    public class GameplayStatus
+    {
+        public bool isFirstHit;
+        public bool hasRevived;
+        public float firstHitHeight;
+        public float leftMovementAmount;
+        public float rightMovementAmount;
+        public float horizontalMovementAmount;
+        public float movementSpeed;
+        public float oldTime;
+        public int currentStageIndex;
+        public int currentScore;
+        public int highScore;
+        public int fallCount;
+    }
+
+    private class StageItem
+    {
+        public GameObject Item { get; }
+        public RectTransform Rect { get; }
+        public Vector2 DeltaPosition { get; set; }
+
+        public StageItem(GameObject item, RectTransform rect, Vector2 deltaPosition)
+        {
+            Item = item;
+            Rect = rect;
+            DeltaPosition = deltaPosition;
+        }
+    }
+    void Start() => InitGame();
+
+    void InitGame()
+    {
+        stageIndices = Converter.DeserializeJSON<int>(stageIndicesCSV.text);
+        ResetGame();
+    }
+    
+    public void OnGameEnter()
+    {
+        ResetGame();
+        CalculateInitialHitHeight();
+        ShowTutorialIfNeeded();
+    }
+
+    private void ResetGame()
+    {
+        gameplayStatus = new GameplayStatus();
+        ClearStageItems(currentItems);
+        ClearStageItems(stageItems);
+        UpdateScoreUI(updateAll: true);
+        LoadStage(isNewGame: true);
+    }
+
+    private void ClearStageItems(List<StageItem> items)
+    {
+        foreach (var stageItem in items)
+        {
+            Destroy(stageItem.Item);
+        }
+
+        items.Clear();
+    }
+
+    private void CalculateInitialHitHeight()
+    {
+        RectTransform islandTopRect = uiComponents.islandTop.GetComponent<RectTransform>();
+        gameplayStatus.firstHitHeight = islandTopRect.localPosition.y - islandTopRect.sizeDelta.y;
+    }
+
+    #region TutorialMethods
+
+    private void ShowTutorialIfNeeded()
+    {
+        if (EndScoreCtrl.Instance.GetHighScore(GameType.build) < MaxHeartCount)
+        {
+            ShowTutorial();
+        }
     }
 
     private void ShowTutorial()
     {
-        if(tutorial.activeSelf) return;
-        
-        tutorial.SetActive(true);
-        DOTween.Kill(tutorialA);
-        DOTween.Kill(tutorialB);
-        DOTween.Kill(tutorialText);
-        tutorialText.DOFade(0.6f, 2f);
-        tutorialA.DOFade(0.6f, 2f);
-        tutorialB.DOFade(0.6f, 2f);
+        if (uiComponents.tutorial.activeSelf) return;
+
+        uiComponents.tutorial.SetActive(true);
+        AnimateTutorialUIElements(0.6f, 2f);
     }
 
     private void HideTutorial(float duration)
     {
-        if (!tutorial.activeSelf) return;
-        
-        DOTween.Kill(tutorialA);
-        DOTween.Kill(tutorialB);
-        DOTween.Kill(tutorialText);
-        tutorialText.DOFade(0, duration);
-        tutorialA.DOFade(0, duration);
-        tutorialB.DOFade(0, duration)
-            .OnComplete(() =>
-            {
-                tutorial.SetActive(false);
-            });
+        if (!uiComponents.tutorial.activeSelf) return;
+
+        AnimateTutorialUIElements(0, duration, () => uiComponents.tutorial.SetActive(false));
     }
-    
-    // Update is called once per frame
+
+    private void AnimateTutorialUIElements(float targetOpacity, float duration, Action onCompleteAction = null)
+    {
+        DOTween.Kill(uiComponents.tutorialImageA);
+        DOTween.Kill(uiComponents.tutorialImageB);
+        DOTween.Kill(uiComponents.tutorialText);
+
+        uiComponents.tutorialText.DOFade(targetOpacity, duration);
+        uiComponents.tutorialImageA.DOFade(targetOpacity, duration);
+        uiComponents.tutorialImageB.DOFade(targetOpacity, duration).OnComplete(() => onCompleteAction?.Invoke());
+    }
+
+    #endregion
+
     void Update()
     {
-        if(horizonMove) CalcHorizonMovement();
+        HandleGameStatus();
 
-        if(deathLight.intensity != 0)
+        if (stageComponents.deathLight.intensity != 0)
         {
-            deathLight.intensity *= lightDecreaseFactor;
-            if (deathLight.intensity <= 0.01f) deathLight.intensity = 0;
-        }
-
-        //shake on hit
-        if(falling & !firstHit & stageItems.Count > 0)
-        {
-            if(stageItems[stageItems.Count-1].GetComponent<RectTransform>().localPosition.y + stageItems[stageItems.Count - 1].GetComponent<RectTransform>().localScale.y >= firstHitHeight - 50f)
-            {
-                shaker.GetComponent<Animator>().SetTrigger("up");
-                firstHit = true;
-                ThisScoreAnim(5);
-            }
+            UpdateLightIntensity();
         }
 
         if (stageItems.Count > 0)
         {
-            for (int i = stageItems.Count - 1; i >= 0; i--)
-            {
-                GameObject item = stageItems[i];
-                if(item.transform.localPosition.y > dropEdgeY.localPosition.y)
-                {
-                    sfxManager.PlayFailSfx();
-                    stageItems.Remove(item);
-                    Destroy(item);
-                    deathLight.intensity += 0.35f;
-                    fallCount += 1;
-                    shaker.GetComponent<Animator>().SetTrigger("small");
-                    hearts.GetComponent<Build_HeartsCtrl>().SetHearts(5-fallCount);
-                    if(fallCount == 1) hearts.GetComponent<Build_HeartsCtrl>().Show(true);
+            ManageStageItems();
+        }
+    }
 
-                    ThisScoreAnim(5-fallCount);
-                }
-            }
+    private void HandleGameStatus()
+    {
+        switch (gameStatus)
+        {
+            case GameStatus.HorizontalMoving:
+                CalculateHorizontalMovement();
+                break;
+            case GameStatus.VerticalMoving:
+                HandleVerticalMovement();
+                break;
+            case GameStatus.GameOver:
+                return;
+        }
+    }
+
+    private void HandleVerticalMovement()
+    {
+        if (!gameplayStatus.isFirstHit & stageItems.Count > 0)
+        {
+            HandleFirstHit();
         }
 
-        if(Time.time - oldTime > 0.5f & falling)
+        if (Time.time - gameplayStatus.oldTime > 0.5f)
         {
             CheckIfFalling();
         }
     }
 
-    public void LoadStage(bool newGame = false)
+    private void HandleFirstHit()
     {
-        if(newGame)
+        var lastItem = stageItems[stageItems.Count - 1];
+
+        if (lastItem.Rect.localPosition.y + lastItem.Rect.localScale.y >= gameplayStatus.firstHitHeight - 50f)
         {
-            currentStageIdx = 0;
-            currentScore = 0;
-            highScore = 0;
+            TriggerShakerAnimation("up");
+            gameplayStatus.isFirstHit = true;
+            ThisScoreAnim(5);
+        }
+    }
+
+    private void UpdateLightIntensity()
+    {
+        stageComponents.deathLight.intensity *= LightDecreaseFactor;
+
+        if (stageComponents.deathLight.intensity <= 0.01f)
+        {
+            stageComponents.deathLight.intensity = 0;
+        }
+    }
+
+    private void ManageStageItems()
+    {
+        for (int i = stageItems.Count - 1; i >= 0; i--)
+        {
+            HandleItemFallingOffStage(stageItems[i]);
+        }
+    }
+
+    private void HandleItemFallingOffStage(StageItem item)
+    {
+        if (item.Rect.localPosition.y > stageComponents.dropBoundaryY.localPosition.y)
+        {
+            sfxManager.PlayFailSfx();
+            stageItems.Remove(item);
+            Destroy(item.Item);
+            stageComponents.deathLight.intensity += 0.35f;
+            gameplayStatus.fallCount += 1;
+            TriggerShakerAnimation("small");
+            UpdateHeartsStatus();
+
+            ThisScoreAnim(5 - gameplayStatus.fallCount);
+        }
+    }
+
+    private void TriggerShakerAnimation(string animationName)
+    {
+        uiComponents.shaker.SetTrigger(animationName);
+    }
+
+    private void UpdateHeartsStatus()
+    {
+        stageComponents.hearts.SetHearts(MaxHeartCount - gameplayStatus.fallCount);
+
+        if (gameplayStatus.fallCount == 1)
+        {
+            stageComponents.hearts.Show(true);
+        }
+    }
+
+    public void LoadStage(bool isNewGame = false)
+    {
+        ResetGameStatus(isNewGame);
+        int idx = GetRandomStageIndex();
+        UpdateMovementSpeed();
+        InitializeCurrentItems(idx);
+        CalculateMovementLimits();
+        SetGameStatusToHorizonMove();
+    }
+
+    private void ResetGameStatus(bool newGame)
+    {
+        if (newGame)
+        {
+            gameplayStatus.currentStageIndex = 0;
+            gameplayStatus.currentScore = 0;
+            gameplayStatus.highScore = 0;
             UpdateScoreUI(true);
         }
-        int idx = Random.Range(0, stageManager.stages.Count);
+    }
 
-        switch (currentStageIdx)
-        {
-            case 0:
-                idx = 0;
-                break;
-            case 1:
-                idx = 1;
-                break;
-            case 2:
-                idx = 0;
-                break;
-            case 3:
-                idx = 0;
-                break;
-            case 4:
-                break;
-            case 5:
-                idx = 0;
-                break;
-            case 6:
-                idx = 1;
-                break;
-            case 7:
-                idx = 2;
-                break;
-            case 8:
-                idx = 1;
-                break;
-            case 9:
-                idx = 0;
-                break;
-            case 10:
-                break;
-            case 11:
-                idx = 2;
-                break;
-            case 12:
-                idx = 1;
-                break;
-            case 13:
-                idx = 0;
-                break;
-            case 14:
-                break;
-            case 15:
-                idx = 2;
-                break;
-            case 16:
-                idx = 3;
-                break;
-            case 17:
-                idx = 2;
-                break;
-            case 18:
-                idx = 3;
-                break;
-            case 19:
-                break;
-            case 20:
-                idx = 2;
-                break;
-            default:
-                idx = 3;
-                break;
-        }
+    private int GetRandomStageIndex()
+    {
+        if (gameplayStatus.currentStageIndex < stageIndices.Length)
+            return stageIndices[gameplayStatus.currentStageIndex];
+        else return 3;
+    }
 
-        moveSpeed = Mathf.Lerp(1.5f,20, stageItems.Count > 150 ? 1 : stageItems.Count / 150f);
-        print(moveSpeed);
-        currentItems = new List<GameObject>();
-        currentItemPos = new List<Vector2>();
-        foreach (GameObject item in stageManager.stages[idx].GetComponent<Land_StageItemHolder>().items)
+    private void UpdateMovementSpeed()
+    {
+        gameplayStatus.movementSpeed = Mathf.Lerp(1.5f, 20, stageItems.Count > 150 ? 1 : stageItems.Count / 150f);
+    }
+
+    private void InitializeCurrentItems(int idx)
+    {
+        currentItems = new List<StageItem>();
+        foreach (GameObject item in stageManager.stages[idx].items)
         {
-            GameObject newObj = Instantiate(item, stageHolderPanel.transform);
+            GameObject newObj = Instantiate(item, stageComponents.stageHolderPanel.transform);
             newObj.name = item.name;
-            newObj.transform.position = new Vector2(newObj.transform.position.x , startingPosition.transform.position.y);
+            newObj.transform.position = new Vector2(newObj.transform.position.x,
+                stageComponents.startingPosition.transform.position.y);
             newObj.GetComponent<BoxCollider2D>().enabled = false;
             newObj.GetComponent<Rigidbody2D>().gravityScale = 0;
-            currentItems.Add(newObj);
-            currentItemPos.Add(newObj.GetComponent<RectTransform>().localPosition);
+
+            currentItems.Add(new StageItem(newObj, newObj.GetComponent<RectTransform>(),
+                newObj.GetComponent<RectTransform>().localPosition));
         }
-        float leftEdge = currentItems[0].GetComponent<RectTransform>().localPosition.x - currentItems[0].GetComponent<RectTransform>().sizeDelta.x/2;
-        float rightEdge = currentItems[currentItems.Count-1].GetComponent<RectTransform>().localPosition.x + currentItems[currentItems.Count - 1].GetComponent<RectTransform>().sizeDelta.x/2;
-
-        leftAmount = (leftEdgeObj.GetComponent<RectTransform>().localPosition.x - leftEdgeObj.GetComponent<RectTransform>().sizeDelta.x/2 - leftEdge);
-        rightAmount = (rightEdgeObj.GetComponent<RectTransform>().localPosition.x + rightEdgeObj.GetComponent<RectTransform>().sizeDelta.x/2 - rightEdge);
-
-        horizonMove = true;
-        currentStageIdx += 1;
-        fallCount = 0;
-        hearts.GetComponent<Build_HeartsCtrl>().Show(false);
-
-        CalcHorizonMovement();
     }
 
-    private void CalcHorizonMovement()
+    private void CalculateMovementLimits()
     {
-        if (!horizonMove) return;
-        horizonMoveAmount = Mathf.Lerp(leftAmount, rightAmount, Mathf.Sin(Time.time * moveSpeed) / 2 + 0.5f);
+        float leftEdge = currentItems[0].Rect.localPosition.x - currentItems[0].Rect.sizeDelta.x / 2;
+        float rightEdge = currentItems[currentItems.Count - 1].Rect.localPosition.x +
+                          currentItems[currentItems.Count - 1].Rect.sizeDelta.x / 2;
 
-        for (int i = 0; i < currentItems.Count; i++)
+        gameplayStatus.leftMovementAmount = (stageComponents.leftEdgeObject.localPosition.x -
+                                             stageComponents.leftEdgeObject.sizeDelta.x / 2 - leftEdge);
+        gameplayStatus.rightMovementAmount = (stageComponents.rightEdgeObject.localPosition.x +
+            stageComponents.rightEdgeObject.sizeDelta.x / 2 - rightEdge);
+    }
+
+    private void SetGameStatusToHorizonMove()
+    {
+        gameStatus = GameStatus.HorizontalMoving;
+        gameplayStatus.currentStageIndex += 1;
+        gameplayStatus.fallCount = 0;
+        stageComponents.hearts.Show(false);
+
+        CalculateHorizontalMovement();
+    }
+
+
+    private void CalculateHorizontalMovement()
+    {
+        if (gameStatus != GameStatus.HorizontalMoving) return;
+
+        gameplayStatus.horizontalMovementAmount = Mathf.Lerp(gameplayStatus.leftMovementAmount,
+            gameplayStatus.rightMovementAmount, Mathf.Sin(Time.time * gameplayStatus.movementSpeed) / 2 + 0.5f);
+
+        foreach (StageItem stageItem in currentItems)
         {
-            currentItems[i].GetComponent<RectTransform>().transform.localPosition = new Vector2(currentItemPos[i].x + horizonMoveAmount, currentItemPos[i].y);
+            stageItem.Rect.transform.localPosition = new Vector2(
+                stageItem.DeltaPosition.x + gameplayStatus.horizontalMovementAmount,
+                stageItem.DeltaPosition.y);
         }
     }
 
-    public void StopHorizonMove()
+    public void StopHorizontalMovement()
     {
-        if (!horizonMove) return;
+        if (gameStatus != GameStatus.HorizontalMoving) return;
         HideTutorial(1f);
-        horizonMove = false;
-        falling = true;
-        for (int i = currentItems.Count-1; i >= 0; i--)
-        {
-            GameObject item = currentItems[i];
-            item.GetComponent<Rigidbody2D>().gravityScale = gravityScale;
-            item.GetComponent<BoxCollider2D>().enabled = true;
-            item.tag = "square";
-            stageItems.Add(item);
-            currentItems.RemoveAt(i);
-            currentItemPos.RemoveAt(i);
-        }
-        //if (surfaceMovement.activeSelf) surfaceMovement.GetComponent<SurfaceMovement2D>().LoadSquare();
+        gameStatus = GameStatus.VerticalMoving;
 
-        hearts.GetComponent<Build_HeartsCtrl>().SetHearts(5);
+        for (int stageIndex = currentItems.Count - 1; stageIndex >= 0; stageIndex--)
+        {
+            StageItem stageItem = currentItems[stageIndex];
+            SetComponentStates(stageItem);
+            currentItems.RemoveAt(stageIndex);
+        }
+
+        stageComponents.hearts.SetHearts(MaxHeartCount);
+    }
+
+    private void SetComponentStates(StageItem stageItem)
+    {
+        Rigidbody2D itemRigidbody2D = stageItem.Item.GetComponent<Rigidbody2D>();
+        if (itemRigidbody2D != null)
+        {
+            itemRigidbody2D.gravityScale = GravityScale;
+        }
+
+        BoxCollider2D itemBoxCollider2D = stageItem.Item.GetComponent<BoxCollider2D>();
+        if (itemBoxCollider2D != null)
+        {
+            itemBoxCollider2D.enabled = true;
+        }
+
+        stageItem.Item.tag = "square";
+        stageItems.Add(stageItem);
     }
 
     private bool CheckIfFalling()
     {
-        oldTime = Time.time;
-        for (int i = stageItems.Count - 1; i >= 0; i--)
+        gameplayStatus.oldTime = Time.time;
+        for (int stageIndex = stageItems.Count - 1; stageIndex >= 0; stageIndex--)
         {
-            if (stageItemsPos.Count <= i)
+            if (stageItems.Count <= stageIndex)
             {
-                UpdateOldPos();
+                UpdateDeltaPos();
                 return true;
             }
-            if (Vector2.Distance(stageItems[i].transform.position, stageItemsPos[i]) > threshold)
+
+            float distance =
+                Vector2.Distance(stageItems[stageIndex].Rect.position, stageItems[stageIndex].DeltaPosition);
+            if (distance > Threshold)
             {
-                UpdateOldPos();
+                UpdateDeltaPos();
                 return true;
             }
         }
 
-        NextStage();
-        falling = false;
+        InitializeNextStage();
         return false;
     }
 
-    private void UpdateOldPos()
+    private void UpdateDeltaPos()
     {
-        stageItemsPos.Clear();
         for (int i = 0; i < stageItems.Count; i++)
         {
-            stageItemsPos.Add(stageItems[i].transform.position);
+            stageItems[i].DeltaPosition = stageItems[i].Rect.position;
         }
     }
 
-    private void NextStage()
+    private void InitializeNextStage()
     {
-        if (fallCount >= 5)
+        if (gameplayStatus.fallCount >= MaxHeartCount)
         {
-            GameFinished();
+            if (gameStatus != GameStatus.GameOver) GameFinished();
             return;
         }
-        
-        foreach(GameObject item in stageItems)
+
+        foreach (StageItem item in stageItems)
         {
-            float height = item.GetComponent<RectTransform>().localPosition.y;
-            if (firstHitHeight > height) firstHitHeight = height;
+            float height = item.Rect.localPosition.y;
+            if (gameplayStatus.firstHitHeight > height) gameplayStatus.firstHitHeight = height;
         }
 
-        firstHit = false;
+        gameplayStatus.isFirstHit = false;
         LoadStage();
 
-        //calculate score
+        int score = CalculateScore();
+        UpdateScore(score);
+    }
+
+    private int CalculateScore()
+    {
         int score = 0;
-        foreach(GameObject obj in stageItems) {
-            int point = 0;
-            if(int.TryParse(obj.name, out point)) {
+        foreach (StageItem item in stageItems)
+        {
+            if (int.TryParse(item.Item.name, out var point))
+            {
                 score += point;
             }
         }
-        UpdateScore(score);
+    
+        return score;
     }
 
     private void UpdateScore(int score)
     {
-        currentScore = score;
-        if (highScore < score) highScore = score;
+        gameplayStatus.currentScore = score;
+        if (gameplayStatus.highScore < score) gameplayStatus.highScore = score;
         UpdateScoreUI();
     }
 
     private void UpdateScoreUI(bool updateAll = false)
     {
-        currentscore_text.text = currentScore.ToString();
-        highscore_text.text = highScore.ToString();
+        uiComponents.currentScoreText.text = gameplayStatus.currentScore.ToString();
+        uiComponents.highScoreText.text = gameplayStatus.highScore.ToString();
 
-        if (updateAll) bestscore_text.text = PlayerPrefs.GetInt("highscore_build").ToString();
+        if (updateAll) uiComponents.bestScoreText.text = PlayerPrefs.GetInt("highscore_build").ToString();
     }
 
     private void GameFinished()
     {
-        shaker.GetComponent<Animator>().SetTrigger("large");
-        
-        if(hasRevibed) ShowScore();
-        else WatchAdsContinue.Instance.Init(Revibe, ShowScore, "Build_Revibe");
+        gameStatus = GameStatus.GameOver;
+        TriggerShakerAnimation("large");
+
+        if (gameplayStatus.hasRevived) ShowScore();
+        else WatchAdsContinue.Instance.Init(ContinueGameAfterAdWatch, ShowScore, "Build_Revive");
     }
 
     private void ShowScore()
     {
-        mainCanvas.GetComponent<Animator>().SetTrigger("ending");
-        EndScoreCtrl.Instance.ShowScore(highScore, GameType.build);
-        hearts.GetComponent<Build_HeartsCtrl>().Show(false);
-        hasRevibed = false;
+        uiComponents.mainCanvas.SetTrigger("ending");
+        EndScoreCtrl.Instance.ShowScore(gameplayStatus.highScore, GameType.build);
+        stageComponents.hearts.Show(false);
+        gameplayStatus.hasRevived = false;
     }
 
-    private void Revibe()
+    private void ContinueGameAfterAdWatch()
     {
-        hasRevibed = true;
-        hearts.GetComponent<Build_HeartsCtrl>().SetHearts(5);
-        fallCount = 0;
-        currentStageIdx -= 1;
-        NextStage();
+        gameplayStatus.hasRevived = true;
+        stageComponents.hearts.SetHearts(MaxHeartCount);
+        gameplayStatus.fallCount = 0;
+        gameplayStatus.currentStageIndex -= 1;
+        InitializeNextStage();
     }
-    
+
     public void RestartGame()
     {
         ClearGame();
-        mainCanvas.GetComponent<Animator>().SetTrigger("retry");
+        uiComponents.mainCanvas.SetTrigger("retry");
         LoadStage(true);
     }
 
     public void ClearGame()
     {
-        print("clear game");
-
-        foreach (GameObject obj in currentItems)
-        {
-            Destroy(obj);
-        }
-
-        foreach (GameObject obj in stageItems)
-        {
-            Destroy(obj);
-        }
-
-        stageItems.Clear();
-        currentItems.Clear();
-        currentItemPos.Clear();
-        stageItemsPos.Clear();
+        ClearStageItems(stageItems);
+        ClearStageItems(currentItems);
+        
         EndScoreCtrl.Instance.HideScore();
-        hearts.SetActive(false);
-        hasRevibed = false;
+        stageComponents.hearts.gameObject.SetActive(false);
+        gameplayStatus.hasRevived = false;
     }
 
-    private void ThisScoreAnim(int i) {
-        if(i>=0) {
-            thisScore_text.color = Color.white;
-            thisScore_text.text = "+" + i.ToString();
-        } else {
-            thisScore_text.color = Color.black;
-            thisScore_text.text = i.ToString();
+    private void ThisScoreAnim(int i)
+    {
+        if (i >= 0)
+        {
+            uiComponents.scoreOfThisGameText.color = Color.white;
+            uiComponents.scoreOfThisGameText.text = "+" + i.ToString();
+        }
+        else
+        {
+            uiComponents.scoreOfThisGameText.color = Color.black;
+            uiComponents.scoreOfThisGameText.text = i.ToString();
         }
 
-        thisScore_text.gameObject.transform.localScale = new Vector3(1f,1f,1f);
-        thisScore_text.gameObject.transform.localEulerAngles = Vector3.zero;
+        uiComponents.scoreOfThisGameText.gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+        uiComponents.scoreOfThisGameText.gameObject.transform.localEulerAngles = Vector3.zero;
 
-        DOTween.Kill(thisScore_text);
-        DOTween.Kill(thisScore_text.gameObject.transform);
-        thisScore_text.gameObject.transform.DOPunchScale(new Vector3(1f,1f,1f), 0.5f)
+        DOTween.Kill(uiComponents.scoreOfThisGameText);
+        DOTween.Kill(uiComponents.scoreOfThisGameText.gameObject.transform);
+        uiComponents.scoreOfThisGameText.gameObject.transform.DOPunchScale(new Vector3(1f, 1f, 1f), 0.5f)
             .SetEase(Ease.OutExpo);
-        thisScore_text.gameObject.transform.DOPunchRotation(new Vector3(0f,0f,10f), 0.35f)
+        uiComponents.scoreOfThisGameText.gameObject.transform.DOPunchRotation(new Vector3(0f, 0f, 10f), 0.35f)
             .SetEase(Ease.InSine);
-        thisScore_text.DOFade(0,1.5f)
+        uiComponents.scoreOfThisGameText.DOFade(0, 1.5f)
             .SetDelay(1f)
             .SetEase(Ease.OutQuad);
     }
-    
-    [Button]
+
     public void SetPlayer(bool playAsPet, Pet pet = null)
     {
-        if(player != null) Destroy(player.gameObject);
+        if (player != null) Destroy(player.gameObject);
         if (playAsPet)
         {
-            player = Instantiate(pet, playerHolder);
-            player.gameObject.transform.localScale *= 350f; 
+            player = Instantiate(pet, stageComponents.playerHolder);
+            player.gameObject.transform.localScale *= 350f;
             player.gameObject.SetActive(true);
         }
     }

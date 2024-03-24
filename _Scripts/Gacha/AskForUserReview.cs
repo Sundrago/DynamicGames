@@ -57,7 +57,7 @@ public class AskForUserReview : MonoBehaviour
         if(status != reviewStatus.NotRevealed) return;
 
         DOVirtual.DelayedCall(5f, () => {
-            AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.cube_fall);
+            AudioManager.Instance.PlaySFXbyTag(SFX_tag.cube_fall);
             ChangeAndSaveStatus(reviewStatus.Revealed);
             reviewCube.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             reviewCube.SetActive(true);

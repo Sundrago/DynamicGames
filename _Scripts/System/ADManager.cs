@@ -118,13 +118,13 @@ public class ADManager : MonoBehaviour
 
     private void PauseBackgroundMusic()
     {
-        AudioCtrl.Instance.PauseBGM();
+        AudioManager.Instance.PauseBGM();
         sfxctrl.PauseBGM();
     }
 
     private void UnPauseBackgroundMusic()
     {
-        AudioCtrl.Instance.UnPauseBgm();
+        AudioManager.Instance.UnPauseBgm();
         sfxctrl.UnPauseBGM();
     }
 }

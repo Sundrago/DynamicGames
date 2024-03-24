@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using DG.Tweening;
+using UnityEngine.Serialization;
 
 public class Shoot_FX : MonoBehaviour
 {
     [SerializeField] FXType type;
     [SerializeField] float distance;
-    [SerializeField]
-    private AudioCtrl audioCtrl;
+    [FormerlySerializedAs("audioCtrl")] [SerializeField]
+    private AudioManager audioManager;
 
     private float updateDistance;
 
@@ -21,7 +22,7 @@ public class Shoot_FX : MonoBehaviour
     {
         enemy_Manager = Shoot_Enemy_Manager.Instance;
         player = Shoot_GameManager.Instacne.player;
-        audioCtrl = AudioCtrl.Instance;
+        audioManager = AudioManager.Instance;
     }
 
     private void OnEnable()
@@ -42,7 +43,7 @@ public class Shoot_FX : MonoBehaviour
                     enemy.KillEnemy(0.5f);
                     enemy.transform.DOMove(gameObject.transform.position, Random.Range(1f, 2.5f))
                         .SetEase(Ease.InSine);
-                    audioCtrl.PlaySFXbyTag(SFX_tag.enemy_dead_blackHole);
+                    audioManager.PlaySFXbyTag(SFX_tag.enemy_dead_blackHole);
                 }
             }
         }

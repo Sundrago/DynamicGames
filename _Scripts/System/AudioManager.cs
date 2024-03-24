@@ -12,10 +12,9 @@ public enum SFX_tag
     , gachaCapsuleOpen, gacha_newItem, gacha_item, gacha_newOpen, notEnoughMoney, insertCoin, coinInJar, gotCoin, rocket_clear, rocket_newLevel, cube_fall, sparkle, key, block_explode
     , unable, block_reveal, popup1, popup2, popup3, earnCoin, earnTicket, earnKey, UI_OPEN, UI_CLOSE, UI_SELECT, click, playWithPet, highScore,showScore, ticketFin, ticketStart,
 }
-
-public class AudioCtrl : SerializedMonoBehaviour
+public class AudioManager : SerializedMonoBehaviour
 {
-    public static AudioCtrl Instance;
+    public static AudioManager Instance;
 
     [SerializeField] AudioSource sfx_source, bgm_source;
     [SerializeField] private Dictionary<SFX_tag, AudioData> audioDatas;
@@ -24,39 +23,34 @@ public class AudioCtrl : SerializedMonoBehaviour
     private float bgmVolume = 0.8f;
     private AudioData bgmPlaying = null;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
+    private float lastsfxPlayTime;
+    private SFX_tag lastSfxtag = SFX_tag.blackhole;
+    
+    private void Awake() => Instance = this;
 
     private void Start()
     {
         SetVolume();
     }
-
-    private float lastsfxPlayTime;
-    private SFX_tag lastSfxtag = SFX_tag.blackhole;
     
+
+    private void SetVolume()
+    {
+        bgmVolume = PlayerPrefs.GetFloat(PlayerData.BGM_VOLUME, 0.8f);
+        sfx_source.volume = PlayerPrefs.GetFloat(PlayerData.SFX_VOLUME, 0.8f);
+
+        if (bgmPlaying == null) bgm_source.volume = PlayerPrefs.GetFloat(PlayerData.BGM_VOLUME, 0.8f);
+        else bgm_source.volume = PlayerPrefs.GetFloat(PlayerData.BGM_VOLUME, 0.8f) * bgmPlaying.volume;
+    }
     public void PlaySFXbyTag(SFX_tag tag)
     {
         if(lastSfxtag == tag && Time.time - lastsfxPlayTime < 0.1f) return;
         lastsfxPlayTime = Time.time;
         lastSfxtag = tag;
         
-        sfx_source.volume = PlayerPrefs.GetFloat(PlayerData.SFX_VOLIME, 1f);
+        sfx_source.volume = PlayerPrefs.GetFloat(PlayerData.SFX_VOLUME, 1f);
         sfx_source.PlayOneShot(audioDatas[tag].src, audioDatas[tag].volume * sfxVolume);
     }
-
-    private void SetVolume()
-    {
-        sfxVolume = 1f;
-        bgmVolume = PlayerPrefs.GetFloat(PlayerData.BGM_VOLUME, 0.8f);
-        sfx_source.volume = PlayerPrefs.GetFloat(PlayerData.SFX_VOLIME, 0.8f);
-
-        if (bgmPlaying == null) bgm_source.volume = PlayerPrefs.GetFloat(PlayerData.BGM_VOLUME, 0.8f);
-        else bgm_source.volume = PlayerPrefs.GetFloat(PlayerData.BGM_VOLUME, 0.8f) * bgmPlaying.volume;
-    }
-
     public void PlayBGM(SFX_tag tag)
     {
         bgmVolume = PlayerPrefs.GetFloat(PlayerData.BGM_VOLUME, 0.8f);

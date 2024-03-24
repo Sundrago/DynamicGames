@@ -104,7 +104,7 @@ public class Ranking_UI : MonoBehaviour
         if (previousTier < newTier)
         {
             duration = 4f;
-            AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.rank_goup);
+            AudioManager.Instance.PlaySFXbyTag(SFX_tag.rank_goup);
 
             slider_ui.DOValue((previousRankInPercent + newRankInPercent) / 200f, duration /5f * 4f)
                 .SetEase(Ease.InOutQuart)
@@ -150,8 +150,8 @@ public class Ranking_UI : MonoBehaviour
                         close_btn.transform.DOScale(Vector3.one, 0.5f);
                         canSkip = true;
                     });
-                if(previousTier < newTier) AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.rank_goupFinish);
-                else AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.rank_same);
+                if(previousTier < newTier) AudioManager.Instance.PlaySFXbyTag(SFX_tag.rank_goupFinish);
+                else AudioManager.Instance.PlaySFXbyTag(SFX_tag.rank_same);
             });
     }
 

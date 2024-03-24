@@ -42,12 +42,17 @@ public class Build_SFXManager : MonoBehaviour
         audioSource.PlayOneShot(fail[rnd], PlayerPrefs.GetFloat("settings_sfx") * Random.Range(0.6f, 1f));
     }
 
-    public IEnumerator PlaySFXByHitSize(float size)
+    public IEnumerator PlaySfxEnumerator(float size)
     {
-        yield return new WaitForSeconds(Random.Range(0, 0.3f));
+        yield return new WaitForSeconds(Random.Range(0, 0.05f));
         if(size > 6.5f) PlayLargeSfx();
         else if(size > 4f) PlayMidSfx();
         else if(size > 1f) PlaySmallSfx();
         else if (size > 0.5f) PlayXSmallSfx();
+    }
+
+    public void PlaySFXByHitSize(float size)
+    {
+        StartCoroutine(PlaySfxEnumerator(size));
     }
 }

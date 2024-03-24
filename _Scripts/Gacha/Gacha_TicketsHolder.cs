@@ -5,6 +5,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
+using UnityEngine.Serialization;
 
 public class Gacha_TicketsHolder : MonoBehaviour
 {
@@ -17,8 +18,8 @@ public class Gacha_TicketsHolder : MonoBehaviour
 
     [SerializeField]
     private RectTransform rect;
-    [SerializeField]
-    private AudioCtrl audioCtrl;
+    [FormerlySerializedAs("audioCtrl")] [SerializeField]
+    private AudioManager audioManager;
     private int count;
     [SerializeField]
     private MoneyManager money;
@@ -114,21 +115,21 @@ public class Gacha_TicketsHolder : MonoBehaviour
         switch (count)
         {
             case 1:
-                audioCtrl.PlaySFXbyTag(SFX_tag.ticket1);
+                audioManager.PlaySFXbyTag(SFX_tag.ticket1);
                 rect.DOAnchorPosY(GetPosY(1), 0.5f)
-                    .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketGen);})
+                    .OnStart(()=>{audioManager.PlaySFXbyTag(SFX_tag.ticketGen);})
                     .SetEase(Ease.OutExpo)
                     .OnComplete(() => {
                         TicketAnimFinished();
                     });
                 break;
             case 2:
-                audioCtrl.PlaySFXbyTag(SFX_tag.ticket2);
+                audioManager.PlaySFXbyTag(SFX_tag.ticket2);
                 rect.DOAnchorPosY(GetPosY(1), 0.65f)
-                    .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketGen);})
+                    .OnStart(()=>{audioManager.PlaySFXbyTag(SFX_tag.ticketGen);})
                     .SetEase(Ease.OutBack);
                 rect.DOAnchorPosY(GetPosY(2), 0.65f)
-                    .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketGen);})
+                    .OnStart(()=>{audioManager.PlaySFXbyTag(SFX_tag.ticketGen);})
                     .SetDelay(0.65f)
                     .SetEase(Ease.InOutQuart)
                     .OnComplete(() => {
@@ -136,16 +137,16 @@ public class Gacha_TicketsHolder : MonoBehaviour
                     });
                 break;
             case 3:
-                audioCtrl.PlaySFXbyTag(SFX_tag.ticket3);
+                audioManager.PlaySFXbyTag(SFX_tag.ticket3);
                 rect.DOAnchorPosY(GetPosY(1), 0.4f)
-                    .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketGen);})
+                    .OnStart(()=>{audioManager.PlaySFXbyTag(SFX_tag.ticketGen);})
                     .SetEase(Ease.OutExpo);
                 rect.DOAnchorPosY(GetPosY(2), 0.4f)
-                    .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketGen);})
+                    .OnStart(()=>{audioManager.PlaySFXbyTag(SFX_tag.ticketGen);})
                     .SetDelay(0.7f)
                     .SetEase(Ease.OutExpo);
                 rect.DOAnchorPosY(GetPosY(3), 0.4f)
-                    .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketGen);})
+                    .OnStart(()=>{audioManager.PlaySFXbyTag(SFX_tag.ticketGen);})
                     .SetDelay(1.3f)
                     .SetEase(Ease.OutExpo)
                     .OnComplete(() => {
@@ -153,20 +154,20 @@ public class Gacha_TicketsHolder : MonoBehaviour
                     });
                 break;
             case 4:
-                audioCtrl.PlaySFXbyTag(SFX_tag.ticket4);
+                audioManager.PlaySFXbyTag(SFX_tag.ticket4);
                 rect.DOAnchorPosY(GetPosY(1), 0.2f)
-                    .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketGen);})
+                    .OnStart(()=>{audioManager.PlaySFXbyTag(SFX_tag.ticketGen);})
                     .SetEase(Ease.OutQuart);
                 rect.DOAnchorPosY(GetPosY(2), 0.3f)
-                    .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketGen);})
+                    .OnStart(()=>{audioManager.PlaySFXbyTag(SFX_tag.ticketGen);})
                     .SetDelay(0.2f)
                     .SetEase(Ease.OutQuart);
                 rect.DOAnchorPosY(GetPosY(3), 0.3f)
-                    .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketGen);})
+                    .OnStart(()=>{audioManager.PlaySFXbyTag(SFX_tag.ticketGen);})
                     .SetDelay(0.5f)
                     .SetEase(Ease.OutQuart);
                 rect.DOAnchorPosY(GetPosY(4), 0.3f)
-                    .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketGen);})
+                    .OnStart(()=>{audioManager.PlaySFXbyTag(SFX_tag.ticketGen);})
                     .SetDelay(0.8f)
                     .SetEase(Ease.OutQuart)
                     .OnComplete(() => {
@@ -174,28 +175,28 @@ public class Gacha_TicketsHolder : MonoBehaviour
                     });
                 break;
             case 6:
-                audioCtrl.PlaySFXbyTag(SFX_tag.ticket6);
+                audioManager.PlaySFXbyTag(SFX_tag.ticket6);
                 rect.DOAnchorPosY(GetPosY(1), 0.45f)
-                    .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketGen);})
+                    .OnStart(()=>{audioManager.PlaySFXbyTag(SFX_tag.ticketGen);})
                     .SetEase(Ease.InOutQuart);
                 rect.DOAnchorPosY(GetPosY(2), 0.45f)
-                    .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketGen);})
+                    .OnStart(()=>{audioManager.PlaySFXbyTag(SFX_tag.ticketGen);})
                     .SetDelay(0.45f)
                     .SetEase(Ease.InOutQuart);
                 rect.DOAnchorPosY(GetPosY(3), 0.25f)
-                    .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketGen);})
+                    .OnStart(()=>{audioManager.PlaySFXbyTag(SFX_tag.ticketGen);})
                     .SetDelay(0.95f)
                     .SetEase(Ease.InOutCirc);
                 rect.DOAnchorPosY(GetPosY(4), 0.25f)
-                    .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketGen);})
+                    .OnStart(()=>{audioManager.PlaySFXbyTag(SFX_tag.ticketGen);})
                     .SetDelay(1.2f)
                     .SetEase(Ease.InOutCirc);
                 rect.DOAnchorPosY(GetPosY(5), 0.25f)
-                    .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketGen);})
+                    .OnStart(()=>{audioManager.PlaySFXbyTag(SFX_tag.ticketGen);})
                     .SetDelay(1.45f)
                     .SetEase(Ease.InOutCirc);
                 rect.DOAnchorPosY(GetPosY(6), 0.25f)
-                    .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketGen);})
+                    .OnStart(()=>{audioManager.PlaySFXbyTag(SFX_tag.ticketGen);})
                     .SetDelay(1.7f)
                     .SetEase(Ease.InOutCirc)
                     .OnComplete(() => {
@@ -203,11 +204,11 @@ public class Gacha_TicketsHolder : MonoBehaviour
                     });
                 break;
             case 12:
-                audioCtrl.PlaySFXbyTag(SFX_tag.ticket12);
+                audioManager.PlaySFXbyTag(SFX_tag.ticket12);
                 for (int i = 0; i < 12; i++)
                 {
                     rect.DOAnchorPosY(GetPosY(i+1), 0.19f)
-                        .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketGen);})
+                        .OnStart(()=>{audioManager.PlaySFXbyTag(SFX_tag.ticketGen);})
                         .SetDelay(0.19f * i)
                         .SetEase(Ease.InOutQuint);
                 }
@@ -218,20 +219,20 @@ public class Gacha_TicketsHolder : MonoBehaviour
                 if(count < 10) delay = 0.18f;
                 else if (count < 20) delay = 0.15f;
                 else delay = 0.11f;
-                audioCtrl.PlaySFXbyTag(SFX_tag.ticketStart);
+                audioManager.PlaySFXbyTag(SFX_tag.ticketStart);
                 for (int i = 0; i < count; i++)
                 {
                     if (i < count - 1)
                     {
                         rect.DOAnchorPosY(GetPosY(i+1), delay)
-                            .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketGen);})
+                            .OnStart(()=>{audioManager.PlaySFXbyTag(SFX_tag.ticketGen);})
                             .SetEase(Ease.OutQuart)
                             .SetDelay(delay * i);
                     }
                     else
                     {
                         rect.DOAnchorPosY(GetPosY(i+1), delay)
-                            .OnStart(()=>{audioCtrl.PlaySFXbyTag(SFX_tag.ticketFin);})
+                            .OnStart(()=>{audioManager.PlaySFXbyTag(SFX_tag.ticketFin);})
                             .SetEase(Ease.OutQuart)
                             .SetDelay(delay * i)
                             .OnComplete(() =>
@@ -266,7 +267,7 @@ public class Gacha_TicketsHolder : MonoBehaviour
         if(DOTween.IsTweening(rect)) return;
         
         money.Coin2DAnim(MoneyManager.RewardType.Ticket, pos, count);
-        audioCtrl.PlaySFXbyTag(SFX_tag.reap);
+        audioManager.PlaySFXbyTag(SFX_tag.reap);
         rect.DOAnchorPosY(GetPosY(count + 1), 0.25f)
             .SetEase(Ease.OutExpo)
             .OnComplete(() => {

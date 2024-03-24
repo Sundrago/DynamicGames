@@ -21,7 +21,7 @@ public class SettingsPanel : MonoBehaviour
     public void ShowPanel() {
         if(gameObject.activeSelf) return;
         
-        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.UI_OPEN);
+        AudioManager.Instance.PlaySFXbyTag(SFX_tag.UI_OPEN);
         gameObject.transform.position = Vector3.zero;
         gameObject.transform.eulerAngles = Vector3.zero;
 
@@ -44,7 +44,7 @@ public class SettingsPanel : MonoBehaviour
     }
 
     public void HidePanel() {
-        AudioCtrl.Instance.PlaySFXbyTag(SFX_tag.UI_SELECT);
+        AudioManager.Instance.PlaySFXbyTag(SFX_tag.UI_SELECT);
         SetVolume();
         gameObject.transform.position = Vector3.zero;
         gameObject.transform.eulerAngles = Vector3.zero;
