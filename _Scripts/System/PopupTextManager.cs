@@ -69,7 +69,7 @@ public class PopupTextManager : MonoBehaviour
 
     public void OnTypeWriterFinished()
     {
-        AudioManager.Instance.PlaySFXbyTag(SFX_tag.UI_OPEN);
+        AudioManager.Instance.PlaySFXbyTag(SfxTag.UI_OPEN);
         Debug.Log("OnTypeWriterFinished");
 
         okayButton.interactable = true;
@@ -82,7 +82,7 @@ public class PopupTextManager : MonoBehaviour
         if(!gameObject.activeSelf) return;
         if (DOTween.IsTweening(panelTransform)) return;
 
-        AudioManager.Instance.PlaySFXbyTag(SFX_tag.UI_CLOSE);
+        AudioManager.Instance.PlaySFXbyTag(SfxTag.UI_CLOSE);
         Sequence hideSequence = DOTween.Sequence();
         hideSequence.Append(backgroundImage.DOFade(0, 0.25f));
         hideSequence.Join(panelTransform.DOScale(0.8f, 0.25f).SetEase(Ease.OutExpo));
@@ -118,7 +118,7 @@ public class PopupTextManager : MonoBehaviour
     {
         if (DOTween.IsTweening(panelTransform)) return;
         
-        AudioManager.Instance.PlaySFXbyTag(SFX_tag.UI_SELECT);
+        AudioManager.Instance.PlaySFXbyTag(SfxTag.UI_SELECT);
         ToggleButtons(false, false, false);  // Disable all buttons
         
         switch (buttonIndex)

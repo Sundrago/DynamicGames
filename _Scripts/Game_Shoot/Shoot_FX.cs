@@ -43,7 +43,7 @@ public class Shoot_FX : MonoBehaviour
                     enemy.KillEnemy(0.5f);
                     enemy.transform.DOMove(gameObject.transform.position, Random.Range(1f, 2.5f))
                         .SetEase(Ease.InSine);
-                    audioManager.PlaySFXbyTag(SFX_tag.enemy_dead_blackHole);
+                    audioManager.PlaySFXbyTag(SfxTag.enemy_dead_blackHole);
                 }
             }
         }

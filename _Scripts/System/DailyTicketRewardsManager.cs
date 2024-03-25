@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using PrivateKeys;
 using MyUtility;
 
 public class DailyTicketRewardsManager : MonoBehaviour
@@ -21,21 +20,20 @@ public class DailyTicketRewardsManager : MonoBehaviour
     private void UpdateAdCountAndDate()
     {
         DateTime today = DateTime.Now;
-        string adDateString =
-            PlayerPrefs.GetString(PlayerData.AD_WATCHED_DATE, Converter.DateTimeToString(today.AddDays(-1)));
-        adCount = PlayerPrefs.GetInt(PlayerData.AD_WATCHED_COUNT, 0);
+        string adDateString = PlayerData.GetString(DataKey.adDate, Converter.DateTimeToString(today.AddDays(-1)));
+        adCount = PlayerData.GetInt(DataKey.adCount, 0);
         DateTime adDate = Converter.StringToDateTime(adDateString);
         if (today.Date != adDate.Date)
         {
             ResetAdCount();
-            PlayerPrefs.SetString(PlayerData.AD_WATCHED_DATE, Converter.DateTimeToString(today));
+            PlayerData.SetString(DataKey.adDate, Converter.DateTimeToString(today));
         }
     }
 
     private void ResetAdCount()
     {
         adCount = 0;
-        PlayerPrefs.SetInt(PlayerData.AD_WATCHED_COUNT, adCount);
+        PlayerData.SetInt(DataKey.adCount, adCount);
 #if !UNITY_EDITOR
     FirebaseAnalytics.LogEvent("Ads", "DailyAdsCount", adCount);
 #endif
@@ -55,7 +53,7 @@ public class DailyTicketRewardsManager : MonoBehaviour
         }
 
         TVICon.sprite = adCount >= 3 ? off : on;
-        PlayerPrefs.SetInt(PlayerData.AD_WATCHED_COUNT, adCount);
+        PlayerData.SetInt(DataKey.adCount, adCount);
 
         string output = Localize.GetLocalizedString("[watchAds]") + " (" + adCount + "/3)";
         PopupTextManager.Instance.ShowYesNoPopup(output, () => { ADManager.Instance.ShowAds(DailyTicketRewards, null, "dailyTicket"); });
@@ -65,7 +63,7 @@ public class DailyTicketRewardsManager : MonoBehaviour
     {
         adCount += 1;
         TVICon.sprite = adCount >= 3 ? off : on;
-        PlayerPrefs.SetInt(PlayerData.AD_WATCHED_COUNT, adCount);
+        PlayerData.SetInt(DataKey.adCount, adCount);
         PopupTextManager.Instance.ShowOKPopup("[watchedAds]",
             () => { MoneyManager.Instance.Coin2DAnim(MoneyManager.RewardType.Ticket, Vector3.zero, 10); });
     }

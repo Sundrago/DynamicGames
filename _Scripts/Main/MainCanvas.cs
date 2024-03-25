@@ -47,7 +47,7 @@ public class MainCanvas : MonoBehaviour
         if(miniisland != null)
             if(DOTween.IsTweening(miniisland.transform)) return;
         
-        AudioManager.Instance.PlaySFXbyTag(SFX_tag.click);
+        AudioManager.Instance.PlaySFXbyTag(SfxTag.click);
         
         switch(blockType) {
             case BlockStatusManager.BlockType.build : 

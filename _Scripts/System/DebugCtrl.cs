@@ -8,7 +8,7 @@ public class DebugCtrl : MonoBehaviour
 {
     [SerializeField] private Ranking_UI ranking_ui;
     [SerializeField] private LeaderboardManger leaderboardManger;
-    [SerializeField] private Gacha_TicketsHolder gachaTicketsHolder;
+    [SerializeField] private TicketsController gachaTicketsHolder;
     [SerializeField] private SFXCTRL sfx;
     [SerializeField] private GameObject IslandSizeRemote;
     [SerializeField] private GameObject debug_front_window;

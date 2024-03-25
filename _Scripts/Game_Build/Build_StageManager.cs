@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Sirenix.OdinInspector;
 
+/// <summary>
+/// Class responsible for managing the stages in the game.
+/// </summary>
 public class Build_StageManager : MonoBehaviour
 {
     public List<Land_StageItemHolder> stages = new List<Land_StageItemHolder>();
     
     #if UNITY_EDITOR
-    [Button]
+    [Sirenix.OdinInspector.Button]
     private void AddAllItemsToList()
     {
         stages = PopulateItemsFromChildren();

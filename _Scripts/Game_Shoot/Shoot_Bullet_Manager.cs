@@ -17,7 +17,7 @@ public class BulletInfo
     [VerticalGroup("fx")]
     public FXType fx;
     [VerticalGroup("fx")]
-    public SFX_tag sfx = SFX_tag.shootA;
+    public SfxTag sfx = SfxTag.shootA;
     
     [VerticalGroup("value")]
     public int points = 1;

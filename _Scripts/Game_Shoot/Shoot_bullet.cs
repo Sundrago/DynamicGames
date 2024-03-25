@@ -113,7 +113,7 @@ public class Shoot_bullet : MonoBehaviour
                 enemy.KillEnemy();
                 Shoot_Bullet_Manager.Instance.KillBullet(this);
                 FXManager.Instance.CreateFX(FXType.SmallExplosion, transform);
-                AudioManager.Instance.PlaySFXbyTag(SFX_tag.enemy_dead_explostion);
+                AudioManager.Instance.PlaySFXbyTag(SfxTag.enemy_dead_explostion);
                 break;
             }
         }

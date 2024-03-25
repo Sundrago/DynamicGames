@@ -227,7 +227,7 @@ public class BlockStatusManager : MonoBehaviour
         Vector3 defaultPos = dragSprite.initialPos;
         defaultPos.y = appearPosY.position.y;
 
-        AudioManager.Instance.PlaySFXbyTag(SFX_tag.sparkle);
+        AudioManager.Instance.PlaySFXbyTag(SfxTag.sparkle);
         data.obj.transform.position = defaultPos;
         data.obj.transform.eulerAngles = Vector3.zero;
         rigidbody2D.isKinematic = true;
@@ -245,7 +245,7 @@ public class BlockStatusManager : MonoBehaviour
 
         DOVirtual.DelayedCall(1.5f, () =>
         {
-            AudioManager.Instance.PlaySFXbyTag(SFX_tag.cube_fall);
+            AudioManager.Instance.PlaySFXbyTag(SfxTag.cube_fall);
             dragSprite.Off();
             rigidbody2D.velocity = Vector2.zero;
         });
@@ -260,7 +260,7 @@ public class BlockStatusManager : MonoBehaviour
         SquareBlockCtrl squareBlockCtrl = data.obj.GetComponent<SquareBlockCtrl>();
 
         //ChangeAndSaveStatus(reviewStatus.Revealed);
-        AudioManager.Instance.PlaySFXbyTag(SFX_tag.block_explode);
+        AudioManager.Instance.PlaySFXbyTag(SfxTag.block_explode);
         
         GameObject fx = Instantiate(FX_explode_prefab);
         fx.transform.SetParent(data.obj.gameObject.transform, true);
@@ -324,14 +324,14 @@ public class BlockStatusManager : MonoBehaviour
             MainCanvas.Instance.Offall(obj);
             PetInGameManager.Instance.PetSelected(minData, pet);
             minData.obj.dragSprite.BtnClicked();
-            AudioManager.Instance.PlaySFXbyTag(SFX_tag.playWithPet);
+            AudioManager.Instance.PlaySFXbyTag(SfxTag.playWithPet);
         }
         else
         {
             if (minData.type == BlockType.friends)
             {
                 petinfo.ShowPanel(pet.type);
-                AudioManager.Instance.PlaySFXbyTag(SFX_tag.playWithPet);
+                AudioManager.Instance.PlaySFXbyTag(SfxTag.playWithPet);
 
             }
         }

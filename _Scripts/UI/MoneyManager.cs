@@ -167,10 +167,16 @@ public class MoneyManager : MonoBehaviour
         }
     }
 
-    public bool SubtractTicket(RewardType _type, int amount)
+    /// <summary>
+    /// Subtracts the specified amount of money from the specified type of reward.
+    /// </summary>
+    /// <param name="_type">The type of reward to subtract money from.</param>
+    /// <param name="amount">The amount of money to subtract.</param>
+    /// <returns>True if the money was successfully subtracted, false otherwise.</returns>
+    public bool SubtractMoney(RewardType _type, int amount)
     {
         if (!HasEnoughTicket(_type, amount)) return false;
-        
+
         int startValue, endValue;
         switch (_type)
         {
@@ -275,7 +281,7 @@ public class MoneyManager : MonoBehaviour
                                             ticketHolder_ui.transform.localScale = Vector3.one;
                                         });
                                     AddTicket(RewardType.Ticket, 1);
-                                    AudioManager.Instance.PlaySFXbyTag(SFX_tag.earnTicket);
+                                    AudioManager.Instance.PlaySFXbyTag(SfxTag.earnTicket);
                                     break;
                                 case RewardType.GachaCoin:
                                     gachaCoinHolder_ui.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f)
@@ -284,7 +290,7 @@ public class MoneyManager : MonoBehaviour
                                             gachaCoinHolder_ui.transform.localScale = Vector3.one;
                                         });
                                     AddTicket(RewardType.GachaCoin, 1);
-                                    AudioManager.Instance.PlaySFXbyTag(SFX_tag.earnCoin);
+                                    AudioManager.Instance.PlaySFXbyTag(SfxTag.earnCoin);
                                     break;
                                 case RewardType.Key:
                                     keyHolder_ui.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f)
@@ -293,7 +299,7 @@ public class MoneyManager : MonoBehaviour
                                             keyHolder_ui.transform.localScale = Vector3.one;
                                         });
                                     AddTicket(RewardType.Key, 1);
-                                    AudioManager.Instance.PlaySFXbyTag(SFX_tag.earnKey);
+                                    AudioManager.Instance.PlaySFXbyTag(SfxTag.earnKey);
                                     break;
                                 default:
                                     break;

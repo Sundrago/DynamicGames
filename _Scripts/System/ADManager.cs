@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using PrivateKeys;
 using MyUtility;
 
 #if !UNITY_EDITOR
@@ -68,7 +67,7 @@ public class ADManager : MonoBehaviour
 
     private bool InDebugMode()
     {
-        return PlayerPrefs.GetInt(PlayerData.DEBUG_MODE, 0) == 1;
+        return PlayerData.GetInt(DataKey.debugMode, 0) == 1;
     }
 
     private void OnRewardedVideoAdRewarded(IronSourcePlacement placement, IronSourceAdInfo adInfo)

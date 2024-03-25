@@ -10,7 +10,9 @@ using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 using Sirenix.OdinInspector;
 
-
+/// <summary>
+///  Game manager for the Build mini game.
+/// </summary>
 public class Build_GameManager : MonoBehaviour, IMiniGame
 {
     [Header("Managers and Controllers")] 
@@ -18,11 +20,11 @@ public class Build_GameManager : MonoBehaviour, IMiniGame
     [SerializeField] private Build_SFXManager sfxManager;
     [SerializeField] private TextAsset stageIndicesCSV;
     
-    [Header("UI Components")] [SerializeField]
-    private UiComponents uiComponents;
+    [Header("UI Components")] 
+    [SerializeField] private UiComponents uiComponents;
 
-    [Header("Stage Components")] [SerializeField]
-    private StageComponents stageComponents;
+    [Header("Stage Components")] 
+    [SerializeField] private StageComponents stageComponents;
 
     [Header("GamePlay Status")] 
     private GameplayStatus gameplayStatus;

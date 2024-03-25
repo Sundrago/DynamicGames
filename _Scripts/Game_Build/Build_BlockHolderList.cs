@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class responsible for holding a list of build blocks.
+/// </summary>
 public class BuildBlockHolderList : MonoBehaviour
 {
     [SerializeField] private List<GameObject> buildBlocks;

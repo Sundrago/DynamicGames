@@ -4,6 +4,7 @@ using DG.Tweening;
 using Firebase.Analytics;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
+using UnityEngine.Serialization;
 #if UNITY_IOS && !UNITY_EDITOR
 using Firebase;
 using Firebase.Analytics;
@@ -45,10 +46,11 @@ public class EndScoreCtrl : MonoBehaviour
     [SerializeField] Image  slider_indicator_high;
     [SerializeField] Image bg;
     [SerializeField] LeaderboardManger leaderboard;
-    [SerializeField] Gacha_TicketsHolder gachaTicketsHolder;
+    [SerializeField] TicketsController ticketsController;
     [SerializeField] Ranking_UI rankingUI;
-    [SerializeField]
-    private Button retartBtn, LeaderboardBtn, backtoMenuBtn;
+    [SerializeField] private Button retartBtn;
+    [SerializeField] private Button leaderboardBtn;
+    [SerializeField] private Button backtoMenuBtn;
 
     public static EndScoreCtrl Instance;
 
@@ -85,7 +87,7 @@ public class EndScoreCtrl : MonoBehaviour
         // FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventPostScore, new Parameter("GameType", score));
         // FirebaseAnalytics.LogEvent("PlayTime", new Parameter("GameType", Time.time-startTime));
 #endif
-        AudioManager.Instance.PlaySFXbyTag(SFX_tag.showScore);
+        AudioManager.Instance.PlaySFXbyTag(SfxTag.showScore);
         print("duration : " + (Time.time-startTime));
         MoneyManager.Instance.ShowPanel();
         PlayerPrefs.SetInt("totalScoreCount", PlayerPrefs.GetInt("totalScoreCount") + 1);
@@ -97,7 +99,7 @@ public class EndScoreCtrl : MonoBehaviour
         //bgm
         curretBgm = sfx.GetCurrentBgm();
         sfx.PlayBGM(4, false, 0.2f);
-        AudioManager.Instance.PlaySFXbyTag(SFX_tag.scoreSlider);
+        AudioManager.Instance.PlaySFXbyTag(SfxTag.scoreSlider);
 
         //save and load data
         int highScore = PlayerPrefs.GetInt("highscore_" + gameType.ToString());
@@ -172,7 +174,7 @@ public class EndScoreCtrl : MonoBehaviour
             .From();
         
         //Tickets
-        DOVirtual.DelayedCall(2f, () => { gachaTicketsHolder.InitTickets(score, previouseHighScore, gameType); });
+        DOVirtual.DelayedCall(2f, () => { ticketsController.InitTickets(score, previouseHighScore, gameType); });
     }
 
     public void TicketAnimFinished()
@@ -256,7 +258,7 @@ public class EndScoreCtrl : MonoBehaviour
     private void SetBtnActive(bool setActive)
     {
         retartBtn.interactable = setActive;
-        LeaderboardBtn.interactable = setActive;
+        leaderboardBtn.interactable = setActive;
         backtoMenuBtn.interactable = setActive;
     }
 

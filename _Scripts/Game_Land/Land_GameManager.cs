@@ -297,7 +297,7 @@ public class Land_GameManager : SerializedMonoBehaviour
         puff_r.GetComponent<Animator>().SetTrigger("puff_4");
         shake.GetComponent<Animator>().SetTrigger("up");
         stage_level.NextLevel();
-        AudioManager.Instance.PlaySFXbyTag(SFX_tag.rocket_clear);
+        AudioManager.Instance.PlaySFXbyTag(SfxTag.rocket_clear);
         SetThrustParticleFXEmission(false);
     }
 

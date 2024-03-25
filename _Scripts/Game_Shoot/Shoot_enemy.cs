@@ -84,7 +84,7 @@ public class Shoot_enemy : MonoBehaviour
             {
                 if (Vector2.Distance(player.position, gameObject.transform.position) < 0.45)
                 {
-                    audioManager.PlaySFXbyTag(SFX_tag.enemy_dead_spin);
+                    audioManager.PlaySFXbyTag(SfxTag.enemy_dead_spin);
                     KillEnemy();
                     return;
                 }

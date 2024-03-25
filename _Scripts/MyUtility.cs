@@ -9,6 +9,9 @@ using Random = UnityEngine.Random;
 
 namespace MyUtility
 {
+    /// <summary>
+    /// The Converter class provides utility methods for converting values between different data types.
+    /// </summary>
     static class Converter
     {
         const string format = "yyyy/MM/dd HH:mm:ss";
@@ -102,6 +105,9 @@ namespace MyUtility
 
     }
 
+    /// <summary>
+    /// The Localize class provides methods for localizing strings.
+    /// </summary>
     static class Localize
     {
         public static string GetLocalizedString(string input)

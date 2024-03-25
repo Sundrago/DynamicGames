@@ -71,7 +71,7 @@ public class SquareBlockCtrl : MonoBehaviour
         if(isNotGame) return;
         DoShineFX(2f);
         DoReveal(2f);
-        AudioManager.Instance.PlaySFXbyTag(SFX_tag.block_reveal);
+        AudioManager.Instance.PlaySFXbyTag(SfxTag.block_reveal);
     }
 
     private void DoShineFX(float duration)

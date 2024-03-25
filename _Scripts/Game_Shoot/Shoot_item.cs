@@ -146,7 +146,7 @@ public class Shoot_item : MonoBehaviour
     private void GotItem(Shoot_item_prefab obj)
     {
         itemType type = obj.type;
-        audioManager.PlaySFXbyTag(SFX_tag.gotItem);
+        audioManager.PlaySFXbyTag(SfxTag.gotItem);
         switch (type)
         {
             case itemType.weapon:
@@ -164,11 +164,11 @@ public class Shoot_item : MonoBehaviour
                 break;
             case itemType.blackHole:
                 FXManager.Instance.CreateFX(FXType.blackhole, obj.transform);
-                audioManager.PlaySFXbyTag(SFX_tag.blackhole);
+                audioManager.PlaySFXbyTag(SfxTag.blackhole);
                 break;
             case itemType.spin:
                 GameObject fx = FXManager.Instance.CreateFX(FXType.spin, player.transform);
-                audioManager.PlaySFXbyTag(SFX_tag.spin);
+                audioManager.PlaySFXbyTag(SfxTag.spin);
                 fx.transform.SetParent(player.transform, true);
                 gameManager.SetSpinMode(7f);
                 gameManager.itemInfo_spin.Init(7);

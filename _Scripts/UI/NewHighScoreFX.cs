@@ -22,7 +22,7 @@ public class NewHighScoreFX : MonoBehaviour
         title.DOAnchorPosY(350, 1).SetEase(Ease.OutExpo);
         title.DOAnchorPosY(-500, 2).SetEase(Ease.InOutExpo).SetDelay(2)
             .OnComplete(()=>{gameObject.SetActive(false);});
-        AudioManager.Instance.PlaySFXbyTag(SFX_tag.highScore);
+        AudioManager.Instance.PlaySFXbyTag(SfxTag.highScore);
         gameObject.SetActive(true);
     }
 }

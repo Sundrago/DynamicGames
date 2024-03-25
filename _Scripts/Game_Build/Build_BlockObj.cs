@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class responsible for representing a block object in a build.
+/// </summary>
 public class Build_BlockObj : MonoBehaviour
 {
-    [SerializeField]
-    private Build_SFXManager sfxManager;
-
-    
+    [SerializeField] private Build_SFXManager sfxManager;
     
     private void OnCollisionEnter2D(Collision2D collision)
     {

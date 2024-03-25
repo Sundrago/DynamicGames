@@ -2,12 +2,22 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
 
+/// <summary>
+/// Represents a UI animation that fills a heart frame with a fill color.
+/// </summary>
 public class Build_HeartFillUIAnim : MonoBehaviour
 {
     [SerializeField] public GameObject fill;
     [SerializeField] public Image heartFrame, heartFill;
     private bool isFilled = true;
-    
+
+    /// <summary>
+    /// Specifies whether the heart is filled or empty.
+    /// </summary>
+    /// <value><c>true</c> if the heart is filled; otherwise, <c>false</c>.</value>
+    /// <remarks>
+    /// Setting the value of this property will trigger the appropriate UI animation to reflect the change.
+    /// </remarks>
     public bool IsFilled
     {
         get { return isFilled; }

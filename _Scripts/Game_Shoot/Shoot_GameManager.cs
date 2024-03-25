@@ -1263,7 +1263,7 @@ public class Shoot_GameManager : SerializedMonoBehaviour
         fXManager.CreateFX(FXType.shield_pop, shield.gameObject.transform);
         fXManager.CreateFX(FXType.Bomb, shield.gameObject.transform);
         fXManager.KillFX(shield);
-        audioManager.PlaySFXbyTag(SFX_tag.shiealdPop);
+        audioManager.PlaySFXbyTag(SfxTag.shiealdPop);
         shield = null;
     }
 
