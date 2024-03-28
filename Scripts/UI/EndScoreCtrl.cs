@@ -32,9 +32,10 @@ public class EndScoreCtrl : MonoBehaviour
     [SerializeField]
     private ReturnToMenu build_return;
     
+    [FormerlySerializedAs("shoot_manager")]
     [Title("SHOOT")]
     [SerializeField]
-    private Shoot_GameManager shoot_manager;
+    private Games.Shoot.GameManager manager;
     [SerializeField]
     private ReturnToMenu shoot_return;
     
@@ -245,7 +246,7 @@ public class EndScoreCtrl : MonoBehaviour
                 land_manager.PlayAgain();
                 break;
             case GameType.shoot :
-                shoot_manager.RestartGame();
+                manager.RestartGame();
                 break;
         }
     }

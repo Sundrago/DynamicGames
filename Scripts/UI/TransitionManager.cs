@@ -34,8 +34,8 @@ public class TransitionManager : MonoBehaviour
         {
             if(rocket.activeInHierarchy) rocket.GetComponent<Land_GameManager>().ClearGame();
             if(build.activeInHierarchy) build.GetComponent<Games.Build.GameManager>().ClearGame();
-            if(jump.activeInHierarchy) jump.GetComponent<Games.Jump.GameManager>().ClearGame();
-            if(shoot.activeInHierarchy) shoot.GetComponent<Shoot_GameManager>().ClearGame();
+            if(jump.activeInHierarchy) jump.GetComponent<Games.Jump.GameManager>().InitGame();
+            if(shoot.activeInHierarchy) shoot.GetComponent<Games.Shoot.GameManager>().ClearGame();
 
             canvas_A.SetActive(false);
             canvas_B.SetActive(true);

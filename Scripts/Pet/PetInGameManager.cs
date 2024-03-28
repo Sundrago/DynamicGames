@@ -8,7 +8,7 @@ public class PetInGameManager : MonoBehaviour
 {
     public static PetInGameManager Instance;
 
-    [SerializeField] private Shoot_GameManager shoot;
+    [SerializeField] private Games.Shoot.GameManager shoot;
     [SerializeField] private Games.Jump.GameManager jump;
     [SerializeField] private Land_GameManager land;
     [SerializeField] private Games.Build.GameManager build;

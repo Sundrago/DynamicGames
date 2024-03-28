@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Serialization;
 
 public class MainCanvas : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class MainCanvas : MonoBehaviour
     [SerializeField] private TitleDrag title;
 
     [SerializeField] private Games.Jump.GameManager jumpGameManager;
-    [SerializeField] private Shoot_GameManager shootGameManager;
+    [FormerlySerializedAs("shootGameManager")] [SerializeField] private Games.Shoot.GameManager gameManager;
     [SerializeField] private DailyTicketRewardsManager dailyTicketRewardsManager; 
     
     private GameObject currentGameBtn = null;
@@ -66,7 +67,7 @@ public class MainCanvas : MonoBehaviour
                 break;
             case BlockStatusManager.BlockType.jump : 
                 PetInGameManager.Instance.EnterGame(GameType.jump);
-                jumpGameManager.ClearGame();
+                jumpGameManager.InitGame();
                 transition.canvas_B = jump;
                 sfx.PlayBGM(0);
                 sfx.PlaySfx(2);
@@ -74,7 +75,7 @@ public class MainCanvas : MonoBehaviour
                 break;
             case BlockStatusManager.BlockType.shoot : 
                 PetInGameManager.Instance.EnterGame(GameType.shoot);
-                shootGameManager.ClearGame();
+                gameManager.ClearGame();
                 transition.canvas_B = shoot;
                 sfx.PlayBGM(5);
                 sfx.PlaySfx(2);

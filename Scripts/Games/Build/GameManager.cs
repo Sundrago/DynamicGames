@@ -17,7 +17,7 @@ namespace Games.Build
         [Header("Managers and Controllers")] 
         [SerializeField] private StageManager stageManager;
         [SerializeField] private SFXManager sfxManager;
-        [SerializeField] private TextAsset stageIndicesCSV;
+        [SerializeField] private TextAsset stageMapJson;
 
         [Header("UI Components")] 
         [SerializeField] private UiComponents uiComponents;
@@ -26,12 +26,12 @@ namespace Games.Build
         [SerializeField] private StageComponents stageComponents;
 
         [Header("GamePlay Status")] 
+        [SerializeField] private int[] stageIndices;
         private GameplayStatus gameplayStatus;
         private Pet player;
         private readonly List<StageItem> stageItems = new();
         private List<StageItem> currentItems = new();
-        private int[] stageIndices;
-        
+
         private const float GravityScale = -1;
         private const float LightDecreaseFactor = 0.97f;
         private const float Threshold = 0.015f;
@@ -88,12 +88,18 @@ namespace Games.Build
             }
         }
 
+        [Sirenix.OdinInspector.Button]
         private void InitGame()
         {
-            stageIndices = Converter.DeserializeJSON<int>(stageIndicesCSV.text);
+            StageData[] tmp = Converter.DeserializeJSONToArray<StageData>(stageMapJson.text);
+            stageIndices = new int[tmp.Length];
+            for (int i = 0; i < tmp.Length; i++)
+            {
+                stageIndices[i] = tmp[i].blockType;
+            }
             ResetGame();
         }
-
+        
         private void ResetGame()
         {
             gameplayStatus = new GameplayStatus();
@@ -337,7 +343,7 @@ namespace Games.Build
         {
             if (gameplayStatus.fallCount >= MaxHeartCount)
             {
-                if (gameStatus != GameStatus.GameOver) GameFinished();
+                if (gameStatus != GameStatus.GameOver) GameOver();
                 return;
             }
 
@@ -379,7 +385,7 @@ namespace Games.Build
             if (updateAll) uiComponents.bestScoreText.text = PlayerPrefs.GetInt("highscore_build").ToString();
         }
 
-        private void GameFinished()
+        private void GameOver()
         {
             gameStatus = GameStatus.GameOver;
             TriggerShakerAnimation("large");
@@ -534,5 +540,10 @@ namespace Games.Build
         }
 
         #endregion
+        
+        public class StageData
+        {
+            public int blockType;
+        }
     }
 }

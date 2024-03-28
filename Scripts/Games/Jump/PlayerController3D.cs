@@ -75,7 +75,7 @@ namespace Games.Jump
         private void HandleFootIndex(Collision other)
         {
             if (TryParseFootIndex(other.gameObject.transform.parent.gameObject.name, out var footIdx))
-                if (footIdx > jumpStage.Score)
+                if (footIdx > jumpStage.CurrentScore)
                     UpdateScoreAndFX(footIdx, other);
         }
 
@@ -86,7 +86,7 @@ namespace Games.Jump
 
         private void UpdateScoreAndFX(int footIdx, Collision other)
         {
-            jumpStage.Score = footIdx;
+            jumpStage.CurrentScore = footIdx;
             jumpStage.UpdateScoreUI(footIdx);
             var obj = Instantiate(footstepFXPrefab, footstepsHolder.transform);
             obj.transform.localPosition = other.transform.parent.transform.localPosition;

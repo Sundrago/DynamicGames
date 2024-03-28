@@ -20,8 +20,7 @@ public class AudioManager : SerializedMonoBehaviour
     [SerializeField] AudioSource sfx_source, bgm_source;
     [SerializeField] private Dictionary<SfxTag, AudioData> audioDatas;
 
-    private float sfxVolume = 0.8f;
-    private float bgmVolume = 0.8f;
+    private float sfxVolume, bgmVolume;
     private AudioData bgmPlaying = null;
 
     private float lastsfxPlayTime;
@@ -36,8 +35,8 @@ public class AudioManager : SerializedMonoBehaviour
 
     private void SetVolume()
     {
-        bgmVolume = MyUtility.PlayerData.GetFloat(DataKey.settings_bgm, 0.8f);
         sfxVolume = MyUtility.PlayerData.GetFloat(DataKey.settings_sfx, 0.8f);
+        bgmVolume = MyUtility.PlayerData.GetFloat(DataKey.settings_bgm, 0.8f);
 
         sfx_source.volume = sfxVolume;
         if (bgmPlaying == null) bgm_source.volume = bgmVolume;

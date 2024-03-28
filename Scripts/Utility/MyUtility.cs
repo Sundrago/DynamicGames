@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
@@ -101,6 +102,12 @@ namespace MyUtility
             {
                 throw new Exception("An error occurred during JSON deserialization.", ex);
             }
+        }
+
+        public static T[] DeserializeJSONToArray<T>(string jsonData)
+        {
+            var dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, T>>(jsonData);
+            return dictionary.Values.ToArray();
         }
 
     }

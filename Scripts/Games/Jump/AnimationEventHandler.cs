@@ -17,7 +17,7 @@ namespace Games.Jump
 
         public void Preload()
         {
-            gameManager.ClearGame();
+            gameManager.InitGame();
         }
 
         public void Ready()
