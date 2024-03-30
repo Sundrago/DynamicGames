@@ -1,33 +1,31 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Games.Shoot
 {
     public class ItemManager : MonoBehaviour
     {
-        [SerializeField] private Boundaries boundaries, islandBounaries;
-
-        [FormerlySerializedAs("itemPrefab")] [SerializeField]
-        private ItemController itemController;
-
-        [SerializeField] private Transform player;
-        [SerializeField] private BulletManager bullet_Manager;
-
-        [SerializeField] private Sprite[] item_imgs;
+        [Header("Managers and Controllers")] 
         [SerializeField] private GameManager gameManager;
+        [SerializeField] private BulletManager bullet_Manager;
+        [SerializeField] private ItemController itemController;
+        [SerializeField] private AudioManager audioManager;
 
-        [FormerlySerializedAs("audioCtrl")] [SerializeField]
-        private AudioManager audioManager;
+        [Header("Game Components")] 
+        [SerializeField] private Boundaries boundaries, islandBounaries;
+        [SerializeField] private Transform player;
+        [SerializeField] private Sprite[] item_imgs;
 
-        public List<ItemController> items = new();
-
+        public List<ItemController> items { get; private set; }
         private Vector2 screenBounds;
         private int totalItemCount;
 
+        private const int MaxBounceCount = 3;
+
         private void Start()
         {
+            items = new List<ItemController>();
             screenBounds =
                 Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height,
                     Camera.main.transform.position.z));
@@ -36,72 +34,41 @@ namespace Games.Shoot
 
         private void Update()
         {
-            if (gameManager.state != GameManager.ShootGameState.playing) return;
+            if (!IsGamePlaying()) return;
 
             for (var i = items.Count - 1; i >= 0; i--)
             {
-                var obj = items[i];
+                var item = items[i];
+                if (item == null) continue;
 
-                //Update Item if Timer ends
-                if (obj.GetNormalizedTimer() < 0.01f) UpdateItem(obj);
-
-                //Move and bounce on wall
-                if (obj == null) continue;
-
-                obj.transform.Translate(obj.Velocity * Time.deltaTime * obj.RandomVector);
-                if (obj.transform.position.x < boundaries.left.position.x)
-                {
-                    obj.transform.position = new Vector3(boundaries.left.position.x, obj.transform.position.y, 0f);
-                    obj.RandomVector = new Vector3(obj.RandomVector.x * -1f, obj.RandomVector.y, 0f);
-                }
-                else if (obj.transform.position.x > boundaries.right.position.x)
-                {
-                    obj.transform.position = new Vector3(boundaries.right.position.x, obj.transform.position.y, 0f);
-                    obj.RandomVector = new Vector3(obj.RandomVector.x * -1f, obj.RandomVector.y, 0f);
-                }
-
-                if (obj.transform.position.y > boundaries.top.position.y)
-                {
-                    obj.transform.position = new Vector3(obj.transform.position.x, boundaries.top.position.y, 0f);
-                    obj.RandomVector = new Vector3(obj.RandomVector.x, obj.RandomVector.y * -1f, 0f);
-                }
-                else if (obj.transform.position.y < boundaries.btm.position.y)
-                {
-                    obj.transform.position = new Vector3(obj.transform.position.x, boundaries.btm.position.y, 0f);
-                    obj.RandomVector = new Vector3(obj.RandomVector.x, obj.RandomVector.y * -1f, 0f);
-                }
-
-                //Move Out When On Island
-                if (obj.transform.position.x > islandBounaries.left.position.x &&
-                    obj.transform.position.x < islandBounaries.right.position.x &&
-                    obj.transform.position.y > islandBounaries.btm.position.y &&
-                    obj.transform.position.y < islandBounaries.top.position.y)
-                    if (obj.RandomVector.y > -1.5f)
-                        obj.RandomVector.y += -15f * Time.deltaTime;
-
-                //When Player Get near item
-                if (Vector2.Distance(player.position, obj.transform.position) < 0.3)
-                {
-                    items.Remove(obj);
-                    obj.transform.DOScale(0f, 0.25f)
-                        .SetEase(Ease.InOutElastic)
-                        .OnComplete(() => { Destroy(obj.transform.gameObject); });
-                    GotItem(obj);
-                    FXManager.Instance.CreateFX(FXType.ItemHit, obj.transform);
-                }
+                UpdateItem(item);
+                HandleMovement(item);
+                BounceOffBoundary(item);
+                HandleItemNearIsland(item);
+                HandleItemInteraction(item);
             }
         }
 
-        public void SpawnItem()
+        private bool IsGamePlaying()
         {
-            if (gameManager.state != GameManager.ShootGameState.playing) return;
-            if (items.Count >= 3) return;
-            // if(gameManager.stage * 2.5f < totalItemCount) return;
+            return gameManager.state == GameManager.ShootGameState.playing;
+        }
 
-            var new_item = Instantiate(itemController, gameObject.transform);
+        public void UpdateItem(ItemController item)
+        {
+            if (item.GetNormalizedTimer() >= 0.01f) return;
+            if (gameManager.state != GameManager.ShootGameState.playing) return;
+
+            var type = GetItemType();
+
+            item.Init(item.transform.localPosition, type, item_imgs[(int)type]);
+            item.transform.DOPunchScale(new Vector3(0.03f, 0.03f, 0), 0.5f).SetEase(Ease.InOutQuad);
+        }
+
+        private ItemType GetItemType()
+        {
             var rnd = Random.Range(0, 5);
             var type = (ItemType)rnd;
-
             if (type == ItemType.Shield && gameManager.shield != null)
             {
                 type = GetRandomSingleItem();
@@ -111,6 +78,71 @@ namespace Games.Shoot
                 var chance = bullet_Manager.bounceCount * 0.25f;
                 if (Random.Range(0f, 1f) < chance) type = GetRandomSingleItem();
             }
+
+            return type;
+        }
+
+        private void HandleMovement(ItemController item)
+        {
+            item.transform.Translate(item.Velocity * Time.deltaTime * item.RandomVector);
+        }
+
+        private void BounceOffBoundary(ItemController item)
+        {
+            if (item.transform.position.x < boundaries.left.position.x)
+            {
+                item.transform.position = new Vector3(boundaries.left.position.x, item.transform.position.y, 0f);
+                item.RandomVector = new Vector3(item.RandomVector.x * -1f, item.RandomVector.y, 0f);
+            }
+            else if (item.transform.position.x > boundaries.right.position.x)
+            {
+                item.transform.position = new Vector3(boundaries.right.position.x, item.transform.position.y, 0f);
+                item.RandomVector = new Vector3(item.RandomVector.x * -1f, item.RandomVector.y, 0f);
+            }
+
+            if (item.transform.position.y > boundaries.top.position.y)
+            {
+                item.transform.position = new Vector3(item.transform.position.x, boundaries.top.position.y, 0f);
+                item.RandomVector = new Vector3(item.RandomVector.x, item.RandomVector.y * -1f, 0f);
+            }
+            else if (item.transform.position.y < boundaries.btm.position.y)
+            {
+                item.transform.position = new Vector3(item.transform.position.x, boundaries.btm.position.y, 0f);
+                item.RandomVector = new Vector3(item.RandomVector.x, item.RandomVector.y * -1f, 0f);
+            }
+        }
+
+        private void HandleItemNearIsland(ItemController item)
+        {
+            if (item.transform.position.x > islandBounaries.left.position.x &&
+                item.transform.position.x < islandBounaries.right.position.x &&
+                item.transform.position.y > islandBounaries.btm.position.y &&
+                item.transform.position.y < islandBounaries.top.position.y)
+                if (item.RandomVector.y > -1.5f)
+                    item.RandomVector.y += -15f * Time.deltaTime;
+        }
+
+        private void HandleItemInteraction(ItemController item)
+        {
+            if (Vector2.Distance(player.position, item.transform.position) < 0.3)
+            {
+                items.Remove(item);
+                item.transform.DOScale(0f, 0.25f).SetEase(Ease.InOutElastic).OnComplete(() =>
+                {
+                    Destroy(item.transform.gameObject);
+                });
+                GotItem(item);
+                FXManager.Instance.CreateFX(FXType.ItemHit, item.transform);
+            }
+        }
+
+        public void SpawnItem()
+        {
+            if (gameManager.state != GameManager.ShootGameState.playing) return;
+            if (items.Count >= 3) return;
+
+            var new_item = Instantiate(itemController, gameObject.transform);
+            var type = GetItemType();
 
             new_item.Init(GetRandomPosOnScreen(), type, item_imgs[(int)type]);
             new_item.transform.DOScale(new Vector3(0, 0, 0), 1f)
@@ -119,31 +151,6 @@ namespace Games.Shoot
             items.Add(new_item);
 
             totalItemCount += 1;
-        }
-
-        private ItemType GetRandomSingleItem()
-        {
-            return (ItemType)Random.Range(2, 4);
-        }
-
-        public void UpdateItem(ItemController item)
-        {
-            if (gameManager.state != GameManager.ShootGameState.playing) return;
-            var rnd = Random.Range(0, 5);
-
-            var type = (ItemType)rnd;
-            if (type == ItemType.Shield && gameManager.shield != null)
-            {
-                type = GetRandomSingleItem();
-            }
-            else if (type == ItemType.Bounce)
-            {
-                var chance = bullet_Manager.bounceCount * 0.25f;
-                if (Random.Range(0f, 1f) < chance) type = GetRandomSingleItem();
-            }
-
-            item.Init(item.transform.localPosition, (ItemType)rnd, item_imgs[rnd]);
-            item.transform.DOPunchScale(new Vector3(0.03f, 0.03f, 0), 0.5f).SetEase(Ease.InOutQuad);
         }
 
         private Vector2 GetRandomPosOnScreen()
@@ -155,33 +162,64 @@ namespace Games.Shoot
         {
             var type = obj.itemType;
             audioManager.PlaySFXbyTag(SfxTag.gotItem);
+
             switch (type)
             {
                 case ItemType.Weapon:
-                    bullet_Manager.UpgradeBullet();
-                    gameManager.itemInfo_atk.Init(-1, bullet_Manager.currentBulletObj);
+                    HandleWeaponPickup();
                     break;
                 case ItemType.Shield:
-                    gameManager.GetShield();
-                    gameManager.itemInfo_shield.Init(-1);
+                    HandleShieldPickup();
                     break;
                 case ItemType.Bounce:
-                    bullet_Manager.bounceCount += 1;
-                    gameManager.itemInfo_bounce.Init(-1, bullet_Manager.bounceCount);
-                    if (bullet_Manager.bounceCount > 3) bullet_Manager.bounceCount = 3;
+                    HandleBouncePickup();
                     break;
                 case ItemType.BlackHole:
-                    FXManager.Instance.CreateFX(FXType.blackhole, obj.transform);
-                    audioManager.PlaySFXbyTag(SfxTag.blackhole);
+                    HandleBlackHolePickup(obj);
                     break;
                 case ItemType.Spin:
-                    var fx = FXManager.Instance.CreateFX(FXType.spin, player.transform);
-                    audioManager.PlaySFXbyTag(SfxTag.spin);
-                    fx.transform.SetParent(player.transform, true);
-                    gameManager.SetSpinMode(7f);
-                    gameManager.itemInfo_spin.Init(7);
+                    HandleSpinPickup();
                     break;
             }
+        }
+
+        private void HandleWeaponPickup()
+        {
+            bullet_Manager.UpgradeBullet();
+            gameManager.itemInfo_atk.Init(-1, bullet_Manager.currentBulletObj);
+        }
+
+        private void HandleShieldPickup()
+        {
+            gameManager.GetShield();
+            gameManager.itemInfo_shield.Init(-1);
+        }
+
+        private void HandleBouncePickup()
+        {
+            bullet_Manager.bounceCount += 1;
+            gameManager.itemInfo_bounce.Init(-1, bullet_Manager.bounceCount);
+            bullet_Manager.bounceCount = Mathf.Min(bullet_Manager.bounceCount, MaxBounceCount);
+        }
+
+        private void HandleBlackHolePickup(ItemController obj)
+        {
+            FXManager.Instance.CreateFX(FXType.blackhole, obj.transform);
+            audioManager.PlaySFXbyTag(SfxTag.blackhole);
+        }
+
+        private void HandleSpinPickup()
+        {
+            var fx = FXManager.Instance.CreateFX(FXType.spin, player.transform);
+            audioManager.PlaySFXbyTag(SfxTag.spin);
+            fx.transform.SetParent(player.transform, true);
+            gameManager.SetSpinMode(7f);
+            gameManager.itemInfo_spin.Init(7);
+        }
+
+        private ItemType GetRandomSingleItem()
+        {
+            return (ItemType)Random.Range(2, 4);
         }
 
         public void KillAll()

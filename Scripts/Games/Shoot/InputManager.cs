@@ -6,20 +6,14 @@ namespace Games.Shoot
 {
     public class InputManager : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
     {
-        [Header("Managers and Controllers")] [SerializeField]
-        private GameManager gameManager;
-
+        [Header("Managers and Controllers")] 
+        [SerializeField] private GameManager gameManager;
         [SerializeField] private BulletManager bullet_Manager;
 
-        [Header("Game Components")] [SerializeField]
-        private GameObject joystickUI;
-
-        [FormerlySerializedAs("joysyick_knob")] [Header("Game Components")] [SerializeField]
-        private GameObject joystickKnob;
-
-        [FormerlySerializedAs("targetObj")] [Header("Game Components")] [SerializeField]
-        private GameObject targetObject;
-
+        [Header("Game Components")] 
+        [SerializeField] private GameObject joystickUI;
+        [SerializeField] private GameObject joystickKnob;
+        [SerializeField] private GameObject targetObject;
         [SerializeField] private Boundaries boundaries;
         [SerializeField] private SpriteAnimator player;
 
