@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.Pet;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Games.Jump
 {
-    public class GameManager : MonoBehaviour
+    public class GameManager : MonoBehaviour, IMiniGame
     {
         [Header("Managers and Controllers")] 
         [SerializeField] private SfxController sfxController;
@@ -313,7 +314,7 @@ namespace Games.Jump
             inputController.gameObject.SetActive(false);
         }
 
-        public void StartGame()
+        public void RestartGame()
         {
             ResetUI();
             Time.timeScale = 1f;
@@ -326,7 +327,7 @@ namespace Games.Jump
             EndScoreCtrl.Instance.StartGame(GameType.jump);
         }
 
-        public void InitGame()
+        public void ClearGame()
         {
             ResetUI();
             Time.timeScale = 1f;
@@ -344,7 +345,7 @@ namespace Games.Jump
             EndScoreCtrl.Instance.HideScore();
         }
 
-        public void BeginFirstGame()
+        public void OnGameEnter()
         {
             player.gameObject.SetActive(true);
             gameObject.transform.parent.gameObject.SetActive(true);
@@ -365,7 +366,7 @@ namespace Games.Jump
                 });
 
             LoadGame();
-            DOVirtual.DelayedCall(3f, () => { StartGame(); });
+            DOVirtual.DelayedCall(3f, () => { RestartGame(); });
             firstGame = false;
         }
 

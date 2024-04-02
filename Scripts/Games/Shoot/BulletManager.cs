@@ -16,7 +16,7 @@ namespace Games.Shoot
         [SerializeField] private InputManager inputManager;
         [SerializeField] private AudioManager audioManager;
         [SerializeField] private ScoreManager scoreManager;
-        [SerializeField] private BulletObject bulletObject;
+        [FormerlySerializedAs("bulletObject")] [SerializeField] private BulletController bulletController;
         [SerializeField] private EnemyManager enemyManager;
         
         [Header("Game Components")] 
@@ -32,9 +32,9 @@ namespace Games.Shoot
 
         public int bounceCount;
         public Vector2 screenBounds { get; private set; }
-        private ObjectPool<BulletObject> bulletObjectPool;
+        private ObjectPool<BulletController> bulletObjectPool;
         private ObjectPool<ParticleSystem> fxObjectPool;
-        private List<BulletObject> bullets;
+        private List<BulletController> bullets;
         
         
         public static BulletManager Instance { get; private set; }
@@ -46,7 +46,7 @@ namespace Games.Shoot
 
         private void Start()
         {
-            bullets = new List<BulletObject>();
+            bullets = new List<BulletController>();
             bulletObjectPool = InitializeBulletPool();
             fxObjectPool = InitializeFxPool();
 
@@ -55,11 +55,11 @@ namespace Games.Shoot
                     Camera.main.transform.position.z));
         }
 
-        private ObjectPool<BulletObject> InitializeBulletPool()
+        private ObjectPool<BulletController> InitializeBulletPool()
         {
-            return new ObjectPool<BulletObject>(() =>
+            return new ObjectPool<BulletController>(() =>
                 {
-                    var bulletController = Instantiate(this.bulletObject);
+                    var bulletController = Instantiate(this.bulletController);
                     bullets.Add(bulletController);
                     return bulletController;
                 },
@@ -112,9 +112,9 @@ namespace Games.Shoot
             if (currentBulletObj >= bulletInfos.Count) currentBulletObj = bulletInfos.Count - 1;
         }
 
-        public void KillBullet(BulletObject bulletObject)
+        public void KillBullet(BulletController bulletController)
         {
-            if (bulletObject.gameObject.activeSelf) bulletObjectPool.Release(bulletObject);
+            if (bulletController.gameObject.activeSelf) bulletObjectPool.Release(bulletController);
         }
 
         public void KillParticleFX(ParticleSystem fx)
@@ -137,18 +137,18 @@ namespace Games.Shoot
             SpawnBulletTimer();
         }
 
-        public void IslandHit(int point, BulletObject bulletObject)
+        public void IslandHit(int point, BulletController bulletController)
         {
             island.transform.localScale = new Vector3(1f, 1f, 1f);
             island.transform.DOPunchScale(new Vector3(0.05f, 0.05f, 0.05f), 0.25f);
-            scoreManager.AddScore(bulletObject.points);
+            scoreManager.AddScore(bulletController.points);
 
             var fx = fxObjectPool.Get();
             fx.transform.SetParent(gameObject.transform);
-            fx.gameObject.transform.position = bulletObject.gameObject.transform.position;
+            fx.gameObject.transform.position = bulletController.gameObject.transform.position;
             fx.Play();
 
-            KillBullet(bulletObject);
+            KillBullet(bulletController);
         }
     }
 

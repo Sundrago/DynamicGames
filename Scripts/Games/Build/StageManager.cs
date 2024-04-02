@@ -9,7 +9,7 @@ namespace Games.Build
     /// </summary>
     public class StageManager : MonoBehaviour
     {
-        public List<Land_StageItemHolder> stages = new();
+        public List<StageItemHolder> stages = new();
 
 #if UNITY_EDITOR
         [Button]
@@ -18,12 +18,12 @@ namespace Games.Build
             stages = PopulateItemsFromChildren();
         }
 
-        private List<Land_StageItemHolder> PopulateItemsFromChildren()
+        private List<StageItemHolder> PopulateItemsFromChildren()
         {
-            var updatedStages = new List<Land_StageItemHolder>();
+            var updatedStages = new List<StageItemHolder>();
 
             for (var i = 0; i < transform.childCount; i++)
-                updatedStages.Add(transform.GetChild(i).gameObject.GetComponent<Land_StageItemHolder>());
+                updatedStages.Add(transform.GetChild(i).gameObject.GetComponent<StageItemHolder>());
 
             return updatedStages;
         }

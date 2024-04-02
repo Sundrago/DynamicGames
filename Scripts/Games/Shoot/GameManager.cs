@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core.Pet;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -30,7 +31,7 @@ namespace Games.Shoot
 
         [SerializeField] private Animator face;
 
-        [SerializeField] private IslandSizeCtrl islandSizeCtrl;
+        [FormerlySerializedAs("islandSizeCtrl")] [SerializeField] private IslandSizeController islandSizeController;
 
         //[SerializeField] EndScoreCtrl endScore;
         [SerializeField] private ScoreManager score;
@@ -167,7 +168,7 @@ namespace Games.Shoot
                     itemManager.SpawnItem();
                     break;
                 case 1:
-                    islandSizeCtrl.OpenIsland();
+                    islandSizeController.OpenIsland();
                     await Task.Delay(1000);
                     face.SetTrigger("turnRed");
                     await Task.Delay(2000);
@@ -177,20 +178,20 @@ namespace Games.Shoot
                         case 0:
                             CreateMetheor();
                             await Task.Delay(2000);
-                            islandSizeCtrl.CloseIsland();
+                            islandSizeController.CloseIsland();
                             break;
                         case 1:
                             enemy_Manager.SpawnEnemyAtRandomPos();
                             enemy_Manager.SpawnEnemyAtRandomPos();
                             enemy_Manager.SpawnEnemyAtRandomPos();
                             await Task.Delay(1000);
-                            islandSizeCtrl.CloseIsland();
+                            islandSizeController.CloseIsland();
                             break;
                         case 2:
                             SpawnOnLeft(2);
                             SpawnOnRight(2);
                             await Task.Delay(3000);
-                            islandSizeCtrl.CloseIsland();
+                            islandSizeController.CloseIsland();
                             break;
                     }
 
@@ -201,7 +202,7 @@ namespace Games.Shoot
                     itemManager.SpawnItem();
                     break;
                 case 2:
-                    islandSizeCtrl.OpenIsland();
+                    islandSizeController.OpenIsland();
                     await Task.Delay(1000);
                     face.SetTrigger("angry01");
                     await Task.Delay(2000);
@@ -216,7 +217,7 @@ namespace Games.Shoot
                             await Task.Delay(1000);
                             CreateMetheor();
                             await Task.Delay(1000);
-                            islandSizeCtrl.CloseIsland();
+                            islandSizeController.CloseIsland();
                             break;
                         case 1:
                             enemy_Manager.SpawnEnemyAtRandomPos();
@@ -224,13 +225,13 @@ namespace Games.Shoot
                             enemy_Manager.SpawnEnemyAtRandomPos();
                             enemy_Manager.SpawnEnemyAtRandomPos();
                             await Task.Delay(1000);
-                            islandSizeCtrl.CloseIsland();
+                            islandSizeController.CloseIsland();
                             break;
                         case 2:
                             SpawnOnLeft(4);
                             SpawnOnRight(4);
                             await Task.Delay(4000);
-                            islandSizeCtrl.CloseIsland();
+                            islandSizeController.CloseIsland();
                             break;
                     }
 
@@ -240,7 +241,7 @@ namespace Games.Shoot
                     createMetheor.Init(1000, 0, 0);
                     break;
                 case 3:
-                    islandSizeCtrl.OpenIsland();
+                    islandSizeController.OpenIsland();
                     await Task.Delay(1000);
                     face.SetTrigger("angry01");
                     await Task.Delay(1000);
@@ -257,7 +258,7 @@ namespace Games.Shoot
                             await Task.Delay(3000);
                             CreateMetheor();
                             await Task.Delay(1000);
-                            islandSizeCtrl.CloseIsland();
+                            islandSizeController.CloseIsland();
                             break;
                         case 1:
                             enemy_Manager.SpawnEnemyAtRandomPos();
@@ -266,13 +267,13 @@ namespace Games.Shoot
                             enemy_Manager.SpawnEnemyAtRandomPos();
                             enemy_Manager.SpawnEnemyAtRandomPos();
                             await Task.Delay(1000);
-                            islandSizeCtrl.CloseIsland();
+                            islandSizeController.CloseIsland();
                             break;
                         case 2:
                             SpawnOnLeft(5);
                             SpawnOnRight(5);
                             await Task.Delay(4000);
-                            islandSizeCtrl.CloseIsland();
+                            islandSizeController.CloseIsland();
                             break;
                     }
 
@@ -283,7 +284,7 @@ namespace Games.Shoot
                     createEnemyInLine.Init(7500, 3, 5, 0.3f);
                     break;
                 case 4:
-                    islandSizeCtrl.OpenIsland();
+                    islandSizeController.OpenIsland();
                     await Task.Delay(1000);
                     face.SetTrigger("angry01");
                     await Task.Delay(1000);
@@ -303,18 +304,18 @@ namespace Games.Shoot
                             await Task.Delay(1000);
                             CreateMetheor();
                             await Task.Delay(1000);
-                            islandSizeCtrl.CloseIsland();
+                            islandSizeController.CloseIsland();
                             break;
                         case 1:
                             enemy_Manager.SpawnEnemyInCircle(1f, Random.Range(5, 8));
                             await Task.Delay(1000);
-                            islandSizeCtrl.CloseIsland();
+                            islandSizeController.CloseIsland();
                             break;
                         case 2:
                             SpawnOnLeft(5);
                             SpawnOnRight(5);
                             await Task.Delay(4000);
-                            islandSizeCtrl.CloseIsland();
+                            islandSizeController.CloseIsland();
                             break;
                         case 3:
                             await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.6f, 20, 1.3f, 30, 0.75f);
@@ -328,7 +329,7 @@ namespace Games.Shoot
                     createEnemyInLine.Init(7500, 3, 8, 0.3f);
                     break;
                 case 5:
-                    islandSizeCtrl.OpenIsland();
+                    islandSizeController.OpenIsland();
                     await Task.Delay(1000);
                     face.SetTrigger("angry01");
                     await Task.Delay(1000);
@@ -346,18 +347,18 @@ namespace Games.Shoot
                             await Task.Delay(500);
                             CreateMetheor();
                             await Task.Delay(500);
-                            islandSizeCtrl.CloseIsland();
+                            islandSizeController.CloseIsland();
                             break;
                         case 1:
                             enemy_Manager.SpawnEnemyInCircle(1f, Random.Range(5, 12));
                             await Task.Delay(1000);
-                            islandSizeCtrl.CloseIsland();
+                            islandSizeController.CloseIsland();
                             break;
                         case 2:
                             SpawnOnLeft(5);
                             SpawnOnRight(5);
                             await Task.Delay(4000);
-                            islandSizeCtrl.CloseIsland();
+                            islandSizeController.CloseIsland();
                             break;
                         case 3:
                             await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.7f, 25, 1.35f, 30);
@@ -371,7 +372,7 @@ namespace Games.Shoot
                     createEnemyInLine.Init(7500, 3, 8, 0.4f);
                     break;
                 case 6:
-                    islandSizeCtrl.OpenIsland();
+                    islandSizeController.OpenIsland();
                     await Task.Delay(1000);
                     face.SetTrigger("angry01");
                     await Task.Delay(1000);
@@ -391,20 +392,20 @@ namespace Games.Shoot
                             await Task.Delay(2000);
                             CreateMetheor();
                             await Task.Delay(500);
-                            islandSizeCtrl.CloseIsland();
+                            islandSizeController.CloseIsland();
                             break;
                         case 1:
                             enemy_Manager.SpawnEnemyInCircle(0.8f, Random.Range(3, 5));
                             await Task.Delay(300);
                             enemy_Manager.SpawnEnemyInCircle(1.2f, Random.Range(5, 8));
                             await Task.Delay(1000);
-                            islandSizeCtrl.CloseIsland();
+                            islandSizeController.CloseIsland();
                             break;
                         case 2:
                             SpawnOnLeft(5);
                             SpawnOnRight(5);
                             await Task.Delay(4000);
-                            islandSizeCtrl.CloseIsland();
+                            islandSizeController.CloseIsland();
                             break;
                         case 3:
                             await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 30);
@@ -418,7 +419,7 @@ namespace Games.Shoot
                     createEnemyInLine.Init(7500, 5, 10, 0.45f);
                     break;
                 case 7:
-                    islandSizeCtrl.OpenIsland();
+                    islandSizeController.OpenIsland();
                     await Task.Delay(1000);
                     face.SetTrigger("angry01");
                     await Task.Delay(1000);
@@ -463,7 +464,7 @@ namespace Games.Shoot
                         }
                     }
 
-                    islandSizeCtrl.CloseIsland();
+                    islandSizeController.CloseIsland();
                     await Task.Delay(1000);
                     createEnemyInCircle.Init(10000, 3, 12);
                     createEnemyRandomPos.Init(2900, 1, 4);
@@ -471,7 +472,7 @@ namespace Games.Shoot
                     createEnemyInLine.Init(7500, 5, 10, 0.45f);
                     break;
                 case 8:
-                    islandSizeCtrl.OpenIsland();
+                    islandSizeController.OpenIsland();
                     await Task.Delay(1000);
                     face.SetTrigger("angry01");
                     await Task.Delay(1000);
@@ -516,7 +517,7 @@ namespace Games.Shoot
                         }
                     }
 
-                    islandSizeCtrl.CloseIsland();
+                    islandSizeController.CloseIsland();
                     await Task.Delay(1000);
                     createEnemyInCircle.Init(10000, 3, 12);
                     createEnemyRandomPos.Init(2400, 1, 4);
@@ -524,7 +525,7 @@ namespace Games.Shoot
                     createEnemyInLine.Init(6500, 5, 10, 0.45f);
                     break;
                 case 9:
-                    islandSizeCtrl.OpenIsland();
+                    islandSizeController.OpenIsland();
                     await Task.Delay(1000);
                     face.SetTrigger("angry01");
                     await Task.Delay(1000);
@@ -569,7 +570,7 @@ namespace Games.Shoot
                         }
                     }
 
-                    islandSizeCtrl.CloseIsland();
+                    islandSizeController.CloseIsland();
                     await Task.Delay(1000);
                     createEnemyInCircle.Init(10000, 3, 12);
                     createEnemyRandomPos.Init(2400, 1, 4);
@@ -577,7 +578,7 @@ namespace Games.Shoot
                     createEnemyInLine.Init(7500, 5, 10, 0.45f);
                     break;
                 case 10:
-                    islandSizeCtrl.OpenIsland();
+                    islandSizeController.OpenIsland();
                     await Task.Delay(1000);
                     face.SetTrigger("angry01");
                     await Task.Delay(1000);
@@ -621,7 +622,7 @@ namespace Games.Shoot
                         }
                     }
 
-                    islandSizeCtrl.CloseIsland();
+                    islandSizeController.CloseIsland();
                     await Task.Delay(1000);
                     createEnemyInCircle.Init(10000, 3, 12);
                     createEnemyRandomPos.Init(2900, 1, 4);
@@ -629,7 +630,7 @@ namespace Games.Shoot
                     createEnemyInLine.Init(7500, 5, 10, 0.45f);
                     break;
                 case 11:
-                    islandSizeCtrl.OpenIsland();
+                    islandSizeController.OpenIsland();
                     await Task.Delay(1000);
                     face.SetTrigger("angry01");
                     await Task.Delay(1000);
@@ -673,7 +674,7 @@ namespace Games.Shoot
                         }
                     }
 
-                    islandSizeCtrl.CloseIsland();
+                    islandSizeController.CloseIsland();
                     await Task.Delay(1000);
                     createEnemyInCircle.Init(8000, 3, 15);
                     createEnemyRandomPos.Init(1400, 1, 4);
@@ -681,7 +682,7 @@ namespace Games.Shoot
                     createEnemyInLine.Init(6900, 5, 10, 0.45f);
                     break;
                 case 12:
-                    islandSizeCtrl.OpenIsland();
+                    islandSizeController.OpenIsland();
                     await Task.Delay(1000);
                     face.SetTrigger("angry01");
                     await Task.Delay(1000);
@@ -725,7 +726,7 @@ namespace Games.Shoot
                         }
                     }
 
-                    islandSizeCtrl.CloseIsland();
+                    islandSizeController.CloseIsland();
                     await Task.Delay(1000);
                     createEnemyInCircle.Init(8000, 7, 15);
                     createEnemyRandomPos.Init(1400, 1, 4);
@@ -733,7 +734,7 @@ namespace Games.Shoot
                     createEnemyInLine.Init(6900, 5, 10, 0.45f);
                     break;
                 case 13:
-                    islandSizeCtrl.OpenIsland();
+                    islandSizeController.OpenIsland();
                     await Task.Delay(1000);
                     face.SetTrigger("angry01");
                     await Task.Delay(1000);
@@ -777,7 +778,7 @@ namespace Games.Shoot
                         }
                     }
 
-                    islandSizeCtrl.CloseIsland();
+                    islandSizeController.CloseIsland();
                     await Task.Delay(1000);
                     createEnemyInCircle.Init(7000, 7, 15);
                     createEnemyRandomPos.Init(900, 1, 4);
@@ -785,7 +786,7 @@ namespace Games.Shoot
                     createEnemyInLine.Init(6900, 5, 10, 0.45f);
                     break;
                 case 14:
-                    islandSizeCtrl.OpenIsland();
+                    islandSizeController.OpenIsland();
                     await Task.Delay(1000);
                     face.SetTrigger("angry01");
                     await Task.Delay(1000);
@@ -829,7 +830,7 @@ namespace Games.Shoot
                         }
                     }
 
-                    islandSizeCtrl.CloseIsland();
+                    islandSizeController.CloseIsland();
                     await Task.Delay(1000);
                     createEnemyInCircle.Init(4100, 7, 15);
                     createEnemyRandomPos.Init(800, 1, 4);
@@ -837,7 +838,7 @@ namespace Games.Shoot
                     createEnemyInLine.Init(4900, 5, 10, 0.45f);
                     break;
                 case 15:
-                    islandSizeCtrl.OpenIsland();
+                    islandSizeController.OpenIsland();
                     await Task.Delay(1000);
                     face.SetTrigger("angry01");
                     await Task.Delay(1000);
@@ -881,7 +882,7 @@ namespace Games.Shoot
                         }
                     }
 
-                    islandSizeCtrl.CloseIsland();
+                    islandSizeController.CloseIsland();
                     await Task.Delay(1000);
                     createEnemyInCircle.Init(4100, 7, 15);
                     createEnemyRandomPos.Init(500, 1, 4);
@@ -889,7 +890,7 @@ namespace Games.Shoot
                     createEnemyInLine.Init(4900, 5, 10, 0.45f);
                     break;
                 case 16:
-                    islandSizeCtrl.OpenIsland();
+                    islandSizeController.OpenIsland();
                     await Task.Delay(1000);
                     face.SetTrigger("angry01");
                     await Task.Delay(1000);
@@ -933,7 +934,7 @@ namespace Games.Shoot
                         }
                     }
 
-                    islandSizeCtrl.CloseIsland();
+                    islandSizeController.CloseIsland();
                     await Task.Delay(1000);
                     createEnemyInCircle.Init(2100, 7, 15);
                     createEnemyRandomPos.Init(500, 1, 4);
@@ -941,7 +942,7 @@ namespace Games.Shoot
                     createEnemyInLine.Init(3900, 5, 10, 0.45f);
                     break;
                 case 17:
-                    islandSizeCtrl.OpenIsland();
+                    islandSizeController.OpenIsland();
                     await Task.Delay(1000);
                     face.SetTrigger("angry01");
                     await Task.Delay(1000);
@@ -985,7 +986,7 @@ namespace Games.Shoot
                         }
                     }
 
-                    islandSizeCtrl.CloseIsland();
+                    islandSizeController.CloseIsland();
                     await Task.Delay(1000);
                     createEnemyInCircle.Init(1100, 7, 15);
                     createEnemyRandomPos.Init(300, 1, 4);
@@ -1125,7 +1126,7 @@ namespace Games.Shoot
             DestroyShield();
 
             face.SetTrigger("idle");
-            islandSizeCtrl.CloseIsland();
+            islandSizeController.CloseIsland();
             score.ResetScore();
 
             player.DOMove(startPosition.position, 0.5f)
@@ -1242,7 +1243,7 @@ namespace Games.Shoot
                     FXManager.Instance.CreateFX(FXType.deadExplosion, player);
                     enemy_Manager.GameOver();
                     face.SetTrigger("idle");
-                    islandSizeCtrl.CloseIsland();
+                    islandSizeController.CloseIsland();
                     joystick.gameObject.SetActive(false);
                     joystick.ResetJoystick();
                     if (!hasRevibed) WatchAdsContinue.Instance.Init(Revibe, ShowScore, "Shoot_Revibe");
@@ -1337,11 +1338,11 @@ namespace Games.Shoot
 
         private async Task Greetings()
         {
-            DOTween.Kill(islandSizeCtrl.GetComponent<RectTransform>());
-            islandSizeCtrl.OpenIsland();
+            DOTween.Kill(islandSizeController.GetComponent<RectTransform>());
+            islandSizeController.OpenIsland();
             face.SetTrigger("idle");
             await Task.Delay(1000);
-            islandSizeCtrl.CloseIsland();
+            islandSizeController.CloseIsland();
         }
 
         public void ReadyToPlay()

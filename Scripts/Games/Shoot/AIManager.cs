@@ -8,55 +8,24 @@ using Random = UnityEngine.Random;
 namespace Games.Shoot
 {
     /// <summary>
-    ///     Class for managing AI in the Shoot game.
+    /// Manages AI behaviors and tasks in the Shoot game.
     /// </summary>
     public class AIManager : MonoBehaviour
     {
         [SerializeField] private GameManager gameManager;
         [SerializeField] private EnemyManager enemyManager;
         [SerializeField] private ItemManager itemManager;
-
-        // private List<Task> tasks;
-        // private bool initiated;
-        //
-        // private void Start()
-        // {
-        //     if (initiated) return;
-        //     tasks = new List<Task>
-        //     {
-        //         CreateTask(CreateEnemyAtRandomPos),
-        //         CreateTask(CreateEnemyAtPlayerInCircle),
-        //         CreateTask(CreateMetheors),
-        //         CreateTask(CreateEnemyInLine),
-        //         CreateTask(CreateEnemyInSpiral),
-        //         CreateTask(CreateItem)
-        //     };
-        //     initiated = true;
-        // }
-        // private Task CreateTask(Func<Task> taskFunction)
-        // {
-        //     return Task.Run(taskFunction);
-        // }
+        
         public void StartTasks()
         {
-            // if (!initiated) Start();
-            // await Task.WhenAll(tasks).ConfigureAwait(false);
-            // CreateEnemyAtRandomPos();
-            // CreateEnemyAtPlayerInCircle();
-            // CreateMetheors();
-            // CreateEnemyInLine();
-            // CreateEnemyInSpiral();
-            // CreateItem();
-
             StartCoroutine(CreateEnemyAtRandomPos());
             StartCoroutine(CreateEnemyAtPlayerInCircle());
             StartCoroutine(CreateMetheors());
             StartCoroutine(CreateEnemyInLine());
             StartCoroutine(CreateEnemyInSpiral());
             StartCoroutine(CreateItem());
-            
-
         }
+        
         private IEnumerator CreateEnemyAtRandomPos()
         {
             while (gameManager.state == GameManager.ShootGameState.playing)

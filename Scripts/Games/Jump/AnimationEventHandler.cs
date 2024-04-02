@@ -17,12 +17,12 @@ namespace Games.Jump
 
         public void Preload()
         {
-            gameManager.InitGame();
+            gameManager.ClearGame();
         }
 
         public void Ready()
         {
-            gameManager.BeginFirstGame();
+            gameManager.OnGameEnter();
         }
     }
 }

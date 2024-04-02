@@ -1,3 +1,5 @@
+using Core.Pet;
+
 namespace Games
 {
     /// <summary>
