@@ -1,92 +1,100 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using DG.Tweening;
+using MyUtility;
+using UnityEngine;
+using UnityEngine.Serialization;
 
-public class SfxController : MonoBehaviour
+namespace Core.System
 {
-    [SerializeField] AudioSource[] bgms = new AudioSource[4];
-    [SerializeField] AudioSource[] sfxs = new AudioSource[2];
-    [SerializeField] AudioSource[] sfxs_2 = new AudioSource[2];
-
-    private int currentBgm = -1;
-
-    void Start()
+    public class SfxController : MonoBehaviour
     {
-        SetVolume();
-    }
+        [SerializeField] private AudioSource[] bgmSources = new AudioSource[4];
+        [SerializeField] private AudioSource[] sfxSources = new AudioSource[2];
+        [SerializeField] private AudioSource[] sfxSources_2 = new AudioSource[2];
 
-    public void PlayBGM(int idx, bool shortTransition = false, float volume = 1f) {
-        print("bgm idx : " +idx );
+        private int currentBgmIndex = -1;
 
-        if (idx == -1)
+        private void Start()
         {
-            if(currentBgm != -1)    
-                AudioOut(bgms[currentBgm], 1f);
-            return;
-        }
-        
-        if(shortTransition) {
-            if(currentBgm != -1)    
-            AudioOut(bgms[currentBgm], 1f);
-            AudioIn(bgms[idx], 0.5f, volume);
-            currentBgm = idx;
-            return;
+            SetVolume();
         }
 
-        if(currentBgm != -1)    
-            AudioOut(bgms[currentBgm]);
-        AudioIn(bgms[idx], 3f, volume);
-        currentBgm = idx;
-    }
+        public void PlayBGM(int idx, bool quickTransition = false, float volume = 1f)
+        {
+            if (idx == -1)
+            {
+                if (currentBgmIndex != -1)
+                    FadeOutAudio(bgmSources[currentBgmIndex], 1f);
+                return;
+            }
 
-    public void PauseBGM()
-    {
-        AudioOut(bgms[currentBgm], 1f);
-    }
+            if (quickTransition)
+            {
+                if (currentBgmIndex != -1)
+                    FadeOutAudio(bgmSources[currentBgmIndex], 1f);
+                FadeInAudio(bgmSources[idx], 0.5f, volume);
+                currentBgmIndex = idx;
+                return;
+            }
 
-    public void UnPauseBGM()
-    {
-        AudioIn(bgms[currentBgm], 0.5f);
-    }
+            if (currentBgmIndex != -1)
+                FadeOutAudio(bgmSources[currentBgmIndex]);
+            FadeInAudio(bgmSources[idx], 3f, volume);
+            currentBgmIndex = idx;
+        }
 
-    public int GetCurrentBgm() {
-        return currentBgm;
-    }
+        public void PauseBGM()
+        {
+            FadeOutAudio(bgmSources[currentBgmIndex], 1f);
+        }
 
-    public void ChangeBGMVolume(float volume = 1f, float duration = 3f)
-    {
-        AudioSource audio = bgms[currentBgm];
-        DOTween.Kill(audio);
-        audio.DOFade(PlayerPrefs.GetFloat("settings_music", 0.5f) * volume, duration);
-    }
+        public void ResumeBGM()
+        {
+            FadeInAudio(bgmSources[currentBgmIndex], 0.5f);
+        }
 
-    private void AudioIn(AudioSource audio, float duration = 3f, float volume = 1f)
-    {
-        DOTween.Kill(audio);
-        audio.volume = 0;
-        audio.DOFade(PlayerPrefs.GetFloat("settings_music", 0.5f) * volume, duration);
-        audio.Play();
-    }
+        public int GetCurrentBgmIndex()
+        {
+            return currentBgmIndex;
+        }
 
-    private void AudioOut(AudioSource audio, float duratioin = 4f) {
-        DOTween.Kill(audio);
-        audio.DOFade(0f, duratioin)
-            .OnComplete(()=>{audio.Stop();});
-    }
+        public void ChangeBGMVolume(float volume = 1f, float duration = 3f)
+        {
+            var audio = bgmSources[currentBgmIndex];
+            DOTween.Kill(audio);
+            audio.DOFade(PlayerData.GetFloat(DataKey.settings_bgm, 0.5f) * volume, duration);
+        }
 
-    public void PlayWaterSfx() {
-        int rnd = Random.Range(0, sfxs.Length);
-        sfxs[rnd].Play();
-    }
+        private void FadeInAudio(AudioSource audio, float duration = 3f, float volume = 1f)
+        {
+            DOTween.Kill(audio);
+            audio.volume = 0;
+            audio.DOFade(PlayerData.GetFloat(DataKey.settings_bgm, 0.5f) * volume, duration);
+            audio.Play();
+        }
 
-    public void PlaySfx(int idx) {
-        sfxs_2[idx].volume = PlayerPrefs.GetFloat("settings_sfx", 1f);
-        sfxs_2[idx].Play();
-    }
+        private void FadeOutAudio(AudioSource audio, float duratioin = 4f)
+        {
+            DOTween.Kill(audio);
+            audio.DOFade(0f, duratioin)
+                .OnComplete(() => { audio.Stop(); });
+        }
 
-    public void SetVolume() {
-        if(currentBgm != -1)
-            bgms[currentBgm].volume = PlayerPrefs.GetFloat("settings_music", 0.5f);
+        public void PlayWaterSoundEffect()
+        {
+            var rnd = Random.Range(0, sfxSources.Length);
+            sfxSources[rnd].Play();
+        }
+
+        public void PlaySfx(int idx)
+        {
+            sfxSources_2[idx].volume = PlayerData.GetFloat(DataKey.settings_sfx, 1f);
+            sfxSources_2[idx].Play();
+        }
+
+        public void SetVolume()
+        {
+            if (currentBgmIndex != -1)
+                bgmSources[currentBgmIndex].volume = PlayerData.GetFloat(DataKey.settings_sfx, 0.5f);
+        }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Core.Main;
+using Core.System;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -85,7 +86,7 @@ public class UnlockBtnManager : MonoBehaviour
     {
         if (!MoneyManager.Instance.HasEnoughTicket(MoneyManager.RewardType.Ticket, 100))
         {
-            AudioManager.Instance.PlaySFXbyTag(SfxTag.unable);
+            AudioManager.Instance.PlaySfxByTag(SfxTag.Unable);
             if (!DOTween.IsTweening(ticketbtn)) ticketbtn.DOPunchPosition(new Vector3(10, 0, 0), 0.5f);
             return;
         }
@@ -93,7 +94,7 @@ public class UnlockBtnManager : MonoBehaviour
         if (MoneyManager.Instance.SubtractMoney(MoneyManager.RewardType.Ticket, 100))
         {
             MoneyManager.Instance.Coin2DAnim(MoneyManager.RewardType.Key, ticketbtn.transform.position, 1);
-            AudioManager.Instance.PlaySFXbyTag(SfxTag.gotCoin);
+            AudioManager.Instance.PlaySfxByTag(SfxTag.AcquiredCoin);
         }
         SetBtnActive();
     }
@@ -102,7 +103,7 @@ public class UnlockBtnManager : MonoBehaviour
     {
         if (!MoneyManager.Instance.HasEnoughTicket(MoneyManager.RewardType.Key, 1))
         {
-            AudioManager.Instance.PlaySFXbyTag(SfxTag.unable);
+            AudioManager.Instance.PlaySfxByTag(SfxTag.Unable);
             if (!DOTween.IsTweening(coinBtn)) coinBtn.DOPunchPosition(new Vector3(10, 0, 0), 0.5f);
             return;
         }
@@ -118,7 +119,7 @@ public class UnlockBtnManager : MonoBehaviour
     [Button]
     public void Coin2DAnim()
     {
-        AudioManager.Instance.PlaySFXbyTag(SfxTag.sparkle);
+        AudioManager.Instance.PlaySfxByTag(SfxTag.Sparkle);
         isAnimPlaying = true;
         float _velocity = 0.5f;
         Vector3 startPos = MoneyManager.Instance.keyHolder_ui.transform.position;
@@ -151,14 +152,14 @@ public class UnlockBtnManager : MonoBehaviour
                     .SetEase((Ease.InOutCubic))
                     .OnComplete(() => {
                         MoneyManager.Instance.obj_pools[(int)MoneyManager.RewardType.Key].Release(obj);
-                        AudioManager.Instance.PlaySFXbyTag(SfxTag.insertCoin);
+                        AudioManager.Instance.PlaySfxByTag(SfxTag.InsertCoin);
                         isAnimPlaying = false;
                         GameObject fx = Instantiate(unlockFX);
                         fx.transform.SetParent(targetBlockObj.transform, true);
                         fx.transform.localPosition = Vector3.zero;
                         fx.SetActive(true);
                         targetBlockObj.Unlock();
-                        AudioManager.Instance.PlaySFXbyTag(SfxTag.key);
+                        AudioManager.Instance.PlaySfxByTag(SfxTag.Key);
                     });
                 obj.transform.DOScale(Vector3.zero, 0.79f * durationFactor)
                     .SetEase(Ease.InQuart);

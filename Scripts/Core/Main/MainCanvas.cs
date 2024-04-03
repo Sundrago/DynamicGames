@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Core.Gacha;
 using Core.Pet;
+using Core.System;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.Serialization;
@@ -20,7 +21,7 @@ namespace Core.Main
         [SerializeField] LeaderboardManger leaderboard;
         [SerializeField] private RankingManager rangkingManager;
         [SerializeField] private GachaponManager gachaponManager;
-        [SerializeField] private PetDrawer petDrawer;
+        [FormerlySerializedAs("inventory")] [FormerlySerializedAs("petDrawer")] [SerializeField] private PetInventory petInventory;
         [SerializeField] private AskForUserReview askForUserReview;
         [SerializeField] List<BlockDragHandler> dragSprites;
         [SerializeField] private GameObject ranking_ui;
@@ -60,7 +61,7 @@ namespace Core.Main
                 if (DOTween.IsTweening(miniisland.transform))
                     return;
 
-            AudioManager.Instance.PlaySFXbyTag(SfxTag.click);
+            AudioManager.Instance.PlaySfxByTag(SfxTag.UI_Click);
 
             switch (blockType)
             {
@@ -101,7 +102,7 @@ namespace Core.Main
                     gachaponManager.ShowPanel();
                     break;
                 case BlockStatusManager.BlockType.friends:
-                    petDrawer.ShowPanel();
+                    petInventory.ShowPanel();
                     break;
                 case BlockStatusManager.BlockType.review:
                     askForUserReview.ShowPanel();
@@ -156,7 +157,7 @@ namespace Core.Main
                         currentGameBtn.GetComponent<BlockDragHandler>().Deactivate();
                         currentGameBtn = null;
                         leaderboard.Start();
-                        StartCoroutine(rangkingManager.UpdatetRanks());
+                        StartCoroutine(rangkingManager.UpdateRanks());
                         TutorialManager.Instancee.WentBackHome();
                     });
             }

@@ -1,159 +1,163 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Core.Pet;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
-using Sirenix.OdinInspector;
-using UnityEditor;
 
-public class WatchAdsContinue : MonoBehaviour
+namespace Core.System
 {
-    // public float normal;
-
-    [SerializeField] private RectMask2D rectMask2D;
-    [SerializeField] private Button yesBtn;
-    [SerializeField] private RectTransform rect, rect2;
-    [SerializeField] private UIPetSpriteAnimator petAnim, petAnim2;
-    [SerializeField] private Image bg;
-
-    private float startTime;
-    private const float duration = 3f;
-    
-    public delegate void Callback();
-    private Callback callbackYes, callbackNo;
-
-    private bool isActive = false;
-    private bool isInvisBtnDown;
-
-    public static WatchAdsContinue Instance;
-    private string note;
-
-    private void Awake()
+    public class WatchAdsContinue : MonoBehaviour
     {
-        Instance = this;
-        gameObject.SetActive(false);
-    }
+        [Header("UI Elements")] 
+        [SerializeField] private RectMask2D rectMask2D;
+        [SerializeField] private Button yesBtn;
+        [SerializeField] private RectTransform initialRect;
+        [SerializeField] private RectTransform finalRect;
+        [SerializeField] private UIPetSpriteAnimator petAnim, petAnim2;
+        [SerializeField] private Image adBackground;
+     
+        private const float duration = 3f;
 
-    private void Update()
-    {
-        if (!isActive) return;
+        private Action callbackYes, callbackNo;
+        private string adDescription;
+        private bool isActive, isHiddenButtonPressed;
+        private float startTime;
 
-        if (isInvisBtnDown) startTime -= Time.deltaTime * 1.5f;
-        
-        if (Time.time > startTime + duration)
+        public static WatchAdsContinue Instance { get; private set; }
+
+        private void Awake()
         {
-            if (callbackNo != null)
-                callbackNo();
+            Instance = this;
+            gameObject.SetActive(false);
+        }
+
+        private void Update()
+        {
+            if (!isActive) return;
+
+            if (isHiddenButtonPressed) startTime -= Time.deltaTime * 1.5f;
+
+            if (Time.time > startTime + duration)
+            {
+                callbackNo?.Invoke();
+                isActive = false;
+                Hide();
+                yesBtn.interactable = false;
+                return;
+            }
+
+            var normal = (duration - Time.time + startTime) / duration;
+            UpdateProgressBar(normal);
+        }
+
+        private void UpdateProgressBar(float normal)
+        {
+            normal = normal * normal;
+            rectMask2D.padding =
+                new Vector4(0, 0, rectMask2D.GetComponent<RectTransform>().sizeDelta.x * (1 - normal), 0);
+        }
+
+        public void Init(Action callbackYes, Action callbackNo, string note)
+        {
+            adDescription = note;
+            this.callbackYes = callbackYes;
+            this.callbackNo = callbackNo;
+
+            if (!PetInGameManager.Instance.EnterGameWithPet)
+            {
+                callbackNo?.Invoke();
+                return;
+            }
+
+            InitActiveState();
+            InitUIComponents();
+            InitBgAndPetMotion();
+        }
+
+        private void InitActiveState()
+        {
             isActive = false;
-            Hide();
             yesBtn.interactable = false;
-            return;
+            UpdateProgressBar(1);
+            isHiddenButtonPressed = false;
         }
-        float normal = (duration - Time.time + startTime) / duration;
-        UpdateProgressBar(normal);
-    }
 
-    private void UpdateProgressBar(float normal)
-    {
-        normal = normal * normal;
-        rectMask2D.padding = new Vector4(0, 0, rectMask2D.GetComponent<RectTransform>().sizeDelta.x * (1-normal), 0);
-    }
-
-    [Button]
-    public void Init(Callback _callbackYes, Callback _callbackNo, string _note)
-    {
-        note = _note;
-        if (!PetInGameManager.Instance.enterGameWithPet)
+        private void InitUIComponents()
         {
-            _callbackNo();
-            return;
+            DOTween.Kill(initialRect);
+            initialRect.anchoredPosition = new Vector2(0f, -500f);
+            initialRect.DOAnchorPosY(150, 0.5f).SetEase(Ease.OutExpo);
+            initialRect.DOPunchRotation(Vector3.one * 3f, 0.55f).OnComplete(() =>
+            {
+                isActive = true;
+                yesBtn.interactable = true;
+                startTime = Time.time;
+            });
         }
-        
-        callbackYes = _callbackYes;
-        callbackNo = _callbackNo;
-        isActive = false;
-        yesBtn.interactable = false;
-        UpdateProgressBar(1);
-        isInvisBtnDown = false;
-        
-        DOTween.Kill(rect);
-        rect.anchoredPosition = new Vector2(0f, -500f);
-        rect.DOAnchorPosY(150, 0.5f).SetEase(Ease.OutExpo);
-        rect.DOPunchRotation(Vector3.one * 3f, 0.55f).OnComplete(() =>
-        {
-            isActive = true;
-            yesBtn.interactable = true;
-            startTime = Time.time;
-        });
-        
-        //PetMotion
-        petAnim.Init(PetInGameManager.Instance.pet.type);
-        gameObject.SetActive(true);
-        
-        //bg
-        bg.color = new Color(0, 0, 0, 0);
-        bg.DOFade(0.3f, 1f);
-        
-        rect.gameObject.SetActive(true);
-        rect2.gameObject.SetActive(false);
-    }
 
-    private void Hide()
-    {
-        DOTween.Kill(rect);
-        bg.DOFade(0f, 0.5f);
-        rect.DOAnchorPosY(-500f, 0.4f).SetEase(Ease.OutExpo);
-        rect.DOPunchRotation(Vector3.one * 3f, 0.5f).OnComplete(() =>
+        private void InitBgAndPetMotion()
         {
-            gameObject.SetActive(false);
-        });
-    }
+            petAnim.Init(PetInGameManager.Instance.petController.type);
+            gameObject.SetActive(true);
 
-    public void YesBtnClicked()
-    {
-        DOTween.Kill(rect);
-        yesBtn.interactable = false;
-        isActive = false;
-        if (callbackYes != null)
-        {
-            ADManager.Instance.ShowAds(WatchedAd, FailedToLoadAD, note);
+            adBackground.color = new Color(0, 0, 0, 0);
+            adBackground.DOFade(0.3f, 1f);
+
+            initialRect.gameObject.SetActive(true);
+            finalRect.gameObject.SetActive(false);
         }
-    }
 
-    public void InvisBtnDown()
-    {
-        isInvisBtnDown = true;
-    }
-    
-    public void InvisBtnUp()
-    {
-        isInvisBtnDown = false;
-    }
 
-    public void WatchedAd()
-    {
-        rect.gameObject.SetActive(false);
-        rect2.gameObject.SetActive(true);
-        rect2.anchoredPosition = new Vector2(0, 150);
-        petAnim2.Init(PetInGameManager.Instance.pet.type);
-    }
-
-    public void ReadyButtonClicked()
-    {
-        bg.DOFade(0f, 0.5f);
-        rect2.DOAnchorPosY(-500f, 0.4f).SetEase(Ease.OutExpo);
-        rect2.DOPunchRotation(Vector3.one * 3f, 0.5f).OnComplete(() =>
+        private void Hide()
         {
-            gameObject.SetActive(false);
-            callbackYes();
-        });
-    }
+            DOTween.Kill(initialRect);
+            adBackground.DOFade(0f, 0.5f);
+            initialRect.DOAnchorPosY(-500f, 0.4f).SetEase(Ease.OutExpo);
+            initialRect.DOPunchRotation(Vector3.one * 3f, 0.5f).OnComplete(() => { gameObject.SetActive(false); });
+        }
 
-    public void FailedToLoadAD()
-    {
-        callbackNo();
-        Hide();
+        public void YesBtnClicked()
+        {
+            DOTween.Kill(initialRect);
+            yesBtn.interactable = false;
+            isActive = false;
+            if (callbackYes != null) ADManager.Instance.ShowAds(WatchedAd, FailedToLoadAD, adDescription);
+        }
+
+        public void InvisBtnDown()
+        {
+            isHiddenButtonPressed = true;
+        }
+
+        public void InvisBtnUp()
+        {
+            isHiddenButtonPressed = false;
+        }
+
+        public void WatchedAd()
+        {
+            initialRect.gameObject.SetActive(false);
+            finalRect.gameObject.SetActive(true);
+            finalRect.anchoredPosition = new Vector2(0, 150);
+            petAnim2.Init(PetInGameManager.Instance.petController.type);
+        }
+
+        public void ReadyButtonClicked()
+        {
+            adBackground.DOFade(0f, 0.5f);
+            finalRect.DOAnchorPosY(-500f, 0.4f).SetEase(Ease.OutExpo);
+            finalRect.DOPunchRotation(Vector3.one * 3f, 0.5f).OnComplete(() =>
+            {
+                gameObject.SetActive(false);
+                callbackYes?.Invoke();
+            });
+        }
+
+        public void FailedToLoadAD()
+        {
+            callbackNo?.Invoke();
+            Hide();
+        }
     }
 }

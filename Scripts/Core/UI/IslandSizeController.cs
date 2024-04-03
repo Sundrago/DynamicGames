@@ -12,78 +12,43 @@ public class IslandSizeController : MonoBehaviour
 
     [SerializeField] public RectTransform smallsized;
     private RectTransform rect;
+    private IDictionary<UnityEngine.iOS.DeviceGeneration, RectTransform> deviceToRectTransform;
 
     private void Awake()
     {
-        smallsized = i14Pro;
-#if UNITY_IOS
-        if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhoneX)
+        deviceToRectTransform = new Dictionary<UnityEngine.iOS.DeviceGeneration, RectTransform>
         {
-            smallsized = iXSXRX;
-        }
-        else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhoneXR)
-        {
-            smallsized = iXSXRX;
-        }
-        else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhoneXS)
-        {
-            smallsized = iXSXRX;
-        }
-        else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhoneXSMax)
-        {
-            smallsized = iXSMax;
-        }
-        else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone11)
-        {
-            smallsized = i11;
-        }
-        else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone11Pro)
-        {
-            smallsized = i12Pro12;
-        }
-        else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone11ProMax)
-        {
-            // smallsized = i14ProMax;
-            smallsized = i12ProMax;
-        }
-        else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone12)
-        {
-            smallsized = i12Pro12;
-        }
-        else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone12Mini)
-        {
-            smallsized = i12Pro12;
-        }
-        else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone12Pro)
-        {
-            smallsized = i12Pro12;
-        }
-        else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone12ProMax)
-        {
-            smallsized = i12ProMax;
-        }
-        else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone13)
-        {
-            smallsized = i12Pro12;
-        }
-        else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone13Mini)
-        {
-            smallsized = i12Pro12;
-        }
-        else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone13Pro)
-        {
-            smallsized = i13Pro;
-        }
-        else if (UnityEngine.iOS.Device.generation == UnityEngine.iOS.DeviceGeneration.iPhone13ProMax)
-        {
-            smallsized = i13ProMax;
-        }
+            { UnityEngine.iOS.DeviceGeneration.iPhoneX, iXSXRX },
+            { UnityEngine.iOS.DeviceGeneration.iPhoneXR, iXSXRX },
+            { UnityEngine.iOS.DeviceGeneration.iPhoneXS, iXSXRX },
+            { UnityEngine.iOS.DeviceGeneration.iPhoneXSMax, iXSMax },
+            { UnityEngine.iOS.DeviceGeneration.iPhone11, i11 },
+            { UnityEngine.iOS.DeviceGeneration.iPhone11Pro, i12Pro12 },
+            { UnityEngine.iOS.DeviceGeneration.iPhone11ProMax, i12ProMax },
+            { UnityEngine.iOS.DeviceGeneration.iPhone12, i12Pro12 },
+            { UnityEngine.iOS.DeviceGeneration.iPhone12Mini, i12Pro12 },
+            { UnityEngine.iOS.DeviceGeneration.iPhone12Pro, i12Pro12 },
+            { UnityEngine.iOS.DeviceGeneration.iPhone12ProMax, i12ProMax },
+            { UnityEngine.iOS.DeviceGeneration.iPhone13, i12Pro12 },
+            { UnityEngine.iOS.DeviceGeneration.iPhone13Mini, i12Pro12 },
+            { UnityEngine.iOS.DeviceGeneration.iPhone13Pro, i13Pro },
+            { UnityEngine.iOS.DeviceGeneration.iPhone13ProMax, i13ProMax },
+        };
+
+        if (deviceToRectTransform.TryGetValue(UnityEngine.iOS.Device.generation, out var size))
+            smallsized = size;
         else
         {
             string modelID = SystemInfo.deviceModel;
             print(modelID);
 
-            if(modelID == "iPhone14,7") smallsized = i12Pro12;
+            /*
+              * iPhone15,4 : iPhone 15
+                iPhone15,5 : iPhone 15 Plus
+                iPhone16,1 : iPhone 15 Pro
+                iPhone16,2 : iPhone 15 Pro Max
+              */
+            if (modelID == "iPhone14,7") smallsized = i12Pro12;
             else if (modelID == "iPhone14,8") smallsized = i12Pro12;
             else if (modelID == "iPhone15,2") smallsized = i14Pro;
             else if (modelID == "iPhone15,3") smallsized = i14ProMax;
@@ -91,16 +56,8 @@ public class IslandSizeController : MonoBehaviour
             else if (modelID == "iPhone16,2") smallsized = i15ProMax;
             else smallsized = i14Pro;
         }
-#endif
     }
-
-    
-    /*
-     * iPhone15,4 : iPhone 15
-       iPhone15,5 : iPhone 15 Plus
-       iPhone16,1 : iPhone 15 Pro
-       iPhone16,2 : iPhone 15 Pro Max
-     */
+ 
     public void Start()
     {
         rect = GetComponent<RectTransform>();
@@ -170,6 +127,5 @@ public class IslandSizeController : MonoBehaviour
         pos.y = rect.sizeDelta.y * -1f / 2f + smallsized.anchoredPosition.y + smallsized.sizeDelta.y / 2f;
         rect.anchoredPosition = pos;
     }
-
 # endif
 }

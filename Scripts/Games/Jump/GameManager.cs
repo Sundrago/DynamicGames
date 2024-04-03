@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Core.Pet;
+using Core.System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -7,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Games.Jump
 {
-    public class GameManager : MonoBehaviour, IMiniGame
+    public class GameManager : MiniGame, IMiniGame
     {
         [Header("Managers and Controllers")] 
         [SerializeField] private SfxController sfxController;
@@ -210,7 +211,7 @@ namespace Games.Jump
         {
             player.gameObject.SetActive(false);
             Time.timeScale = 1f;
-            EndScoreCtrl.Instance.ShowScore(CurrentScore, GameType.jump);
+            GameScoreManager.Instance.ShowScore(CurrentScore, GameType.jump);
             LoadGame();
         }
 
@@ -250,7 +251,7 @@ namespace Games.Jump
                 if (!highFXShown && HighScore > 0)
                 {
                     highFXShown = true;
-                    EndScoreCtrl.Instance.ShowNewHighFX();
+                    GameScoreManager.Instance.ShowNewHighFX();
                 }
 
                 highscore_ui.transform.localScale = new Vector3(1, 1, 1);
@@ -314,7 +315,7 @@ namespace Games.Jump
             inputController.gameObject.SetActive(false);
         }
 
-        public void RestartGame()
+        public override void RestartGame()
         {
             ResetUI();
             Time.timeScale = 1f;
@@ -324,10 +325,10 @@ namespace Games.Jump
             DOTween.Kill(cylindar.transform);
             player.isKinematic = false;
             inputController.gameObject.SetActive(true);
-            EndScoreCtrl.Instance.StartGame(GameType.jump);
+            GameScoreManager.Instance.StartGame(GameType.jump);
         }
 
-        public void ClearGame()
+        public override  void ClearGame()
         {
             ResetUI();
             Time.timeScale = 1f;
@@ -342,20 +343,20 @@ namespace Games.Jump
         {
             CurrentScore = 0;
             UpdateScoreUI(CurrentScore);
-            EndScoreCtrl.Instance.HideScore();
+            GameScoreManager.Instance.HideScore();
         }
 
-        public void OnGameEnter()
+        public override  void OnGameEnter()
         {
             player.gameObject.SetActive(true);
             gameObject.transform.parent.gameObject.SetActive(true);
             tutorial.SetActive(false);
             firstGame = true;
-            EndScoreCtrl.Instance.HideScore();
+            GameScoreManager.Instance.HideScore();
             gameObject.transform.DOScale(new Vector3(1f, 1f, 1f), 1.5f)
                 .OnComplete(() =>
                 {
-                    if (EndScoreCtrl.Instance.GetHighScore(GameType.jump) < 15)
+                    if (GameScoreManager.Instance.GetHighScore(GameType.jump) < 15)
                     {
                         tutorial_cursor.GetComponent<Image>().DOFade(0.5f, 0.5f);
                         tutorial_text.transform.DOScale(Vector3.one, 0.5f);
@@ -370,19 +371,19 @@ namespace Games.Jump
             firstGame = false;
         }
 
-        public void SetPlayer(bool playAsPet, Pet pet = null)
+        public override  void SetPlayer(bool playAsPet, PetController petController = null)
         {
             playerPlaceHolder.SetActive(!playAsPet);
             playerRenderer.gameObject.SetActive(playAsPet);
 
             if (playAsPet)
             {
-                playerRenderer.sprites = pet.GetJumpAnim();
+                playerRenderer.sprites = petController.GetJumpAnim();
                 playerRenderer.GetComponent<SpriteRenderer>().sprite = playerRenderer.sprites[0];
 
-                playerRenderer.gameObject.transform.localRotation = pet.spriteRenderer.transform.localRotation;
-                playerRenderer.gameObject.transform.localPosition = pet.spriteRenderer.transform.localPosition;
-                playerRenderer.gameObject.transform.localScale = pet.spriteRenderer.transform.localScale;
+                playerRenderer.gameObject.transform.localRotation = petController.spriteRenderer.transform.localRotation;
+                playerRenderer.gameObject.transform.localPosition = petController.spriteRenderer.transform.localPosition;
+                playerRenderer.gameObject.transform.localScale = petController.spriteRenderer.transform.localScale;
 
                 playerRenderer.interval = 0.9f / playerRenderer.sprites.Length;
             }

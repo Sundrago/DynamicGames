@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Core.Main;
+using Core.System;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEngine.UI;
@@ -73,7 +74,7 @@ public class SquareBlockCtrl : MonoBehaviour
         if(isNotGame) return;
         DoShineFX(2f);
         DoReveal(2f);
-        AudioManager.Instance.PlaySFXbyTag(SfxTag.block_reveal);
+        AudioManager.Instance.PlaySfxByTag(SfxTag.BlockReveal);
     }
 
     private void DoShineFX(float duration)
@@ -129,7 +130,7 @@ public class SquareBlockCtrl : MonoBehaviour
     public void UnLock()
     {
         if(isNotGame) return;
-        BlockStatusManager.Instance.SetBlockStatus(BlockStatusManager.Instance.GetBlockTypeByGameType(gameType), BlockStatusManager.BlockStatus.unlocked);
+        BlockStatusManager.Instance.SetBlockStatus(BlockStatusManager.Instance.GetBlockTypeByGameType(gameType), BlockStatusManager.BlockStatus.Unlocked);
         lockImage.transform.localPosition = Vector3.zero;
         lockImage.transform.DOShakePosition(0.5f, new Vector3(0.3f, 0.3f, 0));
         lockImage.DOFade(1, 0.5f);

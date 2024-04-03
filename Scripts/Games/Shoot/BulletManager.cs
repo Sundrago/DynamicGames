@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core.System;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -159,7 +160,7 @@ namespace Games.Shoot
         public Sprite sprite;
 
         [VerticalGroup("fx")] public FXType fx;
-        [VerticalGroup("fx")] public SfxTag sfx = SfxTag.shootA;
+        [VerticalGroup("fx")] public SfxTag sfx = SfxTag.ShootTypeA;
 
         [VerticalGroup("value")] public int points = 1;
         [VerticalGroup("value")] public float velocity;

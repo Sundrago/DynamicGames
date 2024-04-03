@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Core.Pet;
+using Core.System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -15,7 +16,6 @@ namespace Core.Main
     {
         [Header("Managers and Controllers")] 
         [SerializeField] private Ranking_UI ranking_UI;
-        [SerializeField] private MainCanvas mainCanvas;
 
         [Header("Game Components")] 
         [SerializeField] private TextMeshPro[] title;
@@ -33,8 +33,10 @@ namespace Core.Main
         private float mouseDownTime, lastShake;
         private Vector2 dragStartPosition, dragDeltaPosition;
         private Color transparentColor;
+        
         private SquareBlockCtrl squareBlockCtrl;
         private Rigidbody2D rigidbody2D;
+        private MainCanvas mainCanvas;
         
         [Header("Constants")] 
         private const float HideTitleDelay = 0.5f;
@@ -47,6 +49,7 @@ namespace Core.Main
             if (started) return;
             squareBlockCtrl = GetComponent<SquareBlockCtrl>();
             rigidbody2D = GetComponent<Rigidbody2D>();
+            mainCanvas = MainCanvas.Instance;
             InitPosition();
             InitColor();
             started = true;
@@ -245,7 +248,7 @@ namespace Core.Main
             if (squareBlockCtrl != null && squareBlockCtrl.isLocked && !squareBlockCtrl.isNotGame)
             {
                 UnlockBtnManager.Instance.Init(this);
-                AudioManager.Instance.PlaySFXbyTag(SfxTag.unable);
+                AudioManager.Instance.PlaySfxByTag(SfxTag.Unable);
                 TutorialManager.Instancee.DragSpriteBtnClicked();
                 isButtonSelected = false;
                 return true;
@@ -367,23 +370,23 @@ namespace Core.Main
             ShakePets(pets);
         }
         
-        private List<Pet.Pet> GetActivePets()
+        private List<Pet.PetController> GetActivePets()
         {
-            var activePets = new List<Pet.Pet>();
-            foreach (var petData in PetManager.Instance.GetActivePetDatas())
+            var activePets = new List<Pet.PetController>();
+            foreach (var petData in PetManager.Instance.GetActivePetConfigs())
             {
                 bool isActive = petData.obj.activeSelf;
-                bool isOnCurrentCorner = petData.obj.GetComponent<SurfaceMovement2D>().currentCorner.obj == gameObject;
+                bool isOnCurrentCorner = petData.obj.GetComponent<SurfaceMovement2D>().currentLocation.obj == gameObject;
                 if (isActive && isOnCurrentCorner)
                 {
-                    Pet.Pet pet = petData.obj.GetComponent<Pet.Pet>();
-                    activePets.Add(pet);
+                    Pet.PetController petController = petData.obj.GetComponent<Pet.PetController>();
+                    activePets.Add(petController);
                 }
             }
             return activePets;
         }
 
-        private void ShakePets(List<Pet.Pet> pets)
+        private void ShakePets(List<Pet.PetController> pets)
         {
             float threshold = pets.Count < 3 ? 1 : 2.5f / pets.Count;
             foreach (var pet in pets)

@@ -1,34 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using Febucci.UI;
-using Sirenix.OdinInspector;
-using TMPro;
 using UnityEngine;
 
 namespace Core.Pet
 {
     public class PetEndScoreMotionCtrl : MonoBehaviour
     {
-        [SerializeField] private SpriteAnimator spriteAnimator;
-        [SerializeField] private Transform dialogueHolder;
-        [SerializeField] private TypewriterByCharacter typewriter;
+        [Header("Managers and Controllers")] 
         [SerializeField] private PetManager petManager;
         [SerializeField] private PetDialogueManager petDialogueManager;
 
-        [Button]
-        public void Init(PetType type, PetDialogueManager.PetScoreType scoreType)
+        [Header("UI Components")] 
+        [SerializeField] private SpriteAnimator spriteAnimator;
+        [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private Transform dialogueHolder;
+        [SerializeField] private TypewriterByCharacter typewriter;
+
+
+        public void Init(PetType type, PetScoreType scoreType)
         {
-            Pet pet = petManager.GetPetDataByType(type).obj.GetComponent<Pet>();
+            var petController = petManager.GetPetDataByType(type).obj.GetComponent<PetController>();
 
-            pet.SetSpriteAnimatorIdleAnimation(spriteAnimator);
+            petController.SetSpriteAnimatorIdleAnimation(spriteAnimator);
 
-            spriteAnimator.GetComponent<SpriteRenderer>().sprite = spriteAnimator.sprites[0];
-            spriteAnimator.gameObject.transform.localRotation = pet.spriteRenderer.transform.localRotation;
-            spriteAnimator.gameObject.transform.localPosition = pet.spriteRenderer.transform.localPosition;
-            spriteAnimator.gameObject.transform.localScale = pet.spriteRenderer.transform.localScale;
+            spriteRenderer.sprite = spriteAnimator.sprites[0];
+            spriteAnimator.gameObject.transform.localRotation = petController.spriteRenderer.transform.localRotation;
+            spriteAnimator.gameObject.transform.localPosition = petController.spriteRenderer.transform.localPosition;
+            spriteAnimator.gameObject.transform.localScale = petController.spriteRenderer.transform.localScale;
 
-            spriteAnimator.interval = pet.GetInterval();
+            spriteAnimator.interval = petController.GetInterval();
 
             dialogueHolder.localScale = Vector3.zero;
             dialogueHolder.DOScale(1, 0.5f).SetEase(Ease.OutBack);

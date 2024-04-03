@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+using Core.System;
+using DG.Tweening;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Rendering;
-using DG.Tweening;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Core.Pet
@@ -12,13 +11,14 @@ namespace Core.Pet
     {
         private const float Anim2DelaySeconds = 5.2f;
         private const float CompleteDelaySeconds = 7f;
-        
-        [Header("Managers and Controllers")] 
-        [SerializeField] private SfxController soundFxController;
-        [SerializeField] private NewPetAnim_IntroSequence petAnim1IntroSequence;
-        [SerializeField] private NewPetAnim_PreviewSequence petAnim2PreviewSequence;
-        [SerializeField] private SpriteAnimator petSpriteAnimator; 
-        
+
+        [Header("Managers and Controllers")] [SerializeField]
+        private SfxController soundFxController;
+
+        [SerializeField] private NewPetAnimIntroSequence newPetAnimIntroSequence;
+        [SerializeField] private NewPetAnimPreviewSequence newPetAnimPreviewSequence;
+        [SerializeField] private SpriteAnimator petSpriteAnimator;
+
         [Header("Game Components")] 
         [SerializeField] private Volume postProcessingGlowVolume;
         [SerializeField] private AudioSource audioSource;
@@ -26,12 +26,12 @@ namespace Core.Pet
 
         private bool isAnimationComplete;
         private PetType selectedPetType;
-        
-        [Sirenix.OdinInspector.Button]
+
+        [Button]
         public void Init(PetType petType)
         {
             SetInitialSettings(petType);
-            
+
             InitiateAnimation1();
             InitiateAnimation2();
         }
@@ -39,9 +39,9 @@ namespace Core.Pet
         private Sprite[] GetPetWalkAnim()
         {
             var petData = PetManager.Instance.GetPetDataByType(selectedPetType).obj;
-            return petData.GetComponent<Pet>().GetWalkAnim();
+            return petData.GetComponent<PetController>().GetWalkAnim();
         }
-        
+
         private void SetInitialSettings(PetType petType)
         {
             soundFxController.PauseBGM();
@@ -52,18 +52,18 @@ namespace Core.Pet
 
             audioSource.Play();
             postProcessingGlowVolume.weight = 0;
-            petAnim1IntroSequence.gameObject.SetActive(false);
-            petAnim2PreviewSequence.gameObject.SetActive(false);
+            newPetAnimIntroSequence.gameObject.SetActive(false);
+            newPetAnimPreviewSequence.gameObject.SetActive(false);
             backgroundImage.color = Color.white;
-            
+
             backgroundImage.DOColor(Color.black, 2f);
             petSpriteAnimator.sprites = GetPetWalkAnim();
         }
 
         private void InitiateAnimation1()
         {
-            petAnim1IntroSequence.Init(PetDialogueManager.Instance.GetWelcomeString(selectedPetType));
-            DOVirtual.Float(0f, 1f, 2f, (x) => { postProcessingGlowVolume.weight = x; });
+            newPetAnimIntroSequence.Init(PetDialogueManager.Instance.GetWelcomeString(selectedPetType));
+            DOVirtual.Float(0f, 1f, 2f, x => { postProcessingGlowVolume.weight = x; });
         }
 
         private void InitiateAnimation2()
@@ -71,14 +71,15 @@ namespace Core.Pet
             DOVirtual.DelayedCall(Anim2DelaySeconds,
                 () =>
                 {
-                    petAnim2PreviewSequence.Init(selectedPetType.ToString().ToUpper(), PetDialogueManager.Instance.GetDescrString(selectedPetType),
+                    newPetAnimPreviewSequence.Init(selectedPetType.ToString().ToUpper(),
+                        PetDialogueManager.Instance.GetDescrString(selectedPetType),
                         PetDialogueManager.Instance.GetRank(selectedPetType).ToString());
                 });
-            DOVirtual.Float(1f, 0.55f, 1f, (x) => { postProcessingGlowVolume.weight = x; }).SetDelay(Anim2DelaySeconds);
+            DOVirtual.Float(1f, 0.55f, 1f, x => { postProcessingGlowVolume.weight = x; }).SetDelay(Anim2DelaySeconds);
 
             DOVirtual.DelayedCall(CompleteDelaySeconds, () =>
             {
-                soundFxController.UnPauseBGM();
+                soundFxController.ResumeBGM();
                 isAnimationComplete = true;
             });
         }
@@ -89,7 +90,7 @@ namespace Core.Pet
 
             gameObject.transform.DOMoveY(-3000, 1f).SetEase(Ease.InOutExpo)
                 .OnComplete(() => { gameObject.SetActive(false); });
-            DOVirtual.Float(0.55f, 0, 0.6f, (x) => { postProcessingGlowVolume.weight = x; });
+            DOVirtual.Float(0.55f, 0, 0.6f, x => { postProcessingGlowVolume.weight = x; });
         }
     }
 }

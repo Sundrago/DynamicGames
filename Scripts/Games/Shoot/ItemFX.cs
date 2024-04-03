@@ -1,3 +1,4 @@
+using Core.System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -26,7 +27,7 @@ namespace Games.Shoot
         {
             if (Time.frameCount % 10 == 0)
             {
-                if (type == FXType.blackhole || type == FXType.Bomb) KillEnemy();
+                if (type == FXType.Blackhole || type == FXType.Bomb) KillEnemy();
                 else if (type == FXType.ShadowBomb) KillPlayer();
             }
         }
@@ -49,7 +50,7 @@ namespace Games.Shoot
                         enemyController.KillEnemy(0.5f);
                         enemyController.transform.DOMove(gameObject.transform.position, Random.Range(1f, 2.5f))
                             .SetEase(Ease.InSine);
-                        audioManager.PlaySFXbyTag(SfxTag.enemy_dead_blackHole);
+                        audioManager.PlaySfxByTag(SfxTag.EnemyDeadBlackHole);
                     }
             }
         }

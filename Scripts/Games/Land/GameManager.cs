@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Core.Pet;
+using Core.System;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -10,7 +11,7 @@ namespace Games.Land
     /// <summary>
     /// Responsible for managing the game logic and components of the game.
     /// </summary>
-    public class GameManager : SerializedMonoBehaviour, IMiniGame
+    public class GameManager : MiniGame, IMiniGame
     {
 
         [Header("Managers and Controllers")] 
@@ -68,7 +69,7 @@ namespace Games.Land
             HandleGameStatus();
         }
 
-        public void ClearGame()
+        public override void ClearGame()
         {
             playerRenderer.PauseAnim();
             rocket.transform.position = initialRocketPos;
@@ -76,46 +77,41 @@ namespace Games.Land
             RocketIsReady();
             OnGameEnter();
             bgAnimator.RemoveCircles();
-            EndScoreCtrl.Instance.HideScore();
+            GameScoreManager.Instance.HideScore();
             isInitialLaunch = true;
             hasRevived = false;
         }
-
-        public void RestartGame()
-        {
-            OnGameEnter();
-        }
-
-        public void OnGameEnter()
+        
+        public override void OnGameEnter()
         {
             playing = true;
             LoadStage(1);
             stageLevelAnimator.PlayAnim();
             score = 0;
-            EndScoreCtrl.Instance.HideScore();
+            GameScoreManager.Instance.HideScore();
             isInitialLaunch = true;
             hasRevived = false;
         }
 
         [Button]
-        public void SetPlayer(bool playAsPet, Pet pet = null)
+        public override void SetPlayer(bool playAsPet, PetController petController = null)
         {
             playerPlaceHolder.SetActive(!playAsPet);
             playerRenderer.gameObject.SetActive(playAsPet);
 
             if (playAsPet)
             {
-                playerRenderer.sprites = pet.GetShipAnim();
+                playerRenderer.sprites = petController.GetShipAnim();
                 playerRenderer.GetComponent<Image>().sprite = playerRenderer.sprites[0];
 
-                playerRenderer.gameObject.transform.localRotation = pet.spriteRenderer.transform.localRotation;
+                playerRenderer.gameObject.transform.localRotation = petController.spriteRenderer.transform.localRotation;
 
-                if (CustomPetPos.ContainsKey(pet.GetType()))
-                    playerRenderer.gameObject.transform.localPosition = CustomPetPos[pet.GetType()];
+                if (CustomPetPos.ContainsKey(petController.GetType()))
+                    playerRenderer.gameObject.transform.localPosition = CustomPetPos[petController.GetType()];
                 else
-                    playerRenderer.gameObject.transform.localPosition = pet.spriteRenderer.transform.localPosition;
+                    playerRenderer.gameObject.transform.localPosition = petController.spriteRenderer.transform.localPosition;
 
-                playerRenderer.gameObject.transform.localScale = pet.spriteRenderer.transform.localScale;
+                playerRenderer.gameObject.transform.localScale = petController.spriteRenderer.transform.localScale;
 
                 playerRenderer.interval = 0.9f / playerRenderer.sprites.Length;
             }
@@ -259,14 +255,14 @@ namespace Games.Land
 
             screenShakeAnimator.SetTrigger("up");
             stageLevelAnimator.NextLevel();
-            AudioManager.Instance.PlaySFXbyTag(SfxTag.rocket_clear);
+            AudioManager.Instance.PlaySfxByTag(SfxTag.RocketClear);
         }
 
         private void OnFailed()
         {
             playerRenderer.PauseAnim();
             particleFXManager.PlayFailedFx(rocket.transform, failPosition);
-            FXManager.Instance.CreateFX(FXType.rocketHit, failPosition);
+            FXManager.Instance.CreateFX(FXType.RocketHit, failPosition);
             bgAnimator.RemoveCircles();
             screenShakeAnimator.SetTrigger("large");
 
@@ -278,7 +274,7 @@ namespace Games.Land
         {
             stageLevelAnimator.SetLevel(1);
             score = currentLevel;
-            EndScoreCtrl.Instance.ShowScore(score, GameType.land);
+            GameScoreManager.Instance.ShowScore(score, GameType.land);
             rocketCanvas.SetTrigger("ending");
             hasRevived = false;
         }
@@ -344,21 +340,25 @@ namespace Games.Land
             }
             else
             {
-                if (EndScoreCtrl.Instance.GetHighScore(GameType.land) <= 1 &&
-                    EndScoreCtrl.Instance.GetHighScore(GameType.land) < 4) uiManager.ShowTutorial();
+                if (GameScoreManager.Instance.GetHighScore(GameType.land) <= 1 &&
+                    GameScoreManager.Instance.GetHighScore(GameType.land) < 4) uiManager.ShowTutorial();
             }
         }
-
-
-        public void PlayAgain()
+        
+        public void ResetGame()
         {
-            EndScoreCtrl.Instance.HideScore();
+            GameScoreManager.Instance.HideScore();
             rocketCanvas.SetTrigger("retry");
             bgAnimator.RemoveCircles();
             LoadStage(1);
             rocket.enabled = true;
             rocket.SetTrigger("begin");
             isInitialLaunch = true;
+        }
+        
+        public override void RestartGame()
+        {
+            ResetGame();
         }
     }
 }

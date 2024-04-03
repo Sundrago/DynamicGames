@@ -1,3 +1,4 @@
+using Core.System;
 using TMPro;
 using UnityEngine;
 
@@ -24,7 +25,7 @@ namespace Games.Land
         public void PlayAnim()
         {
             gameObject.GetComponent<Animator>().SetTrigger("show");
-            AudioManager.Instance.PlaySFXbyTag(SfxTag.rocket_newLevel);
+            AudioManager.Instance.PlaySfxByTag(SfxTag.RocketNewLevel);
         }
 
         public void HideAnim()

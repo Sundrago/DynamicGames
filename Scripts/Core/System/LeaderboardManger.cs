@@ -1,230 +1,245 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.SocialPlatforms;
+using Random = UnityEngine.Random;
 #if UNITY_IOS
 using UnityEngine.SocialPlatforms.GameCenter;
 #endif
-using UnityEngine.Networking;
-using MyUtility;
-using System.Threading.Tasks;
-using Sirenix.OdinInspector;
-using TMPro;
-using Random = System.Random;
-//public enum leaderboard_ids {score_land, score_jump, score_build, score_shoot};
 
-public class LeaderboardManger : MonoBehaviour
-{
-    [SerializeField]
-    private Ranking_UI rangking_ui;
-    private const string dataURL = "https://data.sundragon.net/dynamic_games_data.csv";
-    [SerializeField]
-    private RankingManager rankingManager;
-    [SerializeField]
-    private TextMeshProUGUI DebugText_ui;
-
-    private List<ILeaderboard> leaderboards;
-    //private Dictionary<string, string> CSVData = new Dictionary<string, string>();
-
-    public enum LoadStatus { loading, success, fail }
-    public LoadStatus status;
-    private LoadStatus gameCenterStatus, sundragonNetStatus;
-    private const float timeoutTime = 10f;
-
-    public bool debug_randomRank = false;
-    
-    public ILeaderboard GetLeaderboardByGameType(GameType gameType)
+namespace Core.System{
+    public class LeaderboardManger : MonoBehaviour
     {
-        foreach (ILeaderboard leaderboard in leaderboards)
+        [SerializeField] private Ranking_UI rangking_ui;
+        [SerializeField] private RankingManager rankingManager;
+        [SerializeField] private TextMeshProUGUI DebugText_ui;
+
+        private const string DataURL = "https://data.sundragon.net/dynamic_games_data.csv";
+        private const float TimeoutTime = 10f;
+
+        public LoadStatus status;
+        public bool debug_randomRank { get; set; }
+        private LoadStatus gameCenterStatus, sundragonNetStatus;
+        private List<ILeaderboard> leaderboards;
+
+        public void Start()
         {
-            string id = "score_" + gameType;
-            if (leaderboard.id == id) return leaderboard;
+            debug_randomRank = false;
+            StartCoroutine(GetDataFromServers());
         }
-        Debug.Log("Leaderboard not found : " + gameType);
-        return null;
-    }
 
-    [Button]
-    public void ReportScore(int score, GameType gameType)
-    {
-        string id = "score_" + gameType;
-        Debug.Log("Reporting score " + score + " on leaderboard " + id.ToString());
-        Social.ReportScore(score, id, success => {
-            if (!success)
+        public ILeaderboard GetLeaderboardByGameType(GameType gameType)
+        {
+            foreach (var leaderboard in leaderboards)
             {
-                // PlayerPrefs.SetInt("rank_" + gameType, -1);
-                Debug.Log("Reporting score " + score + " to leaderboard " + id.ToString() + ": failed");
-                return;
+                var id = "score_" + gameType;
+                if (leaderboard.id == id) return leaderboard;
             }
-            
-            ILeaderboard leaderboard = GetLeaderboardByGameType(gameType);
-            leaderboard.LoadScores(success => {
+
+            Debug.Log("Leaderboard not found : " + gameType);
+            return null;
+        }
+
+        public void ReportScore(int score, GameType gameType)
+        {
+            var id = "score_" + gameType;
+            Social.ReportScore(score, id, success =>
+            {
                 if (!success)
                 {
-                    Debug.Log("Loading score " + score + " to leaderboard " + id.ToString() + ": failed");
+                    Debug.Log("Reporting score " + score + " to leaderboard " + id + ": failed");
                     return;
                 }
-                int rank = leaderboard.localUserScore.rank;
-                rangking_ui.gameObject.SetActive(true);
-                StartCoroutine(rangking_ui.ShowRankingUI(gameType, true));
-                
-                if(rank < PlayerPrefs.GetInt("rank_" + gameType))
+
+                var leaderboard = GetLeaderboardByGameType(gameType);
+                leaderboard.LoadScores(success =>
                 {
-                    PlayerPrefs.SetInt("rank_" + gameType, rank);
+                    if (!success)
+                    {
+                        Debug.Log("Loading score " + score + " to leaderboard " + id + ": failed");
+                        return;
+                    }
+
+                    var rank = leaderboard.localUserScore.rank;
+                    rangking_ui.gameObject.SetActive(true);
+                    StartCoroutine(rangking_ui.ShowRankingUI(gameType, true));
+
+                    if (rank < PlayerPrefs.GetInt("rank_" + gameType)) PlayerPrefs.SetInt("rank_" + gameType, rank);
+                });
+            });
+        }
+
+        public void OpenLeaderboard()
+        {
+            Social.ShowLeaderboardUI();
+        }
+
+        public void OpenLeaderboardAt(GameType gameType)
+        {
+            var id = "score_" + gameType;
+#if UNITY_IOS
+            GameCenterPlatform.ShowLeaderboardUI(id, TimeScope.AllTime);
+#endif
+        }
+
+        public IEnumerator GetDataFromServers()
+        {
+            ResetServerStatuses();
+
+            var startTime = Time.time;
+            while (status == LoadStatus.Loading &&
+                   (gameCenterStatus == LoadStatus.Loading || sundragonNetStatus == LoadStatus.Loading))
+            {
+                if (Time.time - startTime > TimeoutTime) status = LoadStatus.Failed;
+                yield return new WaitForSeconds(0.2f);
+            }
+
+            status = gameCenterStatus == LoadStatus.Success && sundragonNetStatus == LoadStatus.Success
+                ? LoadStatus.Success
+                : LoadStatus.Failed;
+
+            if (status == LoadStatus.Success)
+            {
+                StartCoroutine(rankingManager.UpdateRanks());
+                rangking_ui.Close();
+            }
+        }
+
+        private void ResetServerStatuses()
+        {
+            DebugText_ui.text = "";
+            status = LoadStatus.Loading;
+            gameCenterStatus = LoadStatus.Loading;
+            sundragonNetStatus = LoadStatus.Loading;
+
+            StartCoroutine(GetDataFromGameCenter());
+            StartCoroutine(GetDataFromSunDragonNet());
+        }
+
+        private IEnumerator GetDataFromGameCenter()
+        {
+            var debugString = "";
+            leaderboards = new List<ILeaderboard>();
+
+            Social.localUser.Authenticate(success =>
+            {
+                if (success)
+                {
+                    HandleAuthSuccess(ref debugString);
+                }
+                else
+                {
+                    HandleAuthFailed(ref debugString);
                 }
             });
-        });
-    }
 
-    public void OpenLeaderboard()
-    {
-        Social.ShowLeaderboardUI();
-    }
-    
-    public void OpenLeaderboardAt(GameType gameType)
-    {
-        string id = "score_" + gameType;
-#if UNITY_IOS
-        GameCenterPlatform.ShowLeaderboardUI(id.ToString(), TimeScope.AllTime);
-#endif
-    }
-
-    public void Start()
-    {
-        debug_randomRank = false;
-        StartCoroutine(GetDataFromServers());
-    }
-    
-    public IEnumerator GetDataFromServers()
-    {
-        DebugText_ui.text = "";
-        status = LoadStatus.loading;
-        
-        gameCenterStatus = LoadStatus.loading;
-        sundragonNetStatus = LoadStatus.loading;
-        
-        StartCoroutine(GetDataFromGameCenter());
-        StartCoroutine(GetDataFromSunDragonNet());
-
-        float startTime = Time.time;
-        while (status == LoadStatus.loading && (gameCenterStatus == LoadStatus.loading || sundragonNetStatus == LoadStatus.loading))
-        {
-            if (Time.time - startTime > timeoutTime) status = LoadStatus.fail;
-            yield return new WaitForSeconds(0.2f);
-        }
-
-        status = (gameCenterStatus == LoadStatus.success && sundragonNetStatus == LoadStatus.success) ? LoadStatus.success : LoadStatus.fail;
-        Debug.Log("BothSatus : " + status.ToString());
-
-        if (status == LoadStatus.success)
-        {
-            StartCoroutine(rankingManager.UpdatetRanks());
-            rangking_ui.Close();
-        }
-    }
-    
-    IEnumerator GetDataFromGameCenter()
-    {
-        string debugString = "";
-        leaderboards = new List<ILeaderboard>();
-        
-        Social.localUser.Authenticate(success => {
-            if (success)
+            var startTime = Time.time;
+            while (gameCenterStatus == LoadStatus.Loading)
             {
-                rangking_ui.Close();
-                
-                debugString = "GameCenter Authentication Success" + 
-                              "\nUsername: " + Social.localUser.userName + 
-                              "\nUser ID: " + Social.localUser.id + 
-                              "\nIsUnderage: " + Social.localUser.underage;
-                
-                leaderboards = new List<ILeaderboard>();
-                foreach(GameType gameType in Enum.GetValues(typeof(GameType)))
+                if (Time.time - startTime > TimeoutTime)
                 {
-                    string id = "score_" + gameType;
-                    ILeaderboard leaderboard  = Social.CreateLeaderboard();
-                    leaderboard.id = id;
-                    leaderboard.LoadScores(result =>
-                    {
-                        if (!result)
-                        {
-                            debugString += "\nLoading score in leaderboard " + id.ToString() + ": failed";
-                            PlayerPrefs.SetInt("rank_" + gameType.ToString(), -1);
-                            return;
-                        }
-                        
-                        leaderboards.Add(leaderboard);
-                        int rank = leaderboard.localUserScore.rank;
-                        if(debug_randomRank) rank = UnityEngine.Random.Range(100,0);
-                        PlayerPrefs.SetInt("rank_" + gameType.ToString(), rank);
-                        
-                        int highScorePref = PlayerPrefs.GetInt("highscore_" + gameType);
-                        int highScoreGC = (int)leaderboard.localUserScore.value;
-                        if(highScorePref < highScoreGC) PlayerPrefs.SetInt("highscore_" + gameType, highScoreGC);
-
-                        if (leaderboards.Count == Enum.GetValues(typeof(GameType)).Length)
-                            gameCenterStatus = LoadStatus.success;
-                    });
+                    debugString = "GameCenter Authentication failed : Timeout";
+                    gameCenterStatus = LoadStatus.Failed;
                 }
+
+                yield return new WaitForSeconds(0.2f);
+            }
+
+            DebugText_ui.text += debugString;
+            Debug.Log(debugString);
+        }
+
+
+        private void HandleAuthSuccess(ref string debugString)
+        {
+            rangking_ui.Close();
+
+            debugString = "GameCenter Authentication Success" +
+                          "\nUsername: " + Social.localUser.userName +
+                          "\nUser ID: " + Social.localUser.id +
+                          "\nIsUnderage: " + Social.localUser.underage;
+
+            leaderboards = new List<ILeaderboard>();
+            foreach (GameType gameType in Enum.GetValues(typeof(GameType)))
+            {
+                var id = "score_" + gameType;
+                var leaderboard = Social.CreateLeaderboard();
+                leaderboard.id = id;
+                leaderboard.LoadScores(result =>
+                {
+                    if (!result)
+                    {
+                        PlayerPrefs.SetInt("rank_" + gameType, -1);
+                        return;
+                    }
+
+                    leaderboards.Add(leaderboard);
+                    var rank = leaderboard.localUserScore.rank;
+                    if (debug_randomRank) rank = Random.Range(100, 0);
+                    PlayerPrefs.SetInt("rank_" + gameType, rank);
+
+                    var highScorePref = PlayerPrefs.GetInt("highscore_" + gameType);
+                    var highScoreGC = (int)leaderboard.localUserScore.value;
+                    if (highScorePref < highScoreGC) PlayerPrefs.SetInt("highscore_" + gameType, highScoreGC);
+
+                    if (leaderboards.Count == Enum.GetValues(typeof(GameType)).Length)
+                        gameCenterStatus = LoadStatus.Success;
+                });
+            }
+        }
+
+        private void HandleAuthFailed(ref string debugString)
+        {
+            rangking_ui.SetUI(Ranking_UI.RankUIPage.Failed);
+            gameCenterStatus = LoadStatus.Failed;
+            debugString = "GameCenter Authentication failed";
+        }
+
+        private IEnumerator GetDataFromSunDragonNet()
+        {
+            var debugString = "\nConnecting to sundragon.net : ";
+            var request = UnityWebRequest.Get(DataURL);
+
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.ConnectionError ||
+                request.result == UnityWebRequest.Result.ProtocolError)
+            {
+                debugString += "failed\n" +
+                               request.error;
+                sundragonNetStatus = LoadStatus.Failed;
+                rangking_ui.SetUI(Ranking_UI.RankUIPage.Failed);
             }
             else
             {
-                rangking_ui.SetUI(Ranking_UI.RankUIPage.Failed);
-                gameCenterStatus = LoadStatus.fail;
-                debugString = "GameCenter Authentication failed";
-            }
-        });
+                debugString += "success";
 
-        float startTime = Time.time;
-        while (gameCenterStatus == LoadStatus.loading)
-        {
-            if (Time.time - startTime > timeoutTime)
-            {
-                debugString = "GameCenter Authentication failed : Timeout";
-                gameCenterStatus = LoadStatus.fail;
+                var data = request.downloadHandler.text;
+                var rows = data.Split('\n');
+
+                foreach (var row in rows)
+                {
+                    var cols = row.Split(',');
+                    if (cols[0] == "") continue;
+                    PlayerPrefs.SetString(cols[0], cols[1]);
+                    debugString += "\n " + cols[0] + " : " + cols[1];
+                }
+
+                sundragonNetStatus = LoadStatus.Success;
             }
-            yield return new WaitForSeconds(0.2f);
+
+            DebugText_ui.text += debugString;
+            Debug.Log(debugString);
         }
 
-        DebugText_ui.text += debugString;
-        Debug.Log(debugString);
-    }
-
-    
-    IEnumerator GetDataFromSunDragonNet()
-    {
-        string debugString = "\nConnecting to sundragon.net : ";
-        UnityWebRequest request = UnityWebRequest.Get(dataURL);
-
-        yield return request.SendWebRequest();
-
-        if(request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+        public enum LoadStatus
         {
-            debugString += "failed\n" +
-                           request.error;
-            sundragonNetStatus = LoadStatus.fail;
-            rangking_ui.SetUI(Ranking_UI.RankUIPage.Failed);
+            Loading,
+            Success,
+            Failed
         }
-        else
-        {
-            debugString += "success!";
-            
-            string data = request.downloadHandler.text;
-            string[] rows = data.Split('\n');
-            
-            foreach(string row in rows)
-            {
-                string[] cols = row.Split(',');
-                if(cols[0] == "") continue;
-                //if(!CSVData.ContainsKey(cols[0])) CSVData.Add(cols[0], cols[1]);
-                PlayerPrefs.SetString(cols[0], cols[1]);
-                debugString += ("\n " + cols[0] + " : " + cols[1]);
-            }
-            sundragonNetStatus = LoadStatus.success;
-        }
-        
-        DebugText_ui.text += debugString;
-        Debug.Log(debugString);
     }
 }

@@ -13,10 +13,17 @@ namespace MyUtility
         settings_bgm,
         settings_sfx,
         AskForUserReviewStatus,
-        totalTicketCount
+        totalTicketCount,
+        language,
+        totalScoreCount,
     }
     static class PlayerData
     {
+        public static bool HasKey(DataKey key)
+        {
+            return PlayerPrefs.HasKey(key.ToString());
+            
+        }
         public static string GetString(DataKey key, string defaultValue = "")
         {
             return PlayerPrefs.GetString(key.ToString(), defaultValue);

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Core.Pet;
+using Core.System;
 using DG.Tweening;
 using MyUtility;
 using TMPro;
@@ -13,7 +14,7 @@ namespace Games.Build
     /// <summary>
     ///     Game manager for the Build mini game.
     /// </summary>
-    public class GameManager : MonoBehaviour, IMiniGame
+    public class GameManager : MiniGame, IMiniGame
     {
         [Header("Managers and Controllers")] 
         [SerializeField] private StageManager stageManager;
@@ -29,7 +30,7 @@ namespace Games.Build
         [Header("GamePlay Status")] 
         [SerializeField] private int[] stageIndices;
         private GameplayStatus gameplayStatus;
-        private Pet player;
+        private PetController player;
         private readonly List<StageItem> stageItems = new();
         private List<StageItem> currentItems = new();
 
@@ -54,36 +55,36 @@ namespace Games.Build
             if (stageItems.Count > 0) ManageStageItems();
         }
 
-        public void OnGameEnter()
+        public override void OnGameEnter()
         {
             ResetGame();
             CalculateInitialHitHeight();
             ShowTutorialIfNeeded();
         }
 
-        public void RestartGame()
+        public override void RestartGame()
         {
             ClearGame();
             uiComponents.mainCanvas.SetTrigger("retry");
             LoadStage(true);
         }
 
-        public void ClearGame()
+        public override void ClearGame()
         {
             ClearStageItems(stageItems);
             ClearStageItems(currentItems);
 
-            EndScoreCtrl.Instance.HideScore();
+            GameScoreManager.Instance.HideScore();
             stageComponents.hearts.gameObject.SetActive(false);
             gameplayStatus.hasRevived = false;
         }
 
-        public void SetPlayer(bool playAsPet, Pet pet = null)
+        public override void SetPlayer(bool playAsPet, PetController petController = null)
         {
             if (player != null) Destroy(player.gameObject);
             if (playAsPet)
             {
-                player = Instantiate(pet, stageComponents.playerHolder);
+                player = Instantiate(petController, stageComponents.playerHolder);
                 player.gameObject.transform.localScale *= 350f;
                 player.gameObject.SetActive(true);
             }
@@ -398,7 +399,7 @@ namespace Games.Build
         private void ShowScore()
         {
             uiComponents.mainCanvas.SetTrigger("ending");
-            EndScoreCtrl.Instance.ShowScore(gameplayStatus.highScore, GameType.build);
+            GameScoreManager.Instance.ShowScore(gameplayStatus.highScore, GameType.build);
             stageComponents.hearts.Show(false);
             gameplayStatus.hasRevived = false;
         }
@@ -511,7 +512,7 @@ namespace Games.Build
 
         private void ShowTutorialIfNeeded()
         {
-            if (EndScoreCtrl.Instance.GetHighScore(GameType.build) < MaxHeartCount) ShowTutorial();
+            if (GameScoreManager.Instance.GetHighScore(GameType.build) < MaxHeartCount) ShowTutorial();
         }
 
         private void ShowTutorial()

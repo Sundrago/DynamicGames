@@ -1,70 +1,78 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using MyUtility;
+using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
-public class DailyTicketRewardsManager : MonoBehaviour
+namespace Core.System
 {
-    [SerializeField] private Image TVICon;
-    [SerializeField] private Sprite off, on;
-    private int adCount = 0;
+    public class DailyTicketRewardsManager : MonoBehaviour
+    {
+        [Header("UI Elements")] [SerializeField]
+        private Image TVIcon;
 
-    public void Init()
-    {
-        UpdateAdCountAndDate();
-        UpdateTVICon();
-    }
-    
-    private void UpdateAdCountAndDate()
-    {
-        DateTime today = DateTime.Now;
-        string adDateString = MyUtility.PlayerData.GetString(DataKey.adDate, Converter.DateTimeToString(today.AddDays(-1)));
-        adCount = MyUtility.PlayerData.GetInt(DataKey.adCount, 0);
-        DateTime adDate = Converter.StringToDateTime(adDateString);
-        if (today.Date != adDate.Date)
+        [SerializeField] private Sprite off, on;
+
+        private const int MaxAdCount = 3;
+        private int adCount;
+
+
+        public void Init()
         {
-            ResetAdCount();
-            MyUtility.PlayerData.SetString(DataKey.adDate, Converter.DateTimeToString(today));
+            UpdateAdCountAndDate();
+            UpdateIconBasedOnAdCount();
         }
-    }
 
-    private void ResetAdCount()
-    {
-        adCount = 0;
-        MyUtility.PlayerData.SetInt(DataKey.adCount, adCount);
+        private void UpdateAdCountAndDate()
+        {
+            var today = DateTime.Now;
+            var adDateString = PlayerData.GetString(DataKey.adDate, Converter.DateTimeToString(today.AddDays(-1)));
+            adCount = PlayerData.GetInt(DataKey.adCount);
+            var adDate = Converter.StringToDateTime(adDateString);
+            if (today.Date != adDate.Date)
+            {
+                ResetAdCount();
+                PlayerData.SetString(DataKey.adDate, Converter.DateTimeToString(today));
+            }
+        }
+
+        private void ResetAdCount()
+        {
+            adCount = 0;
+            PlayerData.SetInt(DataKey.adCount, adCount);
 #if !UNITY_EDITOR
     FirebaseAnalytics.LogEvent("Ads", "DailyAdsCount", adCount);
 #endif
-    }
-
-    private void UpdateTVICon()
-    {
-        TVICon.sprite = adCount >= 3 ? off : on;
-    }
-    
-    public void WatchAdsBtnClicked()
-    {
-        if (adCount >= 3)
-        {
-            PopupTextManager.Instance.ShowOKPopup("[AdsCountExceed]");
-            return;
         }
 
-        TVICon.sprite = adCount >= 3 ? off : on;
-        MyUtility.PlayerData.SetInt(DataKey.adCount, adCount);
+        private void UpdateIconBasedOnAdCount()
+        {
+            TVIcon.sprite = adCount >= MaxAdCount ? off : on;
+        }
 
-        string output = Localize.GetLocalizedString("[watchAds]") + " (" + adCount + "/3)";
-        PopupTextManager.Instance.ShowYesNoPopup(output, () => { ADManager.Instance.ShowAds(DailyTicketRewards, null, "dailyTicket"); });
-    }
+        public void WatchAdsBtnClicked()
+        {
+            if (adCount >= 3)
+            {
+                PopupTextManager.Instance.ShowOKPopup("[AdsCountExceed]");
+                return;
+            }
 
-    public void DailyTicketRewards()
-    {
-        adCount += 1;
-        TVICon.sprite = adCount >= 3 ? off : on;
-        MyUtility.PlayerData.SetInt(DataKey.adCount, adCount);
-        PopupTextManager.Instance.ShowOKPopup("[watchedAds]",
-            () => { MoneyManager.Instance.Coin2DAnim(MoneyManager.RewardType.Ticket, Vector3.zero, 10); });
+            TVIcon.sprite = adCount >= 3 ? off : on;
+            PlayerData.SetInt(DataKey.adCount, adCount);
+
+            var output = Localize.GetLocalizedString("[watchAds]") + " (" + adCount + "/3)";
+            PopupTextManager.Instance.ShowYesNoPopup(output,
+                () => { ADManager.Instance.ShowAds(DailyTicketRewards, null, "dailyTicket"); });
+        }
+
+        public void DailyTicketRewards()
+        {
+            adCount += 1;
+            TVIcon.sprite = adCount >= 3 ? off : on;
+            PlayerData.SetInt(DataKey.adCount, adCount);
+            PopupTextManager.Instance.ShowOKPopup("[watchedAds]",
+                () => { MoneyManager.Instance.Coin2DAnim(MoneyManager.RewardType.Ticket, Vector3.zero, 10); });
+        }
     }
 }

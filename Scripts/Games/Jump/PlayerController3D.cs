@@ -1,3 +1,4 @@
+using Core.System;
 using UnityEngine;
 
 namespace Games.Jump
@@ -47,7 +48,7 @@ namespace Games.Jump
                 AdjustPositionAndForce(other);
                 PlayAnimation();
                 HandleFootIndex(other);
-                sfxController.PlayWaterSfx();
+                sfxController.PlayWaterSoundEffect();
             }
         }
 

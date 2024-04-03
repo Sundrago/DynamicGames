@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using Core.System;
 using DG.Tweening;
 using MyUtility;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Core.Gacha
@@ -13,7 +15,7 @@ namespace Core.Gacha
     {
         [Header("Managers and Controllers")] 
         [SerializeField] private AudioManager audioManager;
-        [SerializeField] private EndScoreCtrl endScoreController;
+        [FormerlySerializedAs("endScoreController")] [SerializeField] private GameScoreManager gameScoreManager;
         [SerializeField] private MoneyManager moneyManager;
 
         [Header("UI Components")] 
@@ -71,7 +73,7 @@ namespace Core.Gacha
             switch (ticketCount)
             {
                 case 0:
-                    endScoreController.TicketAnimFinished();
+                    gameScoreManager.TicketAnimFinished();
                     break;
                 default:
                     var animCount = ticketCount > 5 ? 12 : ticketCount == 5 ? 6 : ticketCount;
@@ -91,30 +93,30 @@ namespace Core.Gacha
             switch (ticketCount)
             {
                 case 1:
-                    audioManager.PlaySFXbyTag(SfxTag.ticket1);
+                    audioManager.PlaySfxByTag(SfxTag.TicketOne);
                     PlayTicketAnimation(1, 0.5f, 0, Ease.OutExpo, true);
                     break;
                 case 2:
-                    audioManager.PlaySFXbyTag(SfxTag.ticket2);
+                    audioManager.PlaySfxByTag(SfxTag.TicketTwo);
 
                     PlayTicketAnimation(1, 0.65f, 0, Ease.OutBack);
                     PlayTicketAnimation(2, 0.65f, 0.65f, Ease.InOutQuart, true);
                     break;
                 case 3:
-                    audioManager.PlaySFXbyTag(SfxTag.ticket3);
+                    audioManager.PlaySfxByTag(SfxTag.TicketThree);
                     PlayTicketAnimation(1, 0.4f, 0, Ease.OutExpo);
                     PlayTicketAnimation(2, 0.4f, 0.7f, Ease.OutExpo);
                     PlayTicketAnimation(3, 0.4f, 1.3f, Ease.OutExpo, true);
                     break;
                 case 4:
-                    audioManager.PlaySFXbyTag(SfxTag.ticket4);
+                    audioManager.PlaySfxByTag(SfxTag.TicketFour);
                     PlayTicketAnimation(1, 0.2f);
                     PlayTicketAnimation(2, 0.3f, 0.2f);
                     PlayTicketAnimation(3, 0.3f, 0.5f);
                     PlayTicketAnimation(4, 0.3f, 0.8f, Ease.OutQuart, true);
                     break;
                 case 6:
-                    audioManager.PlaySFXbyTag(SfxTag.ticket6);
+                    audioManager.PlaySfxByTag(SfxTag.TicketSix);
                     PlayTicketAnimation(1, 0.45f, 0, Ease.InOutQuart);
                     PlayTicketAnimation(2, 0.45f, 0.45f, Ease.InOutQuart);
                     PlayTicketAnimation(3, 0.25f, 0.95f, Ease.InOutQuart);
@@ -123,7 +125,7 @@ namespace Core.Gacha
                     PlayTicketAnimation(6, 0.25f, 1.7f, Ease.InOutQuart, true);
                     break;
                 case 12:
-                    audioManager.PlaySFXbyTag(SfxTag.ticket12);
+                    audioManager.PlaySfxByTag(SfxTag.TicketTwelve);
                     for (var i = 0; i < 12; i++) PlayTicketAnimation(i + 1, 0.19f, 0.19f * i, Ease.InOutQuint);
 
                     DOVirtual.DelayedCall(2.2f, TicketAnimFinished);
@@ -133,7 +135,7 @@ namespace Core.Gacha
                     if (ticketCount < 10) delay = 0.18f;
                     else if (ticketCount < 20) delay = 0.15f;
                     else delay = 0.11f;
-                    audioManager.PlaySFXbyTag(SfxTag.ticketStart);
+                    audioManager.PlaySfxByTag(SfxTag.TicketStart);
                     for (var i = 0; i < ticketCount; i++)
                         PlayTicketAnimation(i + 1, delay, delay * i, Ease.OutQuart, i >= ticketCount - 1);
 
@@ -170,7 +172,7 @@ namespace Core.Gacha
             bool isLast = false)
         {
             rect.DOAnchorPosY(GetPosY(index), duration)
-                .OnStart(() => { audioManager.PlaySFXbyTag(SfxTag.ticketGen); })
+                .OnStart(() => { audioManager.PlaySfxByTag(SfxTag.TicketGen); })
                 .SetDelay(delay)
                 .SetEase(ease)
                 .OnComplete(() =>
@@ -206,7 +208,7 @@ namespace Core.Gacha
             pos = Camera.main.ScreenToWorldPoint(pos);
 
             moneyManager.Coin2DAnim(MoneyManager.RewardType.Ticket, pos, ticketCount);
-            audioManager.PlaySFXbyTag(SfxTag.reap);
+            audioManager.PlaySfxByTag(SfxTag.TicketReap);
             CollectTicketAnimation();
         }
 
@@ -216,7 +218,7 @@ namespace Core.Gacha
                 .SetEase(Ease.OutExpo)
                 .OnComplete(() =>
                 {
-                    endScoreController.TicketAnimFinished();
+                    gameScoreManager.TicketAnimFinished();
                     rect.DOAnchorPosY(GetPosY(ticketCount + 8), 0.75f)
                         .SetEase(Ease.InQuart)
                         .OnComplete(() =>

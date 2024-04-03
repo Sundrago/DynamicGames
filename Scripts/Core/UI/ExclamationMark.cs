@@ -8,17 +8,16 @@ using UnityEngine;
 
 public class ExclamationMark : MonoBehaviour
 {
-    [SerializeField] private float offsetX, offsetY;
     [SerializeField] private Camera camera;
     
-    private Transform target;
+    private const float OffsetX = 0;
+    private const float OffsetY = 140;
     private bool initialized = false;
-    
-    public delegate void Callback();
-    private Callback callback = null;
+    private Action callback = null;
+    private Transform target;
 
     [Button]
-    public void Init(Transform _target, Callback _callback=null)
+    public void Init(Transform target, Action callback=null)
     {
         RectTransform rect = gameObject.GetComponent<RectTransform>();
         Vector2 defaultSizeDelta = gameObject.GetComponent<RectTransform>().sizeDelta;
@@ -27,8 +26,8 @@ public class ExclamationMark : MonoBehaviour
         rect.DOSizeDelta(defaultSizeDelta, 1f);
         
         initialized = true;
-        target = _target;
-        callback = _callback;
+        this.target = target;
+        this.callback = callback;
         gameObject.SetActive(true);
     }
     
@@ -41,8 +40,8 @@ public class ExclamationMark : MonoBehaviour
         }
 
         gameObject.transform.position = target.position;
-        gameObject.transform.localPosition = new Vector3(gameObject.transform.localPosition.x + offsetX,
-            gameObject.transform.localPosition.y + offsetY, gameObject.transform.localPosition.z);
+        gameObject.transform.localPosition = new Vector3(gameObject.transform.localPosition.x + OffsetX,
+            gameObject.transform.localPosition.y + OffsetY, gameObject.transform.localPosition.z);
     }
     
     public void Clicked()

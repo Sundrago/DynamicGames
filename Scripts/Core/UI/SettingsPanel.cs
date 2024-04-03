@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Core.System;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -21,7 +22,7 @@ public class SettingsPanel : MonoBehaviour
     public void ShowPanel() {
         if(gameObject.activeSelf) return;
         
-        AudioManager.Instance.PlaySFXbyTag(SfxTag.UI_OPEN);
+        AudioManager.Instance.PlaySfxByTag(SfxTag.UI_Open);
         gameObject.transform.position = Vector3.zero;
         gameObject.transform.eulerAngles = Vector3.zero;
 
@@ -44,7 +45,7 @@ public class SettingsPanel : MonoBehaviour
     }
 
     public void HidePanel() {
-        AudioManager.Instance.PlaySFXbyTag(SfxTag.UI_SELECT);
+        AudioManager.Instance.PlaySfxByTag(SfxTag.UI_Select);
         SetVolume();
         gameObject.transform.position = Vector3.zero;
         gameObject.transform.eulerAngles = Vector3.zero;

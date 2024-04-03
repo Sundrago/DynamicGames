@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Core.System;
 using UnityEngine;
 
 public class ReturnToMenu : MonoBehaviour
@@ -9,7 +10,6 @@ public class ReturnToMenu : MonoBehaviour
 
     public void ReturnToMenuClkcked()
     {
-        Debug.Log("ReturnToMenuClkcked");
         if(!TransitionManager.Instance.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("transition_idle")) return;
 
         sfx.PlaySfx(3);

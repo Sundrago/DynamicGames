@@ -1,11 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class DestroySelf : MonoBehaviour
+namespace Core.System
 {
-    public void DestroySelfObj()
+    public class DestroySelf : MonoBehaviour
     {
-        Destroy(gameObject);
+        public void DestroySelfObj()
+        {
+            Destroy(gameObject);
+        }
     }
 }

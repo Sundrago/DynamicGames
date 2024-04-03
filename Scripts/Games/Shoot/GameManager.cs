@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Pet;
+using Core.System;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -8,7 +9,7 @@ using UnityEngine.Serialization;
 
 namespace Games.Shoot
 {
-    public class GameManager : SerializedMonoBehaviour
+    public class GameManager : MiniGame, IMiniGame
     {
         public enum ShootGameState
         {
@@ -39,13 +40,16 @@ namespace Games.Shoot
         [SerializeField] private SfxController sfx;
         [SerializeField] private GameObject adj_transition_notch;
         [SerializeField] private TutorialAnimation hand;
-        [SerializeField] public ItemInfo itemInfo_atk, itemInfo_shield, itemInfo_bounce, itemInfo_spin;
+        [FormerlySerializedAs("itemInfo_atk")] [SerializeField] public ItemInformationUI itemInformationUIAtk;
+        [FormerlySerializedAs("itemInfo_shield")] [SerializeField] public ItemInformationUI itemInformationUIShield;
+        [FormerlySerializedAs("itemInfo_bounce")] [SerializeField] public ItemInformationUI itemInformationUIBounce;
+        [FormerlySerializedAs("itemInfo_spin")] [SerializeField] public ItemInformationUI itemInformationUISpin;
         [SerializeField] private GameObject tutorial;
 
         [SerializeField] private SpriteAnimator playerRenderer;
         [SerializeField] private GameObject playerPlaceHolder;
         [SerializeField] private PetManager petManager;
-
+        
         [FormerlySerializedAs("shootAI")] [SerializeField]
         private AIManager aiManager;
 
@@ -1120,9 +1124,9 @@ namespace Games.Shoot
         // }
 
 
-        public void RestartGame()
+        public override void RestartGame()
         {
-            EndScoreCtrl.Instance.HideScore();
+            GameScoreManager.Instance.HideScore();
             DestroyShield();
 
             face.SetTrigger("idle");
@@ -1214,7 +1218,7 @@ namespace Games.Shoot
                     joystick.ResetJoystick();
                     stageFinished = 0;
                     currentStagePlaying = -1;
-                    if (EndScoreCtrl.Instance.GetHighScore(GameType.shoot) < 200)
+                    if (GameScoreManager.Instance.GetHighScore(GameType.shoot) < 200)
                     {
                         hand.Show();
                         tutorial.SetActive(true);
@@ -1240,7 +1244,7 @@ namespace Games.Shoot
 
                     break;
                 case ShootGameState.dead:
-                    FXManager.Instance.CreateFX(FXType.deadExplosion, player);
+                    FXManager.Instance.CreateFX(FXType.DeadExplosion, player);
                     enemy_Manager.GameOver();
                     face.SetTrigger("idle");
                     islandSizeController.CloseIsland();
@@ -1254,11 +1258,11 @@ namespace Games.Shoot
 
         private void ShowScore()
         {
-            EndScoreCtrl.Instance.ShowScore(score.GetScore(), GameType.shoot);
-            itemInfo_atk.Hide();
-            itemInfo_shield.Hide();
-            itemInfo_bounce.Hide();
-            itemInfo_spin.Hide();
+            GameScoreManager.Instance.ShowScore(score.GetScore(), GameType.shoot);
+            itemInformationUIAtk.HideUI();
+            itemInformationUIShield.HideUI();
+            itemInformationUIBounce.HideUI();
+            itemInformationUISpin.HideUI();
         }
 
         private void Revibe()
@@ -1279,7 +1283,7 @@ namespace Games.Shoot
         public void GetShield()
         {
             if (shield != null) return;
-            shield = fXManager.CreateFX(FXType.shield, player.transform).GetComponent<FX>();
+            shield = fXManager.CreateFX(FXType.Shield, player.transform).GetComponent<FX>();
             shield.gameObject.transform.SetParent(player.transform, true);
             shield.transform.localPosition = Vector3.zero;
         }
@@ -1287,11 +1291,11 @@ namespace Games.Shoot
         private void DestroyShield()
         {
             if (shield == null) return;
-            itemInfo_shield.Hide();
-            fXManager.CreateFX(FXType.shield_pop, shield.gameObject.transform);
+            itemInformationUIShield.HideUI();
+            fXManager.CreateFX(FXType.ShieldPop, shield.gameObject.transform);
             fXManager.CreateFX(FXType.Bomb, shield.gameObject.transform);
             fXManager.KillFX(shield);
-            audioManager.PlaySFXbyTag(SfxTag.shiealdPop);
+            audioManager.PlaySfxByTag(SfxTag.ShieldPop);
             shield = null;
         }
 
@@ -1318,7 +1322,7 @@ namespace Games.Shoot
         public void PreLoad()
         {
             adj_transition_notch.SetActive(false);
-            EndScoreCtrl.Instance.gameObject.SetActive(false);
+            GameScoreManager.Instance.gameObject.SetActive(false);
             RestartGame();
             state = ShootGameState.dead;
             DOTween.Kill(player.transform);
@@ -1358,9 +1362,9 @@ namespace Games.Shoot
                 });
         }
 
-        public void ClearGame()
+        public override void ClearGame()
         {
-            EndScoreCtrl.Instance.HideScore();
+            GameScoreManager.Instance.HideScore();
             state = ShootGameState.dead;
             joystick.ResetJoystick();
             gameObject.SetActive(false);
@@ -1369,26 +1373,31 @@ namespace Games.Shoot
         // ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- //
 
         [Button]
-        public void SetPlayer(bool playAsPet, Pet pet = null)
+        public override void SetPlayer(bool playAsPet, PetController petController = null)
         {
             playerPlaceHolder.SetActive(!playAsPet);
             playerRenderer.gameObject.SetActive(playAsPet);
 
             if (playAsPet)
             {
-                playerRenderer.sprites = pet.GetShipAnim();
+                playerRenderer.sprites = petController.GetShipAnim();
                 playerRenderer.GetComponent<SpriteRenderer>().sprite = playerRenderer.sprites[0];
 
-                playerRenderer.gameObject.transform.localRotation = pet.spriteRenderer.transform.localRotation;
+                playerRenderer.gameObject.transform.localRotation = petController.spriteRenderer.transform.localRotation;
 
-                if (CustomPetPos.ContainsKey(pet.GetType()))
-                    playerRenderer.gameObject.transform.localPosition = CustomPetPos[pet.GetType()];
+                if (CustomPetPos.ContainsKey(petController.GetType()))
+                    playerRenderer.gameObject.transform.localPosition = CustomPetPos[petController.GetType()];
                 else
-                    playerRenderer.gameObject.transform.localPosition = pet.spriteRenderer.transform.localPosition;
-                playerRenderer.gameObject.transform.localScale = pet.spriteRenderer.transform.localScale;
+                    playerRenderer.gameObject.transform.localPosition = petController.spriteRenderer.transform.localPosition;
+                playerRenderer.gameObject.transform.localScale = petController.spriteRenderer.transform.localScale;
 
                 playerRenderer.interval = 0.9f / playerRenderer.sprites.Length;
             }
+        }
+
+        public override void OnGameEnter()
+        {
+            
         }
 
         public class AutoAttackInfo

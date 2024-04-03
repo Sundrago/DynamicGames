@@ -52,7 +52,7 @@ namespace Core.Main
         {
             isDrag = false;
 
-            List<Pet.Pet> petsOnTitle = GetPetsOnTitle();
+            List<Pet.PetController> petsOnTitle = GetPetsOnTitle();
             for (int i = 0; i < petsOnTitle.Count; i++)
             {
                 float thres = petsOnTitle.Count < 3 ? 1 : 3f / petsOnTitle.Count;
@@ -60,13 +60,13 @@ namespace Core.Main
             }
         }
 
-        List<Pet.Pet> GetPetsOnTitle()
+        List<Pet.PetController> GetPetsOnTitle()
         {
-            List<Pet.Pet> petsOnTitle = new List<Pet.Pet>();
-            foreach (var petdata in PetManager.Instance.GetActivePetDatas())
+            List<Pet.PetController> petsOnTitle = new List<Pet.PetController>();
+            foreach (var petdata in PetManager.Instance.GetActivePetConfigs())
             {
                 if (petdata.obj.activeSelf && petdata.obj.GetComponent<SurfaceMovement2D>().currentPlace ==
-                    SurfaceMovement2D.LandingPlace.title)
+                    SurfaceMovement2D.CurrentLocationType.Title)
                 {
                     petsOnTitle.Add(petdata.component);
                 }

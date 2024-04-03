@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using AssetKits.ParticleImage;
 using Core.Pet;
+using Core.System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -16,8 +17,10 @@ namespace Core.Gacha
         [Header("Managers and Controllers")] 
         [SerializeField] private GachaponManager gachaponManager;
         
+        [FormerlySerializedAs("inventory")]
+        [FormerlySerializedAs("petDrawer")]
         [Header("UI Components")] 
-        [SerializeField] private PetDrawer petDrawer;
+        [SerializeField] private PetInventory petInventory;
         [SerializeField] private Transform top, btm1, btm2, itemObj;
         [SerializeField] private Image item, item_white;
         [SerializeField] private List<Image> capsuleImages;
@@ -132,17 +135,17 @@ namespace Core.Gacha
             if (PetManager.Instance.GetTotalPetCount() == 0 ||
                 PetManager.Instance.GetPetCount(PetType.Fluffy) == 0)
                 return PetType.Fluffy;
-            return PetManager.Instance.GetRandomPetData().type;
+            return PetManager.Instance.GetRandomPetConfig().type;
         }
 
-        private void UpdatePetTransform(PetData data)
+        private void UpdatePetTransform(PetConfig config)
         {
-            var relativePosY = data.obj.GetComponent<Pet.Pet>().spriteRenderer.gameObject.transform.localPosition.y *
+            var relativePosY = config.obj.GetComponent<Pet.PetController>().spriteRenderer.gameObject.transform.localPosition.y *
                                posFactor;
-            item.sprite = data.image;
+            item.sprite = config.image;
             item.transform.localPosition = new Vector2(0, relativePosY);
             item.transform.localScale =
-                data.obj.GetComponent<Pet.Pet>().spriteRenderer.gameObject.transform.localScale.y * Vector3.one;
+                config.obj.GetComponent<Pet.PetController>().spriteRenderer.gameObject.transform.localScale.y * Vector3.one;
         }
 
         private void ResetPositions()
@@ -207,7 +210,7 @@ namespace Core.Gacha
             isAnimPlaying = true;
 
             StartParticles();
-            AudioManager.Instance.PlaySFXbyTag(SfxTag.gachaCapsuleOpen);
+            AudioManager.Instance.PlaySfxByTag(SfxTag.GachaCapsuleOpen);
         }
 
         private void PlayOpenAnimation()
@@ -239,7 +242,7 @@ namespace Core.Gacha
 
         private void PlayNewPetAnimation()
         {
-            DOVirtual.DelayedCall(0.15f, () => { AudioManager.Instance.PlaySFXbyTag(SfxTag.gacha_newOpen); });
+            DOVirtual.DelayedCall(0.15f, () => { AudioManager.Instance.PlaySfxByTag(SfxTag.GachaNewOpen); });
         }
 
         #endregion
@@ -254,11 +257,11 @@ namespace Core.Gacha
 
             foreach (var img in capsuleImages) img.DOFade(0, 0.5f);
 
-            targetItemPos = petDrawer.GetItemTransformByType(type);
+            targetItemPos = petInventory.GetItemTransformByType(type);
             midPos = Vector3.Lerp(itemObj.transform.position, targetItemPos.position, 0.5f);
 
-            petDrawer.ShowPanel(false, true);
-            petDrawer.SlideToItemByIdx(type);
+            petInventory.ShowPanel(false, true);
+            petInventory.SlideToItemByIdx(type);
             itemObj.DOMove(midPos, 0.4f)
                 .SetEase(Ease.InBack)
                 .OnComplete(() =>
@@ -280,19 +283,19 @@ namespace Core.Gacha
 
                     DOVirtual.DelayedCall(0.2f, () =>
                     {
-                        if (isNew) AudioManager.Instance.PlaySFXbyTag(SfxTag.gacha_newItem);
-                        else AudioManager.Instance.PlaySFXbyTag(SfxTag.gacha_item);
+                        if (isNew) AudioManager.Instance.PlaySfxByTag(SfxTag.GachaNewItem);
+                        else AudioManager.Instance.PlaySfxByTag(SfxTag.GachaItem);
                         PetManager.Instance.AddPetCountByType(type);
-                        petDrawer.drawerItems[type].UpdateItemWithAnim();
+                        petInventory.drawerItems[type].UpdateItemWithAnimation();
                     });
                 });
         }
 
         private void CapsuleAnimationFinished()
         {
-            petDrawer.HidePanel();
+            petInventory.HidePanel();
             gachaponManager.CapsuleAnimFinished(isNew);
-            if (isNew) PetManager.Instance.GotNewPetFX(type);
+            if (isNew) PetManager.Instance.InstantiateNewPetFX(type);
             gameObject.SetActive(false);
         }
 

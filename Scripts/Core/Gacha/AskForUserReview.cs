@@ -1,3 +1,4 @@
+using Core.System;
 using DG.Tweening;
 using MyUtility;
 using TMPro;
@@ -48,7 +49,7 @@ namespace Core.Gacha
 
             DOVirtual.DelayedCall(5f, () =>
             {
-                AudioManager.Instance.PlaySFXbyTag(SfxTag.cube_fall);
+                AudioManager.Instance.PlaySfxByTag(SfxTag.CubeFall);
                 ChangeAndSaveStatus(ReviewStatus.Revealed);
                 reviewCube.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                 reviewCube.SetActive(true);
@@ -112,7 +113,7 @@ namespace Core.Gacha
             HidePanel();
             DOVirtual.DelayedCall(2f, () =>
             {
-                FXManager.Instance.CreateFX(FXType.rocketHit, reviewCube.transform.position);
+                FXManager.Instance.CreateFX(FXType.RocketHit, reviewCube.transform.position);
                 reviewCube.SetActive(false);
                 Destroy(gameObject);
             });

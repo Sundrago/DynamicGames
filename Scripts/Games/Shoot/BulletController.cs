@@ -1,3 +1,4 @@
+using Core.System;
 using UnityEngine;
 
 namespace Games.Shoot
@@ -102,7 +103,7 @@ namespace Games.Shoot
                     enemyController.KillEnemy();
                     bulletManager.KillBullet(this);
                     FXManager.Instance.CreateFX(FXType.SmallExplosion, transform);
-                    AudioManager.Instance.PlaySFXbyTag(SfxTag.enemy_dead_explostion);
+                    AudioManager.Instance.PlaySfxByTag(SfxTag.EnemyDeadExplosion);
                 }
         }
 
@@ -128,7 +129,7 @@ namespace Games.Shoot
             gameObject.transform.position = _position;
             var angle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg;
             gameObject.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
-            audioManager.PlaySFXbyTag(info.sfx);
+            audioManager.PlaySfxByTag(info.sfx);
         }
         
         private void InitKillFX()
@@ -136,7 +137,7 @@ namespace Games.Shoot
             if (fx != null) FXManager.Instance.KillFX(fx.GetComponent<FX>());
 
             gameObject.GetComponent<SpriteRenderer>().sprite = info.sprite;
-            if (info.fx != FXType.empty)
+            if (info.fx != FXType.Empty)
             {
                 fx = FXManager.Instance.CreateFX(info.fx, gameObject.transform);
                 fx.gameObject.transform.SetParent(gameObject.transform, true);

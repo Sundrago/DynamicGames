@@ -1,113 +1,110 @@
-using System;
-using UnityEngine;
-using MyUtility;
-using UnityEngine.Serialization;
-
 #if !UNITY_EDITOR
 using Firebase.Analytics;
 #endif
+using System;
+using MyUtility;
+using UnityEngine;
 #if UNITY_IPHONE
 using Unity.Advertisement.IosSupport;
 #endif
 
-public class ADManager : MonoBehaviour
+namespace Core.System
 {
-    public static ADManager Instance { get; private set; }
-    public event Action OnAdReward;
-    public event Action OnAdFailed;
-
-    [FormerlySerializedAs("sfxctrl")] [SerializeField] private SfxController sfxController;
-    [SerializeField] private DailyTicketRewardsManager dailyTicketRewardsManager;
-
-    private void Awake()
+    public class ADManager : MonoBehaviour
     {
-        Instance = this;
-#if UNITY_IPHONE
-        RequestIosAuthorizationTracking();
-#endif
-    }
+        [Header("Managers and Controllers")] [SerializeField]
+        private SfxController sfxController;
 
-    private void Start()
-    {
-        InitializeIronSource();
-        dailyTicketRewardsManager.Init();
-    }
+        [SerializeField] private DailyTicketRewardsManager dailyTicketRewardsManager;
 
-#if UNITY_IPHONE
-    private void RequestIosAuthorizationTracking()
-    {
-        if (ATTrackingStatusBinding.GetAuthorizationTrackingStatus() == ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED)
+        public static ADManager Instance { get; private set; }
+        private event Action OnAdReward, OnAdFailed;
+
+        private void Awake()
         {
-            ATTrackingStatusBinding.RequestAuthorizationTracking();
-        }
-    }
+            Instance = this;
+#if UNITY_IPHONE
+            RequestIosAuthorizationTracking();
 #endif
-
-    private void OnApplicationPause(bool isPaused)
-    {
-        IronSource.Agent.onApplicationPause(isPaused);
-    }
-
-    private void InitializeIronSource()
-    {
-        if (InDebugMode())
-        {
-            IronSource.Agent.setMetaData("is_test_suite", "enable");
         }
 
-        IronSource.Agent.shouldTrackNetworkState(true);
-        IronSource.Agent.init(PrivateKey.IronSourceAppKey, IronSourceAdUnits.REWARDED_VIDEO);
-        SubscribeToIronSourceEvents();
-    }
-
-    private void SubscribeToIronSourceEvents()
-    {
-        IronSourceRewardedVideoEvents.onAdShowFailedEvent += OnRewardedVideoAdShowFailed;
-        IronSourceRewardedVideoEvents.onAdRewardedEvent += OnRewardedVideoAdRewarded;
-    }
-
-    private bool InDebugMode()
-    {
-        return MyUtility.PlayerData.GetInt(DataKey.debugMode, 0) == 1;
-    }
-
-    private void OnRewardedVideoAdRewarded(IronSourcePlacement placement, IronSourceAdInfo adInfo)
-    {
-        UnPauseBackgroundMusic();
-        OnAdReward?.Invoke();
-    }
-
-    private void OnRewardedVideoAdShowFailed(IronSourceError error, IronSourceAdInfo adInfo)
-    {
-        PopupTextManager.Instance.ShowOKPopup($"Failed to load AD network: {error}", OnAdFailed);
-        UnPauseBackgroundMusic();
-    }
-
-    public void ShowAds(Action rewardCallback = null, Action failedCallback = null, string adNote = null)
-    {
-        OnAdReward = rewardCallback;
-        OnAdFailed = failedCallback;
-
-        if (InDebugMode())
+        private void Start()
         {
+            InitializeIronSource();
+            dailyTicketRewardsManager.Init();
+        }
+
+#if UNITY_IPHONE
+        private void RequestIosAuthorizationTracking()
+        {
+            if (ATTrackingStatusBinding.GetAuthorizationTrackingStatus() ==
+                ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED)
+                ATTrackingStatusBinding.RequestAuthorizationTracking();
+        }
+#endif
+
+        private void OnApplicationPause(bool isPaused)
+        {
+            IronSource.Agent.onApplicationPause(isPaused);
+        }
+
+        private void InitializeIronSource()
+        {
+            if (InDebugMode()) IronSource.Agent.setMetaData("is_test_suite", "enable");
+
+            IronSource.Agent.shouldTrackNetworkState(true);
+            IronSource.Agent.init(PrivateKey.IronSourceAppKey, IronSourceAdUnits.REWARDED_VIDEO);
+            SubscribeToIronSourceEvents();
+        }
+
+        private void SubscribeToIronSourceEvents()
+        {
+            IronSourceRewardedVideoEvents.onAdShowFailedEvent += OnRewardedVideoAdShowFailed;
+            IronSourceRewardedVideoEvents.onAdRewardedEvent += OnRewardedVideoAdRewarded;
+        }
+
+        private bool InDebugMode()
+        {
+            return PlayerData.GetInt(DataKey.debugMode) == 1;
+        }
+
+        private void OnRewardedVideoAdRewarded(IronSourcePlacement placement, IronSourceAdInfo adInfo)
+        {
+            UnPauseBackgroundMusic();
             OnAdReward?.Invoke();
-            return;
         }
+
+        private void OnRewardedVideoAdShowFailed(IronSourceError error, IronSourceAdInfo adInfo)
+        {
+            PopupTextManager.Instance.ShowOKPopup($"Failed to load AD network: {error}", OnAdFailed);
+            UnPauseBackgroundMusic();
+        }
+
+        public void ShowAds(Action rewardCallback = null, Action failedCallback = null, string adNote = null)
+        {
+            OnAdReward = rewardCallback;
+            OnAdFailed = failedCallback;
+
+            if (InDebugMode())
+            {
+                OnAdReward?.Invoke();
+                return;
+            }
 
 #if !UNITY_EDITOR
         LogFirebaseEvent("Ads", "AdType", adNote);
 #endif
 
-        if (IronSource.Agent.isRewardedVideoAvailable())
-        {
-            IronSource.Agent.showRewardedVideo();
-            PauseBackgroundMusic();
+            if (IronSource.Agent.isRewardedVideoAvailable())
+            {
+                IronSource.Agent.showRewardedVideo();
+                PauseBackgroundMusic();
+            }
+            else
+            {
+                PopupTextManager.Instance.ShowOKPopup("Reward Video not available. Try again later.", OnAdFailed);
+            }
         }
-        else
-        {
-            PopupTextManager.Instance.ShowOKPopup("Reward Video not available. Try again later.", OnAdFailed);
-        }
-    }
 
 #if !UNITY_EDITOR
     private void LogFirebaseEvent(string eventName, string parameterName, string parameterValue)
@@ -116,15 +113,16 @@ public class ADManager : MonoBehaviour
     }
 #endif
 
-    private void PauseBackgroundMusic()
-    {
-        AudioManager.Instance.PauseBGM();
-        sfxController.PauseBGM();
-    }
+        private void PauseBackgroundMusic()
+        {
+            AudioManager.Instance.PauseBGM();
+            sfxController.PauseBGM();
+        }
 
-    private void UnPauseBackgroundMusic()
-    {
-        AudioManager.Instance.UnPauseBgm();
-        sfxController.UnPauseBGM();
+        private void UnPauseBackgroundMusic()
+        {
+            AudioManager.Instance.ResumeBgm();
+            sfxController.ResumeBGM();
+        }
     }
 }

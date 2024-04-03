@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Core.Gacha;
+using Core.System;
 using UnityEngine;
 using TMPro;
 using DG.Tweening;
@@ -282,7 +283,7 @@ public class MoneyManager : MonoBehaviour
                                             ticketHolder_ui.transform.localScale = Vector3.one;
                                         });
                                     AddTicket(RewardType.Ticket, 1);
-                                    AudioManager.Instance.PlaySFXbyTag(SfxTag.earnTicket);
+                                    AudioManager.Instance.PlaySfxByTag(SfxTag.EarnedTicket);
                                     break;
                                 case RewardType.GachaCoin:
                                     gachaCoinHolder_ui.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f)
@@ -291,7 +292,7 @@ public class MoneyManager : MonoBehaviour
                                             gachaCoinHolder_ui.transform.localScale = Vector3.one;
                                         });
                                     AddTicket(RewardType.GachaCoin, 1);
-                                    AudioManager.Instance.PlaySFXbyTag(SfxTag.earnCoin);
+                                    AudioManager.Instance.PlaySfxByTag(SfxTag.EarnedCoin);
                                     break;
                                 case RewardType.Key:
                                     keyHolder_ui.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f)
@@ -300,7 +301,7 @@ public class MoneyManager : MonoBehaviour
                                             keyHolder_ui.transform.localScale = Vector3.one;
                                         });
                                     AddTicket(RewardType.Key, 1);
-                                    AudioManager.Instance.PlaySFXbyTag(SfxTag.earnKey);
+                                    AudioManager.Instance.PlaySfxByTag(SfxTag.EarnedKey);
                                     break;
                                 default:
                                     break;

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class Fruit_item : MonoBehaviour
+public class FruitController : MonoBehaviour
 {
     [SerializeField] public Image fruitImage;
     [SerializeField] private Button fruitBtn;

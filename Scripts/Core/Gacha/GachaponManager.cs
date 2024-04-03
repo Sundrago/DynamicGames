@@ -1,4 +1,5 @@
 using Core.Main;
+using Core.System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -54,7 +55,7 @@ namespace Core.Gacha
             if (gameObject.activeSelf || DOTween.IsTweening(bg)) return;
 
             GachaponBtn.KillFX();
-            AudioManager.Instance.PlaySFXbyTag(SfxTag.popup3);
+            AudioManager.Instance.PlaySfxByTag(SfxTag.UI_Popup3);
             SetBtnActive();
             RnadomizePonCapsule();
             ShowPanelAnimation();
@@ -70,7 +71,7 @@ namespace Core.Gacha
 
             if (DOTween.IsTweening(bg)) return;
 
-            AudioManager.Instance.PlaySFXbyTag(SfxTag.UI_CLOSE);
+            AudioManager.Instance.PlaySfxByTag(SfxTag.UI_Close);
             HidePanelAnimation();
         }
 
@@ -171,7 +172,7 @@ namespace Core.Gacha
             if (moneyManager.SubtractMoney(MoneyManager.RewardType.Ticket, 50))
             {
                 moneyManager.Coin2DAnim(MoneyManager.RewardType.GachaCoin, ticketbtn.transform.position, 1);
-                audioManager.PlaySFXbyTag(SfxTag.gotCoin);
+                audioManager.PlaySfxByTag(SfxTag.AcquiredCoin);
                 TutorialManager.Instancee.TicketBtnClicked();
                 SetBtnActive();
                 return;
@@ -179,7 +180,7 @@ namespace Core.Gacha
 
             if (!moneyManager.HasEnoughTicket(MoneyManager.RewardType.Ticket, 50))
             {
-                audioManager.PlaySFXbyTag(SfxTag.notEnoughMoney);
+                audioManager.PlaySfxByTag(SfxTag.NotEnoughMoney);
                 if (!DOTween.IsTweening(ticketbtn)) ticketbtn.DOPunchPosition(new Vector3(10, 0, 0), 0.5f);
             }
 
@@ -192,7 +193,7 @@ namespace Core.Gacha
                 moneyManager.SubtractMoney(MoneyManager.RewardType.GachaCoin, 1))
             {
                 InsertCoinAnimation();
-                audioManager.PlaySFXbyTag(SfxTag.popup2);
+                audioManager.PlaySfxByTag(SfxTag.UI_Popup2);
                 TutorialManager.Instancee.CoinBtnClicked();
                 SetBtnActive();
                 return;
@@ -200,7 +201,7 @@ namespace Core.Gacha
 
             if (!moneyManager.HasEnoughTicket(MoneyManager.RewardType.GachaCoin, 1))
             {
-                audioManager.PlaySFXbyTag(SfxTag.notEnoughMoney);
+                audioManager.PlaySfxByTag(SfxTag.NotEnoughMoney);
                 if (!DOTween.IsTweening(coinBtn)) coinBtn.DOPunchPosition(new Vector3(10, 0, 0), 0.5f);
             }
 
@@ -267,7 +268,7 @@ namespace Core.Gacha
         private void FinishCoinAnimation(GameObject coinObject)
         {
             MoneyManager.Instance.obj_pools[(int)MoneyManager.RewardType.GachaCoin].Release(coinObject);
-            AudioManager.Instance.PlaySFXbyTag(SfxTag.insertCoin);
+            AudioManager.Instance.PlaySfxByTag(SfxTag.InsertCoin);
             status = GachaponStatus.InsertCoin;
             lever.DOPunchScale(Vector3.one, 0.5f, 5).SetLoops(-1);
             isAnimPlaying = false;
@@ -305,8 +306,8 @@ namespace Core.Gacha
         {
             isAnimPlaying = true;
 
-            audioManager.PlaySFXbyTag(SfxTag.gacha_simple_bgm);
-            audioManager.PlaySFXbyTag(SfxTag.gacha_rotateLever);
+            audioManager.PlaySfxByTag(SfxTag.GachaSimpleBgm);
+            audioManager.PlaySfxByTag(SfxTag.GachaRotateLever);
 
             ResetLeverScaleAndAngle();
             RotateLeverAnimation();
@@ -326,7 +327,7 @@ namespace Core.Gacha
                 .SetEase(Ease.OutBack)
                 .OnComplete(() =>
                 {
-                    audioManager.PlaySFXbyTag(SfxTag.gacha_rotateLever);
+                    audioManager.PlaySfxByTag(SfxTag.GachaRotateLever);
                     lever.DORotate(new Vector3(0, 0, -360), 0.7f)
                         .SetEase(Ease.InOutQuart);
                 });
@@ -336,7 +337,7 @@ namespace Core.Gacha
 
         private void ShakePonCapsulesAndGet()
         {
-            audioManager.PlaySFXbyTag(SfxTag.gacha_capsules);
+            audioManager.PlaySfxByTag(SfxTag.GachaCapsules);
             DOTween.Kill(takeoutCapsule.transform);
 
             ShakeAllCapsules();
@@ -363,7 +364,7 @@ namespace Core.Gacha
                 .SetEase(Ease.OutBounce)
                 .SetDelay(0.5f)
                 .OnComplete(OnTakeoutCapsuleMoveComplete)
-                .OnStart(() => { audioManager.PlaySFXbyTag(SfxTag.gacha_drop); });
+                .OnStart(() => { audioManager.PlaySfxByTag(SfxTag.GachaDrop); });
         }
 
         private void OnTakeoutCapsuleMoveComplete()

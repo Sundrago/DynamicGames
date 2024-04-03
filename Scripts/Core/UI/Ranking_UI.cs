@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Core.System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -85,8 +86,8 @@ public class Ranking_UI : MonoBehaviour
         if (newRank > totalPlayerCount) totalPlayerCount = newRank;
         
         print("totalPlayerCount : " + totalPlayerCount);
-        float previousRankInPercent = rankingManager.GetPercent(previousRank, totalPlayerCount);
-        float newRankInPercent = rankingManager.GetPercent(newRank, totalPlayerCount);
+        float previousRankInPercent = rankingManager.GetRankInPercent(previousRank, totalPlayerCount);
+        float newRankInPercent = rankingManager.GetRankInPercent(newRank, totalPlayerCount);
         Tiers previousTier = rankingManager.GetTiersFromRank(previousRankInPercent);
         Tiers newTier = rankingManager.GetTiersFromRank(newRankInPercent);
 
@@ -104,7 +105,7 @@ public class Ranking_UI : MonoBehaviour
         if (previousTier < newTier)
         {
             duration = 4f;
-            AudioManager.Instance.PlaySFXbyTag(SfxTag.rank_goup);
+            AudioManager.Instance.PlaySfxByTag(SfxTag.RankGroup);
 
             slider_ui.DOValue((previousRankInPercent + newRankInPercent) / 200f, duration /5f * 4f)
                 .SetEase(Ease.InOutQuart)
@@ -150,8 +151,8 @@ public class Ranking_UI : MonoBehaviour
                         close_btn.transform.DOScale(Vector3.one, 0.5f);
                         canSkip = true;
                     });
-                if(previousTier < newTier) AudioManager.Instance.PlaySFXbyTag(SfxTag.rank_goupFinish);
-                else AudioManager.Instance.PlaySFXbyTag(SfxTag.rank_same);
+                if(previousTier < newTier) AudioManager.Instance.PlaySfxByTag(SfxTag.RankGroupFinish);
+                else AudioManager.Instance.PlaySfxByTag(SfxTag.RankUnChanged);
             });
     }
 

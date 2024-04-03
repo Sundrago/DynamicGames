@@ -1,63 +1,60 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
-public class FX : MonoBehaviour
+namespace Core.System
 {
-    [SerializeField] ParticleSystem[] particleSystems = new ParticleSystem[3];
-    [SerializeField] float durationInSec;
-
-    private FXType fXType;
-
-    public void InitAndPlayFX(Vector3 target, FXType type)
+    public class FX : MonoBehaviour
     {
-        fXType = type;
-        gameObject.transform.position = target;
+        [SerializeField] private ParticleSystem[] particleSystems = new ParticleSystem[3];
+        [SerializeField] private float durationInSec;
 
-        foreach (ParticleSystem particle in particleSystems)
+        private FXType fXType;
+
+        public void OnParticleSystemStopped()
         {
-            particle.time = 0;
-            particle.Clear();
-            particle.Play();
+            if (gameObject.activeSelf) FXManager.Instance.KillFX(this);
         }
 
-        //if(fXType == FXType.Bomb)
-        //{
-        //    GetComponent<Shoot_FX>().KillEnemyIfInDistance();
-        //}
-
-        if(durationInSec != 0) Invoke("OnParticleSystemStopped", durationInSec);
-    }
-
-    public void OnParticleSystemStopped()
-    {
-        if (gameObject.activeSelf) FXManager.Instance.KillFX(this);
-    }
-
-    public FXType GetFXType()
-    {
-        return fXType;
-    }
-
-
-    [Button]
-    private void AutoAddParticles(FXType type)
-    {
-        particleSystems = GetComponentsInChildren<ParticleSystem>();
-
-        FXManager manager = gameObject.transform.GetComponentInParent<FXManager>();
-
-        foreach(FXData fX in manager.FXDatas)
+        public void InitAndPlayFX(Vector3 target, FXType type)
         {
-            if (fX.type == type) return;
+            fXType = type;
+            gameObject.transform.position = target;
+
+            foreach (var particle in particleSystems)
+            {
+                particle.time = 0;
+                particle.Clear();
+                particle.Play();
+            }
+
+            if (durationInSec != 0) Invoke("OnParticleSystemStopped", durationInSec);
         }
 
-        FXData fxdata = new FXData();
-        fxdata.prefab = this;
-        fxdata.type = type;
-        manager.FXDatas.Add(fxdata);
+        public FXType GetFXType()
+        {
+            return fXType;
+        }
 
-        gameObject.SetActive(false);
+
+#if UNITY_EDITOR
+        [Button]
+        private void AddParticlesFXs(FXType type)
+        {
+            particleSystems = GetComponentsInChildren<ParticleSystem>();
+
+            var manager = gameObject.transform.GetComponentInParent<FXManager>();
+
+            foreach (var fX in manager.FXDatas)
+                if (fX.type == type)
+                    return;
+
+            var fxdata = new FXData();
+            fxdata.prefab = this;
+            fxdata.type = type;
+            manager.FXDatas.Add(fxdata);
+
+            gameObject.SetActive(false);
+        }
+#endif
     }
 }

@@ -1,3 +1,4 @@
+using Core.System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -95,7 +96,7 @@ namespace Games.Shoot
         {
             if (IsPlayerNear())
             {
-                audioManager.PlaySFXbyTag(SfxTag.enemy_dead_spin);
+                audioManager.PlaySfxByTag(SfxTag.EnemyDeadSpin);
                 KillEnemy();
                 return;
             }

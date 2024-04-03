@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.System;
 using DG.Tweening;
 using UnityEngine;
 
@@ -161,7 +162,7 @@ namespace Games.Shoot
         private void GotItem(ItemController obj)
         {
             var type = obj.itemType;
-            audioManager.PlaySFXbyTag(SfxTag.gotItem);
+            audioManager.PlaySfxByTag(SfxTag.AcquiredItem);
 
             switch (type)
             {
@@ -186,35 +187,35 @@ namespace Games.Shoot
         private void HandleWeaponPickup()
         {
             bullet_Manager.UpgradeBullet();
-            gameManager.itemInfo_atk.Init(-1, bullet_Manager.currentBulletObj);
+            gameManager.itemInformationUIAtk.Init(-1, bullet_Manager.currentBulletObj);
         }
 
         private void HandleShieldPickup()
         {
             gameManager.GetShield();
-            gameManager.itemInfo_shield.Init(-1);
+            gameManager.itemInformationUIShield.Init(-1);
         }
 
         private void HandleBouncePickup()
         {
             bullet_Manager.bounceCount += 1;
-            gameManager.itemInfo_bounce.Init(-1, bullet_Manager.bounceCount);
+            gameManager.itemInformationUIBounce.Init(-1, bullet_Manager.bounceCount);
             bullet_Manager.bounceCount = Mathf.Min(bullet_Manager.bounceCount, MaxBounceCount);
         }
 
         private void HandleBlackHolePickup(ItemController obj)
         {
-            FXManager.Instance.CreateFX(FXType.blackhole, obj.transform);
-            audioManager.PlaySFXbyTag(SfxTag.blackhole);
+            FXManager.Instance.CreateFX(FXType.Blackhole, obj.transform);
+            audioManager.PlaySfxByTag(SfxTag.Blackhole);
         }
 
         private void HandleSpinPickup()
         {
-            var fx = FXManager.Instance.CreateFX(FXType.spin, player.transform);
-            audioManager.PlaySFXbyTag(SfxTag.spin);
+            var fx = FXManager.Instance.CreateFX(FXType.Spin, player.transform);
+            audioManager.PlaySfxByTag(SfxTag.Spin);
             fx.transform.SetParent(player.transform, true);
             gameManager.SetSpinMode(7f);
-            gameManager.itemInfo_spin.Init(7);
+            gameManager.itemInformationUISpin.Init(7);
         }
 
         private ItemType GetRandomSingleItem()
@@ -224,10 +225,10 @@ namespace Games.Shoot
 
         public void KillAll()
         {
-            gameManager.itemInfo_atk.Hide();
-            gameManager.itemInfo_shield.Hide();
-            gameManager.itemInfo_bounce.Hide();
-            gameManager.itemInfo_spin.Hide();
+            gameManager.itemInformationUIAtk.HideUI();
+            gameManager.itemInformationUIShield.HideUI();
+            gameManager.itemInformationUIBounce.HideUI();
+            gameManager.itemInformationUISpin.HideUI();
 
             for (var i = items.Count - 1; i >= 0; i--)
             {

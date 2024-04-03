@@ -13,13 +13,13 @@ public class UIPetSpriteAnimator : MonoBehaviour
     [Button]
     public void Init(PetType type)
     {
-        Pet pet = petManager.GetPetDataByType(type).obj.GetComponent<Pet>();
+        PetController petController = petManager.GetPetDataByType(type).obj.GetComponent<PetController>();
         
-        pet.SetSpriteAnimatorIdleAnimation(spriteAnimator);
+        petController.SetSpriteAnimatorIdleAnimation(spriteAnimator);
         spriteAnimator.GetComponent<SpriteRenderer>().sprite = spriteAnimator.sprites[0];
-        spriteAnimator.gameObject.transform.localRotation = pet.spriteRenderer.transform.localRotation;
-        spriteAnimator.gameObject.transform.localPosition = pet.spriteRenderer.transform.localPosition;
-        spriteAnimator.gameObject.transform.localScale = pet.spriteRenderer.transform.localScale;
-        spriteAnimator.interval = pet.GetInterval();
+        spriteAnimator.gameObject.transform.localRotation = petController.spriteRenderer.transform.localRotation;
+        spriteAnimator.gameObject.transform.localPosition = petController.spriteRenderer.transform.localPosition;
+        spriteAnimator.gameObject.transform.localScale = petController.spriteRenderer.transform.localScale;
+        spriteAnimator.interval = petController.GetInterval();
     }
 }

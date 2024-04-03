@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Core.System;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -22,7 +23,7 @@ public class NewHighScoreFX : MonoBehaviour
         title.DOAnchorPosY(350, 1).SetEase(Ease.OutExpo);
         title.DOAnchorPosY(-500, 2).SetEase(Ease.InOutExpo).SetDelay(2)
             .OnComplete(()=>{gameObject.SetActive(false);});
-        AudioManager.Instance.PlaySFXbyTag(SfxTag.highScore);
+        AudioManager.Instance.PlaySfxByTag(SfxTag.HighScore);
         gameObject.SetActive(true);
     }
 }

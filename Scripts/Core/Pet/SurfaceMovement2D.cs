@@ -1,124 +1,126 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using Core.Main;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Core.Pet
 {
-    [RequireComponent(typeof(Pet))]
+    [RequireComponent(typeof(PetController))]
     public class SurfaceMovement2D : MonoBehaviour
     {
-        [SerializeField] private GameObject headObj, island;
-        [SerializeField] private float moveVelocity = 0.3f;
-        [SerializeField] private float shortTransition = 0.3f;
-        [SerializeField] private float longTransition = 0.3f;
-        [SerializeField] private float hitCheckInterval = 0.5f;
+        private const float HeightMin = 0.15f;
+        private const float Tolerance = 0.05f;
+        private const float Height = 0.1f;
+
+        [SerializeField] private GameObject headObject;
+        [SerializeField] private GameObject island;
+        [SerializeField] private float moveVelocity = 0.2f;
+        [SerializeField] private float shortTransition = 2.5f;
+        [SerializeField] private float longTransition = 2f;
+        [SerializeField] private float hitCheckInterval = 0.25f;
         [SerializeField] private int searchComplexity = 5;
 
-        public enum LandingPlace
-        {
-            block,
-            title,
-            island
-        }
-
-        public LandingPlace currentPlace = LandingPlace.block;
-
-        private Pet pet;
-        private List<AvailableCorner> availables;
-        private List<SquareElement> SquareElements;
-
-        private GameObject[] squares;
-        public CurrentCorner currentCorner = new CurrentCorner();
-        private CurrentCorner oldCorner = new CurrentCorner();
-        private Transition transition = new Transition();
-
-        private const float height_min = 0.15f;
-        private const float tolerance = 0.05f;
-        private const float height = 0.1f;
-
-        private float transitionSpeed = 1f;
+        public CurrentLocationType currentPlace = CurrentLocationType.Block;
+        private readonly CurrentLocation previousLocation = new();
+        private List<AvailableLocation> availableLocations;
+        public CurrentLocation currentLocation = new();
         private float headHitCheckTime;
+
+        private bool isOnIsland, isOnTransition, isPaused;
         private float moveSpeed = 0.3f;
 
-        private bool onTransition = false;
-        private bool onIsland = false;
-        private bool pause = false;
+        private PetController petController;
+        private List<SquareElement> squareBlockElements;
+        private GameObject[] squares;
+        private Transition transition;
 
+        private float transitionSpeed = 1f;
+
+        public enum CurrentLocationType
+        {
+            Block,
+            Title,
+            Island
+        }
+        
         private void Awake()
         {
-            pet = GetComponent<Pet>();
-        }
-
-        public void StartMovement()
-        {
-            LoadSquare();
-            GetAvailable(searchComplexity);
-
-            if (onIsland) return;
-
-            currentCorner.obj = availables[0].sqrElm.obj;
-            currentCorner.cornerIdx = availables[0].cornerIdx;
-            currentCorner.normal = 0;
-
-            oldCorner.obj = currentCorner.obj;
-            oldCorner.cornerIdx = currentCorner.cornerIdx;
-            InitializeCurrentCorner(currentCorner);
+            petController = GetComponent<PetController>();
         }
 
         private void Update()
         {
-            if (onTransition) Transition();
+            if (isOnTransition) Transition();
             else Move();
+        }
+
+        private void OnEnable()
+        {
+            FindNearestCorner();
+        }
+
+        public void StartMovement()
+        {
+            LoadSquares();
+            GetAvailableLocations(searchComplexity);
+
+            if (isOnIsland) return;
+
+            currentLocation.obj = availableLocations[0].squareElement.obj;
+            currentLocation.cornerIdx = availableLocations[0].cornerIdx;
+            currentLocation.normal = 0;
+
+            previousLocation.obj = currentLocation.obj;
+            previousLocation.cornerIdx = currentLocation.cornerIdx;
+            InitiateCurrentCorner(currentLocation);
         }
 
         private void Transition()
         {
-            if (currentCorner.obj == null)
+            if (currentLocation.obj == null)
             {
-                FindNearCorner();
+                FindNearestCorner();
                 return;
             }
 
-            pet.JumpUpdate(transition.normal);
+            petController.JumpUpdate(transition.normal);
             if (transition.normal > 0.95f)
             {
                 FinishTransition();
                 return;
             }
 
-            UpdateP3();
-            UpdateR2();
+            UpdateEndPoint();
+            UpdateEndRotation();
             UpdateTransitionNormal();
-            UpdatePositionRotation();
+            UpdateTransform();
         }
 
         private void FinishTransition()
         {
-            onTransition = false;
+            isOnTransition = false;
             headHitCheckTime = Time.time + hitCheckInterval;
         }
 
-        private void UpdateP3()
+        private void UpdateEndPoint()
         {
-            currentCorner.cornerPoints = GetCornerPoint(currentCorner.obj);
-            currentCorner.pointA = currentCorner.cornerPoints[currentCorner.cornerIdx];
-            currentCorner.pointB =
-                currentCorner.cornerPoints[currentCorner.cornerIdx == 3 ? 0 : currentCorner.cornerIdx + 1];
-            transition.p3 = Vector2.Lerp(currentCorner.pointA, currentCorner.pointB, currentCorner.normal);
+            currentLocation.cornerPoints = GetCornerPoint(currentLocation.obj);
+            currentLocation.pointA = currentLocation.cornerPoints[currentLocation.cornerIdx];
+            currentLocation.pointB =
+                currentLocation.cornerPoints[currentLocation.cornerIdx == 3 ? 0 : currentLocation.cornerIdx + 1];
+            transition.endPoint = Vector2.Lerp(currentLocation.pointA, currentLocation.pointB, currentLocation.normal);
         }
 
-        private void UpdateR2()
+        private void UpdateEndRotation()
         {
-            Vector3 targ = currentCorner.direction ? currentCorner.pointB : currentCorner.pointA;
+            Vector3 targ = currentLocation.direction ? currentLocation.pointB : currentLocation.pointA;
             targ.z = 0f;
-            Vector3 objectPos = transition.p3;
+            Vector3 objectPos = transition.endPoint;
             targ.x = targ.x - objectPos.x;
             targ.y = targ.y - objectPos.y;
-            float angle = Mathf.Atan2(targ.y, targ.x) * Mathf.Rad2Deg;
-            transition.r2 = Quaternion.Euler(new Vector3(0, 0, angle));
+            var angle = Mathf.Atan2(targ.y, targ.x) * Mathf.Rad2Deg;
+            transition.endRotation = Quaternion.Euler(new Vector3(0, 0, angle));
         }
 
         private void UpdateTransitionNormal()
@@ -126,108 +128,103 @@ namespace Core.Pet
             transition.normal += transitionSpeed * Time.deltaTime;
         }
 
-        private void UpdatePositionRotation()
+        private void UpdateTransform()
         {
-            gameObject.transform.position = Bezier(transition.normal, transition.p1, transition.p2, transition.p3);
-            gameObject.transform.rotation = Quaternion.Lerp(transition.r1, transition.r2, transition.normal);
+            gameObject.transform.position = Bezier(transition.normal, transition.startPoint, transition.controlPoint,
+                transition.endPoint);
+            gameObject.transform.rotation =
+                Quaternion.Lerp(transition.startRotation, transition.endRotation, transition.normal);
         }
 
         private Vector2 Bezier(float t, Vector2 a, Vector2 b, Vector2 c)
         {
-            Vector2 ab = Vector2.Lerp(a, b, t);
-            Vector2 bc = Vector2.Lerp(b, c, t);
-            // Debug.DrawLine(ab, bc, Color.magenta, 0.1f);
+            var ab = Vector2.Lerp(a, b, t);
+            var bc = Vector2.Lerp(b, c, t);
             return Vector2.Lerp(ab, bc, t);
         }
 
         private void Move()
         {
-            if (currentCorner.obj == null)
+            if (currentLocation.obj == null)
             {
-                FindNearCorner();
+                FindNearestCorner();
                 return;
             }
 
-            if (Time.frameCount % 10 == 0)
-            {
-                HandlePlaceSetting();
-            }
+            if (Time.frameCount % 10 == 0) UpdateCurrentLocationType();
 
-            currentCorner.cornerPoints = GetCornerPoint(currentCorner.obj);
-            currentCorner.pointA = currentCorner.cornerPoints[currentCorner.cornerIdx];
-            currentCorner.pointB =
-                currentCorner.cornerPoints[(currentCorner.cornerIdx == 3) ? 0 : (currentCorner.cornerIdx + 1)];
-            HandleMovementAndRotation(); // extract method
-            HandleHitCheck(); // extract method
-            if (ShouldFindNearCorner()) // extract method
-            {
-                FindNearCorner();
-            }
+            currentLocation.cornerPoints = GetCornerPoint(currentLocation.obj);
+            currentLocation.pointA = currentLocation.cornerPoints[currentLocation.cornerIdx];
+            currentLocation.pointB =
+                currentLocation.cornerPoints[currentLocation.cornerIdx == 3 ? 0 : currentLocation.cornerIdx + 1];
+            MoveAndRotate();
+            PerformHitCheck();
+            if (ShouldSearchForNewCorner())
+                FindNearestCorner();
         }
 
-        private void HandlePlaceSetting()
+        private void UpdateCurrentLocationType()
         {
-            if (currentCorner.obj.name == "TITLE") SetCurrentPlace(LandingPlace.title);
-            else if (currentCorner.obj.name == "ISLAND") SetCurrentPlace(LandingPlace.island);
+            if (currentLocation.obj.name == "TITLE") SetCurrentLocationType(CurrentLocationType.Title);
+            else if (currentLocation.obj.name == "ISLAND") SetCurrentLocationType(CurrentLocationType.Island);
         }
 
-        private void HandleMovementAndRotation()
+        private void MoveAndRotate()
         {
             // Move along position data
-            if (!pause)
+            if (!isPaused)
             {
-                float displacement = moveSpeed * Time.deltaTime;
-                currentCorner.normal += currentCorner.direction ? displacement : -displacement;
+                var displacement = moveSpeed * Time.deltaTime;
+                currentLocation.normal += currentLocation.direction ? displacement : -displacement;
             }
 
             gameObject.transform.position =
-                Vector2.Lerp(currentCorner.pointA, currentCorner.pointB, currentCorner.normal);
+                Vector2.Lerp(currentLocation.pointA, currentLocation.pointB, currentLocation.normal);
 
             // Rotate along degree
-            Vector3 target = currentCorner.direction ? currentCorner.pointB : currentCorner.pointA;
+            Vector3 target = currentLocation.direction ? currentLocation.pointB : currentLocation.pointA;
             target.z = 0f;
-            Vector3 objectPos = transform.position;
+            var objectPos = transform.position;
             target -= objectPos;
-            float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg;
+            var angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
         }
 
-        private void HandleHitCheck()
+        private void PerformHitCheck()
         {
-            // Get Height Hit Check info
             if (Time.time > headHitCheckTime)
             {
                 headHitCheckTime = Time.time + hitCheckInterval;
                 if (CheckIfHeadHit())
                 {
-                    onIsland = false;
-                    FindNearCorner();
+                    isOnIsland = false;
+                    FindNearestCorner();
                 }
             }
         }
 
-        private bool ShouldFindNearCorner()
+        private bool ShouldSearchForNewCorner()
         {
-            return (currentCorner.normal > 0.95f && currentCorner.direction) ||
-                   (currentCorner.normal < 0.05f && !currentCorner.direction);
+            return (currentLocation.normal > 0.95f && currentLocation.direction) ||
+                   (currentLocation.normal < 0.05f && !currentLocation.direction);
         }
 
         private bool CheckIfHeadHit()
         {
-            for (int i = 0; i < SquareElements.Count; i++)
+            for (var i = 0; i < squareBlockElements.Count; i++)
             {
-                if (SquareElements[i].obj == null || SquareElements[i].obj == currentCorner.obj) continue;
+                if (squareBlockElements[i].obj == null || squareBlockElements[i].obj == currentLocation.obj) continue;
 
-                Vector2 position = headObj.transform.position;
-                Vector2 closest = SquareElements[i].obj.GetComponent<BoxCollider2D>().ClosestPoint(position);
+                Vector2 position = headObject.transform.position;
+                var closest = squareBlockElements[i].obj.GetComponent<BoxCollider2D>().ClosestPoint(position);
 
                 if (closest == position)
                 {
-                    Rigidbody2D rb2D = SquareElements[i].obj.GetComponent<Rigidbody2D>();
+                    var rb2D = squareBlockElements[i].obj.GetComponent<Rigidbody2D>();
                     if (rb2D != null)
                     {
-                        float velocity = Mathf.Abs(rb2D.velocity.x) + Mathf.Abs(rb2D.velocity.y);
-                        if (velocity >= 0.01f) pet.OnHit();
+                        var velocity = Mathf.Abs(rb2D.velocity.x) + Mathf.Abs(rb2D.velocity.y);
+                        if (velocity >= 0.01f) petController.OnHit();
                     }
 
                     return true;
@@ -238,191 +235,185 @@ namespace Core.Pet
             return false;
         }
 
-        private void InitializeCurrentCorner(CurrentCorner currentCorner)
+        private void InitiateCurrentCorner(CurrentLocation currentLocation)
         {
-            //currentCorner.normal = 0;
-            currentCorner.cornerPoints = GetCornerPoint(currentCorner.obj);
-            currentCorner.pointA = currentCorner.cornerPoints[currentCorner.cornerIdx];
-            currentCorner.pointB =
-                currentCorner.cornerPoints[currentCorner.cornerIdx == 3 ? 0 : currentCorner.cornerIdx + 1];
+            currentLocation.cornerPoints = GetCornerPoint(currentLocation.obj);
+            currentLocation.pointA = currentLocation.cornerPoints[currentLocation.cornerIdx];
+            currentLocation.pointB =
+                currentLocation.cornerPoints[currentLocation.cornerIdx == 3 ? 0 : currentLocation.cornerIdx + 1];
         }
 
-        private void FindNearCorner()
+        private void FindNearestCorner()
         {
-            // print("findnearCornter");
-            LoadSquare();
-            if (onIsland)
+            LoadSquares();
+            if (isOnIsland)
             {
-                currentCorner.obj = island;
-                currentCorner.cornerIdx = 1;
+                currentLocation.obj = island;
+                currentLocation.cornerIdx = 1;
             }
             else
             {
-                availables = new List<AvailableCorner>();
-                GetAvailable(searchComplexity);
-                if (availables.Count == 0)
+                availableLocations = new List<AvailableLocation>();
+                GetAvailableLocations(searchComplexity);
+                if (availableLocations.Count == 0)
                 {
-                    Debug.LogWarning("there is no where : " + availables.Count);
+                    Debug.LogWarning("there is no where : " + availableLocations.Count);
                     return;
                 }
 
-                availables = availables.OrderBy(x => x.dist).ToList();
-                //sort available list by
+                availableLocations = availableLocations.OrderBy(x => x.dist).ToList();
 
-                int nextIdx = 0;
-                if (availables.Count > 1)
+                var nextIdx = 0;
+                if (availableLocations.Count > 1)
                 {
-                    while (availables[nextIdx].sqrElm.obj == currentCorner.obj &&
-                           availables[nextIdx].cornerIdx == currentCorner.cornerIdx && nextIdx - 1 < availables.Count &&
-                           !onIsland)
-                    {
+                    while (availableLocations[nextIdx].squareElement.obj == currentLocation.obj &&
+                           availableLocations[nextIdx].cornerIdx == currentLocation.cornerIdx &&
+                           nextIdx - 1 < availableLocations.Count &&
+                           !isOnIsland)
                         nextIdx += 1;
-                    }
 
-                    if (availables[nextIdx].sqrElm.obj == oldCorner.obj &&
-                        availables[nextIdx].cornerIdx == oldCorner.cornerIdx && nextIdx - 1 < availables.Count)
+                    if (availableLocations[nextIdx].squareElement.obj == previousLocation.obj &&
+                        availableLocations[nextIdx].cornerIdx == previousLocation.cornerIdx &&
+                        nextIdx - 1 < availableLocations.Count)
                         nextIdx += 1;
                 }
 
 
-                if (nextIdx >= availables.Count)
-                {
-                    nextIdx = 0;
-                }
+                if (nextIdx >= availableLocations.Count) nextIdx = 0;
 
                 if (Random.Range(0f, 1f) < 0.1f) nextIdx = Random.Range(0, nextIdx + 1);
-                if (availables[nextIdx].dist > 0.5f) nextIdx = 0;
+                if (availableLocations[nextIdx].dist > 0.5f) nextIdx = 0;
 
-                oldCorner.obj = currentCorner.obj;
-                oldCorner.cornerIdx = currentCorner.cornerIdx;
+                previousLocation.obj = currentLocation.obj;
+                previousLocation.cornerIdx = currentLocation.cornerIdx;
 
-                currentCorner.obj = availables[nextIdx].sqrElm.obj;
-                currentCorner.cornerIdx = availables[nextIdx].cornerIdx;
-                //currentCorner.normal = availables[nextIdx].normal;
+                currentLocation.obj = availableLocations[nextIdx].squareElement.obj;
+                currentLocation.cornerIdx = availableLocations[nextIdx].cornerIdx;
             }
 
             //Setup Next Move
-            currentCorner.cornerPoints = GetCornerPoint(currentCorner.obj);
-            currentCorner.pointA = currentCorner.cornerPoints[currentCorner.cornerIdx];
-            currentCorner.pointB =
-                currentCorner.cornerPoints[currentCorner.cornerIdx == 3 ? 0 : currentCorner.cornerIdx + 1];
+            currentLocation.cornerPoints = GetCornerPoint(currentLocation.obj);
+            currentLocation.pointA = currentLocation.cornerPoints[currentLocation.cornerIdx];
+            currentLocation.pointB =
+                currentLocation.cornerPoints[currentLocation.cornerIdx == 3 ? 0 : currentLocation.cornerIdx + 1];
 
-            Vector2 closest =
-                GetClosestPointOnLineSegment(gameObject.transform.position, currentCorner.pointA, currentCorner.pointB);
-            float dist = Vector2.Distance(currentCorner.pointA, currentCorner.pointB);
-            currentCorner.normal = Vector2.Distance(currentCorner.pointA, closest) / dist;
-            currentCorner.normal = Mathf.Clamp(currentCorner.normal, 0.05f, 0.95f);
+            var closest =
+                FindClosestPointsOnLine(gameObject.transform.position, currentLocation.pointA, currentLocation.pointB);
+            var dist = Vector2.Distance(currentLocation.pointA, currentLocation.pointB);
+            currentLocation.normal = Vector2.Distance(currentLocation.pointA, closest) / dist;
+            currentLocation.normal = Mathf.Clamp(currentLocation.normal, 0.05f, 0.95f);
             moveSpeed = moveVelocity / dist * Random.Range(0.8f, 1.2f);
 
 
             //Get DeltaHeight
-            Vector2 midOfLine = Vector2.Lerp(currentCorner.pointA, currentCorner.pointB, 0.5f);
-            Vector2 midOfSquare = currentCorner.obj.transform.position;
+            var midOfLine = Vector2.Lerp(currentLocation.pointA, currentLocation.pointB, 0.5f);
+            Vector2 midOfSquare = currentLocation.obj.transform.position;
 
-            float x = midOfSquare.x - midOfLine.x;
-            float y = midOfSquare.y - midOfLine.y;
-            float d = Vector2.Distance(midOfLine, midOfSquare);
-            Vector2 delta_height = new Vector2(x * height / d, y * height / d);
+            var x = midOfSquare.x - midOfLine.x;
+            var y = midOfSquare.y - midOfLine.y;
+            var d = Vector2.Distance(midOfLine, midOfSquare);
+            var delta_height = new Vector2(x * Height / d, y * Height / d);
 
-            float noramlHeight = height / dist * 1.2f;
-            bool leftAvailalble = CheckAvailablity(currentCorner.pointA, currentCorner.pointB,
-                currentCorner.normal - noramlHeight, delta_height);
-            bool rightAvailable = CheckAvailablity(currentCorner.pointA, currentCorner.pointB,
-                currentCorner.normal + noramlHeight, delta_height);
+            var noramlHeight = Height / dist * 1.2f;
+            var leftAvailalble = CheckPositionAvailability(currentLocation.pointA, currentLocation.pointB,
+                currentLocation.normal - noramlHeight, delta_height);
+            var rightAvailable = CheckPositionAvailability(currentLocation.pointA, currentLocation.pointB,
+                currentLocation.normal + noramlHeight, delta_height);
 
             //Set Direction
             if (leftAvailalble && !rightAvailable)
-                currentCorner.direction = false;
+            {
+                currentLocation.direction = false;
+            }
             else if (!leftAvailalble && rightAvailable)
-                currentCorner.direction = true;
+            {
+                currentLocation.direction = true;
+            }
             else if (leftAvailalble && rightAvailable)
-                currentCorner.direction = (Random.value > 0.5f);
+            {
+                currentLocation.direction = Random.value > 0.5f;
+            }
             else
             {
-                currentCorner.obj = island;
-                currentCorner.cornerIdx = 1;
+                currentLocation.obj = island;
+                currentLocation.cornerIdx = 1;
             }
 
-            if (!currentCorner.direction)
-            {
+            if (!currentLocation.direction)
                 gameObject.transform.localScale = new Vector3(-Mathf.Abs(gameObject.transform.localScale.x),
                     -Mathf.Abs(gameObject.transform.localScale.y), Mathf.Abs(gameObject.transform.localScale.z));
-            }
             else
                 gameObject.transform.localScale = new Vector3(-Mathf.Abs(gameObject.transform.localScale.x),
                     Mathf.Abs(gameObject.transform.localScale.y), Mathf.Abs(gameObject.transform.localScale.z));
 
             //Setup Transition
-            float transitionDist = Mathf.Abs(Vector2.Distance(gameObject.transform.position, closest));
+            var transitionDist = Mathf.Abs(Vector2.Distance(gameObject.transform.position, closest));
 
-            transition.p1 = gameObject.transform.position;
-            transition.p3 = closest;
-            if (transitionDist < height)
+            transition.startPoint = gameObject.transform.position;
+            transition.endPoint = closest;
+            if (transitionDist < Height)
             {
                 transitionSpeed = shortTransition;
-                transition.p2 = gameObject.transform.position +
-                                (headObj.transform.position - gameObject.transform.position) * 0.2f;
+                transition.controlPoint = gameObject.transform.position +
+                                          (headObject.transform.position - gameObject.transform.position) * 0.2f;
             }
             else
             {
                 transitionSpeed = longTransition;
-                transition.p2 = gameObject.transform.position +
-                                (headObj.transform.position - gameObject.transform.position) * 2;
+                transition.controlPoint = gameObject.transform.position +
+                                          (headObject.transform.position - gameObject.transform.position) * 2;
             }
 
-            transition.r1 = gameObject.transform.rotation;
-            pet.JumpStart();
+            transition.startRotation = gameObject.transform.rotation;
+            petController.JumpStart();
             transition.normal = 0;
-            onTransition = true;
-
-            return;
+            isOnTransition = true;
         }
 
-        private void GetAvailable(int target)
+        private void GetAvailableLocations(int target)
         {
-            availables = new List<AvailableCorner>();
+            availableLocations = new List<AvailableLocation>();
 
-            if (onIsland)
+            if (isOnIsland)
             {
-                currentCorner.obj = island;
-                currentCorner.cornerIdx = 1;
-                currentCorner.normal = 0;
+                currentLocation.obj = island;
+                currentLocation.cornerIdx = 1;
+                currentLocation.normal = 0;
 
-                InitializeCurrentCorner(currentCorner);
+                InitiateCurrentCorner(currentLocation);
                 return;
             }
 
-            int count = 0;
-            while (availables.Count < target && count < squares.Length)
+            var count = 0;
+            while (availableLocations.Count < target && count < squares.Length)
             {
-                GetSquarePointsData(count);
+                RetrieveSquareCornerData(count);
                 count += 1;
             }
         }
 
-        private void GetSquareDistSort()
+        private void SortSquaresByDistance()
         {
-            SquareElements = new List<SquareElement>();
+            squareBlockElements = new List<SquareElement>();
             Vector2 playerPos = gameObject.transform.position;
 
-            foreach (GameObject square in squares)
+            foreach (var square in squares)
             {
-                SquareElement elem = new SquareElement();
+                var elem = new SquareElement();
 
-                Vector2 closest = square.GetComponent<BoxCollider2D>().ClosestPoint(playerPos);
+                var closest = square.GetComponent<BoxCollider2D>().ClosestPoint(playerPos);
                 elem.dist = Vector2.Distance(playerPos, closest);
                 elem.obj = square;
-                SquareElements.Add(elem);
+                squareBlockElements.Add(elem);
             }
 
-            SquareElements = SquareElements.OrderBy(x => x.dist).ToList();
+            squareBlockElements = squareBlockElements.OrderBy(x => x.dist).ToList();
         }
 
         private Vector2[] GetCornerPoint(GameObject obj)
         {
             var sqr = obj.GetComponent<SquareBlockCtrl>();
             if (sqr != null)
-            {
                 return new Vector2[]
                 {
                     sqr.tl.transform.position,
@@ -430,7 +421,6 @@ namespace Core.Pet
                     sqr.br.transform.position,
                     sqr.bl.transform.position
                 };
-            }
 
             var renderer = obj.GetComponent<SpriteRenderer>();
             return new[]
@@ -455,182 +445,166 @@ namespace Core.Pet
                     Mathf.Abs(Vector2.Distance(P0, P1 + P2 / 2f))) / 3f;
         }
 
-        private void GetSquarePointsData(int idx)
+        private void RetrieveSquareCornerData(int idx)
         {
-            // Debug.DrawLine(gameObject.transform.position, SquareElements[idx].obj.transform.position, Color.blue, 1f);
-            if (SquareElements[idx].obj == null) return;
+            if (squareBlockElements[idx].obj == null) return;
 
-            SquareElements[idx].cornerPoints = GetCornerPoint(SquareElements[idx].obj);
+            squareBlockElements[idx].cornerPoints = GetCornerPoint(squareBlockElements[idx].obj);
 
-            SquareElements[idx].closestPointOnLine = new Vector2[4];
-            SquareElements[idx].closestPointOnLine[0] = GetClosestPointOnLineSegment(gameObject.transform.position,
-                SquareElements[idx].cornerPoints[0], SquareElements[idx].cornerPoints[1]);
-            SquareElements[idx].closestPointOnLine[1] = GetClosestPointOnLineSegment(gameObject.transform.position,
-                SquareElements[idx].cornerPoints[1], SquareElements[idx].cornerPoints[2]);
-            SquareElements[idx].closestPointOnLine[2] = GetClosestPointOnLineSegment(gameObject.transform.position,
-                SquareElements[idx].cornerPoints[2], SquareElements[idx].cornerPoints[3]);
-            SquareElements[idx].closestPointOnLine[3] = GetClosestPointOnLineSegment(gameObject.transform.position,
-                SquareElements[idx].cornerPoints[3], SquareElements[idx].cornerPoints[0]);
+            squareBlockElements[idx].closestPointsOnLine = new Vector2[4];
+            squareBlockElements[idx].closestPointsOnLine[0] = FindClosestPointsOnLine(gameObject.transform.position,
+                squareBlockElements[idx].cornerPoints[0], squareBlockElements[idx].cornerPoints[1]);
+            squareBlockElements[idx].closestPointsOnLine[1] = FindClosestPointsOnLine(gameObject.transform.position,
+                squareBlockElements[idx].cornerPoints[1], squareBlockElements[idx].cornerPoints[2]);
+            squareBlockElements[idx].closestPointsOnLine[2] = FindClosestPointsOnLine(gameObject.transform.position,
+                squareBlockElements[idx].cornerPoints[2], squareBlockElements[idx].cornerPoints[3]);
+            squareBlockElements[idx].closestPointsOnLine[3] = FindClosestPointsOnLine(gameObject.transform.position,
+                squareBlockElements[idx].cornerPoints[3], squareBlockElements[idx].cornerPoints[0]);
 
             bool[] constraints = { false, false, false, false };
-            if (SquareElements[idx].obj.GetComponent<Core.Main.FootstepConstraints>() != null)
-                constraints = SquareElements[idx].obj.GetComponent<Core.Main.FootstepConstraints>().constraints;
-            SquareElements[idx].constraints = constraints;
+            if (squareBlockElements[idx].obj.GetComponent<FootstepConstraints>() != null)
+                constraints = squareBlockElements[idx].obj.GetComponent<FootstepConstraints>().constraints;
+            squareBlockElements[idx].constraints = constraints;
 
 
-            SquareElements[idx].dists = new float[4];
-            for (int i = 0; i < 4; i++)
-            {
-                SquareElements[idx].dists[i] = constraints[i]
+            squareBlockElements[idx].dists = new float[4];
+            for (var i = 0; i < 4; i++)
+                squareBlockElements[idx].dists[i] = constraints[i]
                     ? float.MaxValue
-                    : Vector2.Distance(gameObject.transform.position, SquareElements[idx].closestPointOnLine[i]);
-            }
+                    : Vector2.Distance(gameObject.transform.position, squareBlockElements[idx].closestPointsOnLine[i]);
 
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
                 if (constraints[i]) continue;
-                Vector2 A = SquareElements[idx].cornerPoints[i];
-                Vector2 B = SquareElements[idx].cornerPoints[i + 1 > 3 ? 0 : i + 1];
+                var A = squareBlockElements[idx].cornerPoints[i];
+                var B = squareBlockElements[idx].cornerPoints[i + 1 > 3 ? 0 : i + 1];
                 Vector2 P = gameObject.transform.position;
 
                 //Get DeltaHeight
-                Vector2 midOfLine = Vector2.Lerp(A, B, 0.5f);
-                Vector2 midOfSquare = SquareElements[idx].obj.transform.position;
+                var midOfLine = Vector2.Lerp(A, B, 0.5f);
+                Vector2 midOfSquare = squareBlockElements[idx].obj.transform.position;
 
-                float x = midOfSquare.x - midOfLine.x;
-                float y = midOfSquare.y - midOfLine.y;
-                float d = Vector2.Distance(midOfLine, midOfSquare);
-                Vector2 delta_height = new Vector2(x * height / d, y * height / d);
+                var x = midOfSquare.x - midOfLine.x;
+                var y = midOfSquare.y - midOfLine.y;
+                var d = Vector2.Distance(midOfLine, midOfSquare);
+                var delta_height = new Vector2(x * Height / d, y * Height / d);
 
                 //Get closest point
-                Vector2 closetPoint = SquareElements[idx].closestPointOnLine[i];
+                var closetPoint = squareBlockElements[idx].closestPointsOnLine[i];
 
                 //Check if target points are available
-                float normalPoint = Vector2.Distance(A, closetPoint) / Vector2.Distance(A, B);
-                float noramlHeight = height / Vector2.Distance(A, B) * 1.5f;
-                bool leftAvailalble = CheckAvailablity(A, B, normalPoint - noramlHeight, delta_height);
-                bool rightAvailable = CheckAvailablity(A, B, normalPoint + noramlHeight, delta_height);
+                var normalPoint = Vector2.Distance(A, closetPoint) / Vector2.Distance(A, B);
+                var noramlHeight = Height / Vector2.Distance(A, B) * 1.5f;
+                var leftAvailalble = CheckPositionAvailability(A, B, normalPoint - noramlHeight, delta_height);
+                var rightAvailable = CheckPositionAvailability(A, B, normalPoint + noramlHeight, delta_height);
 
-                bool isAvailable = (leftAvailalble || rightAvailable);
+                var isAvailable = leftAvailalble || rightAvailable;
 
                 // DEBUG!
-                Vector2 checkpointA = Vector2.Lerp(A, B, normalPoint - noramlHeight) - delta_height;
-                Vector2 checkpointB = Vector2.Lerp(A, B, normalPoint + noramlHeight) - delta_height;
-
-                if (isAvailable) Debug.DrawLine(checkpointA, checkpointB, Color.red, 1f);
-                else Debug.DrawLine(checkpointA, checkpointB, Color.yellow, 1f);
-                Debug.DrawLine(closetPoint, checkpointA, leftAvailalble ? Color.red : Color.yellow, 1f);
-                Debug.DrawLine(closetPoint, checkpointB, rightAvailable ? Color.red : Color.yellow, 1f);
+                // var checkpointA = Vector2.Lerp(A, B, normalPoint - noramlHeight) - delta_height;
+                // var checkpointB = Vector2.Lerp(A, B, normalPoint + noramlHeight) - delta_height;
+                // if (isAvailable) Debug.DrawLine(checkpointA, checkpointB, Color.red, 1f);
+                // else Debug.DrawLine(checkpointA, checkpointB, Color.yellow, 1f);
+                // Debug.DrawLine(closetPoint, checkpointA, leftAvailalble ? Color.red : Color.yellow, 1f);
+                // Debug.DrawLine(closetPoint, checkpointB, rightAvailable ? Color.red : Color.yellow, 1f);
 
                 if (isAvailable)
                 {
-                    AvailableCorner available = new AvailableCorner();
-                    available.sqrElm = SquareElements[idx];
+                    var available = new AvailableLocation();
+                    available.squareElement = squareBlockElements[idx];
                     available.cornerIdx = i;
-                    available.dist = SquareElements[idx].dists[i];
+                    available.dist = squareBlockElements[idx].dists[i];
 
                     available.leftAvailalble = leftAvailalble;
                     available.rightAvailable = rightAvailable;
                     available.normal = normalPoint;
 
-                    availables.Add(available);
+                    availableLocations.Add(available);
                 }
             }
         }
 
-        private static Vector2 GetClosestPointOnLineSegment(Vector2 P, Vector2 A, Vector2 B)
+        private static Vector2 FindClosestPointsOnLine(Vector2 P, Vector2 A, Vector2 B)
         {
-            Vector2 AP = P - A; //Vector from A to P   
-            Vector2 AB = B - A; //Vector from A to B  
+            var AP = P - A; //Vector from A to P   
+            var AB = B - A; //Vector from A to B  
 
-            float magnitudeAB = AB.sqrMagnitude; //Magnitude of AB vector (it's length squared)     
-            float ABAPproduct = Vector2.Dot(AP, AB); //The DOT product of a_to_p and a_to_b     
-            float distance = ABAPproduct / magnitudeAB; //The normalized "distance" from a to your closest point  
+            var magnitudeAB = AB.sqrMagnitude; //Magnitude of AB vector (it's length squared)     
+            var ABAPproduct = Vector2.Dot(AP, AB); //The DOT product of a_to_p and a_to_b     
+            var distance = ABAPproduct / magnitudeAB; //The normalized "distance" from a to your closest point  
 
             if (distance < 0) return A;
-            else if (distance > 1) return B;
-            else return A + AB * distance;
+            if (distance > 1) return B;
+            return A + AB * distance;
         }
 
-        private bool CheckAvailablity(Vector2 A, Vector2 B, float normal, Vector2 delta_height)
+        private bool CheckPositionAvailability(Vector2 A, Vector2 B, float normal, Vector2 delta_height)
         {
             if (normal < 0f || normal > 1f) return false;
 
-            Vector2 point = Vector2.Lerp(A, B, normal) - delta_height;
-            // Debug.DrawLine(A, point, Color.magenta, 1f);
-            // Debug.DrawLine(B, point, Color.magenta, 1f);
+            var point = Vector2.Lerp(A, B, normal) - delta_height;
 
-            foreach (GameObject obj in squares)
+            foreach (var obj in squares)
             {
-                Vector2 closest = obj.GetComponent<BoxCollider2D>().ClosestPoint(point);
+                var closest = obj.GetComponent<BoxCollider2D>().ClosestPoint(point);
                 if (closest == point)
                 {
                     Debug.DrawLine(obj.transform.position, point, Color.magenta, 1f);
                     return false;
                 }
-
-                // closest = island.GetComponent<BoxCollider2D>().ClosestPoint(point);
-                // if (closest == point) return false;
             }
 
             return true;
         }
 
-        private void LoadSquare()
+        private void LoadSquares()
         {
             squares = GameObject.FindGameObjectsWithTag("square");
-            // print("LoadSquare SQRS.COUNT : " + squares.Length);
             if (squares.Length == 0)
             {
-                onIsland = true;
+                isOnIsland = true;
                 return;
             }
-            else onIsland = false;
 
-            //onIsland = false;
-            GetSquareDistSort();
+            isOnIsland = false;
+            SortSquaresByDistance();
         }
 
         public void PauseMovement()
         {
-            pause = true;
+            isPaused = true;
         }
 
         public void ContinueMovement(float speed)
         {
             moveVelocity = speed;
-            pause = false;
-            float dist = Vector2.Distance(currentCorner.pointA, currentCorner.pointB);
+            isPaused = false;
+            var dist = Vector2.Distance(currentLocation.pointA, currentLocation.pointB);
             moveSpeed = moveVelocity / dist * Random.Range(0.8f, 1.2f);
         }
 
-        private void SetCurrentPlace(LandingPlace place)
+        private void SetCurrentLocationType(CurrentLocationType place)
         {
             if (currentPlace == place) return;
             currentPlace = place;
 
             switch (currentPlace)
             {
-                case LandingPlace.title:
-                    pet.OnTitle();
+                case CurrentLocationType.Title:
+                    petController.OnTitle();
                     break;
-                case LandingPlace.island:
-                    pet.OnIsland();
+                case CurrentLocationType.Island:
+                    petController.OnIsland();
                     break;
             }
         }
 
-        private void OnEnable()
-        {
-            FindNearCorner();
-        }
-
         public void ForceLandOnSquare(GameObject targetSquare, float holdDuration)
         {
-            currentCorner.obj = targetSquare;
-            currentCorner.cornerIdx = 3;
-            currentCorner.normal = Random.Range(0.4f, 0.6f);
-            onTransition = false;
+            currentLocation.obj = targetSquare;
+            currentLocation.cornerIdx = 3;
+            currentLocation.normal = Random.Range(0.4f, 0.6f);
+            isOnTransition = false;
 
             headHitCheckTime = Time.time + holdDuration;
         }
@@ -639,42 +613,42 @@ namespace Core.Pet
 
     public class SquareElement
     {
-        public GameObject obj;
-        public float dist;
-        public Vector2[] cornerPoints = null;
-        public Vector2[] closestPointOnLine;
-        public float[] dists = null;
-        public int[] shortCornerIdx = null;
+        public Vector2[] closestPointsOnLine;
         public bool[] constraints;
+        public Vector2[] cornerPoints;
+        public float dist;
+        public float[] dists;
+        public GameObject obj;
+        public int[] shortCornerIdx = null;
     }
 
-    public struct AvailableCorner
+    public struct AvailableLocation
     {
-        public SquareElement sqrElm;
+        public SquareElement squareElement;
         public int cornerIdx;
         public float dist;
         public bool leftAvailalble, rightAvailable;
         public float normal;
     }
 
-    public class CurrentCorner
+    public class CurrentLocation
     {
-        public GameObject obj = null;
-        public Vector2[] cornerPoints = null;
         public int cornerIdx;
-        public float normal;
+        public Vector2[] cornerPoints;
         public bool direction;
+        public float normal;
+        public GameObject obj;
         public Vector2 pointA, pointB;
     }
 
     public struct Transition
     {
-        public Vector2 p1;
-        public Vector2 p2;
-        public Vector2 p3;
+        public Vector2 startPoint;
+        public Vector2 controlPoint;
+        public Vector2 endPoint;
 
-        public Quaternion r1;
-        public Quaternion r2;
+        public Quaternion startRotation;
+        public Quaternion endRotation;
 
         public float normal;
     }
