@@ -31,8 +31,7 @@ namespace DynamicGames.MiniGames.Build
 
         [Header("GamePlay Status")] 
         [SerializeField] private int[] stageIndices;
-
-        [Header("Constants")] 
+        
         private const float GravityScale = -1;
         private const float LightDecreaseFactor = 0.97f;
         private const float Threshold = 0.015f;
@@ -44,6 +43,8 @@ namespace DynamicGames.MiniGames.Build
         private GameStatus gameStatus;
         private PetObject player;
 
+        private enum GameStatus { Ready, HorizontalMoving, VerticalMoving, GameOver }
+        
         [Serializable]
         public class UiComponents
         {
@@ -90,10 +91,7 @@ namespace DynamicGames.MiniGames.Build
             public int fallCount;
         }
         
-        private void Start()
-        {
-            InitGame();
-        }
+        private void Start() => InitGame();
 
         private void Update()
         {
@@ -484,14 +482,6 @@ namespace DynamicGames.MiniGames.Build
             uiComponents.scoreOfThisGameText.DOFade(0, 1.5f)
                 .SetDelay(1f)
                 .SetEase(Ease.OutQuad);
-        }
-
-        private enum GameStatus
-        {
-            Ready,
-            HorizontalMoving,
-            VerticalMoving,
-            GameOver
         }
         
         private class StageItem

@@ -21,10 +21,7 @@ namespace DynamicGames.Pet
         [SerializeField] public PetWeatherData[] petWeatherDatas;
         [SerializeField] public Dictionary<PetType, PetDialogueData> petDialogueDatas = new();
 
-        private void Awake()
-        {
-            Instance = this;
-        }
+        private void Awake() => Instance = this;
 
         private void OnEnable()
         {
