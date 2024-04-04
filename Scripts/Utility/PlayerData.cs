@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace Utility
+namespace DynamicGames.Utility
 {
-    static class PlayerData
+    internal static class PlayerData
     {
         public static bool HasKey(DataKey key)
         {
             return PlayerPrefs.HasKey(key.ToString());
-            
         }
+
         public static string GetString(DataKey key, string defaultValue = "")
         {
             return PlayerPrefs.GetString(key.ToString(), defaultValue);
@@ -26,7 +26,7 @@ namespace Utility
         {
             return PlayerPrefs.GetFloat(key.ToString(), defaultValue);
         }
-        
+
         public static void SetInt(DataKey key, int value)
         {
             PlayerPrefs.SetInt(key.ToString(), value);
@@ -49,8 +49,8 @@ namespace Utility
     public class JsonPlayerData
     {
         private const string FileName = "playerData.json";
-        private string filePath;
         private Dictionary<string, object> data;
+        private readonly string filePath;
 
         public JsonPlayerData()
         {
@@ -62,18 +62,12 @@ namespace Utility
         {
             data = new Dictionary<string, object>();
 
-            if (!File.Exists(filePath))
-            {
-                return;
-            }
+            if (!File.Exists(filePath)) return;
 
             try
             {
-                string jsonData = File.ReadAllText(filePath);
-                if (!string.IsNullOrEmpty(jsonData))
-                {
-                    data = JsonUtility.FromJson<Dictionary<string, object>>(jsonData);
-                }
+                var jsonData = File.ReadAllText(filePath);
+                if (!string.IsNullOrEmpty(jsonData)) data = JsonUtility.FromJson<Dictionary<string, object>>(jsonData);
             }
             catch (Exception e)
             {
@@ -83,7 +77,7 @@ namespace Utility
 
         private void SaveData()
         {
-            string jsonData = JsonUtility.ToJson(data);
+            var jsonData = JsonUtility.ToJson(data);
             File.WriteAllText(filePath, jsonData);
         }
 
@@ -95,21 +89,16 @@ namespace Utility
 
         public int GetInt(string key, int defaultValue = 0)
         {
-            if (!data.ContainsKey(key))
-            {
-                return defaultValue;
-            }
+            if (!data.ContainsKey(key)) return defaultValue;
 
-            object value = data[key];
+            var value = data[key];
             if (value is int)
             {
                 return (int)value;
             }
-            else
-            {
-                Debug.LogError($"Key '{key}' has invalid data type (expected int)");
-                return defaultValue;
-            }
+
+            Debug.LogError($"Key '{key}' has invalid data type (expected int)");
+            return defaultValue;
         }
 
         public void SetFloat(string key, float value)
@@ -120,21 +109,16 @@ namespace Utility
 
         public float GetFloat(string key, float defaultValue = 0f)
         {
-            if (!data.ContainsKey(key))
-            {
-                return defaultValue;
-            }
+            if (!data.ContainsKey(key)) return defaultValue;
 
-            object value = data[key];
+            var value = data[key];
             if (value is float)
             {
                 return (float)value;
             }
-            else
-            {
-                Debug.LogError($"Key '{key}' has invalid data type (expected float)");
-                return defaultValue;
-            }
+
+            Debug.LogError($"Key '{key}' has invalid data type (expected float)");
+            return defaultValue;
         }
 
         public void SetString(string key, string value)
@@ -145,21 +129,16 @@ namespace Utility
 
         public string GetString(string key, string defaultValue = "")
         {
-            if (!data.ContainsKey(key))
-            {
-                return defaultValue;
-            }
+            if (!data.ContainsKey(key)) return defaultValue;
 
-            object value = data[key];
+            var value = data[key];
             if (value is string)
             {
                 return (string)value;
             }
-            else
-            {
-                Debug.LogError($"Key '{key}' has invalid data type (expected string)");
-                return defaultValue;
-            }
+
+            Debug.LogError($"Key '{key}' has invalid data type (expected string)");
+            return defaultValue;
         }
 
         public bool HasKey(string key)
@@ -182,7 +161,7 @@ namespace Utility
             SaveData();
         }
     }
-    
+
     public enum DataKey
     {
         debugMode,
@@ -196,6 +175,6 @@ namespace Utility
         totalScoreCount,
         ticketCount,
         gachaCoinCount,
-        keyCount,
+        keyCount
     }
 }
