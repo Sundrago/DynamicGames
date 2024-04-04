@@ -8,14 +8,13 @@ namespace DynamicGames.MiniGames.Shoot
     /// </summary>
     public class BulletController : MonoBehaviour
     {
-        [Header("Managers and Controllers")] [SerializeField]
-        private BulletManager bulletManager;
-
+        [Header("Managers and Controllers")] 
+        [SerializeField] private BulletManager bulletManager;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private AudioManager audioManager;
         [SerializeField] private EnemyManager enemyManager;
+        
         private int bounceCount;
-
         private Vector3 direction;
         private GameObject fx;
         private BulletInfo info = new();

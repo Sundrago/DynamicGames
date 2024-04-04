@@ -11,11 +11,11 @@ namespace DynamicGames.MiniGames.Jump
     /// </summary>
     public class StageManager : MonoBehaviour
     {
-        [Header("Managers and Controllers")] [SerializeField]
-        private GameManager gameManager;
+        [Header("Managers and Controllers")] 
+        [SerializeField] private GameManager gameManager;
 
-        [Header("Stage Elements")] [SerializeField]
-        private StageDifficulty[] stageMap;
+        [Header("Stage Elements")] 
+        [SerializeField] private StageDifficulty[] stageMap;
 
         [SerializeField] private TextAsset stageMapJson;
         [SerializeField] private GameObject step30, step60, step90, step180, step360;

@@ -17,21 +17,19 @@ namespace DynamicGames.Gachapon
         private const float SizeFactor = 1;
         private const float PositionFactor = 2200;
 
-        [Header("Managers and Controllers")] [SerializeField]
-        private GachaponManager gachaponManager;
-
+        [Header("Managers and Controllers")] 
+        [SerializeField] private GachaponManager gachaponManager;
         [SerializeField] private NewPetAnimManager newPetAnimManager;
 
-        [FormerlySerializedAs("petInventory")] [Header("UI Components")] [SerializeField]
-        private PetInventoryUIManager petInventoryUIManager;
-
+        [Header("UI Components")] 
+        [SerializeField] private PetInventoryUIManager petInventoryUIManager;
         [SerializeField] private Transform topCapsule, btmCapsule1, btmCapsule2, itemObject;
         [SerializeField] private Image rewardItem, rewardItemMask;
         [SerializeField] private List<Image> capsuleImages;
         [SerializeField] private List<ParticleImage> particleImages;
         [SerializeField] private GameObject isNewFx, isOldFx;
+        
         private bool isNew, isAnimPlaying;
-
         private Vector3 midPos;
         private List<float> particleRateOverTimes;
         private CapsuleStatus status;

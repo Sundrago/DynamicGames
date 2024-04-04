@@ -16,24 +16,21 @@ namespace DynamicGames.MiniGames.Land
     {
         private const float DeltaTimeVelocity = 50f;
 
-        [Header("Managers and Controllers")] [SerializeField]
-        private StageManager stageManager;
-
+        [Header("Managers and Controllers")] 
+        [SerializeField] private StageManager stageManager;
         [SerializeField] private IslandSizeController islandSizeController;
         [SerializeField] private PetManager petManager;
         [SerializeField] private SoundEffectsController sfxController;
         [SerializeField] private ParticleFXManager particleFXManager;
         [SerializeField] private BackgroundElementsManager bgAnimator;
 
-        [Header("UI Components")] [SerializeField]
-        private UIManager uiManager;
-
+        [Header("UI Components")] 
+        [SerializeField] private UIManager uiManager;
         [SerializeField] private GameObject tutorialPanel;
         [SerializeField] private SpriteAnimator playerRenderer;
 
-        [Header("Game Components")] [SerializeField]
-        public StageLevelAnimator stageLevelAnimator;
-
+        [Header("Game Components")] 
+        [SerializeField] public StageLevelAnimator stageLevelAnimator;
         [SerializeField] private Transform rocketDummy;
         [SerializeField] private Animator rocket, rocketCanvas;
         [SerializeField] private Animator screenShakeAnimator;

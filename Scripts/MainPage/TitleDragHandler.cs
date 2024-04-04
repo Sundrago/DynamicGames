@@ -14,6 +14,7 @@ namespace DynamicGames.MainPage
         [SerializeField] private RectTransform rectTransform;
         [SerializeField] private float tolerance;
         [SerializeField] private Rigidbody2D rigidbody;
+        
         private bool isDrag;
         private Vector2 startMousePosition, startObjectPosition;
         private Vector3 title_initPos, title_initRotation;

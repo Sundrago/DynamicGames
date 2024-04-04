@@ -14,15 +14,13 @@ namespace DynamicGames.Gachapon
     /// </summary>
     public class TicketsController : MonoBehaviour
     {
-        [Header("Managers and Controllers")] [SerializeField]
-        private AudioManager audioManager;
-
+        [Header("Managers and Controllers")] 
+        [SerializeField] private AudioManager audioManager;
         [SerializeField] private GameScoreManager gameScoreManager;
         [SerializeField] private MoneyManager moneyManager;
 
-        [Header("UI Components")] [SerializeField]
-        private List<GameObject> tickets;
-
+        [Header("UI Components")] 
+        [SerializeField] private List<GameObject> tickets;
         [SerializeField] private RectTransform rect;
         [SerializeField] private Image ticket_prefab;
         [SerializeField] private float startY, height;

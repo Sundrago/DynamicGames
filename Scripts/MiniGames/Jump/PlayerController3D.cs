@@ -10,20 +10,17 @@ namespace DynamicGames.MiniGames.Jump
     [RequireComponent(typeof(Rigidbody))]
     public class PlayerController3D : MonoBehaviour
     {
-        [Header("Managers and Controllers")] [SerializeField]
-        private GameManager jumpStage;
-
+        [Header("Managers and Controllers")] 
+        [SerializeField] private GameManager jumpStage;
         [SerializeField] private SfxController sfxController;
 
-        [Header("Game Components")] [SerializeField]
-        private SpriteAnimator spriteAnimator;
-
+        [Header("Game Components")] 
+        [SerializeField] private SpriteAnimator spriteAnimator;
         [SerializeField] private FootstepFX footstepFXPrefab;
         [SerializeField] private Transform footstepsHolder;
 
-        [Header("Game Status")] [SerializeField]
-        private float jumpForce;
-
+        [Header("Game Status")] 
+        [SerializeField] private float jumpForce;
         [SerializeField] private float posYAdd;
         [SerializeField] private float holdTime;
 

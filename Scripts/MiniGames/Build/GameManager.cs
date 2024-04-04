@@ -18,31 +18,29 @@ namespace DynamicGames.MiniGames.Build
     /// </summary>
     public class GameManager : MiniGameManager, IMiniGame
     {
-        [Header("Constants")] private const float GravityScale = -1;
+        [Header("Managers and Controllers")] 
+        [SerializeField] private StageManager stageManager;
+        [SerializeField] private SFXManager sfxManager;
+        [SerializeField] private TextAsset stageMapJson;
 
+        [Header("UI Components")] 
+        [SerializeField] private UiComponents uiComponents;
+
+        [Header("Game Components")] 
+        [SerializeField] private StageComponents stageComponents;
+
+        [Header("GamePlay Status")] 
+        [SerializeField] private int[] stageIndices;
+
+        [Header("Constants")] 
+        private const float GravityScale = -1;
         private const float LightDecreaseFactor = 0.97f;
         private const float Threshold = 0.015f;
         private const int MaxHeartCount = 5;
 
-        [Header("Managers and Controllers")] [SerializeField]
-        private StageManager stageManager;
-
-        [SerializeField] private SFXManager sfxManager;
-        [SerializeField] private TextAsset stageMapJson;
-
-        [Header("UI Components")] [SerializeField]
-        private UiComponents uiComponents;
-
-        [Header("Game Components")] [SerializeField]
-        private StageComponents stageComponents;
-
-        [Header("GamePlay Status")] [SerializeField]
-        private int[] stageIndices;
-
         private readonly List<StageItem> stageItems = new();
         private List<StageItem> currentItems = new();
         private GameplayStatus gameplayStatus;
-
         private GameStatus gameStatus;
         private PetObject player;
 

@@ -17,20 +17,18 @@ namespace DynamicGames.MiniGames.Shoot
         private const float MaxSpeed = 5f;
         private const float Velocity = 0.2f;
 
-        [Header("Managers and Controllers")] [SerializeField]
-        private GameManager gameManager;
-
+        [Header("Managers and Controllers")] 
+        [SerializeField] private GameManager gameManager;
         [SerializeField] private BulletManager bullet_Manager;
 
-        [Header("Game Components")] [SerializeField]
-        private GameObject joystickUI;
-
+        [Header("Game Components")] 
+        [SerializeField] private GameObject joystickUI;
         [SerializeField] private GameObject joystickKnob;
         [SerializeField] private GameObject targetObject;
         [SerializeField] private Boundaries boundaries;
         [SerializeField] private SpriteAnimator player;
+        
         private Vector2 initialPoint;
-
         private float joystickSensitivity = 1;
         private bool onDrag;
         private Vector3 speed = Vector3.zero;

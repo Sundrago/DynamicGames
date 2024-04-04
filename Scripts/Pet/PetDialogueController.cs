@@ -12,15 +12,13 @@ namespace DynamicGames.Pet
     /// </summary>
     public class PetDialogueController : MonoBehaviour
     {
-        [Header("UI Components")] [SerializeField]
-        private TypewriterByCharacter typewriter;
-
+        [Header("UI Components")] 
+        [SerializeField] private TypewriterByCharacter typewriter;
         [SerializeField] private TextMeshProUGUI outline_ui, main_ui;
         [SerializeField] private Image bgImage, topTail, btmTail;
 
-        [Header("Game Components")] [SerializeField]
-        private RectTransform rect;
-
+        [Header("Game Components")] 
+        [SerializeField] private RectTransform rect;
         [SerializeField] private Transform dialogueLeft, dialogueRight, canvasLeft, canvasRight, tails;
         [SerializeField] private float diff;
 

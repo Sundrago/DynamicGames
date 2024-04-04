@@ -13,13 +13,13 @@ namespace DynamicGames.Gachapon
     /// </summary>
     public class AskForUserReview : MonoBehaviour
     {
-        [Header("UI Components")] [SerializeField]
-        private Transform panel;
-
+        [Header("UI Components")] 
+        [SerializeField] private Transform panel;
         [SerializeField] private GameObject msgbox_enjoying, msgbx_yes, msgbox_no;
         [SerializeField] private GameObject reviewCube;
         [SerializeField] private TextMeshProUGUI guideText;
         [SerializeField] private Image bgImage;
+        
         private ReviewStatus status;
 
         private void Start()

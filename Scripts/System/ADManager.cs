@@ -15,9 +15,8 @@ namespace DynamicGames.System
     /// </summary>
     public class ADManager : MonoBehaviour
     {
-        [Header("Managers and Controllers")] [SerializeField]
-        private SfxController sfxController;
-
+        [Header("Managers and Controllers")] 
+        [SerializeField] private SfxController sfxController;
         [SerializeField] private DailyTicketRewardsManager dailyTicketRewardsManager;
 
         public static ADManager Instance { get; private set; }

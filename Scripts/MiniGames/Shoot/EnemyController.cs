@@ -21,18 +21,16 @@ namespace DynamicGames.MiniGames.Shoot
         private const float NearDistance = 0.45f;
         private const float AttackDistance = 0.125f;
 
-        [Header("Managers and Controllers")] [SerializeField]
-        private ScoreManager scoreManager;
-
+        [Header("Managers and Controllers")] 
+        [SerializeField] private ScoreManager scoreManager;
         [SerializeField] private GameManager gameManager;
         [SerializeField] private AudioManager audioManager;
 
-        [Header("Game components")] [SerializeField]
-        private Boundaries boundaries;
-
+        [Header("Game components")] 
+        [SerializeField] private Boundaries boundaries;
         [SerializeField] private SpriteRenderer spriteRenderer;
+        
         public EnemyStats enemyStats;
-
         private float angle, velocity;
         private Vector3 direction;
         private Transform player;

@@ -8,8 +8,9 @@ namespace DynamicGames.MiniGames.Jump
     [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerController2D : MonoBehaviour
     {
-        private const float JumpHeight = 35.5f;
         [SerializeField] private float jumpForce;
+        
+        private const float JumpHeight = 35.5f;
         private Rigidbody2D rigidBody;
 
         private void Start()

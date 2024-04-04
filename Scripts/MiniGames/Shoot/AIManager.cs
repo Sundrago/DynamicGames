@@ -10,9 +10,7 @@ namespace DynamicGames.MiniGames.Shoot
     /// </summary>
     public class AIManager : MonoBehaviour
     {
-        [FormerlySerializedAs("gameManagerManager")] [SerializeField]
-        private GameManager gameManager;
-
+        [SerializeField] private GameManager gameManager;
         [SerializeField] private EnemyManager enemyManager;
         [SerializeField] private ItemManager itemManager;
 

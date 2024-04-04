@@ -10,14 +10,12 @@ namespace DynamicGames.Pet
     /// </summary>
     public class PetEndScoreMotionCtrl : MonoBehaviour
     {
-        [Header("Managers and Controllers")] [SerializeField]
-        private PetManager petManager;
-
+        [Header("Managers and Controllers")] 
+        [SerializeField] private PetManager petManager;
         [SerializeField] private PetDialogueManager petDialogueManager;
 
-        [Header("UI Components")] [SerializeField]
-        private SpriteAnimator spriteAnimator;
-
+        [Header("UI Components")] 
+        [SerializeField] private SpriteAnimator spriteAnimator;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Transform dialogueHolder;
         [SerializeField] private TypewriterByCharacter typewriter;

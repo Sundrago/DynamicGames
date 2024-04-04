@@ -10,9 +10,8 @@ namespace DynamicGames.Pet
     /// </summary>
     public class PetInGameManager : MonoBehaviour
     {
-        [Header("Managers and Controllers")] [SerializeField]
-        private GameManager shoot;
-
+        [Header("Managers and Controllers")] 
+        [SerializeField] private GameManager shoot;
         [SerializeField] private MiniGames.Jump.GameManager jump;
         [SerializeField] private MiniGames.Land.GameManager land;
         [SerializeField] private MiniGames.Build.GameManager build;

@@ -14,23 +14,22 @@ namespace DynamicGames.MainPage
     /// s
     public class BlockDragHandler : MonoBehaviour, IDraggable
     {
-        [Header("Constants")] private const float HideTitleDelay = 0.5f;
-
-        private const float ShakeThreshold = 30f;
-        private const int ShakeInterval = 4;
-
-        [Header("Managers and Controllers")] [SerializeField]
-        private LeaderboardUI leaderboardUI;
-
-        [Header("Game Components")] [SerializeField]
-        private TextMeshPro[] title;
-
+        [Header("Managers and Controllers")] 
+        [SerializeField] private LeaderboardUI leaderboardUI;
+        
+        [Header("Game Components")] 
+        [SerializeField] private TextMeshPro[] title;
         [SerializeField] private GameObject ShineEffects;
         [SerializeField] private GameObject myUIFX;
         [SerializeField] private BlockStatusManager.BlockType blockType;
 
-        [Header("Player Interactions")] public bool isButtonSelected;
-
+        [Header("Constants")] 
+        private const float HideTitleDelay = 0.5f;
+        private const float ShakeThreshold = 30f;
+        private const int ShakeInterval = 4;
+        
+        [Header("Player Interactions")] 
+        public bool isButtonSelected;
         public bool hold;
         public GameObject miniisland;
         public Vector3 initialPos, initialRotation;

@@ -10,12 +10,12 @@ namespace DynamicGames.System
     /// </summary>
     public class DailyTicketRewardsManager : MonoBehaviour
     {
-        private const int MaxAdCount = 3;
-
-        [Header("UI Elements")] [SerializeField]
-        private Image TVIcon;
-
+        [Header("UI Elements")] 
+        [SerializeField] private Image TVIcon;
         [SerializeField] private Sprite off, on;
+        
+        private const int MaxAdCount = 3;
+        
         private int adCount;
 
         public void Init()

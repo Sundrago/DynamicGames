@@ -39,15 +39,12 @@ namespace DynamicGames.System
             tv
         }
 
-        [Header("Managers and Controllers")] [SerializeField] [TableList]
-        private List<BlockStatusData> BlockStatusDatas = new();
-
-        [FormerlySerializedAs("petinfo")] [SerializeField]
-        private PetInfoPanelManager petInfoPanelManager;
+        [Header("Managers and Controllers")] 
+        [SerializeField] [TableList] private List<BlockStatusData> BlockStatusDatas = new();
+        [SerializeField] private PetInfoPanelManager petInfoPanelManager;
 
         [Header("Game Components")] [SerializeField]
         private Transform appearPosY;
-
         public GameObject FX_appear_prefab, FX_explode_prefab, FX_explode_B_prefab;
 
         public static BlockStatusManager Instance { get; private set; }

@@ -11,8 +11,8 @@ namespace DynamicGames.MiniGames
     /// </summary>
     public abstract class MiniGameManager : SerializedMonoBehaviour, IMiniGame
     {
-        [FormerlySerializedAs("ReturnToMenuButton")] [SerializeField]
-        private ReturnToMenu returnToMenuButton;
+        [FormerlySerializedAs("ReturnToMenuButton")] 
+        [SerializeField] private ReturnToMenu returnToMenuButton;
 
         public abstract void OnGameEnter();
         public abstract void ClearGame();

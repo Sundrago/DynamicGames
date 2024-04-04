@@ -7,15 +7,15 @@ namespace DynamicGames.Pet
     /// </summary>
     public class PetInfoPanelMover : MonoBehaviour
     {
-        private const float lerpA = 0.1f;
-        private const float lerpB = 0.6f;
-
-        [Header("Game Components")] [SerializeField]
-        private Camera camera;
-
+        [Header("Game Components")] 
+        [SerializeField] private Camera camera;
         [SerializeField] public Transform targetPetPos, petSelectionIcon;
         [SerializeField] private Transform pointMarker, pointMarkerTop;
         [SerializeField] private Transform constraint_left, constraint_right;
+        
+        private const float lerpA = 0.1f;
+        private const float lerpB = 0.6f;
+        
         private float offsetY = 550f;
 
         private void Start()

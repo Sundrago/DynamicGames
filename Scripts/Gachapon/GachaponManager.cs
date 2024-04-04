@@ -22,17 +22,15 @@ namespace DynamicGames.Gachapon
             ClosUp
         }
 
-        [Header("Managers and Controllers")] [SerializeField]
-        private AudioManager audioManager;
-
+        [Header("Managers and Controllers")] 
+        [SerializeField] private AudioManager audioManager;
         [SerializeField] private SfxController sfxController;
         [SerializeField] private BlockDragHandler GachaponBtn;
         [SerializeField] private CapsuleAnimation capsuleAnimation;
         [SerializeField] private MoneyManager moneyManager;
 
-        [Header("UI Components")] [SerializeField]
-        private TextMeshProUGUI guideText;
-
+        [Header("UI Components")] 
+        [SerializeField] private TextMeshProUGUI guideText;
         [SerializeField] private Transform takeoutCapsule, lever, gachapon, coinInsertPos;
         [SerializeField] private Image myCapsule_s, myCapsule_l, bg;
         [SerializeField] private Transform ticketbtn, coinBtn;
@@ -40,8 +38,8 @@ namespace DynamicGames.Gachapon
         [SerializeField] private Transform ticketGlow, coinGlow;
         [SerializeField] private Image[] gacapon_caplsule_ui;
 
-        [Header("Sprites")] [SerializeField] private Sprite[] gachapon_capsule_sprites;
-
+        [Header("Sprites")] 
+        [SerializeField] private Sprite[] gachapon_capsule_sprites;
         [SerializeField] private Sprite[] gachapon_capsule_fullsized_sprites;
 
         private bool isAnimPlaying;

@@ -17,8 +17,8 @@ namespace DynamicGames.MiniGames.Land
 
     public class SoundEffectsController : SerializedMonoBehaviour
     {
-        [Header("Audio Components")] [SerializeField]
-        private Dictionary<SfxType, AudioSource> sfxSources;
+        [Header("Audio Components")] 
+        [SerializeField] private Dictionary<SfxType, AudioSource> sfxSources;
 
         public void PlaySFX(SfxType sfxType)
         {

@@ -19,23 +19,22 @@ namespace DynamicGames.MiniGames.Shoot
     /// </summary>
     public class ItemManager : MonoBehaviour
     {
-        private const int MaxBounceCount = 3;
 
-        [Header("Managers and Controllers")] [SerializeField]
-        private GameManager gameManager;
-
+        [Header("Managers and Controllers")] 
+        [SerializeField] private GameManager gameManager;
         [SerializeField] private BulletManager bulletManager;
         [SerializeField] private ItemController itemController;
         [SerializeField] private AudioManager audioManager;
 
-        [Header("Game Components")] [SerializeField]
-        private Boundaries boundaries, islandBounaries;
-
+        [Header("Game Components")] 
+        [SerializeField] private Boundaries boundaries, islandBounaries;
         [SerializeField] private Transform player;
         [SerializeField] private Sprite[] item_imgs;
+        
+        private const int MaxBounceCount = 3;
+        
         private Vector2 screenBounds;
         private int totalItemCount;
-
         public List<ItemController> items { get; private set; }
 
         private void Start()

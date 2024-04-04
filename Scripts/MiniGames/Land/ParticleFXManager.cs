@@ -7,9 +7,8 @@ namespace DynamicGames.MiniGames.Land
     /// </summary>
     public class ParticleFXManager : MonoBehaviour
     {
-        [Header("Game Components")] [SerializeField]
-        private Animator puffLeftAnimator, puffRightAnimator, puffFailAnimator;
-
+        [Header("Game Components")] 
+        [SerializeField] private Animator puffLeftAnimator, puffRightAnimator, puffFailAnimator;
         [SerializeField] private ParticleSystem thrustFX, thrustFX2, thrust_left, thrust_right;
 
         private ParticleSystem.EmissionModule thrustEmission, thrustEmission2, thrustLeftEmission, thrustRightEmission;

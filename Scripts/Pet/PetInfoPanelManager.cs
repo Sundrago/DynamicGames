@@ -12,21 +12,21 @@ namespace DynamicGames.Pet
     /// </summary>
     public class PetInfoPanelManager : MonoBehaviour
     {
-        [Header("Constants")] private const float ScaleOffset = 1;
-
-        private const float YPosOffsetScale = 1100;
-        private const float YPosOffset = -90;
-        private const float sliderSizeDeltaX = 910;
-
-        [Header("UI Components")] [SerializeField]
-        private Image previewImage;
-
+        [Header("UI Components")] 
+        [SerializeField] private Image previewImage;
         [SerializeField] private TextMeshProUGUI name_ui, level_ui, age_ui, skills_ui, from_ui, rank_ui;
         [SerializeField] private TextMeshProUGUI exp_ui;
         [SerializeField] private RectMask2D expSlider_ui;
         [SerializeField] private Transform panel;
         [SerializeField] private TextMeshProUGUI updateText;
         [SerializeField] private PetInfoPanelMover petInfoMover;
+        
+        [Header("Constants")] 
+        private const float ScaleOffset = 1;
+        private const float YPosOffsetScale = 1100;
+        private const float YPosOffset = -90;
+        private const float sliderSizeDeltaX = 910;
+        
         private Transform petObj;
         private SpriteRenderer spriteRenderer;
         private PetType type;

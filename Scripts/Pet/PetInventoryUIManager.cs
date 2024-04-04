@@ -13,27 +13,25 @@ namespace DynamicGames.Pet
     /// </summary>
     public class PetInventoryUIManager : SerializedMonoBehaviour
     {
-        [Header("Constants")] private const int Height = 350;
+        [Header("Managers and Controllers")] 
+        [SerializeField] private PetManager petManager;
+        [SerializeField] private PetInventoryItem petInventoryItemPrefab;
+        [SerializeField] private Transform drawerItemHolder;
 
+        [Header("UI Components")] 
+        [SerializeField] private RectTransform contents;
+        [SerializeField] private Image bgBtn;
+        [SerializeField] private PetInfoPanelManager petInfoPanelManager;
+        
+        [Header("Constants")] 
+        private const int Height = 350;
         private const int Width = 300;
         private const float SizeFactor = 0.85f;
         private const float PosFactor = 800;
         private const float StartHeight = -310;
         private const float SliderOffset = 60;
         private const float HeightOffset = -40;
-
-        [Header("Managers and Controllers")] [SerializeField]
-        private PetManager petManager;
-
-        [SerializeField] private PetInventoryItem petInventoryItemPrefab;
-        [SerializeField] private Transform drawerItemHolder;
-
-        [Header("UI Components")] [SerializeField]
-        private RectTransform contents;
-
-        [SerializeField] private Image bgBtn;
-        [SerializeField] private PetInfoPanelManager petInfoPanelManager;
-
+        
         public Dictionary<PetType, PetInventoryItem> drawerItems = new();
         private float panelHeight;
 

@@ -10,11 +10,11 @@ namespace DynamicGames.MiniGames.Shoot
     /// </summary>
     public class EnemyManager : MonoBehaviour
     {
-        [Header("Managers and Controllers")] [SerializeField]
-        private EnemyController enemyController;
-
+        [Header("Managers and Controllers")] 
+        [SerializeField] private EnemyController enemyController;
         [SerializeField] private Transform player, island;
         [SerializeField] private int defaultCapacity, maxCapacity;
+        
         private ObjectPool<EnemyController> enemyObjectPool;
         private Vector2 screenBounds;
         private bool SpawingOnSpiral;

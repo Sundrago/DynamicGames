@@ -16,9 +16,8 @@ namespace DynamicGames.MainPage
     /// </summary>
     public class MainPage : MonoBehaviour
     {
-        [Header("Managers and Controllers")] [SerializeField]
-        private SfxController sfx;
-
+        [Header("Managers and Controllers")] 
+        [SerializeField] private SfxController sfxController;
         [SerializeField] private TransitionManager transitionManager;
         [SerializeField] private RankingManager rankingManager;
         [SerializeField] private GachaponManager gachaponManager;
@@ -26,15 +25,15 @@ namespace DynamicGames.MainPage
         [SerializeField] private DailyTicketRewardsManager dailyTicketRewardsManager;
         [SerializeField] private GameManager jumpGameManager;
         [SerializeField] private MiniGames.Shoot.GameManager shootGameManager;
-
-        [FormerlySerializedAs("petInventory")] [Header("UI Components")] [SerializeField]
-        private PetInventoryUIManager petInventoryUIManager;
-
+        
+        [Header("UI Components")] 
+        [SerializeField] private PetInventoryUIManager petInventoryUIManager;
         [SerializeField] private AskForUserReview askForUserReview;
         [SerializeField] private GameObject ranking_ui;
         [SerializeField] private TitleDragHandler title;
         [SerializeField] private List<BlockDragHandler> dragSprites;
         [SerializeField] private GameObject build, land, jump, shoot, main;
+        
         private GameObject currentGameBtn;
 
         public static MainPage Instance { get; private set; }
@@ -47,7 +46,7 @@ namespace DynamicGames.MainPage
         private void Start()
         {
             Application.targetFrameRate = 60;
-            sfx.PlayBGM(3);
+            sfxController.PlayBGM(3);
         }
 
         /// <summary>
@@ -71,31 +70,31 @@ namespace DynamicGames.MainPage
                 case BlockStatusManager.BlockType.build:
                     PetInGameManager.Instance.EnterGame(GameType.build);
                     transitionManager.canvas_B = build;
-                    sfx.PlayBGM(1);
-                    sfx.PlaySfx(2);
+                    sfxController.PlayBGM(1);
+                    sfxController.PlaySfx(2);
                     MoneyManager.Instance.HidePanel();
                     break;
                 case BlockStatusManager.BlockType.land:
                     PetInGameManager.Instance.EnterGame(GameType.land);
                     transitionManager.canvas_B = land;
-                    sfx.PlayBGM(2);
-                    sfx.PlaySfx(2);
+                    sfxController.PlayBGM(2);
+                    sfxController.PlaySfx(2);
                     MoneyManager.Instance.HidePanel();
                     break;
                 case BlockStatusManager.BlockType.jump:
                     PetInGameManager.Instance.EnterGame(GameType.jump);
                     jumpGameManager.ClearGame();
                     transitionManager.canvas_B = jump;
-                    sfx.PlayBGM(0);
-                    sfx.PlaySfx(2);
+                    sfxController.PlayBGM(0);
+                    sfxController.PlaySfx(2);
                     MoneyManager.Instance.HidePanel();
                     break;
                 case BlockStatusManager.BlockType.shoot:
                     PetInGameManager.Instance.EnterGame(GameType.shoot);
                     shootGameManager.ClearGame();
                     transitionManager.canvas_B = shoot;
-                    sfx.PlayBGM(5);
-                    sfx.PlaySfx(2);
+                    sfxController.PlayBGM(5);
+                    sfxController.PlaySfx(2);
                     MoneyManager.Instance.HidePanel();
                     break;
                 case BlockStatusManager.BlockType.leaderboard:
@@ -147,7 +146,7 @@ namespace DynamicGames.MainPage
         {
             MoneyManager.Instance.ShowPanel();
             PetInGameManager.Instance.ExitGame();
-            sfx.PlayBGM(3);
+            sfxController.PlayBGM(3);
             if (currentGameBtn == null) return;
             currentGameBtn.GetComponent<Rigidbody2D>().isKinematic = true;
 

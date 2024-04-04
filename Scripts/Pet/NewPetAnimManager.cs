@@ -16,16 +16,14 @@ namespace DynamicGames.Pet
         private const float Anim2DelaySeconds = 5.2f;
         private const float CompleteDelaySeconds = 7f;
 
-        [Header("Managers and Controllers")] [SerializeField]
-        private SfxController soundFxController;
-
+        [Header("Managers and Controllers")] 
+        [SerializeField] private SfxController soundFxController;
         [SerializeField] private NewPetAnimIntroSequence newPetAnimIntroSequence;
         [SerializeField] private NewPetAnimPreviewSequence newPetAnimPreviewSequence;
         [SerializeField] private SpriteAnimator petSpriteAnimator;
 
-        [Header("Game Components")] [SerializeField]
-        private Volume postProcessingGlowVolume;
-
+        [Header("Game Components")] 
+        [SerializeField] private Volume postProcessingGlowVolume;
         [SerializeField] private AudioSource audioSource;
         [SerializeField] private Image backgroundImage;
 

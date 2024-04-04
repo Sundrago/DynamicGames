@@ -8,12 +8,12 @@ namespace DynamicGames.Pet
 {
     public class PetInventoryItem : MonoBehaviour
     {
-        [FormerlySerializedAs("petInventory")] [Header("Managers and Controllers")] [SerializeField]
-        private PetInventoryUIManager petInventoryUIManager;
+        [FormerlySerializedAs("petInventory")] 
+        [Header("Managers and Controllers")] 
+        [SerializeField] private PetInventoryUIManager petInventoryUIManager;
 
-        [Header("UI Components")] [SerializeField]
-        private Image uiImage;
-
+        [Header("UI Components")] 
+        [SerializeField] private Image uiImage;
         [SerializeField] private Image maskImage;
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private TextMeshProUGUI levelText;

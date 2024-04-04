@@ -23,7 +23,8 @@ namespace DynamicGames.MiniGames.Shoot
             revibe
         }
 
-        public static GameManager Instacne;
+        public static GameManager Instacne { get; private set;  }
+        
         [SerializeField] private Animator door_left, door_right;
         [SerializeField] public EnemyManager enemy_Manager;
         [SerializeField] private BulletManager bullet_Manager;

@@ -14,34 +14,30 @@ namespace DynamicGames.MiniGames.Jump
     /// </summary>
     public class GameManager : MiniGameManager, IMiniGame
     {
-        private const float ScrollSpeedMax = 0.35f;
-        private const float ScrollSpeedMin = 0.05f;
-        private const float Friction = 0.015f;
-
-        [Header("Managers and Controllers")] [SerializeField]
-        private SfxController sfxController;
-
+        [Header("Managers and Controllers")] 
+        [SerializeField] private SfxController sfxController;
         [SerializeField] private StageManager stageManager;
         [SerializeField] private PetManager petManager;
         [SerializeField] private TouchInputController inputController;
 
-        [Header("UI Components")] [SerializeField]
-        private TextMeshProUGUI title, score_ui, highscore_ui;
-
+        [Header("UI Components")] 
+        [SerializeField] private TextMeshProUGUI title, score_ui, highscore_ui;
         [SerializeField] private GameObject tutorial, tutorial_cursor, tutorial_text;
 
-        [Header("Game Components")] [SerializeField]
-        private Rigidbody player;
-
+        [Header("Game Components")] 
+        [SerializeField] private Rigidbody player;
         [SerializeField] private Transform footstepHolder, palyerScaler;
         [SerializeField] private GameObject footstep_posA, footstep_posB, footstep_posC, cylindar, playerPlaceHolder;
         [SerializeField] private SpriteAnimator playerRenderer;
         [SerializeField] private ItemObject item_prefab;
 
+        private const float ScrollSpeedMax = 0.35f;
+        private const float ScrollSpeedMin = 0.05f;
+        private const float Friction = 0.015f;
+        
         private readonly List<GameObject> footsteps = new();
         private bool firstGame, hasRevived, highFXShown;
         private float scrollSpeed, reviveTimer;
-
         private GameStatus status;
         public int CurrentScore { get; set; }
         public int HighScore { get; private set; }

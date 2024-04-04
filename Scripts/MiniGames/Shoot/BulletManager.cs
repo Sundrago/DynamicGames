@@ -14,25 +14,22 @@ namespace DynamicGames.MiniGames.Shoot
     /// </summary>
     public class BulletManager : MonoBehaviour
     {
-        [Header("Managers and Controllers")] [SerializeField]
-        private GameManager gameManager;
-
+        [Header("Managers and Controllers")] 
+        [SerializeField] private GameManager gameManager;
         [SerializeField] private InputManager inputManager;
         [SerializeField] private AudioManager audioManager;
         [SerializeField] private ScoreManager scoreManager;
         [SerializeField] private BulletController bulletController;
         [SerializeField] private EnemyManager enemyManager;
 
-        [Header("Game Components")] [SerializeField]
-        public Boundaries islandBoundaries;
-
+        [Header("Game Components")] 
+        [SerializeField] public Boundaries islandBoundaries;
         [SerializeField] public int currentBulletObj;
         [SerializeField] private GameObject island;
         [SerializeField] private ParticleSystem islandHifFX;
 
-        [Header("Game Status")] [TableList(ShowIndexLabels = true)]
-        public List<BulletInfo> bulletInfos = new();
-
+        [Header("Game Status")] 
+        [TableList(ShowIndexLabels = true)] public List<BulletInfo> bulletInfos = new();
         [SerializeField] private Transform player;
         [SerializeField] private int defaultCapacity, maxCapacity;
 
