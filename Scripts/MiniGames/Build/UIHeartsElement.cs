@@ -16,7 +16,6 @@ namespace DynamicGames.MiniGames.Build
         /// <summary>
         ///     Specifies whether the heart is filled or empty.
         /// </summary>
-        /// <value><c>true</c> if the heart is filled; otherwise, <c>false</c>.</value>
         public bool IsFilled
         {
             get => isFilled;

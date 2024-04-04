@@ -3,7 +3,7 @@ using UnityEngine;
 namespace DynamicGames.MainPage
 {
     /// <summary>
-    ///     Controls the footstep constraints for a stepable object.
+    ///     Holds footstep constraints data for a stepable object.
     /// </summary>
     public class FootstepConstraints : MonoBehaviour
     {

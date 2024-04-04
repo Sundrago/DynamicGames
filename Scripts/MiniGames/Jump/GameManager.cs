@@ -42,6 +42,13 @@ namespace DynamicGames.MiniGames.Jump
         public int CurrentScore { get; set; }
         public int HighScore { get; private set; }
 
+        private enum GameStatus
+        {
+            PreGame,
+            Playing,
+            GameOver,
+            Revive
+        }
 
         private void Start()
         {
@@ -377,14 +384,6 @@ namespace DynamicGames.MiniGames.Jump
             CurrentScore = 0;
             UpdateScoreUI(CurrentScore);
             GameScoreManager.Instance.HideScore();
-        }
-
-        private enum GameStatus
-        {
-            PreGame,
-            Playing,
-            GameOver,
-            Revive
         }
     }
 }

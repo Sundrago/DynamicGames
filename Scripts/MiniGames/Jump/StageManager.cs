@@ -16,7 +16,6 @@ namespace DynamicGames.MiniGames.Jump
 
         [Header("Stage Elements")] 
         [SerializeField] private StageDifficulty[] stageMap;
-
         [SerializeField] private TextAsset stageMapJson;
         [SerializeField] private GameObject step30, step60, step90, step180, step360;
         [SerializeField] private Transform footstepHolder;

@@ -14,9 +14,6 @@ namespace DynamicGames.Gachapon
     /// </summary>
     public class CapsuleAnimation : MonoBehaviour
     {
-        private const float SizeFactor = 1;
-        private const float PositionFactor = 2200;
-
         [Header("Managers and Controllers")] 
         [SerializeField] private GachaponManager gachaponManager;
         [SerializeField] private NewPetAnimManager newPetAnimManager;
@@ -29,6 +26,9 @@ namespace DynamicGames.Gachapon
         [SerializeField] private List<ParticleImage> particleImages;
         [SerializeField] private GameObject isNewFx, isOldFx;
         
+        private const float SizeFactor = 1;
+        private const float PositionFactor = 2200;
+     
         private bool isNew, isAnimPlaying;
         private Vector3 midPos;
         private List<float> particleRateOverTimes;

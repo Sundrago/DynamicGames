@@ -44,6 +44,52 @@ namespace DynamicGames.MiniGames.Build
         private GameStatus gameStatus;
         private PetObject player;
 
+        [Serializable]
+        public class UiComponents
+        {
+            public TextMeshProUGUI currentScoreText;
+            public TextMeshProUGUI highScoreText;
+            public TextMeshProUGUI bestScoreText;
+            public TextMeshProUGUI scoreOfThisGameText;
+            public TextMeshProUGUI tutorialText;
+            public Image tutorialImageA;
+            public Image tutorialImageB;
+            public Animator shaker;
+            public Animator mainCanvas;
+            public GameObject islandTop;
+            public GameObject tutorial;
+        }
+
+        [Serializable]
+        public class StageComponents
+        {
+            public GameObject startingPosition;
+            public GameObject stageHolderPanel;
+            public RectTransform leftEdgeObject;
+            public RectTransform rightEdgeObject;
+            public Light2D deathLight;
+            public Transform dropBoundaryY;
+            public Transform playerHolder;
+            public UIHeartsController hearts;
+        }
+
+        [Serializable]
+        public class GameplayStatus
+        {
+            public bool isFirstHit;
+            public bool hasRevived;
+            public float firstHitHeight;
+            public float leftMovementAmount;
+            public float rightMovementAmount;
+            public float horizontalMovementAmount;
+            public float movementSpeed;
+            public float oldTime;
+            public int currentStageIndex;
+            public int currentScore;
+            public int highScore;
+            public int fallCount;
+        }
+        
         private void Start()
         {
             InitGame();
@@ -447,53 +493,7 @@ namespace DynamicGames.MiniGames.Build
             VerticalMoving,
             GameOver
         }
-
-        [Serializable]
-        public class UiComponents
-        {
-            public TextMeshProUGUI currentScoreText;
-            public TextMeshProUGUI highScoreText;
-            public TextMeshProUGUI bestScoreText;
-            public TextMeshProUGUI scoreOfThisGameText;
-            public TextMeshProUGUI tutorialText;
-            public Image tutorialImageA;
-            public Image tutorialImageB;
-            public Animator shaker;
-            public Animator mainCanvas;
-            public GameObject islandTop;
-            public GameObject tutorial;
-        }
-
-        [Serializable]
-        public class StageComponents
-        {
-            public GameObject startingPosition;
-            public GameObject stageHolderPanel;
-            public RectTransform leftEdgeObject;
-            public RectTransform rightEdgeObject;
-            public Light2D deathLight;
-            public Transform dropBoundaryY;
-            public Transform playerHolder;
-            public UIHeartsController hearts;
-        }
-
-        [Serializable]
-        public class GameplayStatus
-        {
-            public bool isFirstHit;
-            public bool hasRevived;
-            public float firstHitHeight;
-            public float leftMovementAmount;
-            public float rightMovementAmount;
-            public float horizontalMovementAmount;
-            public float movementSpeed;
-            public float oldTime;
-            public int currentStageIndex;
-            public int currentScore;
-            public int highScore;
-            public int fallCount;
-        }
-
+        
         private class StageItem
         {
             public StageItem(GameObject item, RectTransform rect, Vector2 deltaPosition)

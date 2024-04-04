@@ -11,7 +11,6 @@ namespace DynamicGames.MainPage
     /// <summary>
     ///     Handles the dragging and interaction behavior of a block.
     /// </summary>
-    /// s
     public class BlockDragHandler : MonoBehaviour, IDraggable
     {
         [Header("Managers and Controllers")] 

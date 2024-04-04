@@ -14,8 +14,6 @@ namespace DynamicGames.MiniGames.Land
     /// </summary>
     public class GameManager : MiniGameManager, IMiniGame
     {
-        private const float DeltaTimeVelocity = 50f;
-
         [Header("Managers and Controllers")] 
         [SerializeField] private StageManager stageManager;
         [SerializeField] private IslandSizeController islandSizeController;
@@ -36,6 +34,8 @@ namespace DynamicGames.MiniGames.Land
         [SerializeField] private Animator screenShakeAnimator;
         [SerializeField] private GameObject playerPlaceHolder;
 
+        private const float DeltaTimeVelocity = 50f;
+        
         public Vector2 failPosition;
         public Quaternion failRotation;
         [SerializeField] private Dictionary<PetType, Vector3> CustomPetPos;
