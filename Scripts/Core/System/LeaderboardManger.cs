@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Core.UI;
+using Games;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -13,7 +15,7 @@ using UnityEngine.SocialPlatforms.GameCenter;
 namespace Core.System{
     public class LeaderboardManger : MonoBehaviour
     {
-        [SerializeField] private Ranking_UI rangking_ui;
+        [SerializeField] private LeaderboardUI rangking_ui;
         [SerializeField] private RankingManager rankingManager;
         [SerializeField] private TextMeshProUGUI DebugText_ui;
 
@@ -193,7 +195,7 @@ namespace Core.System{
 
         private void HandleAuthFailed(ref string debugString)
         {
-            rangking_ui.SetUI(Ranking_UI.RankUIPage.Failed);
+            rangking_ui.SetUI(LeaderboardUI.RankUIPage.Failed);
             gameCenterStatus = LoadStatus.Failed;
             debugString = "GameCenter Authentication failed";
         }
@@ -211,7 +213,7 @@ namespace Core.System{
                 debugString += "failed\n" +
                                request.error;
                 sundragonNetStatus = LoadStatus.Failed;
-                rangking_ui.SetUI(Ranking_UI.RankUIPage.Failed);
+                rangking_ui.SetUI(LeaderboardUI.RankUIPage.Failed);
             }
             else
             {

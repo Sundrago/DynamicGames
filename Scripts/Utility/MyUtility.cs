@@ -8,10 +8,10 @@ using UnityEngine;
 using UnityEngine.Localization.Settings;
 using Random = UnityEngine.Random;
 
-namespace MyUtility
+namespace Utility
 {
     /// <summary>
-    /// The Converter class provides utility methods for converting values between different data types.
+    /// Provides utility methods for converting values between different data types.
     /// </summary>
     static class Converter
     {
@@ -44,7 +44,6 @@ namespace MyUtility
                     DayOfWeek.Monday);
             int weekOfYearOfFirstDayOfMonth = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(
                 new DateTime(date.Year, date.Month, 1), CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-
             return weekOfYear - weekOfYearOfFirstDayOfMonth + 1;
         }
         
@@ -113,7 +112,7 @@ namespace MyUtility
     }
 
     /// <summary>
-    /// The Localize class provides methods for localizing strings.
+    /// Provides methods for localizing strings.
     /// </summary>
     static class Localize
     {
@@ -153,11 +152,11 @@ namespace MyUtility
         {
             DateTime date = DateTime.Now;
             int weekOfMonth = (date.Day + ((int)date.DayOfWeek)) / 7 + 1;
-            int maxNumber = PlayerPrefs.GetString("language") == "ko" ? 46 : 70;
+            int maxNumber = PlayerData.GetString(DataKey.language) == "ko" ? 46 : 70;
             string lottery = "";
             float rnd = Random.Range(0f, 1f);
             Random.InitState(date.Year * date.Month + weekOfMonth);
-
+            
             if (rnd < 0.33f)
             {
                 lottery += GenerateRandomNumber(maxNumber) + " ";
@@ -173,10 +172,12 @@ namespace MyUtility
             {
                 lottery += GenerateRandomNumber(27).ToString();
             }
+            
             Random.InitState((int)(Time.time * 1000f));
             return lottery;
         }
-        static int GenerateRandomNumber(int maxNumber)
+        
+        private static int GenerateRandomNumber(int maxNumber)
         {
             return Random.Range(1, maxNumber);
         }

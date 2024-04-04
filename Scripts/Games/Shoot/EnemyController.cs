@@ -18,7 +18,7 @@ namespace Games.Shoot
     {
         [Header("Managers and Controllers")] 
         [SerializeField] private ScoreManager scoreManager;
-        [SerializeField] private GameManager gameManager;
+        [FormerlySerializedAs("gameManagerManager")] [SerializeField] private GameManager gameManager;
         [SerializeField] private AudioManager audioManager;
 
         [Header("Game components")] 

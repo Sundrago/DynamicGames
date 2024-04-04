@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Pet;
 using Core.System;
+using Core.UI;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -9,7 +10,7 @@ using UnityEngine.Serialization;
 
 namespace Games.Shoot
 {
-    public class GameManager : MiniGame, IMiniGame
+    public class GameManager : MiniGameManager, IMiniGame
     {
         public enum ShootGameState
         {
@@ -1373,23 +1374,23 @@ namespace Games.Shoot
         // ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- //
 
         [Button]
-        public override void SetPlayer(bool playAsPet, PetController petController = null)
+        public override void SetupPet(bool isPlayingWithPet, PetObject petObject = null)
         {
-            playerPlaceHolder.SetActive(!playAsPet);
-            playerRenderer.gameObject.SetActive(playAsPet);
+            playerPlaceHolder.SetActive(!isPlayingWithPet);
+            playerRenderer.gameObject.SetActive(isPlayingWithPet);
 
-            if (playAsPet)
+            if (isPlayingWithPet)
             {
-                playerRenderer.sprites = petController.GetShipAnim();
+                playerRenderer.sprites = petObject.GetShipAnim();
                 playerRenderer.GetComponent<SpriteRenderer>().sprite = playerRenderer.sprites[0];
 
-                playerRenderer.gameObject.transform.localRotation = petController.spriteRenderer.transform.localRotation;
+                playerRenderer.gameObject.transform.localRotation = petObject.spriteRenderer.transform.localRotation;
 
-                if (CustomPetPos.ContainsKey(petController.GetType()))
-                    playerRenderer.gameObject.transform.localPosition = CustomPetPos[petController.GetType()];
+                if (CustomPetPos.ContainsKey(petObject.GetType()))
+                    playerRenderer.gameObject.transform.localPosition = CustomPetPos[petObject.GetType()];
                 else
-                    playerRenderer.gameObject.transform.localPosition = petController.spriteRenderer.transform.localPosition;
-                playerRenderer.gameObject.transform.localScale = petController.spriteRenderer.transform.localScale;
+                    playerRenderer.gameObject.transform.localPosition = petObject.spriteRenderer.transform.localPosition;
+                playerRenderer.gameObject.transform.localScale = petObject.spriteRenderer.transform.localScale;
 
                 playerRenderer.interval = 0.9f / playerRenderer.sprites.Length;
             }

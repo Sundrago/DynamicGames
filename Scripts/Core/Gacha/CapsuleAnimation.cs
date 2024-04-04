@@ -140,12 +140,12 @@ namespace Core.Gacha
 
         private void UpdatePetTransform(PetConfig config)
         {
-            var relativePosY = config.obj.GetComponent<Pet.PetController>().spriteRenderer.gameObject.transform.localPosition.y *
+            var relativePosY = config.obj.GetComponent<Pet.PetObject>().spriteRenderer.gameObject.transform.localPosition.y *
                                posFactor;
             item.sprite = config.image;
             item.transform.localPosition = new Vector2(0, relativePosY);
             item.transform.localScale =
-                config.obj.GetComponent<Pet.PetController>().spriteRenderer.gameObject.transform.localScale.y * Vector3.one;
+                config.obj.GetComponent<Pet.PetObject>().spriteRenderer.gameObject.transform.localScale.y * Vector3.one;
         }
 
         private void ResetPositions()

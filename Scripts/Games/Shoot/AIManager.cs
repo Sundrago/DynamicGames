@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Games.Shoot
@@ -12,7 +13,7 @@ namespace Games.Shoot
     /// </summary>
     public class AIManager : MonoBehaviour
     {
-        [SerializeField] private GameManager gameManager;
+        [FormerlySerializedAs("gameManagerManager")] [SerializeField] private GameManager gameManager;
         [SerializeField] private EnemyManager enemyManager;
         [SerializeField] private ItemManager itemManager;
         

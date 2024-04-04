@@ -1,23 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
-public class BoxColliderHolder : MonoBehaviour
+namespace Core.UI
 {
-    [SerializeField] public BoxCollider2D[] squares;
-    
-#if UNITY_EDITOR
-    [Button]
-    private void AddSquaresToList()
+    public class BoxColliderHolder : MonoBehaviour
     {
-        GameObject[] objs = GameObject.FindGameObjectsWithTag("square");
-        squares = new BoxCollider2D[objs.Length];
-        
-        for(int i=0; i<objs.Length; i++)
+        [SerializeField] public BoxCollider2D[] squares;
+
+#if UNITY_EDITOR
+        [Button]
+        private void AddSquaresToList()
         {
-            squares[i] = objs[i].GetComponent<BoxCollider2D>();
+            var objs = GameObject.FindGameObjectsWithTag("square");
+            squares = new BoxCollider2D[objs.Length];
+
+            for (var i = 0; i < objs.Length; i++) squares[i] = objs[i].GetComponent<BoxCollider2D>();
         }
-    }
 #endif
+    }
 }

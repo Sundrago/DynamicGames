@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
-using MyUtility;
+using Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -145,7 +145,7 @@ namespace Core.Pet
                     pet.component.OnNewFriend();
             }
 
-            GetPetDataByType(_type).obj.GetComponent<PetController>().OnIdle();
+            GetPetDataByType(_type).obj.GetComponent<PetObject>().OnIdle();
         }
 
         public Dictionary<PetType, PetConfig> GetPetDatas()
@@ -240,7 +240,7 @@ namespace Core.Pet
             foreach (PetType type in Enum.GetValues(typeof(PetType)))
                 if (!petConfigs.ContainsKey(type))
                     foreach (var obj in pets)
-                        if (obj.GetComponent<PetController>().type == type)
+                        if (obj.GetComponent<PetObject>().type == type)
                         {
                             petConfigs.Add(type, new PetConfig());
                             petConfigs[type].obj = obj;
@@ -255,7 +255,7 @@ namespace Core.Pet
             {
                 var data = entry.Value;
                 if (entry.Value.obj == null) continue;
-                data.component = data.obj.GetComponent<PetController>();
+                data.component = data.obj.GetComponent<PetObject>();
                 data.type = data.component.type;
                 data.image = data.component.spriteRenderer.sprite;
             }
@@ -278,7 +278,7 @@ namespace Core.Pet
     {
         public GameObject obj;
         [ReadOnly] public PetType type;
-        [ReadOnly] public PetController component;
+        [ReadOnly] public PetObject component;
         [ReadOnly] public Sprite image;
     }
 

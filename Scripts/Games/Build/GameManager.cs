@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using Core.Pet;
 using Core.System;
+using Core.UI;
 using DG.Tweening;
-using MyUtility;
+using Utility;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -14,7 +15,7 @@ namespace Games.Build
     /// <summary>
     ///     Game manager for the Build mini game.
     /// </summary>
-    public class GameManager : MiniGame, IMiniGame
+    public class GameManager : MiniGameManager, IMiniGame
     {
         [Header("Managers and Controllers")] 
         [SerializeField] private StageManager stageManager;
@@ -30,7 +31,7 @@ namespace Games.Build
         [Header("GamePlay Status")] 
         [SerializeField] private int[] stageIndices;
         private GameplayStatus gameplayStatus;
-        private PetController player;
+        private PetObject player;
         private readonly List<StageItem> stageItems = new();
         private List<StageItem> currentItems = new();
 
@@ -79,12 +80,12 @@ namespace Games.Build
             gameplayStatus.hasRevived = false;
         }
 
-        public override void SetPlayer(bool playAsPet, PetController petController = null)
+        public override void SetupPet(bool isPlayingWithPet, PetObject petObject = null)
         {
             if (player != null) Destroy(player.gameObject);
-            if (playAsPet)
+            if (isPlayingWithPet)
             {
-                player = Instantiate(petController, stageComponents.playerHolder);
+                player = Instantiate(petObject, stageComponents.playerHolder);
                 player.gameObject.transform.localScale *= 350f;
                 player.gameObject.SetActive(true);
             }

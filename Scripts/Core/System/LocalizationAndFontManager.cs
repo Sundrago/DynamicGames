@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using MyUtility;
+using Utility;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;

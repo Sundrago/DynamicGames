@@ -1,153 +1,109 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using Sirenix.OdinInspector;
-using Unity.VisualScripting;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class SkyboxManager : MonoBehaviour
+namespace Core.UI
 {
-    [SerializeField]
-    private GameObject sky_prefab;
-    
-    [SerializeField, TableList]
-    private List<BGSpriteSet> bGSpriteSets;
-
-    public static SkyboxManager Instance;
-    
-    private GameObject previousBG = null;
-    private int imageIdx;
-    public int weatherIdx;
-
-    private void Awake()
+    public class SkyboxManager : MonoBehaviour
     {
-        GetBgIdxByTime();
-        Instance = this;
-    }
+        private static readonly List<(float hour, (int WeatherIndex, int SpriteIndex))> TimeWeatherMapping = new()
+        {
+            (5, (0, 2)),
+            (6.5f, (1, 3)),
+            (8, (2, 5)),
+            (10, (3, 1)),
+            (12, (4, 4)),
+            (16, (5, 0)),
+            (17, (6, 1)),
+            (18, (7, 5)),
+            (19, (8, 6)),
+            (20.5f, (9, 3)),
+            (22, (10, 7)),
+            (float.MaxValue, (0, 2))
+        };
 
-    private int GetBgIdxByTime()
-    {
-        System.DateTime time = System.DateTime.Now;
+        [SerializeField] private GameObject sky_prefab;
+        [SerializeField] [TableList] private List<BGSpriteSet> bGSpriteSets;
+        public int weatherIdx;
+        private int imageIdx;
+        private GameObject previousBG;
 
-        float currentTime = time.Hour + time.Minute / 60f;
-        // print("TIME : " + currentTime);
+        public static SkyboxManager Instance { get; set; }
 
-        if (currentTime < 5)
+
+        private void Awake()
         {
-            weatherIdx = 0;
-            return 2;
+            GetBackgroundIndexByTime();
+            Instance = this;
         }
-        else if (currentTime < 6.5)
+
+        private void OnEnable()
         {
-            weatherIdx = 1;
-            return 3;
-        }
-        else if (currentTime < 8)
-        {
-            weatherIdx = 2;
-            return 5;
-        }
-        else if (currentTime < 10)
-        {
-            weatherIdx = 3;
-            return 1;
-        }
-        else if (currentTime < 12)
-        {
-            weatherIdx = 4;
-            return 4;
-        }
-        else if (currentTime < 16)
-        {
-            weatherIdx = 5;
-            return 0;
-        }
-        else if (currentTime < 17)
-        {
-            weatherIdx = 6;
-            return 1;
-        }
-        else if (currentTime < 18)
-        {
-            weatherIdx = 7;
-            return 5;
-        }
-        else if (currentTime < 19)
-        {
-            weatherIdx = 8;
-            return 6;
-        }
-        else if (currentTime < 20.5)
-        {
-            weatherIdx = 9;
-            return 3;
-        }
-        else if (currentTime < 22)
-        {
-            weatherIdx = 10;
-            return 7;
-        }
-        else
-        {
-            weatherIdx = 0;
-            return 2;
-        }
-    }
-    
-    private void OnEnable()
-    {
-        if (previousBG == null)
-        {
-            StartCoroutine(CreateBG(GetBgIdxByTime(), 2f));
-        }
-        else
-        {
-            if (imageIdx != GetBgIdxByTime())
+            if (previousBG == null)
             {
-                imageIdx = GetBgIdxByTime();
-                StartCoroutine(CreateBG(imageIdx, 2f));
-                
+                StartCoroutine(CreateBackgroundWithTransition(GetBackgroundIndexByTime(), 2f));
+            }
+            else
+            {
+                if (imageIdx != GetBackgroundIndexByTime())
+                {
+                    imageIdx = GetBackgroundIndexByTime();
+                    StartCoroutine(CreateBackgroundWithTransition(imageIdx, 2f));
+                }
             }
         }
-    }
 
-    [Button]
-    private void CreateBGAtIdx(int idx)
-    {
-        StartCoroutine(CreateBG(idx));
-    }
-    
-    private IEnumerator CreateBG(int idx = -1, float _transitionTime = 5f)
-    {
-        if(idx == -1) idx = Random.Range(0, bGSpriteSets.Count);
-        GameObject BGHolder = new GameObject();
-        BGHolder.transform.SetParent(gameObject.transform);
-        BGHolder.AddComponent<RectTransform>();
-        BGHolder.transform.localScale = Vector3.one;
-        BGHolder.transform.localPosition = Vector3.zero;
+        private int GetBackgroundIndexByTime()
+        {
+            var time = DateTime.Now;
+            var currentTimeInHour = time.Hour + time.Minute / 60f;
 
-        for (int i = 0; i < bGSpriteSets[idx].sprites.Count; i++)
-        {
-            GameObject bgImage = Instantiate(sky_prefab, BGHolder.transform);
-            bgImage.SetActive(true);
-            bgImage.GetComponent<Sky2DScroll>().Init(bGSpriteSets[idx].sprites[i], i*5.5f + 2f, _transitionTime);
-            yield return new WaitForSeconds(0.5f);
+            foreach (var item in TimeWeatherMapping)
+                if (currentTimeInHour < item.hour)
+                {
+                    weatherIdx = item.Item2.WeatherIndex;
+                    return item.Item2.SpriteIndex;
+                }
+
+            return -1;
         }
-        
-        yield return new WaitForSeconds(_transitionTime);
-        if (previousBG != null)
+
+        [Button]
+        private void CreateBackgroundAtIndex(int idx)
         {
-            Destroy(previousBG);
+            StartCoroutine(CreateBackgroundWithTransition(idx));
         }
-        previousBG = BGHolder;
-    }
-    
-    [Serializable]
-    class BGSpriteSet
-    {
-        [SerializeField]
-        public List<Sprite> sprites;
+
+        private IEnumerator CreateBackgroundWithTransition(int idx = -1, float transitionTime = 5f)
+        {
+            if (idx == -1) idx = Random.Range(0, bGSpriteSets.Count);
+            var BGHolder = new GameObject();
+            BGHolder.transform.SetParent(gameObject.transform);
+            BGHolder.AddComponent<RectTransform>();
+            BGHolder.transform.localScale = Vector3.one;
+            BGHolder.transform.localPosition = Vector3.zero;
+
+            for (var i = 0; i < bGSpriteSets[idx].sprites.Count; i++)
+            {
+                var bgImage = Instantiate(sky_prefab, BGHolder.transform);
+                bgImage.SetActive(true);
+                bgImage.GetComponent<BGSkyAnimator>()
+                    .InitializeSkyAnimator(bGSpriteSets[idx].sprites[i], i * 5.5f + 2f, transitionTime);
+                yield return new WaitForSeconds(0.5f);
+            }
+
+            yield return new WaitForSeconds(transitionTime);
+            if (previousBG != null) Destroy(previousBG);
+            previousBG = BGHolder;
+        }
+
+        [Serializable]
+        private class BGSpriteSet
+        {
+            public List<Sprite> sprites;
+        }
     }
 }

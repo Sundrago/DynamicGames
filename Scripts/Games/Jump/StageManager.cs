@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
-using MyUtility;
+using Utility;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Games.Jump
 {
     public class StageManager : MonoBehaviour
     {
-        [SerializeField] private GameManager gameManager;
+        [FormerlySerializedAs("gameManagerManager")] [SerializeField] private GameManager gameManager;
         [SerializeField] private StageDifficulty[] stageMap;
         [SerializeField] private TextAsset stageMapJson;
         [SerializeField] private GameObject step30, step60, step90, step180, step360;

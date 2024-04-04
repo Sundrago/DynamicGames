@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using Core.Main;
 using Core.Pet;
+using Core.UI;
 using DG.Tweening;
+using Games;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -282,7 +284,7 @@ namespace Core.System
                 });
         }
 
-        public void HandlePetDrop(Vector3 pos, PetController petController)
+        public void HandlePetDrop(Vector3 pos, PetObject petObject)
         {
             var distMin = float.MaxValue;
             BlockStatusData minData = null;
@@ -305,7 +307,7 @@ namespace Core.System
             {
                 var obj = minData.obj.gameObject;
                 MainCanvas.Instance.Offall(obj);
-                PetInGameManager.Instance.PetSelected(minData, petController);
+                PetInGameManager.Instance.PetSelected(minData, petObject);
                 minData.obj.blockDragHandler.OnButtonClicked();
                 AudioManager.Instance.PlaySfxByTag(SfxTag.PlayWithPet);
             }
@@ -313,7 +315,7 @@ namespace Core.System
             {
                 if (minData.type == BlockType.friends)
                 {
-                    petInfoPanelManager.ShowPanel(petController.type);
+                    petInfoPanelManager.ShowPanel(petObject.type);
                     AudioManager.Instance.PlaySfxByTag(SfxTag.PlayWithPet);
                 }
             }
@@ -327,7 +329,7 @@ namespace Core.System
                 if (gameType.ToString() == blockType.ToString())
                     return gameType;
 
-            return GameType.Null;
+            return GameType.@null;
         }
 
         [Serializable]

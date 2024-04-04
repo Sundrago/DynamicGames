@@ -1,5 +1,6 @@
 using Core.Main;
 using Core.System;
+using Core.UI;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -171,7 +172,7 @@ namespace Core.Gacha
         {
             if (moneyManager.SubtractMoney(MoneyManager.RewardType.Ticket, 50))
             {
-                moneyManager.Coin2DAnim(MoneyManager.RewardType.GachaCoin, ticketbtn.transform.position, 1);
+                moneyManager.Reward2DAnimation(MoneyManager.RewardType.GachaCoin, ticketbtn.transform.position, 1);
                 audioManager.PlaySfxByTag(SfxTag.AcquiredCoin);
                 TutorialManager.Instancee.TicketBtnClicked();
                 SetBtnActive();

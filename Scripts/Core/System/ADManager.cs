@@ -2,7 +2,7 @@
 using Firebase.Analytics;
 #endif
 using System;
-using MyUtility;
+using Utility;
 using UnityEngine;
 #if UNITY_IPHONE
 using Unity.Advertisement.IosSupport;

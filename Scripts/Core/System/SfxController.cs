@@ -1,5 +1,5 @@
 using DG.Tweening;
-using MyUtility;
+using Utility;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -94,7 +94,7 @@ namespace Core.System
         public void SetVolume()
         {
             if (currentBgmIndex != -1)
-                bgmSources[currentBgmIndex].volume = PlayerData.GetFloat(DataKey.settings_sfx, 0.5f);
+                bgmSources[currentBgmIndex].volume = PlayerData.GetFloat(DataKey.settings_bgm, 0.5f);
         }
     }
 }

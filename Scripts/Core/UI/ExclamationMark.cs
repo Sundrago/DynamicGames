@@ -1,53 +1,52 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class ExclamationMark : MonoBehaviour
+namespace Core.UI
 {
-    [SerializeField] private Camera camera;
-    
-    private const float OffsetX = 0;
-    private const float OffsetY = 140;
-    private bool initialized = false;
-    private Action callback = null;
-    private Transform target;
-
-    [Button]
-    public void Init(Transform target, Action callback=null)
+    public class ExclamationMark : MonoBehaviour
     {
-        RectTransform rect = gameObject.GetComponent<RectTransform>();
-        Vector2 defaultSizeDelta = gameObject.GetComponent<RectTransform>().sizeDelta;
-        rect.sizeDelta = Vector2.zero;
+        private const float OffsetX = 0;
+        private const float OffsetY = 140;
+        [SerializeField] private Camera camera;
+        private Action callback;
+        private bool initialized;
+        private Transform target;
 
-        rect.DOSizeDelta(defaultSizeDelta, 1f);
-        
-        initialized = true;
-        this.target = target;
-        this.callback = callback;
-        gameObject.SetActive(true);
-    }
-    
-    private void Update()
-    {
-        if (!initialized)
+        private void Update()
         {
-            gameObject.SetActive(false);
-            return;
+            if (!initialized)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+
+            gameObject.transform.position = target.position;
+            gameObject.transform.localPosition = new Vector3(gameObject.transform.localPosition.x + OffsetX,
+                gameObject.transform.localPosition.y + OffsetY, gameObject.transform.localPosition.z);
         }
 
-        gameObject.transform.position = target.position;
-        gameObject.transform.localPosition = new Vector3(gameObject.transform.localPosition.x + OffsetX,
-            gameObject.transform.localPosition.y + OffsetY, gameObject.transform.localPosition.z);
-    }
-    
-    public void Clicked()
-    {
-        callback.Invoke();
-        Destroy(gameObject);
-        // gameObject.SetActive(false);
+        [Button]
+        public void Init(Transform target, Action callback = null)
+        {
+            var rect = gameObject.GetComponent<RectTransform>();
+            var defaultSizeDelta = gameObject.GetComponent<RectTransform>().sizeDelta;
+            rect.sizeDelta = Vector2.zero;
+
+            rect.DOSizeDelta(defaultSizeDelta, 1f);
+
+            initialized = true;
+            this.target = target;
+            this.callback = callback;
+            gameObject.SetActive(true);
+        }
+
+        public void Clicked()
+        {
+            callback.Invoke();
+            Destroy(gameObject);
+            // gameObject.SetActive(false);
+        }
     }
 }

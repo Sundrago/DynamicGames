@@ -1,6 +1,8 @@
 using Core.System;
+using Games;
 using Games.Shoot;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Core.Pet
 {
@@ -13,7 +15,7 @@ namespace Core.Pet
         [SerializeField] private Games.Jump.GameManager jump;
         [SerializeField] private Games.Land.GameManager land;
         [SerializeField] private Games.Build.GameManager build;
-        [SerializeField] public PetController petController;
+        [FormerlySerializedAs("petController")] [SerializeField] public PetObject petObject;
         
         private BlockStatusManager.BlockStatusData blockData;
         private GameType gameType;
@@ -26,54 +28,58 @@ namespace Core.Pet
             Instance = this;
         }
 
-        public void PetSelected(BlockStatusManager.BlockStatusData blockData, PetController petController)
+        public void PetSelected(BlockStatusManager.BlockStatusData blockData, PetObject petObject)
         {
             this.blockData = blockData;
-            this.petController = petController;
+            this.petObject = petObject;
             selectedTime = Time.time;
 
-            this.petController.surfaceMovement2D.ForceLandOnSquare(blockData.obj.blockDragHandler.miniisland, 6f);
-            this.petController.SetToIdle(6f);
+            this.petObject.surfaceMovement2D.ForceLandOnSquare(blockData.obj.blockDragHandler.miniisland, 6f);
+            this.petObject.SetToIdle(6f);
 
             var petGameType = BlockStatusManager.Instance.GetGameType(blockData.type);
-            if (petGameType != GameType.Null) this.petController.OnGameEnter(petGameType);
+            if (petGameType != GameType.@null) this.petObject.OnGameEnter(petGameType);
         }
 
-        public void EnterGame(GameType type)
+        public void EnterGame(GameType gameType)
         {
             if (blockData == null) enterGameWithPet = false;
-            else enterGameWithPet = blockData.type.ToString() == type.ToString() && Time.time < selectedTime + 6.5f;
+            else enterGameWithPet = blockData.type.ToString() == gameType.ToString() && Time.time < selectedTime + 6.5f;
 
-            switch (type)
-            {
-                case GameType.build:
-                    build.SetPlayer(enterGameWithPet, petController);
-                    TutorialManager.Instancee.EnteredGameWithPet();
-                    break;
-                case GameType.land:
-                    land.SetPlayer(enterGameWithPet, petController);
-                    TutorialManager.Instancee.EnteredGameWithPet();
-                    break;
-                case GameType.jump:
-                    jump.SetPlayer(enterGameWithPet, petController);
-                    TutorialManager.Instancee.EnteredGameWithPet();
-                    break;
-                case GameType.shoot:
-                    shoot.SetPlayer(enterGameWithPet, petController);
-                    TutorialManager.Instancee.EnteredGameWithPet();
-                    break;
-            }
+            this.gameType = gameType;
+            MiniGamesManager.Instance.SetupPet(gameType, enterGameWithPet, petObject);
+            TutorialManager.Instancee.EnteredGameWithPet();
+            
+            
+            // switch (type)
+            // {
+            //     case GameType.Build:
+            //         build.SetupPet(enterGameWithPet, petObject);
+            //         TutorialManager.Instancee.EnteredGameWithPet();
+            //         break;
+            //     case GameType.Land:
+            //         land.SetupPet(enterGameWithPet, petObject);
+            //         TutorialManager.Instancee.EnteredGameWithPet();
+            //         break;
+            //     case GameType.Jump:
+            //         jump.SetupPet(enterGameWithPet, petObject);
+            //         TutorialManager.Instancee.EnteredGameWithPet();
+            //         break;
+            //     case GameType.Shoot:
+            //         shoot.SetupPet(enterGameWithPet, petObject);
+            //         TutorialManager.Instancee.EnteredGameWithPet();
+            //         break;
+            // }
 
-            gameType = type;
         }
 
         public void ExitGame()
         {
             if (!enterGameWithPet) return;
 
-            petController.OnGameExit(gameType);
-            petController.surfaceMovement2D.ForceLandOnSquare(blockData.obj.blockDragHandler.miniisland, 2f);
-            petController.SetToIdle(2f);
+            petObject.OnGameExit(gameType);
+            petObject.surfaceMovement2D.ForceLandOnSquare(blockData.obj.blockDragHandler.miniisland, 2f);
+            petObject.SetToIdle(2f);
         }
     }
 }

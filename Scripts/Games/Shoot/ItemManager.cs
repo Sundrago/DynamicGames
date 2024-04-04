@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using Core.System;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Games.Shoot
 {
     public class ItemManager : MonoBehaviour
     {
+        [FormerlySerializedAs("gameManagerManager")]
         [Header("Managers and Controllers")] 
         [SerializeField] private GameManager gameManager;
         [SerializeField] private BulletManager bullet_Manager;

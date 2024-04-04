@@ -1,8 +1,10 @@
 using System;
 using Core.Main;
 using Core.Pet;
+using Core.UI;
 using DG.Tweening;
-using MyUtility;
+using Games;
+using Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
@@ -174,7 +176,7 @@ namespace Core.System
         {
             status = TutorialStatus.B_key;
             AudioManager.Instance.PlaySfxByTag(SfxTag.AcquiredCoin);
-            MoneyManager.Instance.Coin2DAnim(MoneyManager.RewardType.Key, Vector3.zero, 1);
+            MoneyManager.Instance.Reward2DAnimation(MoneyManager.RewardType.Key, Vector3.zero, 1);
         }
 
         public void DragSpriteBtnClicked()
@@ -305,7 +307,7 @@ namespace Core.System
             var ticketCount = MoneyManager.Instance.GetCount(MoneyManager.RewardType.Ticket);
             status = TutorialStatus.E_Gacha;
             if (ticketCount < 50)
-                MoneyManager.Instance.Coin2DAnim(MoneyManager.RewardType.Ticket, Vector3.zero, 50 - ticketCount);
+                MoneyManager.Instance.Reward2DAnimation(MoneyManager.RewardType.Ticket, Vector3.zero, 50 - ticketCount);
         }
 
         public void TicketBtnClicked()
@@ -417,7 +419,7 @@ namespace Core.System
 
         private void tutorial_G04()
         {
-            PreviewIsland.Instance.Open(0);
+            PreviewIsland.Instance.OpenIslandAndPreview(0);
             var fluffy = PetManager.Instance.GetPetDataByType(PetType.Fluffy).obj.transform;
             if (fluffy.position.y > 0)
             {
@@ -441,7 +443,7 @@ namespace Core.System
                 PreviewIsland.Instance.Close();
                 status = TutorialStatus.G_FriendBlockClosed;
                 AudioManager.Instance.PlaySfxByTag(SfxTag.UI_Popup2);
-                PetManager.Instance.GetPetDataByType(PetType.Fluffy).obj.GetComponent<PetController>()
+                PetManager.Instance.GetPetDataByType(PetType.Fluffy).obj.GetComponent<PetObject>()
                     .ShowDialogue(Localize.GetLocalizedString("[fluffy_tutorial0]보기보다 똑똑하구냥"), true);
             }
 
@@ -458,14 +460,14 @@ namespace Core.System
                 if (flag)
                 {
                     tutorial_G07();
-                    PetManager.Instance.GetPetDataByType(PetType.Fluffy).obj.GetComponent<PetController>()
+                    PetManager.Instance.GetPetDataByType(PetType.Fluffy).obj.GetComponent<PetObject>()
                         .ShowDialogue(Localize.GetLocalizedString("[fluffy_tutorial1]가보자냥~!"), true);
                     DOVirtual.DelayedCall(6f, () =>
                     {
                         if (status == TutorialStatus.G_EnterGameWithPet_select)
                         {
                             status = TutorialStatus.G_EnterGameWithPet_drag;
-                            PreviewIsland.Instance.Open(1);
+                            PreviewIsland.Instance.OpenIslandAndPreview(1);
                         }
                     });
                 }
@@ -495,12 +497,12 @@ namespace Core.System
 
         private void tutorial_G06B()
         {
-            PreviewIsland.Instance.Open(1);
+            PreviewIsland.Instance.OpenIslandAndPreview(1);
         }
 
         private void tutorial_G07()
         {
-            PreviewIsland.Instance.Open(2);
+            PreviewIsland.Instance.OpenIslandAndPreview(2);
             status = TutorialStatus.G_EnterGameWithPet_select;
         }
 
@@ -525,7 +527,7 @@ namespace Core.System
                 "[tutorial_G08a]고마워");
             AudioManager.Instance.PlaySfxByTag(SfxTag.UI_Popup2);
             status = TutorialStatus.finished;
-            PetManager.Instance.GetPetDataByType(PetType.Fluffy).obj.GetComponent<PetController>().ignoreIdleDialogue =
+            PetManager.Instance.GetPetDataByType(PetType.Fluffy).obj.GetComponent<PetObject>().ignoreIdleDialogue =
                 false;
             PlayerPrefs.SetInt("tutorialG", 1);
 #if UNITY_IOS && !UNITY_EDITOR
@@ -535,8 +537,8 @@ namespace Core.System
 
         private void tutorial_G11()
         {
-            MoneyManager.Instance.Coin2DAnim(MoneyManager.RewardType.Ticket, Vector3.zero, 30);
-            PetManager.Instance.GetPetDataByType(PetType.Fluffy).obj.GetComponent<PetController>()
+            MoneyManager.Instance.Reward2DAnimation(MoneyManager.RewardType.Ticket, Vector3.zero, 30);
+            PetManager.Instance.GetPetDataByType(PetType.Fluffy).obj.GetComponent<PetObject>()
                 .ShowDialogue(Localize.GetLocalizedString("[fluffy_tutorial2]다른 친구들도 보고싶다냥"), true);
         }
 

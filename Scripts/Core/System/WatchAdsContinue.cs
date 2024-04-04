@@ -1,5 +1,6 @@
 using System;
 using Core.Pet;
+using Core.UI;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -98,7 +99,7 @@ namespace Core.System
 
         private void InitBgAndPetMotion()
         {
-            petAnim.Init(PetInGameManager.Instance.petController.type);
+            petAnim.Init(PetInGameManager.Instance.petObject.type);
             gameObject.SetActive(true);
 
             adBackground.color = new Color(0, 0, 0, 0);
@@ -140,7 +141,7 @@ namespace Core.System
             initialRect.gameObject.SetActive(false);
             finalRect.gameObject.SetActive(true);
             finalRect.anchoredPosition = new Vector2(0, 150);
-            petAnim2.Init(PetInGameManager.Instance.petController.type);
+            petAnim2.Init(PetInGameManager.Instance.petObject.type);
         }
 
         public void ReadyButtonClicked()

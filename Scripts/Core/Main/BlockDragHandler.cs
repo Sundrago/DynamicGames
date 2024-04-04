@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Core.Pet;
 using Core.System;
+using Core.UI;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -14,8 +15,9 @@ namespace Core.Main
     /// </summary>s
     public class BlockDragHandler : MonoBehaviour, IDraggable
     {
+        [FormerlySerializedAs("ranking_UI")]
         [Header("Managers and Controllers")] 
-        [SerializeField] private Ranking_UI ranking_UI;
+        [SerializeField] private LeaderboardUI leaderboardUI;
 
         [Header("Game Components")] 
         [SerializeField] private TextMeshPro[] title;
@@ -370,23 +372,23 @@ namespace Core.Main
             ShakePets(pets);
         }
         
-        private List<Pet.PetController> GetActivePets()
+        private List<Pet.PetObject> GetActivePets()
         {
-            var activePets = new List<Pet.PetController>();
+            var activePets = new List<Pet.PetObject>();
             foreach (var petData in PetManager.Instance.GetActivePetConfigs())
             {
                 bool isActive = petData.obj.activeSelf;
                 bool isOnCurrentCorner = petData.obj.GetComponent<SurfaceMovement2D>().currentLocation.obj == gameObject;
                 if (isActive && isOnCurrentCorner)
                 {
-                    Pet.PetController petController = petData.obj.GetComponent<Pet.PetController>();
-                    activePets.Add(petController);
+                    Pet.PetObject petObject = petData.obj.GetComponent<Pet.PetObject>();
+                    activePets.Add(petObject);
                 }
             }
             return activePets;
         }
 
-        private void ShakePets(List<Pet.PetController> pets)
+        private void ShakePets(List<Pet.PetObject> pets)
         {
             float threshold = pets.Count < 3 ? 1 : 2.5f / pets.Count;
             foreach (var pet in pets)

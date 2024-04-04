@@ -1,5 +1,5 @@
 using System;
-using MyUtility;
+using Utility;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -72,7 +72,7 @@ namespace Core.System
             TVIcon.sprite = adCount >= 3 ? off : on;
             PlayerData.SetInt(DataKey.adCount, adCount);
             PopupTextManager.Instance.ShowOKPopup("[watchedAds]",
-                () => { MoneyManager.Instance.Coin2DAnim(MoneyManager.RewardType.Ticket, Vector3.zero, 10); });
+                () => { MoneyManager.Instance.Reward2DAnimation(MoneyManager.RewardType.Ticket, Vector3.zero, 10); });
         }
     }
 }

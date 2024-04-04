@@ -1,6 +1,7 @@
 using Core.System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Games.Land
 {
@@ -9,7 +10,7 @@ namespace Games.Land
     /// </summary>
     public class StageLevelAnimator : MonoBehaviour
     {
-        [SerializeField] private GameManager gameManager;
+        [FormerlySerializedAs("gameManagerManager")] [SerializeField] private GameManager gameManager;
         [SerializeField] private Animator animator;
         [SerializeField] private TextMeshProUGUI stage_lv_text;
         [SerializeField] public int currentStageLevel = 1;

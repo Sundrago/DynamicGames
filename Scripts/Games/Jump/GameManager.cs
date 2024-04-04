@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Core.Pet;
 using Core.System;
+using Core.UI;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -8,7 +9,7 @@ using UnityEngine.UI;
 
 namespace Games.Jump
 {
-    public class GameManager : MiniGame, IMiniGame
+    public class GameManager : MiniGameManager, IMiniGame
     {
         [Header("Managers and Controllers")] 
         [SerializeField] private SfxController sfxController;
@@ -371,19 +372,19 @@ namespace Games.Jump
             firstGame = false;
         }
 
-        public override  void SetPlayer(bool playAsPet, PetController petController = null)
+        public override void SetupPet(bool isPlayingWithPet, PetObject petObject = null)
         {
-            playerPlaceHolder.SetActive(!playAsPet);
-            playerRenderer.gameObject.SetActive(playAsPet);
+            playerPlaceHolder.SetActive(!isPlayingWithPet);
+            playerRenderer.gameObject.SetActive(isPlayingWithPet);
 
-            if (playAsPet)
+            if (isPlayingWithPet)
             {
-                playerRenderer.sprites = petController.GetJumpAnim();
+                playerRenderer.sprites = petObject.GetJumpAnim();
                 playerRenderer.GetComponent<SpriteRenderer>().sprite = playerRenderer.sprites[0];
 
-                playerRenderer.gameObject.transform.localRotation = petController.spriteRenderer.transform.localRotation;
-                playerRenderer.gameObject.transform.localPosition = petController.spriteRenderer.transform.localPosition;
-                playerRenderer.gameObject.transform.localScale = petController.spriteRenderer.transform.localScale;
+                playerRenderer.gameObject.transform.localRotation = petObject.spriteRenderer.transform.localRotation;
+                playerRenderer.gameObject.transform.localPosition = petObject.spriteRenderer.transform.localPosition;
+                playerRenderer.gameObject.transform.localScale = petObject.spriteRenderer.transform.localScale;
 
                 playerRenderer.interval = 0.9f / playerRenderer.sprites.Length;
             }

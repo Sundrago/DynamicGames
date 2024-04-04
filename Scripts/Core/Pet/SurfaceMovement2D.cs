@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core.Main;
+using Core.UI;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Core.Pet
 {
-    [RequireComponent(typeof(PetController))]
+    [RequireComponent(typeof(PetObject))]
     public class SurfaceMovement2D : MonoBehaviour
     {
         private const float HeightMin = 0.15f;
@@ -30,7 +31,7 @@ namespace Core.Pet
         private bool isOnIsland, isOnTransition, isPaused;
         private float moveSpeed = 0.3f;
 
-        private PetController petController;
+        private PetObject petObject;
         private List<SquareElement> squareBlockElements;
         private GameObject[] squares;
         private Transition transition;
@@ -46,7 +47,7 @@ namespace Core.Pet
         
         private void Awake()
         {
-            petController = GetComponent<PetController>();
+            petObject = GetComponent<PetObject>();
         }
 
         private void Update()
@@ -84,7 +85,7 @@ namespace Core.Pet
                 return;
             }
 
-            petController.JumpUpdate(transition.normal);
+            petObject.JumpUpdate(transition.normal);
             if (transition.normal > 0.95f)
             {
                 FinishTransition();
@@ -224,7 +225,7 @@ namespace Core.Pet
                     if (rb2D != null)
                     {
                         var velocity = Mathf.Abs(rb2D.velocity.x) + Mathf.Abs(rb2D.velocity.y);
-                        if (velocity >= 0.01f) petController.OnHit();
+                        if (velocity >= 0.01f) petObject.OnHit();
                     }
 
                     return true;
@@ -365,7 +366,7 @@ namespace Core.Pet
             }
 
             transition.startRotation = gameObject.transform.rotation;
-            petController.JumpStart();
+            petObject.JumpStart();
             transition.normal = 0;
             isOnTransition = true;
         }
@@ -591,10 +592,10 @@ namespace Core.Pet
             switch (currentPlace)
             {
                 case CurrentLocationType.Title:
-                    petController.OnTitle();
+                    petObject.OnTitle();
                     break;
                 case CurrentLocationType.Island:
-                    petController.OnIsland();
+                    petObject.OnIsland();
                     break;
             }
         }

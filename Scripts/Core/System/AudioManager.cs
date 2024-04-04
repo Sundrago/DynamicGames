@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using MyUtility;
+using Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;

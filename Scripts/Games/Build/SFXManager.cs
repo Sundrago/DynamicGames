@@ -1,5 +1,5 @@
 using System.Collections;
-using MyUtility;
+using Utility;
 using UnityEngine;
 
 namespace Games.Build

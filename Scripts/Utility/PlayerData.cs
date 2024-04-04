@@ -3,20 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace MyUtility
+namespace Utility
 {
-    public enum DataKey
-    {
-        debugMode,
-        adDate,
-        adCount,
-        settings_bgm,
-        settings_sfx,
-        AskForUserReviewStatus,
-        totalTicketCount,
-        language,
-        totalScoreCount,
-    }
     static class PlayerData
     {
         public static bool HasKey(DataKey key)
@@ -193,5 +181,21 @@ namespace MyUtility
             data.Clear();
             SaveData();
         }
+    }
+    
+    public enum DataKey
+    {
+        debugMode,
+        adDate,
+        adCount,
+        settings_bgm,
+        settings_sfx,
+        AskForUserReviewStatus,
+        totalTicketCount,
+        language,
+        totalScoreCount,
+        ticketCount,
+        gachaCoinCount,
+        keyCount,
     }
 }

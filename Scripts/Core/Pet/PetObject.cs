@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Core.System;
+using Core.UI;
+using Games;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -11,7 +13,7 @@ using Random = UnityEngine.Random;
 namespace Core.Pet
 {
     [RequireComponent(typeof(SurfaceMovement2D))]
-    public class PetController : SerializedMonoBehaviour
+    public class PetObject : SerializedMonoBehaviour
     {
         [SerializeField] public PetType type;
         [SerializeField] public SpriteRenderer spriteRenderer;

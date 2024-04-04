@@ -8,7 +8,7 @@ namespace Games.Jump
     /// </summary>
     public class AnimationEventHandler : MonoBehaviour
     {
-        [SerializeField] private GameManager gameManager;
+        [FormerlySerializedAs("gameManagerManager")] [SerializeField] private GameManager gameManager;
 
         private void Start()
         {

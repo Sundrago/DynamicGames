@@ -149,7 +149,7 @@ namespace Core.Pet
 
         private void CreateAndInitializeItem(PetConfig config, int index)
         {
-            var petController = config.obj.GetComponent<PetController>();
+            var petController = config.obj.GetComponent<PetObject>();
             var item = Instantiate(petInventoryItemPrefab, drawerItemHolder);
 
             var x = index % 4;

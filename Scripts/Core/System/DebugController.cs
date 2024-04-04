@@ -1,7 +1,9 @@
 using System;
 using Core.Gacha;
 using Core.Pet;
-using MyUtility;
+using Core.UI;
+using Games;
+using Utility;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -16,7 +18,7 @@ namespace Core.System
 
         [SerializeField] private SfxController sfxController;
         [SerializeField] private LeaderboardManger leaderboardManger;
-        [SerializeField] private Ranking_UI ranking_ui;
+        [FormerlySerializedAs("ranking_ui")] [SerializeField] private LeaderboardUI leaderboardUI;
         [SerializeField] private LocalizationAndFontManager localizationAndFontManager;
         [SerializeField] private TMP_Dropdown localeSelector;
 
@@ -51,7 +53,7 @@ namespace Core.System
 
         public void ShowRankingUI()
         {
-            StartCoroutine(ranking_ui.ShowRankingUI(0));
+            StartCoroutine(leaderboardUI.ShowRankingUI(0));
         }
 
         public void ShowRandomRanking()

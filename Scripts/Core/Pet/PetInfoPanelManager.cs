@@ -68,7 +68,7 @@ namespace Core.Pet
         {
             this.type = type;
             var petData = PetManager.Instance.GetPetDataByType(type);
-            var petController = petData.obj.GetComponent<PetController>();
+            var petController = petData.obj.GetComponent<PetObject>();
 
             var petInfoMover = gameObject.GetComponent<PetInfoPanelMover>();
             if (petInfoMover != null)

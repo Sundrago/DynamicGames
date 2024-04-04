@@ -1,64 +1,83 @@
-using System.Collections;
-using System.Collections.Generic;
 using Core.System;
-using UnityEngine;
-using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
+using Utility;
 
-public class SettingsPanel : MonoBehaviour
+namespace Core.UI
 {
-    [SerializeField] Slider music_slider, sfx_slider;
-    [SerializeField] SfxController sfx;
-
-    // Update is called once per frame
-    void Update()
+    public class SettingsPanel : MonoBehaviour, IPanelObject
     {
-        if(Time.frameCount % 30 == 0) {
-            SetVolume();
-            sfx.SetVolume();
+        [FormerlySerializedAs("musicSlider")] [FormerlySerializedAs("music_slider")] [SerializeField]
+        private Slider bgmSlider;
+
+        [FormerlySerializedAs("sfx_slider")] [SerializeField]
+        private Slider sfxSlider;
+
+        [FormerlySerializedAs("sfx")] [SerializeField]
+        private SfxController sfxController;
+
+        public void ShowPanel()
+        {
+            if (gameObject.activeSelf) return;
+
+            AudioManager.Instance.PlaySfxByTag(SfxTag.UI_Open);
+
+            SetupPanelAnimation();
+            UpdateVolumeSlider();
         }
-    }
 
-    public void ShowPanel() {
-        if(gameObject.activeSelf) return;
-        
-        AudioManager.Instance.PlaySfxByTag(SfxTag.UI_Open);
-        gameObject.transform.position = Vector3.zero;
-        gameObject.transform.eulerAngles = Vector3.zero;
+        public void HidePanel()
+        {
+            AudioManager.Instance.PlaySfxByTag(SfxTag.UI_Select);
+            SetVolume();
+            gameObject.transform.position = Vector3.zero;
+            gameObject.transform.eulerAngles = Vector3.zero;
 
-        if(DOTween.IsTweening(gameObject.transform)) DOTween.Kill(gameObject.transform);
+            gameObject.transform.DOLocalMoveY(-2500f, 1.5f)
+                .SetEase(Ease.OutExpo)
+                .OnComplete(() => { gameObject.SetActive(false); });
+            gameObject.transform.DORotate(new Vector3(0f, 0f, 100f), 0.5f)
+                .SetEase(Ease.OutExpo);
+        }
 
-        gameObject.transform.DOLocalMoveY(-2500f, 0.5f)
-            .From()
-            .SetEase(Ease.OutExpo);
-        gameObject.transform.DORotate(new Vector3(0f,0f,50f), 0.5f)
-            .From()
-            .SetEase(Ease.OutBack);
-        
-        music_slider.value = PlayerPrefs.GetFloat("settings_music", 0.5f);
-        sfx_slider.value = PlayerPrefs.GetFloat("settings_sfx", 1f);
+        public void OnVolumeChange()
+        {
+            SetVolume();
+            sfxController.SetVolume();
+        }
 
-        music_slider.GetComponent<SliderCtrl>().OnValueChange();
-        sfx_slider.GetComponent<SliderCtrl>().OnValueChange();
+        private void SetupPanelAnimation()
+        {
+            gameObject.transform.position = Vector3.zero;
+            gameObject.transform.eulerAngles = Vector3.zero;
 
-        gameObject.SetActive(true);
-    }
+            if (DOTween.IsTweening(gameObject.transform)) DOTween.Kill(gameObject.transform);
+            gameObject.transform.DOLocalMoveY(-2500f, 0.5f)
+                .From()
+                .SetEase(Ease.OutExpo);
+            gameObject.transform.DORotate(new Vector3(0f, 0f, 50f), 0.5f)
+                .From()
+                .SetEase(Ease.OutBack);
 
-    public void HidePanel() {
-        AudioManager.Instance.PlaySfxByTag(SfxTag.UI_Select);
-        SetVolume();
-        gameObject.transform.position = Vector3.zero;
-        gameObject.transform.eulerAngles = Vector3.zero;
+            gameObject.SetActive(true);
+        }
 
-        gameObject.transform.DOLocalMoveY(-2500f, 1.5f)
-            .SetEase(Ease.OutExpo)
-            .OnComplete(()=>{gameObject.SetActive(false);});
-        gameObject.transform.DORotate(new Vector3(0f,0f,100f), 0.5f)
-            .SetEase(Ease.OutExpo);
-    }
+        private void UpdateVolumeSlider()
+        {
+            if (bgmSlider.value != PlayerData.GetFloat(DataKey.settings_bgm, 0.5f))
+                bgmSlider.value = PlayerData.GetFloat(DataKey.settings_bgm, 0.5f);
 
-    private void SetVolume() {
-        PlayerPrefs.SetFloat("settings_music", music_slider.value);
-        PlayerPrefs.SetFloat("settings_sfx", sfx_slider.value);
+            if (sfxSlider.value != PlayerData.GetFloat(DataKey.settings_sfx, 1f))
+                sfxSlider.value = PlayerData.GetFloat(DataKey.settings_sfx, 1f);
+        }
+
+        private void SetVolume()
+        {
+            Debug.Log(bgmSlider.value + ", " + sfxSlider.value);
+            PlayerData.SetFloat(DataKey.settings_bgm, bgmSlider.value);
+            PlayerData.SetFloat(DataKey.settings_sfx, sfxSlider.value);
+        }
     }
 }

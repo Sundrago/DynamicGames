@@ -1,8 +1,11 @@
-public interface IPanelObject
+namespace Core.UI
 {
-    /// Displays UI panel.
-    void ShowPanel();
-    
-    /// Hides UI panel.
-    void HidePanel();
+    public interface IPanelObject
+    {
+        /// Displays UI panel.
+        void ShowPanel();
+
+        /// Hides UI panel.
+        void HidePanel();
+    }
 }

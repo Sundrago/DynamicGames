@@ -1,18 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
-public class FruitController : MonoBehaviour
+namespace Core.UI
 {
-    [SerializeField] public Image fruitImage;
-    [SerializeField] private Button fruitBtn;
-    [SerializeField] private TextMeshProUGUI fruitCount_UI;
-
-    public void Init(int amount)
+    public class FruitController : MonoBehaviour
     {
-        fruitCount_UI.text = amount.ToString();
-        fruitBtn.interactable = (amount != 0);
+        [SerializeField] public Image fruitImage;
+        [SerializeField] private Button fruitBtn;
+        [SerializeField] private TextMeshProUGUI fruitCount_UI;
+
+        public void Init(int amount)
+        {
+            fruitCount_UI.text = amount.ToString();
+            fruitBtn.interactable = amount != 0;
+        }
     }
 }

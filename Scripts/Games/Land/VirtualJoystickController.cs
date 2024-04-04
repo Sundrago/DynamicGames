@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Games.Land
@@ -27,7 +28,7 @@ namespace Games.Land
     {
         [SerializeField] private GameObject joystickUI;
         [SerializeField] private Sprite[] joystickImg = new Sprite[4];
-        [SerializeField] private GameManager gameManager;
+        [FormerlySerializedAs("gameManagerManager")] [SerializeField] private GameManager gameManager;
         private int currentStateIndex;
         private Vector2 initialPoint;
         private float joystickHalfScaleY;

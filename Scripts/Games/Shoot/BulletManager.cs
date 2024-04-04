@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.System;
+using Core.UI;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace Games.Shoot
 {
     public class BulletManager : MonoBehaviour
     {
+        [FormerlySerializedAs("gameManagerManager")]
         [Header("Managers and Controllers")] 
         [SerializeField] private GameManager gameManager;
         [SerializeField] private InputManager inputManager;

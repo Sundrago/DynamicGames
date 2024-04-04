@@ -1,4 +1,5 @@
 using Core.System;
+using Core.UI;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -39,7 +40,7 @@ namespace Core.Pet
         private Sprite[] GetPetWalkAnim()
         {
             var petData = PetManager.Instance.GetPetDataByType(selectedPetType).obj;
-            return petData.GetComponent<PetController>().GetWalkAnim();
+            return petData.GetComponent<PetObject>().GetWalkAnim();
         }
 
         private void SetInitialSettings(PetType petType)

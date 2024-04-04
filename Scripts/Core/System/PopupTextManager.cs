@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using Febucci.UI;
-using MyUtility;
+using Utility;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

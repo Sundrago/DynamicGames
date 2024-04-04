@@ -1,67 +1,70 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class SpriteAnimator : MonoBehaviour
+namespace Core.UI
 {
-    [SerializeField] public Sprite[] sprites;
-    [SerializeField] public float interval = 1f;
-    private Image image = null;
-    private SpriteRenderer spriteRenderer = null;
-    private int idx;
-    public bool start = true;
-    public int pauseAtIdx = -1;
-    private bool paused = false;
-    
-    private IEnumerator SpriteAnim()
+    public class SpriteAnimator : MonoBehaviour
     {
-        while (start)
-        {
-            yield return new WaitForSeconds(interval);
-            
-            if(!paused) idx += 1;
-            if (idx >= sprites.Length) idx = 0;
-            
-            if(image!=null)
-                image.sprite = sprites[idx];
-            if(spriteRenderer!=null)
-                spriteRenderer.sprite = sprites[idx];
-            
-            if (pauseAtIdx == idx) start = false;
-        }
-    }
+        [SerializeField] public Sprite[] sprites;
+        [SerializeField] public float interval = 1f;
+        [FormerlySerializedAs("start")] public bool isPlaying = true;
+        public int pauseAtIdx = -1;
+        private int idx;
 
-    public void RestartWithNoLoop()
-    {
-        idx = 0;
-        pauseAtIdx = sprites.Length - 1;
-        if (start == false)
+        private Image image;
+        private bool pauseAnimation;
+        private SpriteRenderer spriteRenderer;
+
+        private void OnEnable()
         {
-            start = true;
+            pauseAtIdx = -1;
+            isPlaying = true;
+            if (GetComponent<Image>() != null)
+                image = GetComponent<Image>();
+            if (GetComponent<SpriteRenderer>() != null)
+                spriteRenderer = GetComponent<SpriteRenderer>();
             StartCoroutine(SpriteAnim());
         }
-    }
-    
-    private void OnEnable()
-    {
-        pauseAtIdx = -1;
-        start = true;
-        if(GetComponent<Image>() != null)
-            image = GetComponent<Image>();
-        if(GetComponent<SpriteRenderer>() != null)
-            spriteRenderer = GetComponent<SpriteRenderer>();
-        StartCoroutine(SpriteAnim());
-    }
 
-    public void PauseAnim()
-    {
-        paused = true;
-    }
+        private IEnumerator SpriteAnim()
+        {
+            while (isPlaying)
+            {
+                yield return new WaitForSeconds(interval);
 
-    public void UnPauseAnim()
-    {
-        paused = false;
+                if (!pauseAnimation) idx += 1;
+                if (idx >= sprites.Length) idx = 0;
+
+                if (image != null)
+                    image.sprite = sprites[idx];
+                if (spriteRenderer != null)
+                    spriteRenderer.sprite = sprites[idx];
+
+                if (pauseAtIdx == idx) isPlaying = false;
+            }
+        }
+
+        public void RestartWithNoLoop()
+        {
+            idx = 0;
+            pauseAtIdx = sprites.Length - 1;
+            if (isPlaying == false)
+            {
+                isPlaying = true;
+                StartCoroutine(SpriteAnim());
+            }
+        }
+
+        public void PauseAnim()
+        {
+            pauseAnimation = true;
+        }
+
+        public void ResumeAnim()
+        {
+            pauseAnimation = false;
+        }
     }
 }

@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using Core.Gacha;
 using Core.Pet;
 using Core.System;
+using Core.UI;
 using UnityEngine;
 using DG.Tweening;
+using Games;
 using UnityEngine.Serialization;
 
 namespace Core.Main
@@ -27,9 +29,9 @@ namespace Core.Main
         [SerializeField] private GameObject ranking_ui;
         [SerializeField] private TitleDragHandler title;
 
-        [SerializeField] private Games.Jump.GameManager jumpGameManager;
+        [FormerlySerializedAs("jumpGameManagerManager")] [SerializeField] private Games.Jump.GameManager jumpGameManager;
 
-        [FormerlySerializedAs("shootGameManager")] [SerializeField]
+        [FormerlySerializedAs("gameManagerManager")] [FormerlySerializedAs("shootGameManager")] [SerializeField]
         private Games.Shoot.GameManager gameManager;
 
         [SerializeField] private DailyTicketRewardsManager dailyTicketRewardsManager;

@@ -1,9 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Core.UI;
 using DG.Tweening;
+using Games;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -14,7 +17,7 @@ namespace Core.System
         [Header("Managers and Controllers")] [SerializeField]
         private LeaderboardManger leaderboardManager;
 
-        [SerializeField] private Ranking_UI ranking_UI;
+        [FormerlySerializedAs("ranking_UI")] [SerializeField] private LeaderboardUI leaderboardUI;
 
         private readonly SortedDictionary<int, Tiers> TiersDictionary = new()
         {

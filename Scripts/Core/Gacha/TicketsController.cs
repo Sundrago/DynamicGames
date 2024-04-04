@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using Core.System;
+using Core.UI;
 using DG.Tweening;
-using MyUtility;
+using Games;
+using Utility;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -207,7 +209,7 @@ namespace Core.Gacha
             var pos = Input.mousePosition;
             pos = Camera.main.ScreenToWorldPoint(pos);
 
-            moneyManager.Coin2DAnim(MoneyManager.RewardType.Ticket, pos, ticketCount);
+            moneyManager.Reward2DAnimation(MoneyManager.RewardType.Ticket, pos, ticketCount);
             audioManager.PlaySfxByTag(SfxTag.TicketReap);
             CollectTicketAnimation();
         }

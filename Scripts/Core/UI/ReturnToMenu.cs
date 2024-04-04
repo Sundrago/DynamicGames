@@ -1,21 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
 using Core.System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class ReturnToMenu : MonoBehaviour
+namespace Core.UI
 {
-    [SerializeField] SfxController sfx;
-    [SerializeField] private GameObject FromCanvas, MainCanvas;
-
-    public void ReturnToMenuClkcked()
+    public class ReturnToMenu : MonoBehaviour
     {
-        if(!TransitionManager.Instance.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("transition_idle")) return;
+        [FormerlySerializedAs("sfx")] [SerializeField]
+        private SfxController sfxController;
 
-        sfx.PlaySfx(3);
-        TransitionManager.Instance.canvas_A = FromCanvas;
-        TransitionManager.Instance.canvas_B = MainCanvas;
-        TransitionManager.Instance.ReturnToMenu = true;
-        TransitionManager.Instance.GetComponent<Animator>().SetTrigger("start");
+        [FormerlySerializedAs("FromCanvas")] [SerializeField]
+        private GameObject fromCanvas;
+
+        [FormerlySerializedAs("MainCanvas")] [SerializeField]
+        private GameObject mainCanvas;
+
+        public void OnReturnToMenuButtonClick()
+        {
+            if (!TransitionManager.Instance.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0)
+                    .IsName("transition_idle")) return;
+
+            sfxController.PlaySfx(3);
+            TransitionManager.Instance.canvas_A = fromCanvas;
+            TransitionManager.Instance.canvas_B = mainCanvas;
+            TransitionManager.Instance.ReturnToMenu = true;
+            TransitionManager.Instance.GetComponent<Animator>().SetTrigger("start");
+        }
     }
 }

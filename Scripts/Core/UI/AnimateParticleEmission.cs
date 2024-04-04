@@ -1,22 +1,21 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-public class AnimateParticleEmission : MonoBehaviour
+namespace Core.UI
 {
-    [SerializeField] private ParticleSystem systems;
-    [SerializeField] private float rateOverTimeConstantMaxTo = 0;
-    [SerializeField] private float duration = 10f;
-
-    private ParticleSystem.EmissionModule emission;
-    private void Start()
+    public class AnimateParticleEmission : MonoBehaviour
     {
-        emission = systems.emission;
-        DOVirtual.Float(emission.rateOverTime.constantMax, rateOverTimeConstantMaxTo, duration, (x) =>
+        [SerializeField] private ParticleSystem systems;
+        [SerializeField] private float rateOverTimeConstantMaxTo;
+        [SerializeField] private float duration = 10f;
+
+        private ParticleSystem.EmissionModule emission;
+
+        private void Start()
         {
-            emission.rateOverTime = new ParticleSystem.MinMaxCurve(0, x);
-        });
+            emission = systems.emission;
+            DOVirtual.Float(emission.rateOverTime.constantMax, rateOverTimeConstantMaxTo, duration,
+                x => { emission.rateOverTime = new ParticleSystem.MinMaxCurve(0, x); });
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Games.Land
 {
@@ -8,7 +9,7 @@ namespace Games.Land
     /// </summary>
     public class BackgroundElementsManager : MonoBehaviour
     {
-        [SerializeField] private GameManager gameManager;
+        [FormerlySerializedAs("gameManagerManager")] [SerializeField] private GameManager gameManager;
         [SerializeField] private Transform circleCanvas;
         private readonly List<Vector2> circlePositions = new();
         private readonly List<GameObject> circles = new();

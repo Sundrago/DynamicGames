@@ -1,3 +1,4 @@
+using Core.UI;
 using DG.Tweening;
 using Febucci.UI;
 using UnityEngine;
@@ -19,7 +20,7 @@ namespace Core.Pet
 
         public void Init(PetType type, PetScoreType scoreType)
         {
-            var petController = petManager.GetPetDataByType(type).obj.GetComponent<PetController>();
+            var petController = petManager.GetPetDataByType(type).obj.GetComponent<PetObject>();
 
             petController.SetSpriteAnimatorIdleAnimation(spriteAnimator);
 

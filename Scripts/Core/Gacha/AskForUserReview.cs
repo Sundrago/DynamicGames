@@ -1,6 +1,6 @@
 using Core.System;
 using DG.Tweening;
-using MyUtility;
+using Utility;
 using TMPro;
 using UnityEngine;
 using UnityEngine.iOS;

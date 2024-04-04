@@ -1,3 +1,5 @@
+using Core.System;
+using Core.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
@@ -6,6 +8,7 @@ namespace Games.Shoot
 {
     public class InputManager : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
     {
+        [FormerlySerializedAs("gameManagerManager")]
         [Header("Managers and Controllers")] 
         [SerializeField] private GameManager gameManager;
         [SerializeField] private BulletManager bullet_Manager;
@@ -141,7 +144,7 @@ namespace Games.Shoot
         private void UpdatePlayerAnimation()
         {
             if (NormalVector.x + NormalVector.y > 0.2f)
-                player.UnPauseAnim();
+                player.ResumeAnim();
             else
                 player.PauseAnim();
         }
