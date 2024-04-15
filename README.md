@@ -2,17 +2,14 @@
 ![](https://github.com/Sundrago/DynamicGames/blob/cab7517de28998237fae896c819d36751cbed703/Docs/00_0.jpeg) | ![](https://github.com/Sundrago/DynamicGames/blob/cab7517de28998237fae896c819d36751cbed703/Docs/00_1.jpeg) | ![](https://github.com/Sundrago/DynamicGames/blob/cab7517de28998237fae896c819d36751cbed703/Docs/00_2.jpeg) | ![](https://github.com/Sundrago/DynamicGames/blob/cab7517de28998237fae896c819d36751cbed703/Docs/00_3.jpeg) | ![](https://github.com/Sundrago/DynamicGames/blob/cab7517de28998237fae896c819d36751cbed703/Docs/00_4.jpeg) | ![](https://github.com/Sundrago/DynamicGames/blob/cab7517de28998237fae896c819d36751cbed703/Docs/00_5.jpeg) |
 ---:|:---:|:---:|:---:|:---:|:---
 
-<p align="center"><a href="https://apple.co/3ijIa9V">
+<br />
+<p align="center"><a href="http://apple.co/3qpjd4j">
 <img src="https://github.com/Sundrago/Cocktailor/blob/15a867f85fc3829dc0730dccfe3db2180e624dce/Docs/appstore.png" width="200"">
 </a></p>
 
-<p align="center"><a href="https://play.google.com/store/apps/details?id=net.sundragon.cocktail">
-<img src="https://github.com/Sundrago/Cocktailor/blob/15a867f85fc3829dc0730dccfe3db2180e624dce/Docs/playstore.png" width="200"">
-</a></p>
-
-&nbsp;
+<br />
 <hr>
-&nbsp;
+<br />
 
 ### 개요
 - 개발기간: 2023.09 ~
