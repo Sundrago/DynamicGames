@@ -294,21 +294,39 @@ namespace DynamicGames.Pet
                 currentLocation.obj = availableLocations[nextIdx].squareElement.obj;
                 currentLocation.cornerIdx = availableLocations[nextIdx].cornerIdx;
             }
+            
+            var closest = GetClosestPoint(out var dist);
+            UpdateDirection(dist);
+            SetupTransition(closest);
+        }
 
-            //Setup Next Move
-            currentLocation.cornerPoints = GetCornerPoint(currentLocation.obj);
-            currentLocation.pointA = currentLocation.cornerPoints[currentLocation.cornerIdx];
-            currentLocation.pointB =
-                currentLocation.cornerPoints[currentLocation.cornerIdx == 3 ? 0 : currentLocation.cornerIdx + 1];
+        private void SetupTransition(Vector2 closest)
+        {
+            var transitionDist = Mathf.Abs(Vector2.Distance(gameObject.transform.position, closest));
 
-            var closest =
-                FindClosestPointsOnLine(gameObject.transform.position, currentLocation.pointA, currentLocation.pointB);
-            var dist = Vector2.Distance(currentLocation.pointA, currentLocation.pointB);
-            currentLocation.normal = Vector2.Distance(currentLocation.pointA, closest) / dist;
-            currentLocation.normal = Mathf.Clamp(currentLocation.normal, 0.05f, 0.95f);
-            moveSpeed = moveVelocity / dist * Random.Range(0.8f, 1.2f);
+            transition.startPoint = gameObject.transform.position;
+            transition.endPoint = closest;
+            if (transitionDist < Height)
+            {
+                transitionSpeed = shortTransition;
+                transition.controlPoint = gameObject.transform.position +
+                                          (headObject.transform.position - gameObject.transform.position) * 0.2f;
+            }
+            else
+            {
+                transitionSpeed = longTransition;
+                transition.controlPoint = gameObject.transform.position +
+                                          (headObject.transform.position - gameObject.transform.position) * 2;
+            }
 
+            transition.startRotation = gameObject.transform.rotation;
+            petObject.JumpStart();
+            transition.normal = 0;
+            isOnTransition = true;
+        }
 
+        private void UpdateDirection(float dist)
+        {
             //Get DeltaHeight
             var midOfLine = Vector2.Lerp(currentLocation.pointA, currentLocation.pointB, 0.5f);
             Vector2 midOfSquare = currentLocation.obj.transform.position;
@@ -317,8 +335,8 @@ namespace DynamicGames.Pet
             var y = midOfSquare.y - midOfLine.y;
             var d = Vector2.Distance(midOfLine, midOfSquare);
             var delta_height = new Vector2(x * Height / d, y * Height / d);
-
             var noramlHeight = Height / dist * 1.2f;
+            
             var leftAvailalble = CheckPositionAvailability(currentLocation.pointA, currentLocation.pointB,
                 currentLocation.normal - noramlHeight, delta_height);
             var rightAvailable = CheckPositionAvailability(currentLocation.pointA, currentLocation.pointB,
@@ -349,29 +367,22 @@ namespace DynamicGames.Pet
             else
                 gameObject.transform.localScale = new Vector3(-Mathf.Abs(gameObject.transform.localScale.x),
                     Mathf.Abs(gameObject.transform.localScale.y), Mathf.Abs(gameObject.transform.localScale.z));
+        }
 
-            //Setup Transition
-            var transitionDist = Mathf.Abs(Vector2.Distance(gameObject.transform.position, closest));
+        private Vector2 GetClosestPoint(out float dist)
+        {
+            currentLocation.cornerPoints = GetCornerPoint(currentLocation.obj);
+            currentLocation.pointA = currentLocation.cornerPoints[currentLocation.cornerIdx];
+            currentLocation.pointB =
+                currentLocation.cornerPoints[currentLocation.cornerIdx == 3 ? 0 : currentLocation.cornerIdx + 1];
 
-            transition.startPoint = gameObject.transform.position;
-            transition.endPoint = closest;
-            if (transitionDist < Height)
-            {
-                transitionSpeed = shortTransition;
-                transition.controlPoint = gameObject.transform.position +
-                                          (headObject.transform.position - gameObject.transform.position) * 0.2f;
-            }
-            else
-            {
-                transitionSpeed = longTransition;
-                transition.controlPoint = gameObject.transform.position +
-                                          (headObject.transform.position - gameObject.transform.position) * 2;
-            }
-
-            transition.startRotation = gameObject.transform.rotation;
-            petObject.JumpStart();
-            transition.normal = 0;
-            isOnTransition = true;
+            var closest =
+                FindClosestPointsOnLine(gameObject.transform.position, currentLocation.pointA, currentLocation.pointB);
+            dist = Vector2.Distance(currentLocation.pointA, currentLocation.pointB);
+            currentLocation.normal = Vector2.Distance(currentLocation.pointA, closest) / dist;
+            currentLocation.normal = Mathf.Clamp(currentLocation.normal, 0.05f, 0.95f);
+            moveSpeed = moveVelocity / dist * Random.Range(0.8f, 1.2f);
+            return closest;
         }
 
         private void GetAvailableLocations(int target)
@@ -383,7 +394,6 @@ namespace DynamicGames.Pet
                 currentLocation.obj = island;
                 currentLocation.cornerIdx = 1;
                 currentLocation.normal = 0;
-
                 InitiateCurrentCorner(currentLocation);
                 return;
             }
@@ -453,23 +463,8 @@ namespace DynamicGames.Pet
         {
             if (squareBlockElements[idx].obj == null) return;
 
-            squareBlockElements[idx].cornerPoints = GetCornerPoint(squareBlockElements[idx].obj);
-
-            squareBlockElements[idx].closestPointsOnLine = new Vector2[4];
-            squareBlockElements[idx].closestPointsOnLine[0] = FindClosestPointsOnLine(gameObject.transform.position,
-                squareBlockElements[idx].cornerPoints[0], squareBlockElements[idx].cornerPoints[1]);
-            squareBlockElements[idx].closestPointsOnLine[1] = FindClosestPointsOnLine(gameObject.transform.position,
-                squareBlockElements[idx].cornerPoints[1], squareBlockElements[idx].cornerPoints[2]);
-            squareBlockElements[idx].closestPointsOnLine[2] = FindClosestPointsOnLine(gameObject.transform.position,
-                squareBlockElements[idx].cornerPoints[2], squareBlockElements[idx].cornerPoints[3]);
-            squareBlockElements[idx].closestPointsOnLine[3] = FindClosestPointsOnLine(gameObject.transform.position,
-                squareBlockElements[idx].cornerPoints[3], squareBlockElements[idx].cornerPoints[0]);
-
-            bool[] constraints = { false, false, false, false };
-            if (squareBlockElements[idx].obj.GetComponent<FootstepConstraints>() != null)
-                constraints = squareBlockElements[idx].obj.GetComponent<FootstepConstraints>().constraints;
-            squareBlockElements[idx].constraints = constraints;
-
+            UpdateCurrentElementsPositionData(idx);
+            var constraints = GetConstraints(idx);
 
             squareBlockElements[idx].dists = new float[4];
             for (var i = 0; i < 4; i++)
@@ -501,16 +496,10 @@ namespace DynamicGames.Pet
                 var noramlHeight = Height / Vector2.Distance(A, B) * 1.5f;
                 var leftAvailalble = CheckPositionAvailability(A, B, normalPoint - noramlHeight, delta_height);
                 var rightAvailable = CheckPositionAvailability(A, B, normalPoint + noramlHeight, delta_height);
-
                 var isAvailable = leftAvailalble || rightAvailable;
 
                 // DEBUG!
-                // var checkpointA = Vector2.Lerp(A, B, normalPoint - noramlHeight) - delta_height;
-                // var checkpointB = Vector2.Lerp(A, B, normalPoint + noramlHeight) - delta_height;
-                // if (isAvailable) Debug.DrawLine(checkpointA, checkpointB, Color.red, 1f);
-                // else Debug.DrawLine(checkpointA, checkpointB, Color.yellow, 1f);
-                // Debug.DrawLine(closetPoint, checkpointA, leftAvailalble ? Color.red : Color.yellow, 1f);
-                // Debug.DrawLine(closetPoint, checkpointB, rightAvailable ? Color.red : Color.yellow, 1f);
+                // DebugDrawAvailablePath(A, B, normalPoint, noramlHeight, delta_height, isAvailable, closetPoint, leftAvailalble, rightAvailable);
 
                 if (isAvailable)
                 {
@@ -526,6 +515,40 @@ namespace DynamicGames.Pet
                     availableLocations.Add(available);
                 }
             }
+        }
+
+        private static void DebugDrawAvailablePath(Vector2 A, Vector2 B, float normalPoint, float noramlHeight,
+            Vector2 delta_height, bool isAvailable, Vector2 closetPoint, bool leftAvailalble, bool rightAvailable)
+        {
+            var checkpointA = Vector2.Lerp(A, B, normalPoint - noramlHeight) - delta_height;
+            var checkpointB = Vector2.Lerp(A, B, normalPoint + noramlHeight) - delta_height;
+            if (isAvailable) Debug.DrawLine(checkpointA, checkpointB, Color.red, 1f);
+            else Debug.DrawLine(checkpointA, checkpointB, Color.yellow, 1f);
+            Debug.DrawLine(closetPoint, checkpointA, leftAvailalble ? Color.red : Color.yellow, 1f);
+            Debug.DrawLine(closetPoint, checkpointB, rightAvailable ? Color.red : Color.yellow, 1f);
+        }
+
+        private bool[] GetConstraints(int idx)
+        {
+            bool[] constraints = { false, false, false, false };
+            if (squareBlockElements[idx].obj.GetComponent<FootstepConstraints>() != null)
+                constraints = squareBlockElements[idx].obj.GetComponent<FootstepConstraints>().constraints;
+            squareBlockElements[idx].constraints = constraints;
+            return constraints;
+        }
+
+        private void UpdateCurrentElementsPositionData(int idx)
+        {
+            squareBlockElements[idx].cornerPoints = GetCornerPoint(squareBlockElements[idx].obj);
+            squareBlockElements[idx].closestPointsOnLine = new Vector2[4];
+            squareBlockElements[idx].closestPointsOnLine[0] = FindClosestPointsOnLine(gameObject.transform.position,
+                squareBlockElements[idx].cornerPoints[0], squareBlockElements[idx].cornerPoints[1]);
+            squareBlockElements[idx].closestPointsOnLine[1] = FindClosestPointsOnLine(gameObject.transform.position,
+                squareBlockElements[idx].cornerPoints[1], squareBlockElements[idx].cornerPoints[2]);
+            squareBlockElements[idx].closestPointsOnLine[2] = FindClosestPointsOnLine(gameObject.transform.position,
+                squareBlockElements[idx].cornerPoints[2], squareBlockElements[idx].cornerPoints[3]);
+            squareBlockElements[idx].closestPointsOnLine[3] = FindClosestPointsOnLine(gameObject.transform.position,
+                squareBlockElements[idx].cornerPoints[3], squareBlockElements[idx].cornerPoints[0]);
         }
 
         private static Vector2 FindClosestPointsOnLine(Vector2 P, Vector2 A, Vector2 B)
@@ -561,6 +584,7 @@ namespace DynamicGames.Pet
             return true;
         }
 
+        //Load once when transition is finished
         private void LoadSquares()
         {
             squares = GameObject.FindGameObjectsWithTag("square");
@@ -626,7 +650,7 @@ namespace DynamicGames.Pet
         public int[] shortCornerIdx = null;
     }
 
-    public struct AvailableLocation
+    public class AvailableLocation
     {
         public SquareElement squareElement;
         public int cornerIdx;
