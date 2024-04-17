@@ -337,6 +337,7 @@ namespace DynamicGames.Pet
             var delta_height = new Vector2(x * Height / d, y * Height / d);
             var noramlHeight = Height / dist * 1.2f;
             
+            //Check Availability
             var leftAvailalble = CheckPositionAvailability(currentLocation.pointA, currentLocation.pointB,
                 currentLocation.normal - noramlHeight, delta_height);
             var rightAvailable = CheckPositionAvailability(currentLocation.pointA, currentLocation.pointB,
