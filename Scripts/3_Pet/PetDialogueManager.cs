@@ -12,6 +12,15 @@ using Random = UnityEngine.Random;
 
 namespace DynamicGames.Pet
 {
+    public enum PetScoreType
+    {
+        NewBest,
+        Excellent,
+        Great,
+        Good,
+        Bad
+    }
+    
     /// <summary>
     ///     Manages pet dialogues and provides methods to retrieve pet dialogues for specific events.
     /// </summary>
@@ -42,16 +51,16 @@ namespace DynamicGames.Pet
             }
         }
 
-        public string GetIdleText(PetType _type)
+        public string GetIdleText(PetType type)
         {
             var strings = new List<string>();
 
-            if (petDialogueDatas[_type].idle0 != "")
-                strings.Add(Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].idle0));
-            if (petDialogueDatas[_type].idle1 != "")
-                strings.Add(Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].idle1));
-            if (petDialogueDatas[_type].idle2 != "")
-                strings.Add(Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].idle2));
+            if (petDialogueDatas[type].idle0 != "")
+                strings.Add(Localize.GetLocalizedPetDialogue(petDialogueDatas[type].idle0));
+            if (petDialogueDatas[type].idle1 != "")
+                strings.Add(Localize.GetLocalizedPetDialogue(petDialogueDatas[type].idle1));
+            if (petDialogueDatas[type].idle2 != "")
+                strings.Add(Localize.GetLocalizedPetDialogue(petDialogueDatas[type].idle2));
 
             if (strings.Count == 0) return null;
 
@@ -59,140 +68,140 @@ namespace DynamicGames.Pet
             return strings[rnd];
         }
 
-        private string GetDialogFromData(PetType _type, Func<PetDialogueData, string> propertySelector)
+        private string GetDialogFromData(PetType type, Func<PetDialogueData, string> propertySelector)
         {
-            var dialog = propertySelector(petDialogueDatas[_type]);
+            var dialog = propertySelector(petDialogueDatas[type]);
             return string.IsNullOrEmpty(dialog) ? null : Localize.GetLocalizedPetDialogue(dialog);
         }
 
-        public string GetOnHitText(PetType _type)
+        public string GetOnHitText(PetType type)
         {
-            if (string.IsNullOrEmpty(petDialogueDatas[_type].onHit)) return null;
-            return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].onHit);
+            if (string.IsNullOrEmpty(petDialogueDatas[type].onHit)) return null;
+            return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].onHit);
         }
 
-        public string GetOnDragText(PetType _type)
+        public string GetOnDragText(PetType type)
         {
-            if (string.IsNullOrEmpty(petDialogueDatas[_type].onDrag)) return null;
-            return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].onDrag);
+            if (string.IsNullOrEmpty(petDialogueDatas[type].onDrag)) return null;
+            return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].onDrag);
         }
 
-        public string GetGameEnterString(PetType _type, GameType _gameType)
+        public string GetGameEnterString(PetType type, GameType gameType)
         {
-            if (petDialogueDatas[_type].preferredGame == _gameType &&
-                !string.IsNullOrEmpty(petDialogueDatas[_type].onPrefGameEnter))
-                return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].onPrefGameEnter);
+            if (petDialogueDatas[type].preferredGame == gameType &&
+                !string.IsNullOrEmpty(petDialogueDatas[type].onPrefGameEnter))
+                return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].onPrefGameEnter);
 
-            if (petDialogueDatas[_type].unpreferredGame == _gameType &&
-                !string.IsNullOrEmpty(petDialogueDatas[_type].onUnpreferredGameEnter))
-                return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].onUnpreferredGameEnter);
+            if (petDialogueDatas[type].unpreferredGame == gameType &&
+                !string.IsNullOrEmpty(petDialogueDatas[type].onUnpreferredGameEnter))
+                return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].onUnpreferredGameEnter);
 
-            if (!string.IsNullOrEmpty(petDialogueDatas[_type].onGameEnter))
-                return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].onGameEnter);
+            if (!string.IsNullOrEmpty(petDialogueDatas[type].onGameEnter))
+                return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].onGameEnter);
 
             return null;
         }
 
-        public string GetGameExitString(PetType _type, GameType _gameType)
+        public string GetGameExitString(PetType type, GameType gameType)
         {
-            if (petDialogueDatas[_type].preferredGame == _gameType &&
-                !string.IsNullOrEmpty(petDialogueDatas[_type].onPrefGameExit))
-                return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].onPrefGameExit);
+            if (petDialogueDatas[type].preferredGame == gameType &&
+                !string.IsNullOrEmpty(petDialogueDatas[type].onPrefGameExit))
+                return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].onPrefGameExit);
 
-            if (petDialogueDatas[_type].unpreferredGame == _gameType &&
-                !string.IsNullOrEmpty(petDialogueDatas[_type].onUnpreferredGameExit))
-                return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].onUnpreferredGameExit);
+            if (petDialogueDatas[type].unpreferredGame == gameType &&
+                !string.IsNullOrEmpty(petDialogueDatas[type].onUnpreferredGameExit))
+                return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].onUnpreferredGameExit);
 
-            if (!string.IsNullOrEmpty(petDialogueDatas[_type].onGameExit))
-                return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].onGameExit);
+            if (!string.IsNullOrEmpty(petDialogueDatas[type].onGameExit))
+                return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].onGameExit);
 
             return null;
         }
 
-        public string GetOnTitleString(PetType _type)
+        public string GetOnTitleString(PetType type)
         {
-            if (string.IsNullOrEmpty(petDialogueDatas[_type].onTitle)) return null;
-            return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].onTitle);
+            if (string.IsNullOrEmpty(petDialogueDatas[type].onTitle)) return null;
+            return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].onTitle);
         }
 
-        public string GetOnIslandString(PetType _type)
+        public string GetOnIslandString(PetType type)
         {
-            if (string.IsNullOrEmpty(petDialogueDatas[_type].onIsland)) return null;
-            return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].onIsland);
+            if (string.IsNullOrEmpty(petDialogueDatas[type].onIsland)) return null;
+            return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].onIsland);
         }
 
-        public string GetShakeString(PetType _type)
+        public string GetShakeString(PetType type)
         {
-            if (string.IsNullOrEmpty(petDialogueDatas[_type].onTitleShake)) return null;
-            return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].onTitleShake);
+            if (string.IsNullOrEmpty(petDialogueDatas[type].onTitleShake)) return null;
+            return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].onTitleShake);
         }
 
-        public string GetNewFriendString(PetType _type)
+        public string GetNewFriendString(PetType type)
         {
-            if (string.IsNullOrEmpty(petDialogueDatas[_type].newFriend)) return null;
-            return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].newFriend);
+            if (string.IsNullOrEmpty(petDialogueDatas[type].newFriend)) return null;
+            return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].newFriend);
         }
 
-        public string GetWelcomeString(PetType _type)
+        public string GetWelcomeString(PetType type)
         {
-            if (string.IsNullOrEmpty(petDialogueDatas[_type].welcome)) return null;
-            return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].welcome);
+            if (string.IsNullOrEmpty(petDialogueDatas[type].welcome)) return null;
+            return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].welcome);
         }
 
-        public string GetDescrString(PetType _type)
+        public string GetDescrString(PetType type)
         {
-            if (string.IsNullOrEmpty(petDialogueDatas[_type].descr)) return null;
-            return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].descr);
+            if (string.IsNullOrEmpty(petDialogueDatas[type].descr)) return null;
+            return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].descr);
         }
 
-        public string GetDescr(PetType _type)
+        public string GetDescr(PetType type)
         {
-            if (string.IsNullOrEmpty(petDialogueDatas[_type].descr)) return null;
-            return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].descr);
+            if (string.IsNullOrEmpty(petDialogueDatas[type].descr)) return null;
+            return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].descr);
         }
 
-        public string GetFrom(PetType _type)
+        public string GetFrom(PetType type)
         {
-            if (string.IsNullOrEmpty(petDialogueDatas[_type].from)) return null;
-            return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].from);
+            if (string.IsNullOrEmpty(petDialogueDatas[type].from)) return null;
+            return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].from);
         }
 
-        public char GetRank(PetType _type)
+        public char GetRank(PetType type)
         {
-            return petDialogueDatas[_type].rank;
+            return petDialogueDatas[type].rank;
         }
 
-        public string GetPetScoreString(PetType _type, PetScoreType _scoreType)
+        public string GetPetScoreString(PetType type, PetScoreType scoreType)
         {
-            switch (_scoreType)
+            switch (scoreType)
             {
                 case PetScoreType.NewBest:
-                    if (string.IsNullOrEmpty(petDialogueDatas[_type].score_newBest))
+                    if (string.IsNullOrEmpty(petDialogueDatas[type].score_newBest))
                         return Localize.GetLocalizedPetDialogue(petDialogueDatas[PetType.Default]
                             .score_newBest);
-                    return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].score_newBest);
+                    return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].score_newBest);
                     break;
                 case PetScoreType.Excellent:
-                    if (string.IsNullOrEmpty(petDialogueDatas[_type].score_excelent))
+                    if (string.IsNullOrEmpty(petDialogueDatas[type].score_excelent))
                         return Localize.GetLocalizedPetDialogue(petDialogueDatas[PetType.Default]
                             .score_excelent);
-                    return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].score_excelent);
+                    return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].score_excelent);
                     break;
                 case PetScoreType.Great:
-                    if (string.IsNullOrEmpty(petDialogueDatas[_type].score_great))
+                    if (string.IsNullOrEmpty(petDialogueDatas[type].score_great))
                         return Localize.GetLocalizedPetDialogue(petDialogueDatas[PetType.Default]
                             .score_great);
-                    return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].score_great);
+                    return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].score_great);
                     break;
                 case PetScoreType.Good:
-                    if (string.IsNullOrEmpty(petDialogueDatas[_type].score_good))
+                    if (string.IsNullOrEmpty(petDialogueDatas[type].score_good))
                         return Localize.GetLocalizedPetDialogue(petDialogueDatas[PetType.Default].score_good);
-                    return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].score_good);
+                    return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].score_good);
                     break;
                 case PetScoreType.Bad:
-                    if (string.IsNullOrEmpty(petDialogueDatas[_type].score_bad))
+                    if (string.IsNullOrEmpty(petDialogueDatas[type].score_bad))
                         return Localize.GetLocalizedPetDialogue(petDialogueDatas[PetType.Default].score_bad);
-                    return Localize.GetLocalizedPetDialogue(petDialogueDatas[_type].score_bad);
+                    return Localize.GetLocalizedPetDialogue(petDialogueDatas[type].score_bad);
                     break;
             }
 
@@ -264,18 +273,8 @@ namespace DynamicGames.Pet
             print(json);
 
             foreach (var data in petDialogueDatas) data.Value.weatherDatas = new List<PetWeatherData>();
-
             foreach (var data in petWeatherDatas) petDialogueDatas[data.type].weatherDatas.Add(data);
         }
 #endif
-    }
-
-    public enum PetScoreType
-    {
-        NewBest,
-        Excellent,
-        Great,
-        Good,
-        Bad
     }
 }

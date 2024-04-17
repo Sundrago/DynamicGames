@@ -9,5 +9,6 @@
 !/Resources/**
 !/Docs/**
 
-# ignore private keys.
+# ignore followings
 PrivateData.cs
+*.meta
