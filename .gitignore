@@ -76,5 +76,4 @@ crashlytics-build.properties
 /.vscode/
 /.idea/
 Assets/Plugins/Firebase/Plugins/x86_64/FirebaseCppApp-11_6_0.bundle
-PrivateKeys.cs
 FirebaseCppApp-11_6_0.bundle
