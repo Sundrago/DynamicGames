@@ -1,0 +1,34 @@
+<dependencies>
+  <packages>
+    <package>com.facebook.android:audience-network-sdk:6.16.0</package>
+    <package>com.google.android.gms:play-services-ads:22.6.0</package>
+    <package>com.google.android.gms:play-services-ads-identifier:18.0.1</package>
+    <package>com.google.android.gms:play-services-base:18.2.0</package>
+    <package>com.google.android.gms:play-services-basement:18.1.0</package>
+    <package>com.google.firebase:firebase-analytics:21.3.0</package>
+    <package>com.google.firebase:firebase-analytics-unity:11.6.0</package>
+    <package>com.google.firebase:firebase-app-unity:11.6.0</package>
+    <package>com.google.firebase:firebase-common:20.3.3</package>
+    <package>com.ironsource.adapters:admobadapter:4.3.41</package>
+    <package>com.ironsource.adapters:facebookadapter:4.3.45</package>
+    <package>com.ironsource.sdk:mediationsdk:7.7.0</package>
+  </packages>
+  <files />
+  <settings>
+    <setting name="androidAbis" value="arm64-v8a,armeabi-v7a" />
+    <setting name="bundleId" value="net.sundragon.dynamic" />
+    <setting name="explodeAars" value="True" />
+    <setting name="gradleBuildEnabled" value="True" />
+    <setting name="gradlePropertiesTemplateEnabled" value="False" />
+    <setting name="gradleTemplateEnabled" value="False" />
+    <setting name="installAndroidPackages" value="True" />
+    <setting name="localMavenRepoDir" value="Assets/GeneratedLocalRepo" />
+    <setting name="packageDir" value="Assets/Plugins/Android" />
+    <setting name="patchAndroidManifest" value="True" />
+    <setting name="patchMainTemplateGradle" value="True" />
+    <setting name="projectExportEnabled" value="False" />
+    <setting name="useFullCustomMavenRepoPathWhenExport" value="True" />
+    <setting name="useFullCustomMavenRepoPathWhenNotExport" value="False" />
+    <setting name="useJetifier" value="True" />
+  </settings>
+</dependencies>
