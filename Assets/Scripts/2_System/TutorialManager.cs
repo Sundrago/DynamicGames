@@ -40,7 +40,7 @@ namespace DynamicGames.System
         [SerializeField] private MainPage.MainPage main;
         [SerializeField] private GameObject cursor;
         [SerializeField] private Image cursor_image;
-        [FormerlySerializedAs("exclamationMark_prefab")] [SerializeField] private ExclamationMarkButton exclamationMarkButtonPrefab;
+        [SerializeField] private ExclamationMarkButton exclamationMarkButtonPrefab;
         [SerializeField] private Transform mainCanvas;
         
         public static TutorialManager Instancee { get; private set; }

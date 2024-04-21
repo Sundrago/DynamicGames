@@ -22,42 +22,19 @@ namespace DynamicGames.UI
             Failed
         }
 
-        [Header("Managers and Controllers")] [SerializeField]
-        private RankingManager rankingManager;
-
-        [SerializeField] private LeaderboardManger leaderboardManager;
-
-        [FormerlySerializedAs("sfx")] [SerializeField]
-        private SfxController sfxController;
-
-        [FormerlySerializedAs("slider_ui")] [Header("UI Elements")] [SerializeField]
-        private Slider progressSlider;
-
-        [FormerlySerializedAs("score_text_ui")] [SerializeField]
-        private TextMeshProUGUI scoreText;
-
-        [FormerlySerializedAs("title_ui")] [SerializeField]
-        private TextMeshProUGUI titleText;
-
-        [FormerlySerializedAs("tier_image_ui")] [SerializeField]
-        private Image tierImage;
-
-        [FormerlySerializedAs("BG")] [SerializeField]
-        private Image bgImage;
-
-        [FormerlySerializedAs("tier_icon_group")] [SerializeField]
-        private RectTransform tierIconGroup;
-
-        [SerializeField] private RectTransform[] tierIconRectTransforms;
-
-        [FormerlySerializedAs("openLeaderboard_btn")] [SerializeField]
-        private Button openLeaderboardButton;
-
-        [FormerlySerializedAs("close_btn")] [SerializeField]
-        private Button closeButton;
-
-        [FormerlySerializedAs("tierBoard_ui")] [SerializeField]
-        private Transform tierBoard;
+        [Header("Managers and Controllers")] 
+        [SerializeField] private RankingManager rankingManager;
+        [SerializeField] private LeaderboardManger leaderboardManager; 
+        [SerializeField] private SfxController sfxController;
+        
+        [Header("UI Elements")] 
+        [SerializeField] private Slider progressSlider; 
+        [SerializeField] private TextMeshProUGUI scoreText, titleText; 
+        [SerializeField] private Image tierImage, bgImage; 
+        [SerializeField] private RectTransform tierIconGroup;
+        [SerializeField] private RectTransform[] tierIconRectTransforms; 
+        [SerializeField] private Button openLeaderboardButton, closeButton; 
+        [SerializeField] private Transform tierBoard;
 
         [SerializeField] private GameObject score_ui, login_ui, failed_ui;
         [SerializeField] private float tierIconGroupOffsetY;

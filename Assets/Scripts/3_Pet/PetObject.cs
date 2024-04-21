@@ -19,19 +19,12 @@ namespace DynamicGames.Pet
     public class PetObject : SerializedMonoBehaviour
     {
         [SerializeField] public PetType type;
-        [SerializeField] public SpriteRenderer spriteRenderer;
-
-        [FormerlySerializedAs("surfaceMovement2D")] [SerializeField]
-        public PetSurfaceMovement2D petSurfaceMovement2D;
-
+        [SerializeField] public SpriteRenderer spriteRenderer; 
+        [SerializeField] public PetSurfaceMovement2D petSurfaceMovement2D;
         [SerializeField] public Transform centerPoint;
-
         [SerializeField] private float defaultInterval = 0.2f;
-
-        [FormerlySerializedAs("petInfo")] [SerializeField]
-        private PetInfoPanelManager petInformation;
-
-
+        [SerializeField] private PetInfoPanelManager petInformation;
+        
         [TitleGroup("CallBacks", alignment: TitleAlignments.Centered)] [SerializeField] [BoxGroup("CallBacks/IDLE")]
         private float idleTimeMin = 5;
 
