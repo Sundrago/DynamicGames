@@ -50,7 +50,7 @@ namespace DynamicGames.MiniGames.Shoot
 
         public void SpawnEnemy(Vector2 pos, bool forceCreate = false, float delay = 0)
         {
-            if (GameManager.Instacne.state != GameManager.ShootGameState.playing) return;
+            if (GameManager.Instacne.state != GameManager.ShootGameState.Playing) return;
             if (!forceCreate && SpawingOnSpiral) return;
 
             var enemyController = enemyObjectPool.Get();
@@ -126,7 +126,7 @@ namespace DynamicGames.MiniGames.Shoot
 
         public void SpawnOnIsland(int angle, float x, float y)
         {
-            if (GameManager.Instacne.state != GameManager.ShootGameState.playing) return;
+            if (GameManager.Instacne.state != GameManager.ShootGameState.Playing) return;
             var enemyController = enemyObjectPool.Get();
             enemyController.transform.SetParent(gameObject.transform);
             enemyController.transform.position = new Vector3(island.position.x, island.position.y, 0f);

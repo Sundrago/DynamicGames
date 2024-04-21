@@ -117,7 +117,7 @@ namespace DynamicGames.MiniGames.Shoot
 
         private async Task SpawnBulletTimer()
         {
-            while (gameManager.state == GameManager.ShootGameState.playing)
+            while (gameManager.state == GameManager.ShootGameState.Playing)
             {
                 await Task.Delay(bulletInfos[currentBulletObj].intervalInMeleSec);
                 SpawnBullet(player.transform.position, inputManager.NormalVector);

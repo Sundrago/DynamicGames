@@ -17,61 +17,46 @@ namespace DynamicGames.MiniGames.Shoot
     {
         public enum ShootGameState
         {
-            ready,
-            dead,
-            playing,
-            revibe
+            Ready,
+            Dead,
+            Playing,
+            Revive
         }
 
         public static GameManager Instacne { get; private set;  }
         
-        [SerializeField] private Animator door_left, door_right;
-        [SerializeField] public EnemyManager enemy_Manager;
-        [SerializeField] private BulletManager bullet_Manager;
-        [SerializeField] public Transform player, island;
+        [Header("Managers and Controllers")]
+        [SerializeField] public EnemyManager enemyManager;
+        [SerializeField] private BulletManager bulletManager;
         [SerializeField] private FXManager fXManager;
-        [SerializeField] private InputManager joystick;
+        [SerializeField] private InputManager inputManager;
+        [SerializeField] public ItemManager itemManager;
+        [SerializeField] private IslandSizeController islandSizeController;
+        [SerializeField] private ScoreManager scoreManager;
+        [SerializeField] private SfxController sfxController;
+        [SerializeField] private PetManager petManager;
+        [SerializeField] private AIManager aiManager;
+        [SerializeField] private Dictionary<PetType, Vector3> CustomPetPos;
 
-        [FormerlySerializedAs("shoot_Item")] [SerializeField]
-        public ItemManager itemManager;
-
-        [SerializeField] private Animator face;
-
-        [FormerlySerializedAs("islandSizeCtrl")] [SerializeField]
-        private IslandSizeController islandSizeController;
-
-        //[SerializeField] EndScoreCtrl endScore;
-        [SerializeField] private ScoreManager score;
+        
+        [SerializeField] private Animator doorLeftAnimator; 
+        [SerializeField] private Animator doorRightAnimator;
+        [SerializeField] public Transform player, island;
         [SerializeField] private Transform startPosition, loadPosition;
-        [SerializeField] private SfxController sfx;
         [SerializeField] private GameObject adj_transition_notch;
+        [SerializeField] private Animator face;
         [SerializeField] private TutorialAnimation hand;
 
-        [FormerlySerializedAs("itemInfo_atk")] [SerializeField]
-        public ItemInformationUI itemInformationUIAtk;
-
-        [FormerlySerializedAs("itemInfo_shield")] [SerializeField]
-        public ItemInformationUI itemInformationUIShield;
-
-        [FormerlySerializedAs("itemInfo_bounce")] [SerializeField]
-        public ItemInformationUI itemInformationUIBounce;
-
-        [FormerlySerializedAs("itemInfo_spin")] [SerializeField]
-        public ItemInformationUI itemInformationUISpin;
-
+        [SerializeField] public ItemInformationUI itemInformationUIAtk;
+        [SerializeField] public ItemInformationUI itemInformationUIShield;
+        [SerializeField] public ItemInformationUI itemInformationUIBounce;
+        [SerializeField] public ItemInformationUI itemInformationUISpin;
         [SerializeField] private GameObject tutorial;
-
         [SerializeField] private SpriteAnimator playerRenderer;
         [SerializeField] private GameObject playerPlaceHolder;
-        [SerializeField] private PetManager petManager;
-
-        [FormerlySerializedAs("shootAI")] [SerializeField]
-        private AIManager aiManager;
-
         [ReadOnly] public FXController shield;
 
         public ShootGameState state;
-
         public bool spinMode;
 
         public int stage;
@@ -83,172 +68,54 @@ namespace DynamicGames.MiniGames.Shoot
         public AutoAttackInfo createEnemyRandomPos = new();
         public AutoAttackInfo createItem = new();
         public AutoAttackInfo createMetheor = new();
-
-        [SerializeField] private Dictionary<PetType, Vector3> CustomPetPos;
-
-        private bool hasRevibed;
+        
+        private bool hasRevived;
         private float spinTime;
         private int stageFinished, currentStagePlaying = -1;
 
         private void Awake()
         {
             Instacne = this;
+            gameObject.SetActive(false);
         }
-
-        // Start is called before the first frame update
+        
         private void Start()
         {
-            Application.targetFrameRate = 60;
             audioManager = AudioManager.Instance;
 
-            ChangeStatus(ShootGameState.ready);
+            ChangeStatus(ShootGameState.Ready);
             stage = 0;
             stageFinished = 0;
+            SetDefaultAttackState();
+
+            hand.gameObject.SetActive(false);
+            tutorial.SetActive(false);
+        }
+
+        private void SetDefaultAttackState()
+        {
             createEnemyInCircle.Init(1000, 0, 0);
             createEnemyRandomPos.Init(1100, 0, 0);
             createMetheor.Init(1200, 0, 0);
             createEnemyInLine.Init(1300, 0, 0);
             createEnemyInSpira.Init(1400, 0, 0);
             createItem.Init(3700, 1, 1, 0.5f);
-
-            hand.gameObject.SetActive(false);
-            tutorial.SetActive(false);
         }
-
-        // Update is called once per frame
+        
         private void Update()
         {
             switch (state)
             {
-                case ShootGameState.ready:
+                case ShootGameState.Ready:
                     Update_ready();
                     break;
-                case ShootGameState.playing:
+                case ShootGameState.Playing:
                     Update_Playing();
                     break;
-                case ShootGameState.dead:
+                case ShootGameState.Dead:
                     break;
             }
         }
-
-        // async Task CreateEnemyAtRandomPos()
-        // {
-        //     if(state != ShootGameState.playing) return;
-        //     
-        //     AutoAttackInfo info = createEnemyRandomPos;
-        //     if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
-        //     {
-        //         int amt = Random.Range(info.min, info.max + 1);
-        //         for (int i = 0; i < amt; i++)
-        //         {
-        //             enemy_Manager.SpawnEnemyAtRandomPos();
-        //         }
-        //     }
-        //     await Task.Delay(info.delay);
-        //     CreateEnemyAtRandomPos();
-        // }
-        //
-        // async Task CreateEnemyAtPlayerInCircle()
-        // {
-        //     if(state != ShootGameState.playing) return;
-        //
-        //     AutoAttackInfo info = createEnemyInCircle;
-        //     if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
-        //     {
-        //         enemy_Manager.SpawnEnemyInCircle(1f, Random.Range(info.min, info.max));
-        //     }
-        //     await Task.Delay(info.delay);
-        //     CreateEnemyAtPlayerInCircle();
-        // }
-        //
-        // async Task CreateMetheors()
-        // {
-        //     if(state != ShootGameState.playing) return;
-        //     
-        //     AutoAttackInfo info = createMetheor;
-        //     
-        //     if (stage <= 2)
-        //     {
-        //         await Task.Delay(info.delay);
-        //         CreateEnemyInLine();
-        //         return;
-        //     }
-        //     
-        //     if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
-        //     {
-        //         int amt = Random.Range(info.min, info.max + 1);
-        //         for (int i = 0; i < amt; i++)
-        //         {
-        //             await Task.Delay(2000);
-        //             CreateMetheor();
-        //         }
-        //     }
-        //     await Task.Delay(info.delay);
-        //     CreateMetheors();
-        // }
-        //
-        // async Task CreateEnemyInLine()
-        // {
-        //     if(state != ShootGameState.playing) return;
-        //     AutoAttackInfo info = createEnemyInLine;
-        //     
-        //     if (stage <= 3)
-        //     {
-        //         await Task.Delay(info.delay);
-        //         CreateEnemyInLine();
-        //         return;
-        //     }
-        //
-        //     if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
-        //     {
-        //         enemy_Manager.SpawnEnemyInLineY(Random.Range(info.min, info.max+ 1));
-        //     }
-        //
-        //     await Task.Delay(info.delay);
-        //     CreateEnemyInLine();
-        // }
-        //
-        // async Task CreateEnemyInSpiral()
-        // {
-        //     if(state != ShootGameState.playing) return;
-        //     AutoAttackInfo info = createEnemyInSpira;
-        //     
-        //     if (stage <= 3)
-        //     {
-        //         await Task.Delay(info.delay);
-        //         CreateEnemyInLine();
-        //         return;
-        //     }
-        //
-        //     if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
-        //     {
-        //         await enemy_Manager.SpawnEnemyInSpiral(0.6f * Random.Range(0.9f, 1.1f),
-        //             1.5f * Random.Range(0.85f, 1.3f), Random.Range(info.min, info.max+ 1)
-        //             , 1.5f * Random.Range(0.7f, 1.3f), 35, 0.6f * Random.Range(0.8f, 1.2f));
-        //     }
-        //
-        //     await Task.Delay(info.delay);
-        //     CreateEnemyInSpiral();
-        // }
-        //
-        // async Task CreateItem()
-        // {
-        //     if(state != ShootGameState.playing) return;
-        //     
-        //     AutoAttackInfo info = createItem;
-        //
-        //     int count = shoot_Item.items.Count;
-        //     info.probability = (1 - 0.4f * count) * 0.85f;
-        //     
-        //     if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
-        //     {
-        //         shoot_Item.SpawnItem();
-        //     }
-        //
-        //     await Task.Delay(info.delay);
-        //     CreateItem();
-        // }
-
 
         public override void RestartGame()
         {
@@ -257,7 +124,7 @@ namespace DynamicGames.MiniGames.Shoot
 
             face.SetTrigger("idle");
             islandSizeController.CloseIsland();
-            score.ResetScore();
+            scoreManager.ResetScore();
 
             player.DOMove(startPosition.position, 0.5f)
                 .SetEase(Ease.InOutCubic);
@@ -265,13 +132,13 @@ namespace DynamicGames.MiniGames.Shoot
                 .SetEase(Ease.InOutCubic)
                 .OnComplete(() =>
                 {
-                    ChangeStatus(ShootGameState.ready);
-                    joystick.gameObject.SetActive(true);
+                    ChangeStatus(ShootGameState.Ready);
+                    inputManager.gameObject.SetActive(true);
                 });
             stageFinished = 0;
-            enemy_Manager.KillAll();
+            enemyManager.KillAll();
             itemManager.KillAll();
-            bullet_Manager.Restart();
+            bulletManager.Restart();
             stage = 0;
             spinMode = false;
         }
@@ -279,12 +146,11 @@ namespace DynamicGames.MiniGames.Shoot
         public override void ClearGame()
         {
             GameScoreManager.Instance.HideScore();
-            state = ShootGameState.dead;
-            joystick.ResetJoystick();
+            state = ShootGameState.Dead;
+            inputManager.ResetJoystick();
             gameObject.SetActive(false);
         }
-
-        // ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- //
+        
 
         [Button]
         public override void SetupPet(bool isPlayingWithPet, PetObject petObject = null)
@@ -316,16 +182,15 @@ namespace DynamicGames.MiniGames.Shoot
 
         private void Update_ready()
         {
-            if (joystick.NormalVector != Vector3.zero) ChangeStatus(ShootGameState.playing);
+            if (inputManager.NormalVector != Vector3.zero) ChangeStatus(ShootGameState.Playing);
         }
 
         private void Update_Playing()
         {
             if (Time.frameCount % 20 != 0) return;
             if (spinMode && Time.time > spinTime) spinMode = false;
-
-
-            var myScofre = score.GetScore();
+            
+            var myScofre = scoreManager.GetScore();
 
             if (myScofre < 5) SetStage(0);
             else if (myScofre < 30) SetStage(1);
@@ -349,7 +214,7 @@ namespace DynamicGames.MiniGames.Shoot
 
         private async Task SetStage(int _stage)
         {
-            if (state != ShootGameState.playing) return;
+            if (state != ShootGameState.Playing) return;
             if (stage >= _stage) return;
             if (currentStagePlaying != -1) return;
 
@@ -383,9 +248,9 @@ namespace DynamicGames.MiniGames.Shoot
                             islandSizeController.CloseIsland();
                             break;
                         case 1:
-                            enemy_Manager.SpawnEnemyAtRandomPos();
-                            enemy_Manager.SpawnEnemyAtRandomPos();
-                            enemy_Manager.SpawnEnemyAtRandomPos();
+                            enemyManager.SpawnEnemyAtRandomPos();
+                            enemyManager.SpawnEnemyAtRandomPos();
+                            enemyManager.SpawnEnemyAtRandomPos();
                             await Task.Delay(1000);
                             islandSizeController.CloseIsland();
                             break;
@@ -422,10 +287,10 @@ namespace DynamicGames.MiniGames.Shoot
                             islandSizeController.CloseIsland();
                             break;
                         case 1:
-                            enemy_Manager.SpawnEnemyAtRandomPos();
-                            enemy_Manager.SpawnEnemyAtRandomPos();
-                            enemy_Manager.SpawnEnemyAtRandomPos();
-                            enemy_Manager.SpawnEnemyAtRandomPos();
+                            enemyManager.SpawnEnemyAtRandomPos();
+                            enemyManager.SpawnEnemyAtRandomPos();
+                            enemyManager.SpawnEnemyAtRandomPos();
+                            enemyManager.SpawnEnemyAtRandomPos();
                             await Task.Delay(1000);
                             islandSizeController.CloseIsland();
                             break;
@@ -463,11 +328,11 @@ namespace DynamicGames.MiniGames.Shoot
                             islandSizeController.CloseIsland();
                             break;
                         case 1:
-                            enemy_Manager.SpawnEnemyAtRandomPos();
-                            enemy_Manager.SpawnEnemyAtRandomPos();
-                            enemy_Manager.SpawnEnemyAtRandomPos();
-                            enemy_Manager.SpawnEnemyAtRandomPos();
-                            enemy_Manager.SpawnEnemyAtRandomPos();
+                            enemyManager.SpawnEnemyAtRandomPos();
+                            enemyManager.SpawnEnemyAtRandomPos();
+                            enemyManager.SpawnEnemyAtRandomPos();
+                            enemyManager.SpawnEnemyAtRandomPos();
+                            enemyManager.SpawnEnemyAtRandomPos();
                             await Task.Delay(1000);
                             islandSizeController.CloseIsland();
                             break;
@@ -492,7 +357,7 @@ namespace DynamicGames.MiniGames.Shoot
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
-                    enemy_Manager.SpawnEnemyInLineY(6);
+                    enemyManager.SpawnEnemyInLineY(6);
 
                     rnd = Random.Range(0, 4);
                     switch (rnd)
@@ -509,7 +374,7 @@ namespace DynamicGames.MiniGames.Shoot
                             islandSizeController.CloseIsland();
                             break;
                         case 1:
-                            enemy_Manager.SpawnEnemyInCircle(1f, Random.Range(5, 8));
+                            enemyManager.SpawnEnemyInCircle(1f, Random.Range(5, 8));
                             await Task.Delay(1000);
                             islandSizeController.CloseIsland();
                             break;
@@ -520,7 +385,7 @@ namespace DynamicGames.MiniGames.Shoot
                             islandSizeController.CloseIsland();
                             break;
                         case 3:
-                            await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.6f, 20, 1.3f, 30, 0.75f);
+                            await enemyManager.SpawnEnemyInSpiral(0.5f, 1.6f, 20, 1.3f, 30, 0.75f);
                             break;
                     }
 
@@ -537,7 +402,7 @@ namespace DynamicGames.MiniGames.Shoot
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
-                    enemy_Manager.SpawnEnemyInLineY(8);
+                    enemyManager.SpawnEnemyInLineY(8);
 
                     rnd = Random.Range(0, 4);
                     switch (rnd)
@@ -552,7 +417,7 @@ namespace DynamicGames.MiniGames.Shoot
                             islandSizeController.CloseIsland();
                             break;
                         case 1:
-                            enemy_Manager.SpawnEnemyInCircle(1f, Random.Range(5, 12));
+                            enemyManager.SpawnEnemyInCircle(1f, Random.Range(5, 12));
                             await Task.Delay(1000);
                             islandSizeController.CloseIsland();
                             break;
@@ -563,7 +428,7 @@ namespace DynamicGames.MiniGames.Shoot
                             islandSizeController.CloseIsland();
                             break;
                         case 3:
-                            await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.7f, 25, 1.35f, 30);
+                            await enemyManager.SpawnEnemyInSpiral(0.5f, 1.7f, 25, 1.35f, 30);
                             break;
                     }
 
@@ -580,7 +445,7 @@ namespace DynamicGames.MiniGames.Shoot
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
-                    enemy_Manager.SpawnEnemyInLineY(10);
+                    enemyManager.SpawnEnemyInLineY(10);
 
                     rnd = Random.Range(0, 4);
                     switch (rnd)
@@ -597,9 +462,9 @@ namespace DynamicGames.MiniGames.Shoot
                             islandSizeController.CloseIsland();
                             break;
                         case 1:
-                            enemy_Manager.SpawnEnemyInCircle(0.8f, Random.Range(3, 5));
+                            enemyManager.SpawnEnemyInCircle(0.8f, Random.Range(3, 5));
                             await Task.Delay(300);
-                            enemy_Manager.SpawnEnemyInCircle(1.2f, Random.Range(5, 8));
+                            enemyManager.SpawnEnemyInCircle(1.2f, Random.Range(5, 8));
                             await Task.Delay(1000);
                             islandSizeController.CloseIsland();
                             break;
@@ -610,7 +475,7 @@ namespace DynamicGames.MiniGames.Shoot
                             islandSizeController.CloseIsland();
                             break;
                         case 3:
-                            await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 30);
+                            await enemyManager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 30);
                             break;
                     }
 
@@ -644,7 +509,7 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(500);
                                 break;
                             case 1:
-                                enemy_Manager.SpawnEnemyInCircle(1f, Random.Range(8, 15));
+                                enemyManager.SpawnEnemyInCircle(1f, Random.Range(8, 15));
                                 await Task.Delay(3000);
                                 break;
                             case 2:
@@ -653,14 +518,14 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(4000);
                                 break;
                             case 3:
-                                await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.7f, 20, 1.5f, 30);
+                                await enemyManager.SpawnEnemyInSpiral(0.5f, 1.7f, 20, 1.5f, 30);
                                 await Task.Delay(1500);
                                 break;
                             case 4:
                                 await Task.Delay(3000);
-                                enemy_Manager.SpawnEnemyInLineY(7, 0.7f);
+                                enemyManager.SpawnEnemyInLineY(7, 0.7f);
                                 await Task.Delay(1500);
-                                enemy_Manager.SpawnEnemyInLineY(7);
+                                enemyManager.SpawnEnemyInLineY(7);
                                 await Task.Delay(5000);
                                 break;
                         }
@@ -697,7 +562,7 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(500);
                                 break;
                             case 1:
-                                enemy_Manager.SpawnEnemyInCircle(1f, Random.Range(8, 15));
+                                enemyManager.SpawnEnemyInCircle(1f, Random.Range(8, 15));
                                 await Task.Delay(2500);
                                 break;
                             case 2:
@@ -706,14 +571,14 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(3000);
                                 break;
                             case 3:
-                                await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.7f, 22, 1.5f, 30);
+                                await enemyManager.SpawnEnemyInSpiral(0.5f, 1.7f, 22, 1.5f, 30);
                                 await Task.Delay(1500);
                                 break;
                             case 4:
                                 await Task.Delay(3000);
-                                enemy_Manager.SpawnEnemyInLineY(7, 0.7f);
+                                enemyManager.SpawnEnemyInLineY(7, 0.7f);
                                 await Task.Delay(1500);
-                                enemy_Manager.SpawnEnemyInLineY(7);
+                                enemyManager.SpawnEnemyInLineY(7);
                                 await Task.Delay(4000);
                                 break;
                         }
@@ -750,7 +615,7 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(500);
                                 break;
                             case 1:
-                                enemy_Manager.SpawnEnemyInCircle(1f, Random.Range(15, 30));
+                                enemyManager.SpawnEnemyInCircle(1f, Random.Range(15, 30));
                                 await Task.Delay(3200);
                                 break;
                             case 2:
@@ -759,14 +624,14 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(2500);
                                 break;
                             case 3:
-                                await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.7f, 25, 1.5f, 30);
+                                await enemyManager.SpawnEnemyInSpiral(0.5f, 1.7f, 25, 1.5f, 30);
                                 await Task.Delay(2500);
                                 break;
                             case 4:
                                 await Task.Delay(3000);
-                                enemy_Manager.SpawnEnemyInLineY(7, 0.7f);
+                                enemyManager.SpawnEnemyInLineY(7, 0.7f);
                                 await Task.Delay(1500);
-                                enemy_Manager.SpawnEnemyInLineY(7);
+                                enemyManager.SpawnEnemyInLineY(7);
                                 await Task.Delay(3000);
                                 break;
                         }
@@ -786,7 +651,7 @@ namespace DynamicGames.MiniGames.Shoot
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
-                    enemy_Manager.SpawnEnemyInLineY(10);
+                    enemyManager.SpawnEnemyInLineY(10);
 
                     for (var i = 0; i < 2; i++)
                     {
@@ -802,9 +667,9 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(500);
                                 break;
                             case 1:
-                                enemy_Manager.SpawnEnemyInCircle(0.8f, Random.Range(3, 5));
+                                enemyManager.SpawnEnemyInCircle(0.8f, Random.Range(3, 5));
                                 await Task.Delay(300);
-                                enemy_Manager.SpawnEnemyInCircle(1.2f, Random.Range(5, 8));
+                                enemyManager.SpawnEnemyInCircle(1.2f, Random.Range(5, 8));
                                 await Task.Delay(1000);
                                 break;
                             case 2:
@@ -813,13 +678,13 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(4000);
                                 break;
                             case 3:
-                                await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 30);
+                                await enemyManager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 30);
                                 break;
                             case 4:
                                 await Task.Delay(3000);
-                                enemy_Manager.SpawnEnemyInLineY(10, 0.7f);
+                                enemyManager.SpawnEnemyInLineY(10, 0.7f);
                                 await Task.Delay(1500);
-                                enemy_Manager.SpawnEnemyInLineY(10);
+                                enemyManager.SpawnEnemyInLineY(10);
                                 break;
                         }
                     }
@@ -838,7 +703,7 @@ namespace DynamicGames.MiniGames.Shoot
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
-                    enemy_Manager.SpawnEnemyInLineY(15);
+                    enemyManager.SpawnEnemyInLineY(15);
 
                     for (var i = 0; i < 3; i++)
                     {
@@ -854,9 +719,9 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(500);
                                 break;
                             case 1:
-                                enemy_Manager.SpawnEnemyInCircle(0.8f, Random.Range(3, 5));
+                                enemyManager.SpawnEnemyInCircle(0.8f, Random.Range(3, 5));
                                 await Task.Delay(300);
-                                enemy_Manager.SpawnEnemyInCircle(1.2f, Random.Range(5, 8));
+                                enemyManager.SpawnEnemyInCircle(1.2f, Random.Range(5, 8));
                                 await Task.Delay(1000);
                                 break;
                             case 2:
@@ -865,13 +730,13 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(4000);
                                 break;
                             case 3:
-                                await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 30);
+                                await enemyManager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 30);
                                 break;
                             case 4:
                                 await Task.Delay(3000);
-                                enemy_Manager.SpawnEnemyInLineY(10, 0.7f);
+                                enemyManager.SpawnEnemyInLineY(10, 0.7f);
                                 await Task.Delay(1500);
-                                enemy_Manager.SpawnEnemyInLineY(10);
+                                enemyManager.SpawnEnemyInLineY(10);
                                 break;
                         }
                     }
@@ -890,7 +755,7 @@ namespace DynamicGames.MiniGames.Shoot
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
-                    enemy_Manager.SpawnEnemyInLineY(15);
+                    enemyManager.SpawnEnemyInLineY(15);
 
                     for (var i = 0; i < 3; i++)
                     {
@@ -906,9 +771,9 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(500);
                                 break;
                             case 1:
-                                enemy_Manager.SpawnEnemyInCircle(0.8f, Random.Range(3, 5));
+                                enemyManager.SpawnEnemyInCircle(0.8f, Random.Range(3, 5));
                                 await Task.Delay(300);
-                                enemy_Manager.SpawnEnemyInCircle(1.2f, Random.Range(5, 8));
+                                enemyManager.SpawnEnemyInCircle(1.2f, Random.Range(5, 8));
                                 await Task.Delay(1000);
                                 break;
                             case 2:
@@ -917,13 +782,13 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(4000);
                                 break;
                             case 3:
-                                await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 30);
+                                await enemyManager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 30);
                                 break;
                             case 4:
                                 await Task.Delay(3000);
-                                enemy_Manager.SpawnEnemyInLineY(10, 0.7f);
+                                enemyManager.SpawnEnemyInLineY(10, 0.7f);
                                 await Task.Delay(1500);
-                                enemy_Manager.SpawnEnemyInLineY(10);
+                                enemyManager.SpawnEnemyInLineY(10);
                                 break;
                         }
                     }
@@ -942,7 +807,7 @@ namespace DynamicGames.MiniGames.Shoot
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
-                    enemy_Manager.SpawnEnemyInLineY(15);
+                    enemyManager.SpawnEnemyInLineY(15);
 
                     for (var i = 0; i < 4; i++)
                     {
@@ -958,9 +823,9 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(500);
                                 break;
                             case 1:
-                                enemy_Manager.SpawnEnemyInCircle(0.8f, Random.Range(3, 5));
+                                enemyManager.SpawnEnemyInCircle(0.8f, Random.Range(3, 5));
                                 await Task.Delay(300);
-                                enemy_Manager.SpawnEnemyInCircle(1.2f, Random.Range(5, 8));
+                                enemyManager.SpawnEnemyInCircle(1.2f, Random.Range(5, 8));
                                 await Task.Delay(1000);
                                 break;
                             case 2:
@@ -969,13 +834,13 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(4000);
                                 break;
                             case 3:
-                                await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 30);
+                                await enemyManager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 30);
                                 break;
                             case 4:
                                 await Task.Delay(3000);
-                                enemy_Manager.SpawnEnemyInLineY(10, 0.7f);
+                                enemyManager.SpawnEnemyInLineY(10, 0.7f);
                                 await Task.Delay(1500);
-                                enemy_Manager.SpawnEnemyInLineY(10);
+                                enemyManager.SpawnEnemyInLineY(10);
                                 break;
                         }
                     }
@@ -994,7 +859,7 @@ namespace DynamicGames.MiniGames.Shoot
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
-                    enemy_Manager.SpawnEnemyInLineY(15);
+                    enemyManager.SpawnEnemyInLineY(15);
 
                     for (var i = 0; i < 4; i++)
                     {
@@ -1010,9 +875,9 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(500);
                                 break;
                             case 1:
-                                enemy_Manager.SpawnEnemyInCircle(0.8f, Random.Range(3, 5));
+                                enemyManager.SpawnEnemyInCircle(0.8f, Random.Range(3, 5));
                                 await Task.Delay(300);
-                                enemy_Manager.SpawnEnemyInCircle(1.2f, Random.Range(5, 8));
+                                enemyManager.SpawnEnemyInCircle(1.2f, Random.Range(5, 8));
                                 await Task.Delay(1000);
                                 break;
                             case 2:
@@ -1021,13 +886,13 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(4000);
                                 break;
                             case 3:
-                                await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 30);
+                                await enemyManager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 30);
                                 break;
                             case 4:
                                 await Task.Delay(3000);
-                                enemy_Manager.SpawnEnemyInLineY(10, 0.7f);
+                                enemyManager.SpawnEnemyInLineY(10, 0.7f);
                                 await Task.Delay(1500);
-                                enemy_Manager.SpawnEnemyInLineY(10);
+                                enemyManager.SpawnEnemyInLineY(10);
                                 break;
                         }
                     }
@@ -1046,7 +911,7 @@ namespace DynamicGames.MiniGames.Shoot
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
-                    enemy_Manager.SpawnEnemyInLineY(15);
+                    enemyManager.SpawnEnemyInLineY(15);
 
                     for (var i = 0; i < 5; i++)
                     {
@@ -1062,9 +927,9 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(500);
                                 break;
                             case 1:
-                                enemy_Manager.SpawnEnemyInCircle(0.8f, Random.Range(3, 5));
+                                enemyManager.SpawnEnemyInCircle(0.8f, Random.Range(3, 5));
                                 await Task.Delay(300);
-                                enemy_Manager.SpawnEnemyInCircle(1.2f, Random.Range(5, 8));
+                                enemyManager.SpawnEnemyInCircle(1.2f, Random.Range(5, 8));
                                 await Task.Delay(1000);
                                 break;
                             case 2:
@@ -1073,13 +938,13 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(4000);
                                 break;
                             case 3:
-                                await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 30);
+                                await enemyManager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 30);
                                 break;
                             case 4:
                                 await Task.Delay(3000);
-                                enemy_Manager.SpawnEnemyInLineY(10, 0.7f);
+                                enemyManager.SpawnEnemyInLineY(10, 0.7f);
                                 await Task.Delay(1500);
-                                enemy_Manager.SpawnEnemyInLineY(10);
+                                enemyManager.SpawnEnemyInLineY(10);
                                 break;
                         }
                     }
@@ -1098,7 +963,7 @@ namespace DynamicGames.MiniGames.Shoot
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
-                    enemy_Manager.SpawnEnemyInLineY(15);
+                    enemyManager.SpawnEnemyInLineY(15);
 
                     for (var i = 0; i < 5; i++)
                     {
@@ -1114,9 +979,9 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(500);
                                 break;
                             case 1:
-                                enemy_Manager.SpawnEnemyInCircle(0.8f, Random.Range(3, 5));
+                                enemyManager.SpawnEnemyInCircle(0.8f, Random.Range(3, 5));
                                 await Task.Delay(300);
-                                enemy_Manager.SpawnEnemyInCircle(1.2f, Random.Range(5, 8));
+                                enemyManager.SpawnEnemyInCircle(1.2f, Random.Range(5, 8));
                                 await Task.Delay(1000);
                                 break;
                             case 2:
@@ -1125,13 +990,13 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(4000);
                                 break;
                             case 3:
-                                await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 30);
+                                await enemyManager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 30);
                                 break;
                             case 4:
                                 await Task.Delay(3000);
-                                enemy_Manager.SpawnEnemyInLineY(10, 0.7f);
+                                enemyManager.SpawnEnemyInLineY(10, 0.7f);
                                 await Task.Delay(1500);
-                                enemy_Manager.SpawnEnemyInLineY(10);
+                                enemyManager.SpawnEnemyInLineY(10);
                                 break;
                         }
                     }
@@ -1150,7 +1015,7 @@ namespace DynamicGames.MiniGames.Shoot
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
-                    enemy_Manager.SpawnEnemyInLineY(15);
+                    enemyManager.SpawnEnemyInLineY(15);
 
                     for (var i = 0; i < 5; i++)
                     {
@@ -1166,9 +1031,9 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(500);
                                 break;
                             case 1:
-                                enemy_Manager.SpawnEnemyInCircle(0.8f, Random.Range(5, 10));
+                                enemyManager.SpawnEnemyInCircle(0.8f, Random.Range(5, 10));
                                 await Task.Delay(300);
-                                enemy_Manager.SpawnEnemyInCircle(1.2f, Random.Range(10, 20));
+                                enemyManager.SpawnEnemyInCircle(1.2f, Random.Range(10, 20));
                                 await Task.Delay(1000);
                                 break;
                             case 2:
@@ -1177,13 +1042,13 @@ namespace DynamicGames.MiniGames.Shoot
                                 await Task.Delay(4000);
                                 break;
                             case 3:
-                                await enemy_Manager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 10);
+                                await enemyManager.SpawnEnemyInSpiral(0.5f, 1.7f, 30, 1.5f, 10);
                                 break;
                             case 4:
                                 await Task.Delay(3000);
-                                enemy_Manager.SpawnEnemyInLineY(15, 0.7f);
+                                enemyManager.SpawnEnemyInLineY(15, 0.7f);
                                 await Task.Delay(1500);
-                                enemy_Manager.SpawnEnemyInLineY(15);
+                                enemyManager.SpawnEnemyInLineY(15);
                                 break;
                         }
                     }
@@ -1205,35 +1070,35 @@ namespace DynamicGames.MiniGames.Shoot
 
         private async Task SpawnOnLeft(int count)
         {
-            if (state != ShootGameState.playing) return;
-            door_left.SetTrigger("open");
+            if (state != ShootGameState.Playing) return;
+            doorLeftAnimator.SetTrigger("open");
             await Task.Delay(400);
             for (var i = 0; i < count; i++)
             {
-                enemy_Manager.SpawnOnIsland(180, -1.5f, 0f);
+                enemyManager.SpawnOnIsland(180, -1.5f, 0f);
                 await Task.Delay(1000);
             }
 
-            door_left.SetTrigger("close");
+            doorLeftAnimator.SetTrigger("close");
         }
 
         private async Task SpawnOnRight(int count)
         {
-            if (state != ShootGameState.playing) return;
-            door_right.SetTrigger("open");
+            if (state != ShootGameState.Playing) return;
+            doorRightAnimator.SetTrigger("open");
             await Task.Delay(400);
             for (var i = 0; i < count; i++)
             {
-                enemy_Manager.SpawnOnIsland(0, 1.5f, 0f);
+                enemyManager.SpawnOnIsland(0, 1.5f, 0f);
                 await Task.Delay(1000);
             }
 
-            door_right.SetTrigger("close");
+            doorRightAnimator.SetTrigger("close");
         }
 
         public void CreateMetheor()
         {
-            if (state != ShootGameState.playing) return;
+            if (state != ShootGameState.Playing) return;
             var path = new Vector3[3];
             path[0] = island.transform.position;
             path[2] = player.transform.position;
@@ -1267,8 +1132,8 @@ namespace DynamicGames.MiniGames.Shoot
             state = _state;
             switch (state)
             {
-                case ShootGameState.ready:
-                    joystick.ResetJoystick();
+                case ShootGameState.Ready:
+                    inputManager.ResetJoystick();
                     stageFinished = 0;
                     currentStagePlaying = -1;
                     if (GameScoreManager.Instance.GetHighScore(GameType.shoot) < 200)
@@ -1282,11 +1147,11 @@ namespace DynamicGames.MiniGames.Shoot
                         tutorial.SetActive(false);
                     }
 
-                    hasRevibed = false;
+                    hasRevived = false;
                     break;
-                case ShootGameState.playing:
+                case ShootGameState.Playing:
                     aiManager.StartTasks();
-                    bullet_Manager.StartSpawnBulletTimer();
+                    bulletManager.StartSpawnBulletTimer();
                     stageFinished = 0;
                     currentStagePlaying = -1;
                     if (hand.gameObject.activeSelf)
@@ -1296,14 +1161,14 @@ namespace DynamicGames.MiniGames.Shoot
                     }
 
                     break;
-                case ShootGameState.dead:
+                case ShootGameState.Dead:
                     FXManager.Instance.CreateFX(FXType.DeadExplosion, player);
-                    enemy_Manager.GameOver();
+                    enemyManager.GameOver();
                     face.SetTrigger("idle");
                     islandSizeController.CloseIsland();
-                    joystick.gameObject.SetActive(false);
-                    joystick.ResetJoystick();
-                    if (!hasRevibed) WatchAdsContinueGame.Instance.Init(Revibe, ShowScore, "Shoot_Revibe");
+                    inputManager.gameObject.SetActive(false);
+                    inputManager.ResetJoystick();
+                    if (!hasRevived) WatchAdsContinueGame.Instance.Init(Revive, ShowScore, "Shoot_Revive");
                     else ShowScore();
                     break;
             }
@@ -1311,25 +1176,25 @@ namespace DynamicGames.MiniGames.Shoot
 
         private void ShowScore()
         {
-            GameScoreManager.Instance.ShowScore(score.GetScore(), GameType.shoot);
+            GameScoreManager.Instance.ShowScore(scoreManager.GetScore(), GameType.shoot);
             itemInformationUIAtk.HideUI();
             itemInformationUIShield.HideUI();
             itemInformationUIBounce.HideUI();
             itemInformationUISpin.HideUI();
         }
 
-        private void Revibe()
+        private void Revive()
         {
-            enemy_Manager.KillAll();
+            enemyManager.KillAll();
             face.SetTrigger("turnRed");
-            state = ShootGameState.playing;
+            state = ShootGameState.Playing;
             currentStagePlaying = -1;
             stage -= 1;
             SetStage(stage + 1);
-            joystick.gameObject.SetActive(true);
+            inputManager.gameObject.SetActive(true);
             aiManager.StartTasks();
-            bullet_Manager.StartSpawnBulletTimer();
-            hasRevibed = true;
+            bulletManager.StartSpawnBulletTimer();
+            hasRevived = true;
         }
 
 
@@ -1354,7 +1219,7 @@ namespace DynamicGames.MiniGames.Shoot
 
         public void GetAttack()
         {
-            if (state != ShootGameState.playing) return;
+            if (state != ShootGameState.Playing) return;
 
             if (shield != null)
             {
@@ -1363,7 +1228,7 @@ namespace DynamicGames.MiniGames.Shoot
             }
 
             //dead
-            ChangeStatus(ShootGameState.dead);
+            ChangeStatus(ShootGameState.Dead);
         }
 
         public void SetSpinMode(float duration)
@@ -1377,22 +1242,16 @@ namespace DynamicGames.MiniGames.Shoot
             adj_transition_notch.SetActive(false);
             GameScoreManager.Instance.gameObject.SetActive(false);
             RestartGame();
-            state = ShootGameState.dead;
+            state = ShootGameState.Dead;
             DOTween.Kill(player.transform);
             player.transform.position = loadPosition.position;
-            joystick.gameObject.SetActive(false);
+            inputManager.gameObject.SetActive(false);
             Greetings();
-
-            createEnemyInCircle.Init(1000, 0, 0);
-            createEnemyRandomPos.Init(1100, 0, 0);
-            createMetheor.Init(1200, 0, 0);
-            createEnemyInLine.Init(1300, 0, 0);
-            createEnemyInSpira.Init(1400, 0, 0);
-            createItem.Init(3700, 1, 1, 0.5f);
+            SetDefaultAttackState();
             hand.gameObject.SetActive(false);
             tutorial.gameObject.SetActive(false);
         }
-
+        
         private async Task Greetings()
         {
             DOTween.Kill(islandSizeController.GetComponent<RectTransform>());
@@ -1410,8 +1269,8 @@ namespace DynamicGames.MiniGames.Shoot
                 .SetEase(Ease.OutQuart)
                 .OnComplete(() =>
                 {
-                    ChangeStatus(ShootGameState.ready);
-                    joystick.gameObject.SetActive(true);
+                    ChangeStatus(ShootGameState.Ready);
+                    inputManager.gameObject.SetActive(true);
                 });
         }
 

@@ -65,13 +65,13 @@ namespace DynamicGames.MiniGames.Shoot
 
         private bool IsGamePlaying()
         {
-            return gameManager.state == GameManager.ShootGameState.playing;
+            return gameManager.state == GameManager.ShootGameState.Playing;
         }
 
         public void UpdateItem(ItemController item)
         {
             if (item.GetNormalizedTimer() >= 0.01f) return;
-            if (gameManager.state != GameManager.ShootGameState.playing) return;
+            if (gameManager.state != GameManager.ShootGameState.Playing) return;
 
             var type = GetItemType();
 
@@ -152,7 +152,7 @@ namespace DynamicGames.MiniGames.Shoot
 
         public void SpawnItem()
         {
-            if (gameManager.state != GameManager.ShootGameState.playing) return;
+            if (gameManager.state != GameManager.ShootGameState.Playing) return;
             if (items.Count >= 3) return;
 
             var new_item = Instantiate(itemController, gameObject.transform);

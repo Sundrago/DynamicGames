@@ -58,8 +58,8 @@ namespace DynamicGames.MiniGames.Shoot
 
         void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
         {
-            if (!(gameManager.state == GameManager.ShootGameState.playing ||
-                  gameManager.state == GameManager.ShootGameState.ready!))
+            if (!(gameManager.state == GameManager.ShootGameState.Playing ||
+                  gameManager.state == GameManager.ShootGameState.Ready!))
             {
                 ResetJoystick();
                 return;
@@ -118,8 +118,8 @@ namespace DynamicGames.MiniGames.Shoot
         {
             if (!onDrag) return;
 
-            if (!(gameManager.state == GameManager.ShootGameState.playing ||
-                  gameManager.state == GameManager.ShootGameState.ready!))
+            if (!(gameManager.state == GameManager.ShootGameState.Playing ||
+                  gameManager.state == GameManager.ShootGameState.Ready!))
             {
                 ResetJoystick();
                 return;

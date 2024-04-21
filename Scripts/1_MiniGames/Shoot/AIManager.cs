@@ -26,7 +26,7 @@ namespace DynamicGames.MiniGames.Shoot
 
         private IEnumerator CreateEnemyAtRandomPos()
         {
-            while (gameManager.state == GameManager.ShootGameState.playing)
+            while (gameManager.state == GameManager.ShootGameState.Playing)
             {
                 var info = gameManager.createEnemyRandomPos;
                 yield return new WaitForSeconds(info.delay / 1000f);
@@ -40,7 +40,7 @@ namespace DynamicGames.MiniGames.Shoot
 
         private IEnumerator CreateEnemyAtPlayerInCircle()
         {
-            while (gameManager.state == GameManager.ShootGameState.playing)
+            while (gameManager.state == GameManager.ShootGameState.Playing)
             {
                 var info = gameManager.createEnemyInCircle;
                 yield return new WaitForSeconds(info.delay / 1000);
@@ -51,7 +51,7 @@ namespace DynamicGames.MiniGames.Shoot
 
         private IEnumerator CreateMetheors()
         {
-            while (gameManager.state == GameManager.ShootGameState.playing)
+            while (gameManager.state == GameManager.ShootGameState.Playing)
             {
                 var info = gameManager.createMetheor;
                 yield return new WaitForSeconds(info.delay / 1000);
@@ -69,7 +69,7 @@ namespace DynamicGames.MiniGames.Shoot
 
         private IEnumerator CreateEnemyInLine()
         {
-            while (gameManager.state == GameManager.ShootGameState.playing)
+            while (gameManager.state == GameManager.ShootGameState.Playing)
             {
                 var info = gameManager.createEnemyInLine;
                 yield return new WaitForSeconds(info.delay / 1000);
@@ -80,7 +80,7 @@ namespace DynamicGames.MiniGames.Shoot
 
         private IEnumerator CreateEnemyInSpiral()
         {
-            while (gameManager.state == GameManager.ShootGameState.playing)
+            while (gameManager.state == GameManager.ShootGameState.Playing)
             {
                 var info = gameManager.createEnemyInSpira;
                 yield return new WaitForSeconds(info.delay / 1000);
@@ -93,7 +93,7 @@ namespace DynamicGames.MiniGames.Shoot
 
         private IEnumerator CreateItem()
         {
-            while (gameManager.state == GameManager.ShootGameState.playing)
+            while (gameManager.state == GameManager.ShootGameState.Playing)
             {
                 var info = gameManager.createItem;
                 var count = itemManager.items.Count;
