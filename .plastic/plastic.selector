@@ -1,4 +1,0 @@
-repository "Land on Island@SunDragon@cloud"
-  path "/"
-    br "/main"
-    co "/main"

@@ -1,0 +1,336 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: UI Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: UI
+  m_TableCollectionNameGuidString: 6b9bc9303a0694eaea227e98e85f6c26
+  m_Entries:
+  - m_Id: 1463001538560
+    m_Key: ask4review_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119269048320
+    m_Key: ask4review_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119273242624
+    m_Key: ask4review_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119273242625
+    m_Key: ask4review_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602752
+    m_Key: ask4review_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602753
+    m_Key: ask4review_5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602754
+    m_Key: ask4review_6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602755
+    m_Key: ask4review_7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11042742917390336
+    m_Key: DEFAULT_YES
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11042808537276416
+    m_Key: DEFAULT_NO
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11042831329124352
+    m_Key: DEFAULT_OKAY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11053730018353152
+    m_Key: title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11053730018353153
+    m_Key: tutorial_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11057840172032000
+    m_Key: tutorial_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502629978112
+    m_Key: tutorial_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366720
+    m_Key: tutorial_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366721
+    m_Key: tutorial_B01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366722
+    m_Key: tutorial_B02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366723
+    m_Key: tutorial_B03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366724
+    m_Key: tutorial_B04
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662144
+    m_Key: tutorial_C01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662145
+    m_Key: tutorial_C02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662146
+    m_Key: tutorial_D01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662147
+    m_Key: tutorial_D02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662148
+    m_Key: tutorial_D03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987959820288
+    m_Key: tutorial_F01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014592
+    m_Key: tutorial_F02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014593
+    m_Key: tutorial_F03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014594
+    m_Key: tutorial_F04
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662153
+    m_Key: tutorial_jump
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662154
+    m_Key: tutorial_build
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662155
+    m_Key: tutorial_land
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662156
+    m_Key: tutorial_shoot1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662157
+    m_Key: tutorial_shoot2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662149
+    m_Key: tutorial_E01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014595
+    m_Key: tutorial_E01a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662150
+    m_Key: tutorial_E02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014596
+    m_Key: tutorial_E02a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662151
+    m_Key: tutorial_E03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014597
+    m_Key: tutorial_E03a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014598
+    m_Key: tutorial_E04_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662152
+    m_Key: tutorial_E04
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014599
+    m_Key: tutorial_E04a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16525583755239424
+    m_Key: tutorial_C02_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16525583755239425
+    m_Key: tutorial_C02_2a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503675609088
+    m_Key: shoot_item_descr_bounce
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503683997696
+    m_Key: shoot_item_descr_atk
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503683997697
+    m_Key: shoot_item_descr_shield
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503683997698
+    m_Key: shoot_item_descr_spin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28842017898356737
+    m_Key: tutorial_F03A
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28859940318732295
+    m_Key: ATT_Descr
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28901141906448384
+    m_Key: watchedAds
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28842017898356736
+    m_Key: watchAds
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28901141906448385
+    m_Key: AdsCountExceed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993472
+    m_Key: tutorial_G01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993473
+    m_Key: tutorial_G01a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993474
+    m_Key: tutorial_G02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993475
+    m_Key: tutorial_G02a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993476
+    m_Key: tutorial_G03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993477
+    m_Key: tutorial_G03a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993478
+    m_Key: tutorial_G05
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993479
+    m_Key: tutorial_G05a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993480
+    m_Key: tutorial_G06
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993481
+    m_Key: tutorial_G06A
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993482
+    m_Key: previewIsland_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187776
+    m_Key: previewIsland_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187777
+    m_Key: previewIsland_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187778
+    m_Key: fluffy_tutorial0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187779
+    m_Key: fluffy_tutorial1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071939932160
+    m_Key: fluffy_tutorial2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320768
+    m_Key: tutorial_G08
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320769
+    m_Key: tutorial_G09
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320770
+    m_Key: tutorial_G10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320771
+    m_Key: tutorial_G08a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320772
+    m_Key: tutorial_G09a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38281431351287808
+    m_Key: watchAdsContinue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38289496863662080
+    m_Key: watchAdsReady
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 6681097157621579801
+  references:
+    version: 2
+    RefIds:
+    - rid: 6681097157621579801
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1697990671788

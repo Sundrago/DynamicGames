@@ -1,0 +1,348 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: UI_de
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: de
+  m_SharedData: {fileID: 11400000, guid: 6b9bc9303a0694eaea227e98e85f6c26, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 1463001538560
+    m_Localized: "Genie\xDFt du das Spiel?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119269048320
+    m_Localized: "Bitte hinterlassen Sie eine Bewertung!\nWir werden flei\xDFig aktualisieren
+      :)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119273242624
+    m_Localized: Nicht noch einmal fragen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119273242625
+    m_Localized: Ja!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602752
+    m_Localized: Nein.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602753
+    m_Localized: Sicher!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602754
+    m_Localized: Nicht jetzt!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602755
+    m_Localized: "Hoppla, bitte teilen Sie uns mit, was wir verbessern k\xF6nnen,
+      um die Spiele unterhaltsamer zu gestalten."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11042742917390336
+    m_Localized: Ja!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11042808537276416
+    m_Localized: Nein.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11053730018353152
+    m_Localized: Dynamische Spiele
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11053730018353153
+    m_Localized: Willkommen bei <title><br>Dynamische Spiele</title>!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11057840172032000
+    m_Localized: Hallo!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11042831329124352
+    m_Localized: In Ordnung!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502629978112
+    m_Localized: Probieren Sie verschiedene Minispiele in <title>Dynamische Spiele</title>
+      aus!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366720
+    m_Localized: Sollen wir das Minispiel starten, wenn du bereit bist?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366721
+    m_Localized: "Um das gesperrte Spiel zu \xF6ffnen, ben\xF6tigen Sie einen <pend>Schl\xFCssel</pend>!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366722
+    m_Localized: "Ein Schl\xFCssel?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366723
+    m_Localized: "Ich gebe dir einen Schl\xFCssel als Geschenk! Versuche, das Spiel
+      zu entsperren, das du m\xF6chtest!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366724
+    m_Localized: Danke!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662144
+    m_Localized: "Gl\xFCckwunsch!! Du hast dein erstes Spiel freigeschaltet!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662145
+    m_Localized: "Ber\xFChre das freigeschaltete Spiel, um es zu spielen!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662146
+    m_Localized: Wow, du hast das Spiel gespielt und ein Ticket bekommen!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662147
+    m_Localized: Mit einem Ticket kannst du ein neues Spiel freischalten oder ein
+      Haustier aus dem Gacha ziehen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662148
+    m_Localized: Ich gebe dir einen Leaderboard-Block und einen Gacha-Block miau!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662149
+    m_Localized: Im Haustier-Gacha kannst du Haustiere ziehen miau!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662150
+    m_Localized: "<title>Sammle s\xFC\xDFe Haustiere</title> miau!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662151
+    m_Localized: Im Gacha brauchst du 50 Tickets, um einmal ein Haustier zu ziehen
+      miau
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662152
+    m_Localized: Ich gebe dir Tickets, ziehe ein Haustier miau!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662153
+    m_Localized: "Spring so hoch wie m\xF6glich!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662154
+    m_Localized: "Stapel so viele Bl\xF6cke wie m\xF6glich auf der Insel!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662155
+    m_Localized: Lande das Raumschiff sicher auf der Insel!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662156
+    m_Localized: Greife die Insel an!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662157
+    m_Localized: Weiche den Feinden und Raketen aus!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987959820288
+    m_Localized: "Gl\xFCckwunsch, du hast dein erstes Haustier gezogen!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014592
+    m_Localized: Das ist ein Freunde-Block, in dem du Haustierinformationen sehen
+      kannst miau!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014593
+    m_Localized: Das Tutorial ist hiermit beendet!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014594
+    m_Localized: Spiele das Spiel, schalte mehr Spiele frei und ziehe neue Haustiere!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014595
+    m_Localized: Ein Haustier?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014596
+    m_Localized: Wie viel kostet es?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014597
+    m_Localized: Lass es uns versuchen!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014598
+    m_Localized: Ziehe ein Haustier miau!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014599
+    m_Localized: Danke!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16525583755239424
+    m_Localized: Du bist im ersten Spiel miau!! Erreiche eine hohe Punktzahl und
+      sammle Tickets miau!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16525583755239425
+    m_Localized: Auf geht's!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503675609088
+    m_Localized: "Kugeln prallen von W\xE4nden ab"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503683997696
+    m_Localized: "Die Angriffskraft der Kugeln verst\xE4rken"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503683997697
+    m_Localized: Mit einem Schild gegen die Angriffe des Feindes verteidigen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503683997698
+    m_Localized: 7 Sekunden Unbesiegbarkeit! Greife den Feind an!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28842017898356736
+    m_Localized: Sollen wir 10 Tickets bekommen, indem wir eine Anzeige anschauen?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28842017898356737
+    m_Localized: Wenn du nicht genug Tickets hast, kannst du dir welche ansehen,
+      indem du Werbung anschaust miau
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28859940318732295
+    m_Localized: "Um personalisierte Werbung bereitzustellen, sammeln wir Informationen
+      \xFCber die Werbeaktivit\xE4ten der Nutzer"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28901141906448384
+    m_Localized: Erhalte 10 Tickets!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28901141906448385
+    m_Localized: Du kannst die Werbung nur dreimal am Tag anschauen!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993472
+    m_Localized: Miau! Wusstest du, dass du das Spiel mit den erworbenen Haustieren
+      spielen kannst?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993473
+    m_Localized: Wirklich? Wie?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993474
+    m_Localized: Es ist einfach miau! Zieh das Haustier mit deinem Finger und setze
+      es auf den Block miau.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993475
+    m_Localized: Oh, das ist faszinierend!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993476
+    m_Localized: "\xDCbe, indem du mich ziehst und auf den Freundesblock legst miau!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993477
+    m_Localized: Okay, ich werde es versuchen!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993478
+    m_Localized: "Gut gemacht miau!! Wenn du das Haustier auf den Friends-Block legst,
+      kannst du sofort die Informationen \xFCber das Haustier \xFCberpr\xFCfen miau"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993479
+    m_Localized: Aha!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993480
+    m_Localized: Nicht nur das, du kannst das Spiel auch mit einem Haustier spielen
+      miau!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993481
+    m_Localized: Lass mich auf den Spielblock fallen miau~!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993482
+    m_Localized: Ziehen Sie Fluffy auf den Friends-Block und sehen Sie, was passiert.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187776
+    m_Localized: Legen Sie Fluffy auf den Spielblock.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187777
+    m_Localized: "Ber\xFChren Sie den Spielblock, um zu spielen!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187778
+    m_Localized: Schlauer, als du aussiehst miau!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187779
+    m_Localized: Lass uns gehen miau~!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071939932160
+    m_Localized: "Ich m\xF6chte auch die anderen Freunde sehen miau."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320768
+    m_Localized: "Gut gemacht miau! Indem du das Haustier so auf den Spielblock legst,
+      kannst du mit dem Haustier spielen, das du m\xF6chtest miau!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320769
+    m_Localized: Das Tutorial endet hier miau. Ich werde dich informieren, wenn es
+      in Zukunft neue Updates gibt miau!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320770
+    m_Localized: Ich gebe dir 30 Tickets als Geschenk miau. Hab eine tolle Zeit auf
+      <title>Dynamic Island</title> miau!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320771
+    m_Localized: Danke
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320772
+    m_Localized: Du bist der Beste
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38281431351287808
+    m_Localized: Sollen wir nach dem Anschauen einer Werbung weitermachen?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38289496863662080
+    m_Localized: Bist du bereit miau?
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

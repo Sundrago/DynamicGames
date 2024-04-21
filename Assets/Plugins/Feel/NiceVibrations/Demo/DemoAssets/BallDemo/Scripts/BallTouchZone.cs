@@ -1,0 +1,66 @@
+// Copyright (c) Meta Platforms, Inc. and affiliates. 
+
+using UnityEngine;
+using UnityEngine.EventSystems;
+
+namespace Lofelt.NiceVibrations
+{
+    public class BallTouchZone : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
+    {
+        public RectTransform BallMover;
+        protected Canvas _canvas;
+        protected bool _holding;
+        protected float _initialZPosition;
+        protected Vector3 _newPosition;
+        protected PointerEventData _pointerEventData;
+        protected Vector2 _workPosition;
+        public RenderMode ParentCanvasRenderMode { get; protected set; }
+
+
+        protected virtual void Start()
+        {
+            Initialization();
+        }
+
+        protected virtual void Update()
+        {
+            if (_holding)
+                _newPosition = GetWorldPosition(_pointerEventData.position);
+            else
+                _newPosition = Vector3.one * 5000f;
+
+            _newPosition.z = _initialZPosition;
+            BallMover.position = _newPosition;
+        }
+
+        public virtual void OnPointerEnter(PointerEventData data)
+        {
+            _holding = true;
+            _pointerEventData = data;
+        }
+
+        public virtual void OnPointerExit(PointerEventData data)
+        {
+            _holding = false;
+        }
+
+        protected virtual void Initialization()
+        {
+            ParentCanvasRenderMode = GetComponentInParent<Canvas>().renderMode;
+            _canvas = GetComponentInParent<Canvas>();
+            _initialZPosition = transform.position.z;
+        }
+
+        protected virtual Vector3 GetWorldPosition(Vector3 testPosition)
+        {
+            if (ParentCanvasRenderMode == RenderMode.ScreenSpaceCamera)
+            {
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(_canvas.transform as RectTransform,
+                    testPosition, _canvas.worldCamera, out _workPosition);
+                return _canvas.transform.TransformPoint(_workPosition);
+            }
+
+            return testPosition;
+        }
+    }
+}

@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Localization-String-Tables-Korean (ko)
+  m_EditorClassIdentifier: 
+  m_GroupName: Localization-String-Tables-Korean (ko)
+  m_Data:
+    m_SerializedData: []
+  m_GUID: a1f739bdb16394954a81c202e5ba5d19
+  m_SerializeEntries:
+  - m_GUID: 50bc1ea8a99074573882700d5d7d9cbe
+    m_Address: PetDialogue_ko
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko
+    - Preload
+  - m_GUID: e0a959391ea4c49b7bc38753ca2eff97
+    m_Address: UI_ko
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko
+  m_ReadOnly: 1
+  m_Settings: {fileID: 11400000, guid: 215631ea2fa8541a3aee1a79a05f1273, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: c0b14fa62ac0d421bb06584467fb463c, type: 2}
+    - {fileID: 11400000, guid: 178503ace7a154e7d9ddd696e0d3aa16, type: 2}

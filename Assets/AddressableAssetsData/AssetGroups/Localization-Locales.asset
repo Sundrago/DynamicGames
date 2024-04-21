@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Localization-Locales
+  m_EditorClassIdentifier: 
+  m_GroupName: Localization-Locales
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 1d1d69c5dfa1f46018d9f366808bbffc
+  m_SerializeEntries:
+  - m_GUID: c5bcf75f792494d47b38f7ec3499882f
+    m_Address: Chinese (Simplified) (zh-CN)
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale
+  - m_GUID: 50173d6fe3c444f2e8ccf739295a37c0
+    m_Address: Dutch (nl)
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale
+  - m_GUID: b9f8bb4d712334d73bdb3c2b0a36f57e
+    m_Address: English (en)
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale
+  - m_GUID: a91e8fc2f350c4756be6fe1f5e9adbb1
+    m_Address: German (de)
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale
+  - m_GUID: ddb78889fd9cd4b9d9a32d365a5f36ee
+    m_Address: Japanese (ja)
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale
+  - m_GUID: 8cc8acc65049744c6a33796e115897c1
+    m_Address: Korean (ko)
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale
+  - m_GUID: aba4abc69c1d5481f96df8e85ffcbcdd
+    m_Address: Portuguese (pt)
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale
+  - m_GUID: 6ba606bf8cc97440f8710656f2aeaa05
+    m_Address: Russian (ru)
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale
+  - m_GUID: 8858f864990534a77b3ceac42391abcc
+    m_Address: Spanish (es)
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale
+  - m_GUID: 4c99434234dba494798905745b97ec03
+    m_Address: Chinese (Traditional) (zh-hant)
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale
+  - m_GUID: 332b7eba686344ade99219f454f1977f
+    m_Address: French (fr)
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale
+  m_ReadOnly: 1
+  m_Settings: {fileID: 11400000, guid: 215631ea2fa8541a3aee1a79a05f1273, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: c3f533389e22a4425ac3cd0bd5287ef7, type: 2}
+    - {fileID: 11400000, guid: 749a29f9615e94f4c96f5c65a04a6109, type: 2}

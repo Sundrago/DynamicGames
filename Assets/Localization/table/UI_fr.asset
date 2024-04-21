@@ -1,0 +1,357 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: UI_fr
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: fr
+  m_SharedData: {fileID: 11400000, guid: 6b9bc9303a0694eaea227e98e85f6c26, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 11053730018353152
+    m_Localized: Jeux Dynamiques
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11053730018353153
+    m_Localized: Bienvenue chez <title><br>Dynamic Games</title>!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11057840172032000
+    m_Localized: Bonjour!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1463001538560
+    m_Localized: Vous amusez-vous avec le jeu ?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119269048320
+    m_Localized: "Veuillez laisser un avis ! Nous mettrons \xE0 jour avec diligence
+      :)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119273242624
+    m_Localized: "Ne demandez pas \xE0 nouveau"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119273242625
+    m_Localized: Oui!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602752
+    m_Localized: Non!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602753
+    m_Localized: "Bien s\xFBr ! "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602754
+    m_Localized: Pas maintenant !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602755
+    m_Localized: "Oups, dites-nous ce que nous pouvons am\xE9liorer pour rendre les
+      jeux plus agr\xE9ables."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11042742917390336
+    m_Localized: Oui!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11042808537276416
+    m_Localized: Non!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11042831329124352
+    m_Localized: D'accord!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502629978112
+    m_Localized: "Essayez une vari\xE9t\xE9 de mini-jeux dans <title>Dynamic Games</title>
+      !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366720
+    m_Localized: "Si vous \xEAtes pr\xEAt, devrions-nous commencer le mini-jeu ?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366721
+    m_Localized: "Vous avez besoin d'une <pend>cl\xE9</pend> pour d\xE9verrouiller
+      le jeu verrouill\xE9 !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366722
+    m_Localized: "Une cl\xE9 ?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366723
+    m_Localized: "Je vous offrirai une cl\xE9 en cadeau ! Essayez de d\xE9bloquer
+      le jeu que vous voulez !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366724
+    m_Localized: Merci !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662144
+    m_Localized: "F\xE9licitations !! Tu as d\xE9bloqu\xE9 ton premier jeu !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662145
+    m_Localized: "Touchez le jeu d\xE9verrouill\xE9 pour essayer de le jouer !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662146
+    m_Localized: "Waouh, tu as jou\xE9 au jeu et obtenu un ticket !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662147
+    m_Localized: "Avec un ticket, vous pouvez d\xE9bloquer un nouveau jeu ou tirer
+      un animal de compagnie du gacha"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662148
+    m_Localized: Je vais te donner un bloc de classement et un bloc gacha miaou !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662149
+    m_Localized: Dans la gacha de pets, tu peux tirer des animaux de compagnie miaou!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662150
+    m_Localized: <title>Collectionnez des animaux de compagnie mignons</title> miaou
+      !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662151
+    m_Localized: Tu as besoin de 50 tickets pour tirer un animal de compagnie une
+      fois dans le gacha miaou
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662152
+    m_Localized: Je te donne des tickets, tire un animal de compagnie miaou !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662153
+    m_Localized: Sautez le plus haut possible !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662154
+    m_Localized: "Empilez autant de blocs que possible sur l'\xEEle !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662155
+    m_Localized: "Faites atterrir le vaisseau spatial en toute s\xE9curit\xE9 sur
+      l'\xEEle !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662156
+    m_Localized: "Attaquez l'\xEEle !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662157
+    m_Localized: "\xC9vitez les ennemis et les missiles !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987959820288
+    m_Localized: "F\xE9licitations, tu as tir\xE9 ton premier animal de compagnie
+      !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014592
+    m_Localized: "C'est un bloc amis o\xF9 tu peux voir les informations sur les
+      animaux de compagnie miaou !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014593
+    m_Localized: Le tutoriel se termine ici !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014594
+    m_Localized: "Joue au jeu, d\xE9bloque plus de jeux et obtiens de nouveaux animaux
+      de compagnie !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014595
+    m_Localized: Un animal de compagnie ?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014596
+    m_Localized: "Combien \xE7a co\xFBte ?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014597
+    m_Localized: Essayons !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014598
+    m_Localized: Tire un animal de compagnie miaou !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014599
+    m_Localized: Merci !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16525583755239424
+    m_Localized: "Tu es entr\xE9 dans le premier jeu miaou !! Vise un score \xE9lev\xE9
+      et collecte des tickets miaou !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16525583755239425
+    m_Localized: Allons-y !!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503675609088
+    m_Localized: Les balles rebondissent sur les murs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503683997696
+    m_Localized: Augmenter la puissance d'attaque de la balle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503683997697
+    m_Localized: "D\xE9fendez-vous contre les attaques ennemies avec un bouclier"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503683997698
+    m_Localized: "7 secondes d'invincibilit\xE9 ! Attaquez l'ennemi !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28842017898356736
+    m_Localized: "Devrions-nous obtenir 10 tickets en regardant une publicit\xE9
+      ?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28842017898356737
+    m_Localized: "Si vous manquez de tickets, vous pouvez en obtenir en regardant
+      des publicit\xE9s miaou"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28859940318732295
+    m_Localized: "Pour fournir des publicit\xE9s personnalis\xE9es, nous collectons
+      des informations sur les activit\xE9s publicitaires des utilisateurs"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28901141906448384
+    m_Localized: Recevez 10 tickets !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28901141906448385
+    m_Localized: "Vous ne pouvez regarder la publicit\xE9 que trois fois par jour
+      !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993472
+    m_Localized: Miaou ! Savais-tu que tu peux jouer au jeu avec les animaux de compagnie
+      que tu as acquis ?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993473
+    m_Localized: Vraiment ? Comment ?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993474
+    m_Localized: C'est facile miaou ! Glisse simplement l'animal avec ton doigt et
+      place-le sur le bloc miaou.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993475
+    m_Localized: Oh, c'est fascinant !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993476
+    m_Localized: "Pratique en me faisant glisser et en me pla\xE7ant sur le bloc
+      amis miaou !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993477
+    m_Localized: D'accord, je vais essayer !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993478
+    m_Localized: "Bien jou\xE9 miaou !! Si tu d\xE9poses l'animal sur le bloc Friends,
+      tu peux imm\xE9diatement v\xE9rifier les informations sur l'animal miaou."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993479
+    m_Localized: Aha !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993480
+    m_Localized: "Pas seulement \xE7a, mais tu peux aussi jouer au jeu avec un animal
+      de compagnie miaou !!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993481
+    m_Localized: "L\xE2che-moi sur le bloc de jeu miaou~ !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993482
+    m_Localized: Glissez Fluffy sur le bloc Amis et voyez ce qui se passe.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187776
+    m_Localized: Placez Fluffy sur le bloc de jeu.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187777
+    m_Localized: Touchez le bloc de jeu pour jouer !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187778
+    m_Localized: Plus intelligent que tu en as l'air miaou !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187779
+    m_Localized: Allons-y miaou~ !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071939932160
+    m_Localized: Je veux voir les autres amis miaou.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320768
+    m_Localized: "Bien jou\xE9 miaou ! En pla\xE7ant le animal de compagnie sur le
+      bloc de jeu de cette mani\xE8re, tu peux jouer avec le animal de compagnie
+      que tu veux miaou !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320769
+    m_Localized: "Le tutoriel se termine ici miaou. Je te ferai savoir s'il y a des
+      nouvelles mises \xE0 jour \xE0 l'avenir miaou !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320770
+    m_Localized: "Je te donnerai 30 billets en cadeau miaou. Amuse-toi bien sur l'<title>\xCEle
+      Dynamique</title> miaou !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320771
+    m_Localized: Merci
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320772
+    m_Localized: Tu es le meilleur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38281431351287808
+    m_Localized: "On continue apr\xE8s avoir regard\xE9 une pub?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38289496863662080
+    m_Localized: "Tu es pr\xEAt miaou ?"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

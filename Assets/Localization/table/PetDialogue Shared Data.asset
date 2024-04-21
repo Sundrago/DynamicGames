@@ -1,0 +1,1192 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: PetDialogue Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: PetDialogue
+  m_TableCollectionNameGuidString: c74ed1ef526d1412797cc8f1c9f0392e
+  m_Entries:
+  - m_Id: 1198431245688832
+    m_Key: Cocoa_descr
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437568
+    m_Key: Brownie_descr
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437569
+    m_Key: Fluffy_descr
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437570
+    m_Key: Foxy_descr
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437571
+    m_Key: MrPinchy_descr
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437572
+    m_Key: Krabs_descr
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437573
+    m_Key: Dash_descr
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437574
+    m_Key: Batcat_descr
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437575
+    m_Key: Butter_descr
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437576
+    m_Key: Matata_descr
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437577
+    m_Key: Gcat_descr
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437578
+    m_Key: Kune_descr
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437579
+    m_Key: Lo_descr
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437580
+    m_Key: Ve_descr
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437581
+    m_Key: Cocoa_descr_l
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437582
+    m_Key: Brownie_descr_l
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437583
+    m_Key: Fluffy_descr_l
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437584
+    m_Key: Foxy_descr_l
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437585
+    m_Key: MrPinchy_descr_l
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437586
+    m_Key: Krabs_descr_l
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437587
+    m_Key: Dash_descr_l
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437588
+    m_Key: Batcat_descr_l
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437589
+    m_Key: Butter_descr_l
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437590
+    m_Key: Matata_descr_l
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437591
+    m_Key: Gcat_descr_l
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437592
+    m_Key: Kune_descr_l
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437593
+    m_Key: Lo_descr_l
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437594
+    m_Key: Ve_descr_l
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437595
+    m_Key: Cocoa_from
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437596
+    m_Key: Brownie_from
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437597
+    m_Key: Fluffy_from
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437598
+    m_Key: Foxy_from
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437599
+    m_Key: MrPinchy_from
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437600
+    m_Key: Krabs_from
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437601
+    m_Key: Dash_from
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437602
+    m_Key: Batcat_from
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437603
+    m_Key: Butter_from
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631872
+    m_Key: Matata_from
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631873
+    m_Key: Gcat_from
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631874
+    m_Key: Kune_from
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631875
+    m_Key: Lo_from
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631876
+    m_Key: Ve_from
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631877
+    m_Key: Fluffy_welcome
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631878
+    m_Key: Foxy_welcome
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631879
+    m_Key: Dash_welcome
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631880
+    m_Key: Batcat_welcome
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631881
+    m_Key: Cocoa_idle0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631882
+    m_Key: Brownie_idle0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631883
+    m_Key: Fluffy_idle0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631884
+    m_Key: Foxy_idle0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631885
+    m_Key: MrPinchy_idle0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631886
+    m_Key: Krabs_idle0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631887
+    m_Key: Dash_idle0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631888
+    m_Key: Batcat_idle0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631889
+    m_Key: Butter_idle0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631890
+    m_Key: Matata_idle0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631891
+    m_Key: Gcat_idle0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631892
+    m_Key: Kune_idle0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631893
+    m_Key: Lo_idle0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631894
+    m_Key: Ve_idle0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631895
+    m_Key: Cocoa_idle1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631896
+    m_Key: Brownie_idle1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631897
+    m_Key: Fluffy_idle1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631898
+    m_Key: Foxy_idle1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631899
+    m_Key: MrPinchy_idle1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631900
+    m_Key: Krabs_idle1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631901
+    m_Key: Dash_idle1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631902
+    m_Key: Batcat_idle1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631903
+    m_Key: Butter_idle1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631904
+    m_Key: Matata_idle1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631905
+    m_Key: Gcat_idle1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631906
+    m_Key: Kune_idle1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631907
+    m_Key: Lo_idle1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631908
+    m_Key: Ve_idle1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631909
+    m_Key: Cocoa_idle2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631910
+    m_Key: MrPinchy_idle2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631911
+    m_Key: Matata_idle2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631912
+    m_Key: Gcat_idle2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631913
+    m_Key: Kune_idle2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631914
+    m_Key: Lo_idle2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631915
+    m_Key: Ve_idle2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631916
+    m_Key: Cocoa_onDrag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631917
+    m_Key: Brownie_onDrag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631918
+    m_Key: Fluffy_onDrag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631919
+    m_Key: Foxy_onDrag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631920
+    m_Key: MrPinchy_onDrag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631921
+    m_Key: Krabs_onDrag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631922
+    m_Key: Dash_onDrag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631923
+    m_Key: Batcat_onDrag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631924
+    m_Key: Butter_onDrag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631925
+    m_Key: Matata_onDrag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631926
+    m_Key: Gcat_onDrag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631927
+    m_Key: Kune_onDrag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631928
+    m_Key: Lo_onDrag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631929
+    m_Key: Ve_onDrag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631930
+    m_Key: Cocoa_onTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631931
+    m_Key: Brownie_onTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631932
+    m_Key: Fluffy_onTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631933
+    m_Key: Foxy_onTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631934
+    m_Key: MrPinchy_onTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631935
+    m_Key: Krabs_onTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631936
+    m_Key: Dash_onTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826176
+    m_Key: Batcat_onTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826177
+    m_Key: Butter_onTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826178
+    m_Key: Matata_onTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826179
+    m_Key: Gcat_onTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826180
+    m_Key: Kune_onTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826181
+    m_Key: Lo_onTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826182
+    m_Key: Ve_onTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826183
+    m_Key: Cocoa_onTitleShake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826184
+    m_Key: Brownie_onTitleShake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826185
+    m_Key: Fluffy_onTitleShake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826186
+    m_Key: Foxy_onTitleShake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826187
+    m_Key: MrPinchy_onTitleShake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826188
+    m_Key: Krabs_onTitleShake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826189
+    m_Key: Dash_onTitleShake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826190
+    m_Key: Batcat_onTitleShake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826191
+    m_Key: Butter_onTitleShake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826192
+    m_Key: Matata_onTitleShake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826193
+    m_Key: Gcat_onTitleShake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826194
+    m_Key: Kune_onTitleShake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826195
+    m_Key: Lo_onTitleShake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826196
+    m_Key: Ve_onTitleShake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826197
+    m_Key: Cocoa_onIsland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826198
+    m_Key: Brownie_onIsland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826199
+    m_Key: Fluffy_onIsland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826200
+    m_Key: Foxy_onIsland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826201
+    m_Key: MrPinchy_onIsland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826202
+    m_Key: Krabs_onIsland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826203
+    m_Key: Dash_onIsland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826204
+    m_Key: Batcat_onIsland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826205
+    m_Key: Butter_onIsland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826206
+    m_Key: Matata_onIsland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826207
+    m_Key: Gcat_onIsland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826208
+    m_Key: Kune_onIsland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826209
+    m_Key: Lo_onIsland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826210
+    m_Key: Ve_onIsland
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826211
+    m_Key: Foxy_onHit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826212
+    m_Key: Batcat_onHit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826213
+    m_Key: Matata_onHit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826214
+    m_Key: Gcat_onHit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826215
+    m_Key: Foxy_onPrefGameEnter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826216
+    m_Key: Dash_onPrefGameEnter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826217
+    m_Key: Batcat_onPrefGameEnter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826218
+    m_Key: Kune_onPrefGameEnter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826219
+    m_Key: Foxy_onPrefGameExit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826220
+    m_Key: Dash_onPrefGameExit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826221
+    m_Key: Batcat_onPrefGameExit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826222
+    m_Key: Kune_onPrefGameExit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826223
+    m_Key: Cocoa_onGameEnter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826224
+    m_Key: Brownie_onGameEnter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826225
+    m_Key: Fluffy_onGameEnter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826226
+    m_Key: Foxy_onGameEnter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826227
+    m_Key: MrPinchy_onGameEnter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826228
+    m_Key: Krabs_onGameEnter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826229
+    m_Key: Dash_onGameEnter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826230
+    m_Key: Batcat_onGameEnter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826231
+    m_Key: Butter_onGameEnter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826232
+    m_Key: Matata_onGameEnter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826233
+    m_Key: Gcat_onGameEnter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826234
+    m_Key: Kune_onGameEnter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826235
+    m_Key: Lo_onGameEnter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826236
+    m_Key: Ve_onGameEnter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826237
+    m_Key: Cocoa_onGameExit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826238
+    m_Key: Brownie_onGameExit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826239
+    m_Key: Fluffy_onGameExit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826240
+    m_Key: Foxy_onGameExit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826241
+    m_Key: MrPinchy_onGameExit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826242
+    m_Key: Krabs_onGameExit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826243
+    m_Key: Dash_onGameExit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826244
+    m_Key: Batcat_onGameExit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020480
+    m_Key: Butter_onGameExit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020481
+    m_Key: Matata_onGameExit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020482
+    m_Key: Gcat_onGameExit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020483
+    m_Key: Kune_onGameExit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020484
+    m_Key: Lo_onGameExit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020485
+    m_Key: Ve_onGameExit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020486
+    m_Key: Cocoa_score_newBest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020487
+    m_Key: Brownie_score_newBest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020488
+    m_Key: Fluffy_score_newBest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020489
+    m_Key: Foxy_score_newBest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020490
+    m_Key: MrPinchy_score_newBest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020491
+    m_Key: Krabs_score_newBest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020492
+    m_Key: Dash_score_newBest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020493
+    m_Key: Batcat_score_newBest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020494
+    m_Key: Butter_score_newBest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020495
+    m_Key: Matata_score_newBest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020496
+    m_Key: Gcat_score_newBest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020497
+    m_Key: Kune_score_newBest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020498
+    m_Key: Lo_score_newBest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020499
+    m_Key: Ve_score_newBest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020500
+    m_Key: Cocoa_score_excelent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020501
+    m_Key: Brownie_score_excelent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020502
+    m_Key: Fluffy_score_excelent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020503
+    m_Key: Foxy_score_excelent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020504
+    m_Key: MrPinchy_score_excelent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020505
+    m_Key: Krabs_score_excelent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020506
+    m_Key: Dash_score_excelent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020507
+    m_Key: Batcat_score_excelent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020508
+    m_Key: Butter_score_excelent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020509
+    m_Key: Matata_score_excelent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020510
+    m_Key: Gcat_score_excelent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020511
+    m_Key: Kune_score_excelent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020512
+    m_Key: Lo_score_excelent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020513
+    m_Key: Ve_score_excelent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020514
+    m_Key: Cocoa_score_great
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020515
+    m_Key: Brownie_score_great
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020516
+    m_Key: Fluffy_score_great
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020517
+    m_Key: Foxy_score_great
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020518
+    m_Key: MrPinchy_score_great
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020519
+    m_Key: Krabs_score_great
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020520
+    m_Key: Dash_score_great
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020521
+    m_Key: Batcat_score_great
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020522
+    m_Key: Butter_score_great
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020523
+    m_Key: Matata_score_great
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020524
+    m_Key: Gcat_score_great
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020525
+    m_Key: Kune_score_great
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020526
+    m_Key: Lo_score_great
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020527
+    m_Key: Ve_score_great
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020528
+    m_Key: Cocoa_score_good
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020529
+    m_Key: Brownie_score_good
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020530
+    m_Key: Fluffy_score_good
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020531
+    m_Key: Foxy_score_good
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020532
+    m_Key: MrPinchy_score_good
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020533
+    m_Key: Krabs_score_good
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020534
+    m_Key: Dash_score_good
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020535
+    m_Key: Batcat_score_good
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020536
+    m_Key: Butter_score_good
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020537
+    m_Key: Matata_score_good
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020538
+    m_Key: Gcat_score_good
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020539
+    m_Key: Kune_score_good
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020540
+    m_Key: Lo_score_good
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020541
+    m_Key: Ve_score_good
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214784
+    m_Key: Cocoa_score_bad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214785
+    m_Key: Brownie_score_bad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214786
+    m_Key: Fluffy_score_bad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214787
+    m_Key: Foxy_score_bad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214788
+    m_Key: MrPinchy_score_bad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214789
+    m_Key: Krabs_score_bad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214790
+    m_Key: Dash_score_bad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214791
+    m_Key: Batcat_score_bad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214792
+    m_Key: Butter_score_bad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214793
+    m_Key: Matata_score_bad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214794
+    m_Key: Gcat_score_bad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214795
+    m_Key: Kune_score_bad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214796
+    m_Key: Lo_score_bad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214797
+    m_Key: Ve_score_bad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214798
+    m_Key: Cocoa_newFriend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214799
+    m_Key: Brownie_newFriend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214800
+    m_Key: Fluffy_newFriend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214801
+    m_Key: Foxy_newFriend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214802
+    m_Key: MrPinchy_newFriend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214803
+    m_Key: Krabs_newFriend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214804
+    m_Key: Dash_newFriend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214805
+    m_Key: Batcat_newFriend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214806
+    m_Key: Butter_newFriend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214807
+    m_Key: Matata_newFriend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214808
+    m_Key: Gcat_newFriend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214809
+    m_Key: Kune_newFriend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214810
+    m_Key: Lo_newFriend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214811
+    m_Key: Ve_newFriend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214812
+    m_Key: Cocoa_weather_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214813
+    m_Key: Cocoa_weather_6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214814
+    m_Key: Fluffy_weather_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214815
+    m_Key: Fluffy_weather_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214816
+    m_Key: Fluffy_weather_5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214817
+    m_Key: Fluffy_weather_10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214818
+    m_Key: Foxy_weather_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214819
+    m_Key: Foxy_weather_5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214820
+    m_Key: Foxy_weather_9
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214821
+    m_Key: MrPinchy_weather_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214822
+    m_Key: MrPinchy_weather_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214823
+    m_Key: MrPinchy_weather_10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214824
+    m_Key: Krabs_weather_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214825
+    m_Key: Krabs_weather_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214826
+    m_Key: Krabs_weather_7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214827
+    m_Key: Krabs_weather_10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214828
+    m_Key: Dash_weather_5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214829
+    m_Key: Batcat_weather_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214830
+    m_Key: Batcat_weather_10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214831
+    m_Key: Butter_weather_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214832
+    m_Key: Butter_weather_5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214833
+    m_Key: Butter_weather_8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214834
+    m_Key: Matata_weather_7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214835
+    m_Key: Gcat_weather_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214836
+    m_Key: Gcat_weather_10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214837
+    m_Key: Kune_weather_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214838
+    m_Key: Kune_weather_5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214839
+    m_Key: Lo_weather_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214840
+    m_Key: Ve_weather_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214841
+    m_Key: Krabs_onHit
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 7122387236646551558
+  references:
+    version: 2
+    RefIds:
+    - rid: 7122387236646551558
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1705918224363

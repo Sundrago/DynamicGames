@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: String Table
+  m_EditorClassIdentifier: 
+  m_GroupName: String Table
+  m_Data:
+    m_SerializedData: []
+  m_GUID: baa90a73c40704f209284b970492f9dd
+  m_SerializeEntries:
+  - m_GUID: c74ed1ef526d1412797cc8f1c9f0392e
+    m_Address: Assets/_Localizing/table/PetDialogue Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+  - m_GUID: 6b9bc9303a0694eaea227e98e85f6c26
+    m_Address: Assets/_Localizing/table/UI Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+  m_ReadOnly: 1
+  m_Settings: {fileID: 11400000, guid: 215631ea2fa8541a3aee1a79a05f1273, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: c2b8883f768c04a938d1c8e8c0c4a267, type: 2}
+    - {fileID: 11400000, guid: 76191f4dce0c945c286c892bf861d761, type: 2}

@@ -1,0 +1,348 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: UI_pt
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: pt
+  m_SharedData: {fileID: 11400000, guid: 6b9bc9303a0694eaea227e98e85f6c26, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 1463001538560
+    m_Localized: "Voc\xEA est\xE1 gostando do jogo?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119269048320
+    m_Localized: "Por favor, deixe um coment\xE1rio!\nVamos atualizar com dedica\xE7\xE3o
+      :)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119273242624
+    m_Localized: "N\xE3o perguntar novamente"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119273242625
+    m_Localized: Sim!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602752
+    m_Localized: "N\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602753
+    m_Localized: Claro!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602754
+    m_Localized: "Agora n\xE3o!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602755
+    m_Localized: Opa, por favor nos diga o que podemos melhorar para tornar os jogos
+      mais divertidos.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11042742917390336
+    m_Localized: Sim!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11042808537276416
+    m_Localized: "N\xE3o."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11053730018353152
+    m_Localized: "Jogos Din\xE2micos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11053730018353153
+    m_Localized: "Bem-vindo(a) aos <title><br>Jogos Din\xE2micos</title>!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11057840172032000
+    m_Localized: "Ol\xE1!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11042831329124352
+    m_Localized: Ok!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502629978112
+    m_Localized: "Experimente uma variedade de minijogos em <title>Jogos Din\xE2micos</title>!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366720
+    m_Localized: "Se voc\xEA estiver pronto, devemos come\xE7ar o minijogo?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366721
+    m_Localized: "Voc\xEA precisa de uma <pend>chave</pend> para desbloquear o jogo
+      trancado!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366722
+    m_Localized: Uma chave?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366723
+    m_Localized: "Vou te dar uma chave de presente! Tente desbloquear o jogo que
+      voc\xEA quer!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366724
+    m_Localized: Obrigado!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662144
+    m_Localized: "Parab\xE9ns!! Voc\xEA desbloqueou seu primeiro jogo!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662145
+    m_Localized: "Toque no jogo desbloqueado para tentar jog\xE1-lo!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662146
+    m_Localized: "Uau, voc\xEA jogou e ganhou um ingresso!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662147
+    m_Localized: "Com um bilhete, voc\xEA pode desbloquear um novo jogo ou tirar
+      um pet do gacha"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662148
+    m_Localized: "Vou te dar um bloco de classifica\xE7\xE3o e um bloco de gacha
+      miau!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662149
+    m_Localized: "No gacha de pets, voc\xEA pode adquirir pets miau!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662150
+    m_Localized: <title>Colete pets fofinhos</title> miau!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662151
+    m_Localized: "Voc\xEA precisa de 50 bilhetes para tirar um pet uma vez no gacha
+      miau"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662152
+    m_Localized: Vou te dar bilhetes, tire um pet miau!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662153
+    m_Localized: Pule o mais alto que puder!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662154
+    m_Localized: "Empilhe o m\xE1ximo de blocos poss\xEDvel na ilha!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662155
+    m_Localized: "Fa\xE7a o pouso da nave espacial com seguran\xE7a na ilha!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662156
+    m_Localized: Ataque a ilha!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662157
+    m_Localized: "Evite os inimigos e m\xEDsseis!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987959820288
+    m_Localized: "Parab\xE9ns, voc\xEA tirou seu primeiro pet!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014592
+    m_Localized: "Este \xE9 um bloco de amigos onde voc\xEA pode ver informa\xE7\xF5es
+      de pets miau!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014593
+    m_Localized: O tutorial termina aqui!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014594
+    m_Localized: Jogue o jogo, desbloqueie mais jogos e adquira novos pets!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014595
+    m_Localized: Um pet?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014596
+    m_Localized: Quanto custa?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014597
+    m_Localized: Vamos tentar!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014598
+    m_Localized: Tire um pet miau!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014599
+    m_Localized: Obrigado!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16525583755239424
+    m_Localized: "Entrou no primeiro jogo miau!! Obtenha uma pontua\xE7\xE3o alta
+      e colete tickets miau!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16525583755239425
+    m_Localized: "Vamos l\xE1!!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503675609088
+    m_Localized: As balas ricocheteiam nas paredes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503683997696
+    m_Localized: Aumentar o poder de ataque da bala
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503683997697
+    m_Localized: Defenda-se dos ataques inimigos com um escudo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503683997698
+    m_Localized: 7 segundos de invencibilidade! Ataque o inimigo!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28842017898356736
+    m_Localized: "Que tal recebermos 10 bilhetes assistindo a um an\xFAncio?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28842017898356737
+    m_Localized: "Se estiver com poucos bilhetes, pode assistir an\xFAncios para
+      conseguir mais miau"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28859940318732295
+    m_Localized: "Para fornecer an\xFAncios personalizados, coletamos informa\xE7\xF5es
+      sobre as atividades de publicidade dos usu\xE1rios"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28901141906448384
+    m_Localized: Receba 10 bilhetes!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28901141906448385
+    m_Localized: "Voc\xEA s\xF3 pode assistir ao an\xFAncio tr\xEAs vezes por dia!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993472
+    m_Localized: Miau! Sabias que podes jogar o jogo com os pets que adquiriste?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993473
+    m_Localized: "S\xE9rio? Como?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993474
+    m_Localized: "\xC9 f\xE1cil miau! Arraste o pet com o dedo e coloque-o no bloco
+      miau."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993475
+    m_Localized: Oh, que fascinante!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993476
+    m_Localized: Pratique arrastando-me e colocando-me no bloco de amigos miau!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993477
+    m_Localized: Ok, vou tentar!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993478
+    m_Localized: "Bem feito miau!! Se voc\xEA soltar o pet no bloco Friends, voc\xEA
+      pode verificar imediatamente as informa\xE7\xF5es sobre o pet miau"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993479
+    m_Localized: "Ah\xE1!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993480
+    m_Localized: "N\xE3o s\xF3 isso, voc\xEA tamb\xE9m pode jogar o jogo com um pet
+      miau!!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993481
+    m_Localized: Solta-me no bloco do jogo miau~!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993482
+    m_Localized: Arraste o Fluffy para o bloco Amigos e veja o que acontece.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187776
+    m_Localized: Coloque o Fluffy no bloco do jogo.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187777
+    m_Localized: Toque no bloco do jogo para jogar!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187778
+    m_Localized: Mais esperto do que parece miau!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187779
+    m_Localized: "Vamos l\xE1 miau~!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071939932160
+    m_Localized: Quero ver os outros amigos miau.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320768
+    m_Localized: "Bem feito miau! Colocando o pet no bloco do jogo assim, voc\xEA
+      pode jogar com o pet que quiser miau!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320769
+    m_Localized: "O tutorial termina aqui miau. Se houver novas atualiza\xE7\xF5es
+      no futuro, eu te aviso miau!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320770
+    m_Localized: "Vou te dar 30 ingressos como presente miau. Divirta-se na <title>Ilha
+      Din\xE2mica</title> miau!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320771
+    m_Localized: Obrigado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320772
+    m_Localized: "Voc\xEA \xE9 o melhor"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38281431351287808
+    m_Localized: "Vamos continuar depois de assistir a um an\xFAncio?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38289496863662080
+    m_Localized: "Est\xE1s pronto miau?"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

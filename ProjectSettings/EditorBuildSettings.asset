@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scene/Main.unity
+    path: Assets/Scene/DynamicGames.unity
     guid: 066573f226ec5412083cb9e30dad2e69
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: d9e61393c450447a6bd38cda1578648a, type: 2}

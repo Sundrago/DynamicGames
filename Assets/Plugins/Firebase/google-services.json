@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "667304107215",
+    "project_id": "dynamicisland-5a9ab",
+    "storage_bucket": "dynamicisland-5a9ab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:667304107215:android:c16d4f3417fb933ec6ebba",
+        "android_client_info": {
+          "package_name": "net.sundragon.dynamic"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvzhQ9c0G_F03ckCj5apmEmVEWkLIuzD4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

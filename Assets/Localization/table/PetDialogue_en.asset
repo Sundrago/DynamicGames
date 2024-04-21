@@ -1,0 +1,1201 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: PetDialogue_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: c74ed1ef526d1412797cc8f1c9f0392e, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 1198431245688832
+    m_Localized: The cat that brings good luck to good people and bad luck to bad
+      people.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437568
+    m_Localized: A common cat living with an ordinary servant in an ordinary home.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437569
+    m_Localized: Owner of Dynamic Island.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437570
+    m_Localized: A center of the world's best cat idol"Lovely Kittens"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437571
+    m_Localized: A wandering whelk who thinks of itself as a cat.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437572
+    m_Localized: A native of Dynamic Island who wants to be friends with cats.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437573
+    m_Localized: A rising star in the cat athletics world.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437574
+    m_Localized: A billionaire cat working secretly as a superhero.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437575
+    m_Localized: A cat running a restaurant in Piazza Mondello on Sicilia Island
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437576
+    m_Localized: A cat that serves as a train station master in Wakayama City, Japan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437577
+    m_Localized: A scientist cat who likes experiments and research.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437578
+    m_Localized: A famous Russian mystery novelist cat.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437579
+    m_Localized: A cat dreaming of passionate love.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437580
+    m_Localized: A cat dreaming of burning love.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437581
+    m_Localized: A cat that brings fortune to the good and misfortune to the bad.
+      It lived in the port of Philadelphia, USA. One day, it climbed onto a small
+      fishing boat to see if there were any fish left and fell asleep. When it woke
+      up, it found itself in the middle of the sea! And the boat, which it thought
+      was a fishing vessel, turned out to be a drug-smuggling ship! Chased by the
+      police, the ship eventually sank... Just when it thought it was the end, it
+      survived by clinging to the wreckage of the ship and arrived at Dynamic Island!
+      In Philadelphia, it thought of itself as a cat that brings misfortune, but
+      on Dynamic Island, it is making friends and realizing that it can also bring
+      good fortune.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437582
+    m_Localized: An ordinary cat with an ordinary owner in an ordinary family. Feeling
+      bored with his too ordinary life and environment. Went shopping and accidentally
+      won a trip to Dynamic Island in a raffle. Finally, the ordinary life starts
+      to change!? Now stepping onto Dynamic Island
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437595
+    m_Localized: Philadelphia, United States
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437596
+    m_Localized: Osaka, Japan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437597
+    m_Localized: B612
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437598
+    m_Localized: Daegu, South Korea
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437599
+    m_Localized: Gibraltar, United Kingdom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437600
+    m_Localized: Dynamic Island
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437601
+    m_Localized: Plovdiv, Bulgaria
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437602
+    m_Localized: New York, USA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437603
+    m_Localized: Palermo, Italy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631872
+    m_Localized: Wakayama, Japan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631873
+    m_Localized: Berlin, Germany
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631874
+    m_Localized: Moscow, Russia
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631875
+    m_Localized: Seoul, South Korea
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631876
+    m_Localized: Seoul, South Korea
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631877
+    m_Localized: Welcome to Dynamic Island, nya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631878
+    m_Localized: An idol with sincere emotions!! <foxy>Foxy</foxy> of Lovely Kittens
+      meow!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631879
+    m_Localized: Make way, here I come meow~!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631880
+    m_Localized: I've come back after defeating the evil gang... <bounce>Meow!</bounce>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631881
+    m_Localized: The <wave>lottery number</wave> for this week is~
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631882
+    m_Localized: Good meow~
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631883
+    m_Localized: Cleaning should be done frequently, nya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631884
+    m_Localized: I'll work hard on the next <bounce>new song</bounce> meow!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631885
+    m_Localized: I am a cat.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631886
+    m_Localized: Cats are interesting creatures
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631887
+    m_Localized: <wave>Move aside meow~!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631888
+    m_Localized: Crisis lurking in the darkness... <bounce>Meow!</bounce>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631889
+    m_Localized: <pend>If it's about cooking, I'm quite confident meow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631890
+    m_Localized: The train rides with dreams, <swing>Meow!</swing>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631891
+    m_Localized: Life is an organic machine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631892
+    m_Localized: <wiggle>Can't even write, maybe I should just sleep..
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631893
+    m_Localized: If I had liked pineapple pizza...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631894
+    m_Localized: The habit of sighing is not good...!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631895
+    m_Localized: <wave><LOTTERY>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631896
+    m_Localized: It's a special time, meow~
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631897
+    m_Localized: Cleanliness is elegance, nya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631898
+    m_Localized: Please love <bounce>Lovely Kittens</bounce> a lot meow!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631899
+    m_Localized: Acknowledge that I'm a cat.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631900
+    m_Localized: I want to get acquainted with the cat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631901
+    m_Localized: <wave>I'm going, meow~!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631902
+    m_Localized: Hunting crisis of justice... <bounce>Nyan!</bounce>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631903
+    m_Localized: <pend>Aren't you hungry?</pend>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631904
+    m_Localized: Everyone has moments when they want to get away, <swing>Meow!</swing>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631905
+    m_Localized: Excellent beings should rule the Earth.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631906
+    m_Localized: </wiggle>I can't think of any ideas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631907
+    m_Localized: There is a cat that keeps popping into my mind<shake>...</shake>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631908
+    m_Localized: I keep thinking of a certain cat<shake>...</shake>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631909
+    m_Localized: <wave><LOTTERY>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631910
+    m_Localized: Identity is something you choose for yourself.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631911
+    m_Localized: Chugga chugga <swing>meow!</swing>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631912
+    m_Localized: Cats are genetically superior organisms
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631913
+    m_Localized: <wiggle>Should I just rewrite it from the beginning?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631914
+    m_Localized: You shouldn't be picky eater
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631915
+    m_Localized: The things I like, the other person may not like!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631916
+    m_Localized: <wave>Leave fate to fate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631917
+    m_Localized: I don't want to go home~
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631918
+    m_Localized: Be careful not to damage my fur, nya!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631919
+    m_Localized: Do you want to take a picture with me meow?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631920
+    m_Localized: <shake>Don't touch me!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631921
+    m_Localized: It feels like becoming a bird
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631922
+    m_Localized: <wave> Let me go ~
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631923
+    m_Localized: Who put us in danger... <bounce>Meow!</bounce>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631924
+    m_Localized: <pend>Do you want something to eat meow?</pend>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631925
+    m_Localized: Where are we going, <swing>meow?</swing>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631926
+    m_Localized: ...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631927
+    m_Localized: <wiggle>LET ME GO!! I need to write a novel!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631928
+    m_Localized: I want to go to Ve!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631929
+    m_Localized: I want to go to Lo!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631930
+    m_Localized: Bonus number woohoo~
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631931
+    m_Localized: <shake>Ahh!</shake> Let me down~!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631932
+    m_Localized: This is a neat scenery, nya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631933
+    m_Localized: <bounce>Wow, I didn't know there was a place like this, meow!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631934
+    m_Localized: I want to go down.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631935
+    m_Localized: I can see that sea
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431287631936
+    m_Localized: <wave>High huh~!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826176
+    m_Localized: Unknown buoyancy...<bounce>Meow!</bounce>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826177
+    m_Localized: <pend>Good scenery with good side dishes is the best!</pend>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826178
+    m_Localized: What a breathtaking view, <swing>meow!</swing>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826179
+    m_Localized: Cats have no acrophobia genes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826180
+    m_Localized: <wiggle>Ah! The pain of creation!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826181
+    m_Localized: That's pretty...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826182
+    m_Localized: I miss you...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826183
+    m_Localized: <wave><LOTTERY>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826184
+    m_Localized: <shake>Ah!</shake> Save me~!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826185
+    m_Localized: Don't shake, nya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826186
+    m_Localized: <bounce>Gar~~ This is super fun meow!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826187
+    m_Localized: <shake>What are you doing right now?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826188
+    m_Localized: Is this the wave of the sky?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826189
+    m_Localized: <wave>Shake more!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826190
+    m_Localized: Unusual vibration... <bounce>Meow!</bounce>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826191
+    m_Localized: <pend>Can't set up a restaurant here meow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826192
+    m_Localized: Don't panic and follow the instructions, <swing>meow!</swing>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826193
+    m_Localized: Let's try to create a gene that doesn't cause motion sickness
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826194
+    m_Localized: <wiggle>Dizzy, stop shaking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826195
+    m_Localized: Don't be picky <shake>...!</shake>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826196
+    m_Localized: Don't sigh<shake>...!</shake>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826197
+    m_Localized: I feel like I can touch the sky<wave>meow~</wave>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826198
+    m_Localized: It's too high here meow~!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826199
+    m_Localized: You can see the whole island, nya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826200
+    m_Localized: <bounce>wow!! The view is great meow!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826201
+    m_Localized: I have acrophobia. I'll sue you.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826202
+    m_Localized: This is the first time in such a high place
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826203
+    m_Localized: <wave>So high~!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826204
+    m_Localized: Watchtower monitoring evil... <bounce>Meow!</bounce>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826205
+    m_Localized: <pend>I want to open a restaurant here.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826206
+    m_Localized: It's really a breathtaking view, <swing>meow!</swing>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826207
+    m_Localized: Cats are great
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826208
+    m_Localized: Nice view, bring vodka
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826209
+    m_Localized: We used to watch the night view together...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826210
+    m_Localized: Who you view the night view with is important...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826211
+    m_Localized: Oh no!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826212
+    m_Localized: Ugh...!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826213
+    m_Localized: <shake>Meow...!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826214
+    m_Localized: <shake>...!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826215
+    m_Localized: Watch me being awesome, meow!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826216
+    m_Localized: <wave>This is a piece of cake for me!</wave>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826217
+    m_Localized: The victory of justice is fate ... <bounce>Meow!</bounce>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826218
+    m_Localized: <wiggle>I can do this after drinking 10 bottles of vodka
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826219
+    m_Localized: <foxy>Foxy!!</foxy> Please continue to love me meow!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826220
+    m_Localized: <wave>I can do this all day long!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826221
+    m_Localized: Fate can sometimes be a mischievous prankster... <bounce>Meow!</bounce>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826222
+    m_Localized: <wiggle>It's over, let's go for a drink
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826223
+    m_Localized: <wave>You will need luck~
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826224
+    m_Localized: Special game! Exciting~
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826225
+    m_Localized: I will demonstrate it neatly, nya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826226
+    m_Localized: <foxy>Foxy!!</foxy> I'm setting off!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826227
+    m_Localized: As a cat, I participate in the game.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826228
+    m_Localized: Cats' games, that would be fun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826229
+    m_Localized: <wave>Let's go see~!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826230
+    m_Localized: My fight with myself... <bounce>Meow!</bounce>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826231
+    m_Localized: <pend>Eating and exercise are equally important
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826232
+    m_Localized: Train departing, <swing>meow~!</swing>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826233
+    m_Localized: Is it a new research?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826234
+    m_Localized: <wiggle>Let's go find a place to hang out<rot>skiing!</rot>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826235
+    m_Localized: Let's start!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826236
+    m_Localized: Let's get started!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826237
+    m_Localized: <wave>Fate is decided by the sky!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826238
+    m_Localized: I made a page of memories~
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826239
+    m_Localized: If needed, call me again meow, nya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826240
+    m_Localized: <bounce> Everyone worked hard, meow!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826241
+    m_Localized: I finished the game like a cat.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826242
+    m_Localized: The games of cats were fun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826243
+    m_Localized: <wave>Next time it will be better!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431291826244
+    m_Localized: Incomplete me... Possibility of growth... <bounce>Meow!</bounce>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020480
+    m_Localized: <pend>Would you like to eat?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020481
+    m_Localized: The train has returned to the garage, <swing>yay!</swing>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020482
+    m_Localized: The research is finished
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020483
+    m_Localized: <wiggle>Inspiration is striking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020484
+    m_Localized: Are you thirsty for a mint chocolate drink?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020485
+    m_Localized: Are you hungry, do you want to eat pineapple pizza?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020486
+    m_Localized: Luck was insanely good<wave>meow~</wave>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020487
+    m_Localized: It was really a good experience~
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020488
+    m_Localized: It was a game with not a speck of dust, nya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020489
+    m_Localized: Thanks to your <bounce>support</bounce>!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020490
+    m_Localized: This looks like a cat result
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020491
+    m_Localized: Cats' game, crabs play better
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020492
+    m_Localized: <wave>I am the best meow~!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020493
+    m_Localized: I defeat myself... <bounce>meow!</bounce>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020494
+    m_Localized: <pend>I am as good at cooking as I am at gaming!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020495
+    m_Localized: It was like a train full of dreams, <swing>Nya!</swing>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020496
+    m_Localized: This is a great result
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020497
+    m_Localized: <wiggle>Masterpiece! It's a masterpiece!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020498
+    m_Localized: Just like mint chocolate, the best result
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020499
+    m_Localized: Just like pineapple pizza, the best result!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020500
+    m_Localized: My luck was really good <wave>meow~</wave>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020501
+    m_Localized: It was a fun experience meow~
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020502
+    m_Localized: Fresh like it's been cleaned, nya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020503
+    m_Localized: <bounce>Thanks</bounce> for your support meow!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020504
+    m_Localized: The cat became a cat.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020505
+    m_Localized: The game of cats, completely understood
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020506
+    m_Localized: <wave>I am different from ordinary people~!</wave>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020507
+    m_Localized: The feeling of satisfaction from doing your best... <bounce>nyan!</bounce>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020508
+    m_Localized: <pend>The game was like a delicious dish meow!</pend>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020509
+    m_Localized: It felt like an expectant train, <swing>meow!</swing>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020510
+    m_Localized: Not bad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020511
+    m_Localized: <wiggle>It's a masterpiece
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020512
+    m_Localized: As refreshing as mint results
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020513
+    m_Localized: The result is as satisfying as pizza!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020514
+    m_Localized: I'm so lucky<wave>meow~</wave>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020515
+    m_Localized: It was fun meow~
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020516
+    m_Localized: If it was neat like this, nya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020517
+    m_Localized: I'm asking for a bigger <bounce>cheer</bounce>!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020518
+    m_Localized: As a cat, I have done my best.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020519
+    m_Localized: Other types of games, difficult to understand
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020520
+    m_Localized: <wave>Am I doing well~?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020521
+    m_Localized: Proud...<bounce>meow!</bounce>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020522
+    m_Localized: <pend>Is this enough to be good at games?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020523
+    m_Localized: It felt like a fun train, <swing>meow!</swing>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020524
+    m_Localized: More research is needed.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020525
+    m_Localized: <wiggle>Good work<rot>skiing!</rot>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020526
+    m_Localized: A result as sweet as chocolate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020527
+    m_Localized: It's a tangy result, just like pineapple!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020528
+    m_Localized: There are days like this<wave>too~</wave>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020529
+    m_Localized: This was good enough meow~
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020530
+    m_Localized: It would be nice if you could put in a little more effort, nya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020531
+    m_Localized: I'll <bounce>try harder</bounce> nya !!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020532
+    m_Localized: As a cat, it's a little disappointing.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020533
+    m_Localized: Different types of games, difficult
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020534
+    m_Localized: <wave>My foot slipped a little~!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020535
+    m_Localized: Regret... <bounce>Nyang!</bounce>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020536
+    m_Localized: <pend>The result is not very good
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020537
+    m_Localized: Just an ordinary train, <swing>meow!</swing>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020538
+    m_Localized: Disappointing..
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020539
+    m_Localized: <wiggle>This extent..
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020540
+    m_Localized: This is a bland result
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431296020541
+    m_Localized: This is a boring result
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214784
+    m_Localized: Luck is so bad...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214785
+    m_Localized: If that's the case, it might be better to go home...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214786
+    m_Localized: Really messy skill, nya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214787
+    m_Localized: I'm sorry for not meeting your expectations, meow...!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214788
+    m_Localized: As a cat, I feel embarrassed.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214789
+    m_Localized: I will study more in the future.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214790
+    m_Localized: <wave>This is absurd!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214791
+    m_Localized: Disappointment in myself... <bounce>meow!</bounce>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214792
+    m_Localized: <pend>Am I not good at games...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214793
+    m_Localized: The train had an accident! <swing>Oh no!</swing>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214794
+    m_Localized: It's a total mess
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214795
+    m_Localized: <wiggle>I guess I just have to be nervous..
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214796
+    m_Localized: This is exactly like pineapple pizza...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214797
+    m_Localized: This is exactly like mint chocolate...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214798
+    m_Localized: Wishing you lots of luck<wave>~</wave>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214799
+    m_Localized: It's going to get noisy again~
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214800
+    m_Localized: Welcome new guest meow, nya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214801
+    m_Localized: <bounce>Is that a fan of mine??
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214802
+    m_Localized: As a cat, I welcome the new colleague.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214803
+    m_Localized: New meetings! They're always enjoyable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214804
+    m_Localized: <wave>Who is it~!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214805
+    m_Localized: Law-abiding citizen... <bounce>meow!</bounce>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214806
+    m_Localized: <pend>Would you like to treat for a meal?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214808
+    m_Localized: Excellent cats have the right to rest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214809
+    m_Localized: <wiggle>I'm curious about your story!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214810
+    m_Localized: Surely not...?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214811
+    m_Localized: Maybe...?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214812
+    m_Localized: There will be good luck today<wave>meow~</wave>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214813
+    m_Localized: If you buy a lottery ticket today, I think you might win<wave>meow~</wave>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214814
+    m_Localized: Time to wake up and wash up, nya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214815
+    m_Localized: Have you showered, nya?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214816
+    m_Localized: If you've eaten, then brush your teeth, nya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214817
+    m_Localized: Go wash and go to bed, nya
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214818
+    m_Localized: Have a <bounce>energetic day</bounce> today meow!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214819
+    m_Localized: Everyone<bounce>fighting</bounce>nyang!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214820
+    m_Localized: You did a lot of <bounce>work</bounce> today meow!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214821
+    m_Localized: zzZ..
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214822
+    m_Localized: zzZ..
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214823
+    m_Localized: zz..
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214824
+    m_Localized: The wave has come
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214825
+    m_Localized: The waves are going
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214826
+    m_Localized: The waves are coming
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214827
+    m_Localized: The wave goes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214828
+    m_Localized: <wave>Let's run again today meow~!</wave>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214829
+    m_Localized: It's my time... <bounce>Meow!</bounce>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214830
+    m_Localized: The time when the earth falls... <bounce>Meow!</bounce>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214831
+    m_Localized: <pend>Have you had breakfast?~
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214832
+    m_Localized: <pend>Have you had lunch?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214833
+    m_Localized: <pend>Are you going to have dinner?~
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214834
+    m_Localized: There is romance in the sunset... <swing>meow...</swing>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214835
+    m_Localized: Superior cats wake up early
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214836
+    m_Localized: Superior cats sleep early
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214837
+    m_Localized: <wiggle>I can't sleep..
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214838
+    m_Localized: <wiggle>I need to write, but I'm too sleepy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214839
+    m_Localized: Ve...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214840
+    m_Localized: Lo...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214841
+    m_Localized: Ouch!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437583
+    m_Localized: 
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437584
+    m_Localized: 
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437585
+    m_Localized: 
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437586
+    m_Localized: 
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437587
+    m_Localized: 
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437588
+    m_Localized: 
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437589
+    m_Localized: 
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437590
+    m_Localized: 
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437591
+    m_Localized: 
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437592
+    m_Localized: 
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437593
+    m_Localized: 
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431283437594
+    m_Localized: 
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1198431300214807
+    m_Localized: 
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

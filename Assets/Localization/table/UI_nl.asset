@@ -1,0 +1,350 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: UI_nl
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: nl
+  m_SharedData: {fileID: 11400000, guid: 6b9bc9303a0694eaea227e98e85f6c26, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 1463001538560
+    m_Localized: Geniet je van het spel?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119269048320
+    m_Localized: 'Laat alsjeblieft een review achter!
+
+      We zullen ijverig updaten
+      :)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119273242624
+    m_Localized: Niet opnieuw vragen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119273242625
+    m_Localized: Ja!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602752
+    m_Localized: Nee.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602753
+    m_Localized: Zeker!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602754
+    m_Localized: Niet nu!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10119302602755
+    m_Localized: Oeps, laat ons weten wat we kunnen verbeteren om de spellen leuker
+      te maken.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11042742917390336
+    m_Localized: Ja!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11042808537276416
+    m_Localized: Nee.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11053730018353152
+    m_Localized: Dynamische Spellen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11053730018353153
+    m_Localized: Welkom bij <title><br>Dynamische Spellen</title>!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11057840172032000
+    m_Localized: Hallo!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11042831329124352
+    m_Localized: "Ok\xE9!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502629978112
+    m_Localized: <title>Dynamische Spellen</title> biedt een verscheidenheid aan
+      minigames om te proberen!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366720
+    m_Localized: Zullen we de minigame starten als je klaar bent?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366721
+    m_Localized: Om het vergrendelde spel te openen, heb je een <pend>sleutel</pend>
+      nodig!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366722
+    m_Localized: Een sleutel?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366723
+    m_Localized: Ik zal je een sleutel als cadeau geven! Probeer het spel dat je
+      wilt ontgrendelen!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12641502638366724
+    m_Localized: Bedankt!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662144
+    m_Localized: Gefeliciteerd!! Je hebt je eerste spel ontgrendeld!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662145
+    m_Localized: Raak het ontgrendelde spel aan om het te spelen!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662146
+    m_Localized: Wauw, je hebt gespeeld en een ticket gewonnen!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662147
+    m_Localized: Met een ticket kun je een nieuw spel ontgrendelen of een huisdier
+      uit de gacha halen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662148
+    m_Localized: Ik zal je een leaderboardblok en een gacha-blok geven miauw!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662149
+    m_Localized: In de huisdierengacha kun je huisdieren trekken miauw!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662150
+    m_Localized: <title>Verzamel schattige huisdieren</title> miauw!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662151
+    m_Localized: In de gacha heb je 50 tickets nodig om een keer een huisdier te
+      trekken miauw
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662152
+    m_Localized: Ik geef je tickets, trek een huisdier miauw!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662153
+    m_Localized: Spring zo hoog mogelijk!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662154
+    m_Localized: Stapel zoveel mogelijk blokken op het eiland!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662155
+    m_Localized: Laat het ruimteschip veilig landen op het eiland!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662156
+    m_Localized: Val het eiland aan!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14358870502662157
+    m_Localized: Ontwijk de vijanden en raketten!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987959820288
+    m_Localized: Gefeliciteerd, je hebt je eerste huisdier getrokken!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014592
+    m_Localized: Dit is een vriendenblok waar je huisdierinformatie kunt bekijken
+      miauw!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014593
+    m_Localized: De tutorial is hierbij afgelopen!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014594
+    m_Localized: Speel het spel en ontgrendel meer spellen en trek nieuwe huisdieren!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014595
+    m_Localized: Een huisdier?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014596
+    m_Localized: Hoeveel kost het?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014597
+    m_Localized: Laten we het proberen!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014598
+    m_Localized: Trek een huisdier miauw!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15926987964014599
+    m_Localized: Dank je!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16525583755239424
+    m_Localized: Je bent in het eerste spel miauw!! Haal een hoge score en verzamel
+      tickets miauw!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16525583755239425
+    m_Localized: Laten we gaan!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503675609088
+    m_Localized: Kogels kaatsen tegen muren
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503683997696
+    m_Localized: Verhoog de aanvalskracht van de kogels
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503683997697
+    m_Localized: Verdedig met een schild tegen de aanvallen van de vijand
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28800503683997698
+    m_Localized: 7 seconden onoverwinnelijk! Val de vijand aan!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28842017898356736
+    m_Localized: Zullen we 10 tickets krijgen door naar een advertentie te kijken?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28842017898356737
+    m_Localized: Als je niet genoeg tickets hebt, kun je er wat krijgen door naar
+      advertenties te kijken miauw
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28859940318732295
+    m_Localized: Om gepersonaliseerde advertenties te bieden, verzamelen we informatie
+      over de advertentieactiviteiten van gebruikers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28901141906448384
+    m_Localized: Ontvang 10 tickets!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28901141906448385
+    m_Localized: Je kunt de advertentie maar drie keer per dag bekijken!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993472
+    m_Localized: Miauw! Wist je dat je het spel met de verkregen huisdieren kunt
+      spelen?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993473
+    m_Localized: Echt? Hoe?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993474
+    m_Localized: Het is makkelijk miauw! Sleep het huisdier met je vinger en plaats
+      het op het blok miauw.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993475
+    m_Localized: Oh, wat fascinerend!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993476
+    m_Localized: Oefen door mij te slepen en op het vriendenblok te plaatsen miauw!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993477
+    m_Localized: "Ok\xE9, ik zal het proberen!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993478
+    m_Localized: Goed gedaan miauw!! Als je het huisdier op het Friends-blok laat
+      vallen, kun je meteen de informatie over het huisdier bekijken miauw
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993479
+    m_Localized: Aha!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993480
+    m_Localized: Niet alleen dat, je kunt ook het spel spelen met een huisdier miauw!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993481
+    m_Localized: Laat me vallen op het spelblok miauw~!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616501993482
+    m_Localized: Sleep Fluffy naar het vriendenblok en kijk wat er gebeurt.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187776
+    m_Localized: Plaats Fluffy op het spelblok.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187777
+    m_Localized: Raak het spelblok aan om te spelen!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187778
+    m_Localized: Slimmer dan je eruitziet miauw!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35552616506187779
+    m_Localized: Laten we gaan miauw~!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071939932160
+    m_Localized: Ik wil de andere vrienden ook zien miauw.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320768
+    m_Localized: Goed gedaan miauw! Door het huisdier zo op het spelblok te plaatsen,
+      kun je spelen met het huisdier dat je wilt miauw!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320769
+    m_Localized: De tutorial eindigt hier miauw. Als er in de toekomst nieuwe updates
+      zijn, laat ik het je weten miauw!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320770
+    m_Localized: Ik geef je 30 tickets als cadeau miauw. Veel plezier op <title>Dynamic
+      Island</title> miauw!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320771
+    m_Localized: Dank je
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35738071948320772
+    m_Localized: Je bent de beste
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38281431351287808
+    m_Localized: Zullen we doorgaan na het bekijken van een advertentie miauw?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38289496863662080
+    m_Localized: Ben je klaar miauw?
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
