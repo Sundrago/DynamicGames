@@ -77,16 +77,16 @@ namespace DynamicGames.System
     /// </summary>
     public class AudioManager : SerializedMonoBehaviour
     {
+        public static AudioManager Instance { get; private set; }
+        
         [SerializeField] private AudioSource sfxSource;
         [SerializeField] private AudioSource bgmSource;
         [SerializeField] private Dictionary<SfxTag, AudioData> audioDatas;
 
         private AudioData currentBgm;
-        private SfxTag currentSfxTag = SfxTag.Blackhole;
+        private SfxTag currentSfxTag = SfxTag.Null;
         private float sfxVolume, bgmVolume, lastSfxPlayTime;
-
-        public static AudioManager Instance { get; private set; }
-
+        
         private void Awake()
         {
             Instance = this;
