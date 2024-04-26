@@ -37,7 +37,7 @@ namespace DynamicGames.MiniGames.Shoot
         [SerializeField] private ScoreManager scoreManager;
         [SerializeField] private SfxController sfxController;
         [SerializeField] private PetManager petManager;
-        [FormerlySerializedAs("aiEnumorators")] [FormerlySerializedAs("aiManager")] [SerializeField] private AIEnumerator aiEnumerator;
+        [SerializeField] private AIEnumerator aiEnumerator;
         [SerializeField] private Dictionary<PetType, Vector3> CustomPetPos;
         [SerializeField] private AIManager aiManager;
 
@@ -46,9 +46,9 @@ namespace DynamicGames.MiniGames.Shoot
         [SerializeField] private Animator doorRightAnimator;
         [SerializeField] public Transform player, island;
         [SerializeField] private Transform startPosition, loadPosition;
-        [FormerlySerializedAs("adj_transition_notch")] [SerializeField] private GameObject adjTransitionNotch;
-        [FormerlySerializedAs("face")] [SerializeField] private Animator faceAnimator;
-        [FormerlySerializedAs("hand")] [SerializeField] private TutorialAnimation tutorialAnimation;
+        [SerializeField] private GameObject adjTransitionNotch;
+        [SerializeField] private Animator faceAnimator;
+        [SerializeField] private TutorialAnimation tutorialAnimation;
 
         [SerializeField] public ItemInformationUI itemInformationUIAtk;
         [SerializeField] public ItemInformationUI itemInformationUIShield;
