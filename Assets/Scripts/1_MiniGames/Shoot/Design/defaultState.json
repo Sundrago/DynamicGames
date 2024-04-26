@@ -1,0 +1,38 @@
+{
+  "CreateEnemyInCircle": {
+    "Delay": 1000,
+    "Min": 0,
+    "Max": 0,
+    "Probability": 1.0
+  },
+  "CreateEnemyInLine": {
+    "Delay": 1100,
+    "Min": 0,
+    "Max": 0,
+    "Probability": 1.0
+  },
+  "CreateEnemyInSpiral": {
+    "Delay": 1200,
+    "Min": 0,
+    "Max": 0,
+    "Probability": 1.0
+  },
+  "CreateEnemyRandomPos": {
+    "Delay": 1300,
+    "Min": 0,
+    "Max": 0,
+    "Probability": 1.0
+  },
+  "CreateItem": {
+    "Delay": 1400,
+    "Min": 0,
+    "Max": 1,
+    "Probability": 1.0
+  },
+  "CreateMeteor": {
+    "Delay": 3700,
+    "Min": 1,
+    "Max": 1,
+    "Probability": 0.5
+  }
+}

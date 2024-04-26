@@ -1,0 +1,97 @@
+[
+  {
+    "StageLevel": 1,
+    "PreTasks": [
+      {
+        "AITaskType": 2,
+        "Parameters": [
+          "Open"
+        ]
+      },
+      {
+        "AITaskType": 0,
+        "Parameters": [
+          "1000"
+        ]
+      },
+      {
+        "AITaskType": 3,
+        "Parameters": [
+          "TurnRed"
+        ]
+      },
+      {
+        "AITaskType": 0,
+        "Parameters": [
+          "2000"
+        ]
+      }
+    ],
+    "NumberOfRandomTasksToPerform": 1,
+    "RandomTaskPool": [
+      [
+        {
+          "AITaskType": 8,
+          "Parameters": [
+            "1",
+            "2000"
+          ]
+        }
+      ],
+      [
+        {
+          "AITaskType": 4,
+          "Parameters": [
+            "3",
+            "100"
+          ]
+        },
+        {
+          "AITaskType": 0,
+          "Parameters": [
+            "1000"
+          ]
+        }
+      ],
+      [
+        {
+          "AITaskType": 6,
+          "Parameters": [
+            "2"
+          ]
+        },
+        {
+          "AITaskType": 7,
+          "Parameters": [
+            "2"
+          ]
+        }
+      ]
+    ],
+    "PostTasks": [
+      {
+        "AITaskType": 2,
+        "Parameters": [
+          "Close"
+        ]
+      },
+      {
+        "AITaskType": 0,
+        "Parameters": [
+          "1000"
+        ]
+      }
+    ]
+  },
+  {
+    "StageLevel": 2,
+    "PreTasks": [],
+    "NumberOfRandomTasksToPerform": 1,
+    "RandomTaskPool": [
+      [],
+      [],
+      []
+    ],
+    "PostTasks": []
+  }
+]

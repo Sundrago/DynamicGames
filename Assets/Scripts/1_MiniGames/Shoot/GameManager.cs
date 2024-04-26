@@ -37,8 +37,9 @@ namespace DynamicGames.MiniGames.Shoot
         [SerializeField] private ScoreManager scoreManager;
         [SerializeField] private SfxController sfxController;
         [SerializeField] private PetManager petManager;
-        [SerializeField] private AIManager aiManager;
+        [FormerlySerializedAs("aiEnumorators")] [FormerlySerializedAs("aiManager")] [SerializeField] private AIEnumerator aiEnumerator;
         [SerializeField] private Dictionary<PetType, Vector3> CustomPetPos;
+        [SerializeField] private AIManager aiManager;
 
         
         [SerializeField] private Animator doorLeftAnimator; 
@@ -65,13 +66,6 @@ namespace DynamicGames.MiniGames.Shoot
 
         public int stage;
 
-        public AutoAttackInfo createEnemyInCircle = new();
-        public AutoAttackInfo createEnemyInLine = new();
-        public AutoAttackInfo createEnemyInSpira = new();
-        public AutoAttackInfo createEnemyRandomPos = new();
-        public AutoAttackInfo createItem = new();
-        public AutoAttackInfo createMetheor = new();
-        
         private bool hasRevived;
         private float spinTime;
         private int stageFinished, currentStagePlaying = -1;
@@ -97,12 +91,8 @@ namespace DynamicGames.MiniGames.Shoot
 
         private void SetDefaultAttackState()
         {
-            createEnemyInCircle.Init(1000, 0, 0);
-            createEnemyRandomPos.Init(1100, 0, 0);
-            createMetheor.Init(1200, 0, 0);
-            createEnemyInLine.Init(1300, 0, 0);
-            createEnemyInSpira.Init(1400, 0, 0);
-            createItem.Init(3700, 1, 1, 0.5f);
+            aiManager.
+                SetDefaultState();
         }
         
         private void Update()
@@ -213,6 +203,45 @@ namespace DynamicGames.MiniGames.Shoot
             else SetStage(17);
         }
 
+        public enum FaceState
+        {
+            Idle, TurnRed, Angry01,
+        }
+
+        public void SetFaceAnimation(FaceState state)
+        {
+            switch (state)
+            {
+                case FaceState.Idle:
+                    faceAnimator.SetTrigger("idle");
+                    break;
+                case FaceState.TurnRed:
+                    faceAnimator.SetTrigger("turnRed");
+                    break;
+                case FaceState.Angry01:
+                    faceAnimator.SetTrigger("angry01");
+                    break;
+            }
+        }
+
+        public enum IslandState
+        {
+            Open,
+            Close
+        }
+        public void SetIslandAnimation(IslandState state)
+        {
+            switch (state)
+            {
+                case IslandState.Open:
+                    islandSizeController.OpenIsland();
+                    break;
+                case IslandState.Close:
+                    islandSizeController.CloseIsland();
+                    break;
+            }
+        }
+        
         private async Task SetStage(int _stage)
         {
             if (state != ShootGameState.Playing) return;
@@ -227,12 +256,12 @@ namespace DynamicGames.MiniGames.Shoot
             switch (stage)
             {
                 case 0:
-                    createEnemyInCircle.Init(1000, 0, 0);
-                    createEnemyRandomPos.Init(1100, 0, 0);
-                    createMetheor.Init(1200, 0, 0);
-                    createEnemyInLine.Init(1300, 0, 0);
-                    createEnemyInSpira.Init(1400, 0, 0);
-                    createItem.Init(3500, 1, 1, 0.5f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInCircle.Initialize(1000, 0, 0);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyRandomPos.Initialize(1100, 0, 0);
+                    aiManager.CurrentAutoAttackInfo.CreateMeteor.Initialize(1200, 0, 0);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInLine.Initialize(1300, 0, 0);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInSpiral.Initialize(1400, 0, 0);
+                    aiManager.CurrentAutoAttackInfo.CreateItem.Initialize(3500, 1, 1, 0.5f);
                     itemManager.SpawnItem();
                     break;
                 case 1:
@@ -246,27 +275,25 @@ namespace DynamicGames.MiniGames.Shoot
                         case 0:
                             CreateMetheor();
                             await Task.Delay(2000);
-                            islandSizeController.CloseIsland();
                             break;
                         case 1:
                             enemyManager.SpawnEnemyAtRandomPos();
                             enemyManager.SpawnEnemyAtRandomPos();
                             enemyManager.SpawnEnemyAtRandomPos();
                             await Task.Delay(1000);
-                            islandSizeController.CloseIsland();
                             break;
                         case 2:
                             SpawnOnLeft(2);
                             SpawnOnRight(2);
                             await Task.Delay(3000);
-                            islandSizeController.CloseIsland();
                             break;
                     }
 
+                    islandSizeController.CloseIsland();
                     await Task.Delay(1000);
-                    createEnemyInCircle.Init(12000, 0, 1);
-                    createEnemyRandomPos.Init(3000, 0, 2);
-                    createMetheor.Init(1000, 0, 0);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInCircle.Initialize(12000, 0, 1);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyRandomPos.Initialize(3000, 0, 2);
+                    aiManager.CurrentAutoAttackInfo.CreateMeteor.Initialize(1000, 0, 0);
                     itemManager.SpawnItem();
                     break;
                 case 2:
@@ -304,9 +331,9 @@ namespace DynamicGames.MiniGames.Shoot
                     }
 
                     await Task.Delay(1000);
-                    createEnemyInCircle.Init(10000, 0, 1);
-                    createEnemyRandomPos.Init(2900, 0, 3);
-                    createMetheor.Init(1000, 0, 0);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInCircle.Initialize(10000, 0, 1);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyRandomPos.Initialize(2900, 0, 3);
+                    aiManager.CurrentAutoAttackInfo.CreateMeteor.Initialize(1000, 0, 0);
                     break;
                 case 3:
                     islandSizeController.OpenIsland();
@@ -346,10 +373,10 @@ namespace DynamicGames.MiniGames.Shoot
                     }
 
                     await Task.Delay(1000);
-                    createEnemyInCircle.Init(10000, 0, 4);
-                    createEnemyRandomPos.Init(2900, 0, 4);
-                    createMetheor.Init(9000, 0, 1);
-                    createEnemyInLine.Init(7500, 3, 5, 0.3f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInCircle.Initialize(10000, 0, 4);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyRandomPos.Initialize(2900, 0, 4);
+                    aiManager.CurrentAutoAttackInfo.CreateMeteor.Initialize(9000, 0, 1);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInLine.Initialize(7500, 3, 5, 0.3f);
                     break;
                 case 4:
                     islandSizeController.OpenIsland();
@@ -391,10 +418,10 @@ namespace DynamicGames.MiniGames.Shoot
                     }
 
                     await Task.Delay(1000);
-                    createEnemyInCircle.Init(10000, 2, 6);
-                    createEnemyRandomPos.Init(2900, 0, 4);
-                    createMetheor.Init(9000, 0, 1);
-                    createEnemyInLine.Init(7500, 3, 8, 0.3f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInCircle.Initialize(10000, 2, 6);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyRandomPos.Initialize(2900, 0, 4);
+                    aiManager.CurrentAutoAttackInfo.CreateMeteor.Initialize(9000, 0, 1);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInLine.Initialize(7500, 3, 8, 0.3f);
                     break;
                 case 5:
                     islandSizeController.OpenIsland();
@@ -434,10 +461,10 @@ namespace DynamicGames.MiniGames.Shoot
                     }
 
                     await Task.Delay(1000);
-                    createEnemyInCircle.Init(10000, 2, 6);
-                    createEnemyRandomPos.Init(2900, 1, 4);
-                    createMetheor.Init(9000, 0, 2);
-                    createEnemyInLine.Init(7500, 3, 8, 0.4f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInCircle.Initialize(10000, 2, 6);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyRandomPos.Initialize(2900, 1, 4);
+                    aiManager.CurrentAutoAttackInfo.CreateMeteor.Initialize(9000, 0, 2);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInLine.Initialize(7500, 3, 8, 0.4f);
                     break;
                 case 6:
                     islandSizeController.OpenIsland();
@@ -481,10 +508,10 @@ namespace DynamicGames.MiniGames.Shoot
                     }
 
                     await Task.Delay(1000);
-                    createEnemyInCircle.Init(10000, 3, 12);
-                    createEnemyRandomPos.Init(2900, 1, 4);
-                    createMetheor.Init(8000, 0, 2);
-                    createEnemyInLine.Init(7500, 5, 10, 0.45f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInCircle.Initialize(10000, 3, 12);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyRandomPos.Initialize(2900, 1, 4);
+                    aiManager.CurrentAutoAttackInfo.CreateMeteor.Initialize(8000, 0, 2);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInLine.Initialize(7500, 5, 10, 0.45f);
                     break;
                 case 7:
                     islandSizeController.OpenIsland();
@@ -534,10 +561,10 @@ namespace DynamicGames.MiniGames.Shoot
 
                     islandSizeController.CloseIsland();
                     await Task.Delay(1000);
-                    createEnemyInCircle.Init(10000, 3, 12);
-                    createEnemyRandomPos.Init(2900, 1, 4);
-                    createMetheor.Init(4900, 1, 1, 0.5f);
-                    createEnemyInLine.Init(7500, 5, 10, 0.45f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInCircle.Initialize(10000, 3, 12);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyRandomPos.Initialize(2900, 1, 4);
+                    aiManager.CurrentAutoAttackInfo.CreateMeteor.Initialize(4900, 1, 1, 0.5f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInLine.Initialize(7500, 5, 10, 0.45f);
                     break;
                 case 8:
                     islandSizeController.OpenIsland();
@@ -587,10 +614,10 @@ namespace DynamicGames.MiniGames.Shoot
 
                     islandSizeController.CloseIsland();
                     await Task.Delay(1000);
-                    createEnemyInCircle.Init(10000, 3, 12);
-                    createEnemyRandomPos.Init(2400, 1, 4);
-                    createMetheor.Init(4900, 1, 1, 0.5f);
-                    createEnemyInLine.Init(6500, 5, 10, 0.45f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInCircle.Initialize(10000, 3, 12);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyRandomPos.Initialize(2400, 1, 4);
+                    aiManager.CurrentAutoAttackInfo.CreateMeteor.Initialize(4900, 1, 1, 0.5f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInLine.Initialize(6500, 5, 10, 0.45f);
                     break;
                 case 9:
                     islandSizeController.OpenIsland();
@@ -640,10 +667,10 @@ namespace DynamicGames.MiniGames.Shoot
 
                     islandSizeController.CloseIsland();
                     await Task.Delay(1000);
-                    createEnemyInCircle.Init(10000, 3, 12);
-                    createEnemyRandomPos.Init(2400, 1, 4);
-                    createMetheor.Init(4900, 1, 1, 0.5f);
-                    createEnemyInLine.Init(7500, 5, 10, 0.45f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInCircle.Initialize(10000, 3, 12);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyRandomPos.Initialize(2400, 1, 4);
+                    aiManager.CurrentAutoAttackInfo.CreateMeteor.Initialize(4900, 1, 1, 0.5f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInLine.Initialize(7500, 5, 10, 0.45f);
                     break;
                 case 10:
                     islandSizeController.OpenIsland();
@@ -692,10 +719,10 @@ namespace DynamicGames.MiniGames.Shoot
 
                     islandSizeController.CloseIsland();
                     await Task.Delay(1000);
-                    createEnemyInCircle.Init(10000, 3, 12);
-                    createEnemyRandomPos.Init(2900, 1, 4);
-                    createMetheor.Init(4900, 1, 1, 0.5f);
-                    createEnemyInLine.Init(7500, 5, 10, 0.45f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInCircle.Initialize(10000, 3, 12);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyRandomPos.Initialize(2900, 1, 4);
+                    aiManager.CurrentAutoAttackInfo.CreateMeteor.Initialize(4900, 1, 1, 0.5f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInLine.Initialize(7500, 5, 10, 0.45f);
                     break;
                 case 11:
                     islandSizeController.OpenIsland();
@@ -744,10 +771,10 @@ namespace DynamicGames.MiniGames.Shoot
 
                     islandSizeController.CloseIsland();
                     await Task.Delay(1000);
-                    createEnemyInCircle.Init(8000, 3, 15);
-                    createEnemyRandomPos.Init(1400, 1, 4);
-                    createMetheor.Init(3900, 1, 1, 0.5f);
-                    createEnemyInLine.Init(6900, 5, 10, 0.45f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInCircle.Initialize(8000, 3, 15);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyRandomPos.Initialize(1400, 1, 4);
+                    aiManager.CurrentAutoAttackInfo.CreateMeteor.Initialize(3900, 1, 1, 0.5f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInLine.Initialize(6900, 5, 10, 0.45f);
                     break;
                 case 12:
                     islandSizeController.OpenIsland();
@@ -796,10 +823,10 @@ namespace DynamicGames.MiniGames.Shoot
 
                     islandSizeController.CloseIsland();
                     await Task.Delay(1000);
-                    createEnemyInCircle.Init(8000, 7, 15);
-                    createEnemyRandomPos.Init(1400, 1, 4);
-                    createMetheor.Init(2900, 1, 1, 0.5f);
-                    createEnemyInLine.Init(6900, 5, 10, 0.45f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInCircle.Initialize(8000, 7, 15);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyRandomPos.Initialize(1400, 1, 4);
+                    aiManager.CurrentAutoAttackInfo.CreateMeteor.Initialize(2900, 1, 1, 0.5f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInLine.Initialize(6900, 5, 10, 0.45f);
                     break;
                 case 13:
                     islandSizeController.OpenIsland();
@@ -848,10 +875,10 @@ namespace DynamicGames.MiniGames.Shoot
 
                     islandSizeController.CloseIsland();
                     await Task.Delay(1000);
-                    createEnemyInCircle.Init(7000, 7, 15);
-                    createEnemyRandomPos.Init(900, 1, 4);
-                    createMetheor.Init(2900, 1, 1, 0.5f);
-                    createEnemyInLine.Init(6900, 5, 10, 0.45f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInCircle.Initialize(7000, 7, 15);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyRandomPos.Initialize(900, 1, 4);
+                    aiManager.CurrentAutoAttackInfo.CreateMeteor.Initialize(2900, 1, 1, 0.5f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInLine.Initialize(6900, 5, 10, 0.45f);
                     break;
                 case 14:
                     islandSizeController.OpenIsland();
@@ -900,10 +927,10 @@ namespace DynamicGames.MiniGames.Shoot
 
                     islandSizeController.CloseIsland();
                     await Task.Delay(1000);
-                    createEnemyInCircle.Init(4100, 7, 15);
-                    createEnemyRandomPos.Init(800, 1, 4);
-                    createMetheor.Init(1100, 1, 1, 0.3f);
-                    createEnemyInLine.Init(4900, 5, 10, 0.45f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInCircle.Initialize(4100, 7, 15);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyRandomPos.Initialize(800, 1, 4);
+                    aiManager.CurrentAutoAttackInfo.CreateMeteor.Initialize(1100, 1, 1, 0.3f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInLine.Initialize(4900, 5, 10, 0.45f);
                     break;
                 case 15:
                     islandSizeController.OpenIsland();
@@ -952,10 +979,10 @@ namespace DynamicGames.MiniGames.Shoot
 
                     islandSizeController.CloseIsland();
                     await Task.Delay(1000);
-                    createEnemyInCircle.Init(4100, 7, 15);
-                    createEnemyRandomPos.Init(500, 1, 4);
-                    createMetheor.Init(1100, 1, 1, 0.5f);
-                    createEnemyInLine.Init(4900, 5, 10, 0.45f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInCircle.Initialize(4100, 7, 15);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyRandomPos.Initialize(500, 1, 4);
+                    aiManager.CurrentAutoAttackInfo.CreateMeteor.Initialize(1100, 1, 1, 0.5f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInLine.Initialize(4900, 5, 10, 0.45f);
                     break;
                 case 16:
                     islandSizeController.OpenIsland();
@@ -1004,10 +1031,10 @@ namespace DynamicGames.MiniGames.Shoot
 
                     islandSizeController.CloseIsland();
                     await Task.Delay(1000);
-                    createEnemyInCircle.Init(2100, 7, 15);
-                    createEnemyRandomPos.Init(500, 1, 4);
-                    createMetheor.Init(700, 1, 1, 0.5f);
-                    createEnemyInLine.Init(3900, 5, 10, 0.45f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInCircle.Initialize(2100, 7, 15);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyRandomPos.Initialize(500, 1, 4);
+                    aiManager.CurrentAutoAttackInfo.CreateMeteor.Initialize(700, 1, 1, 0.5f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInLine.Initialize(3900, 5, 10, 0.45f);
                     break;
                 case 17:
                     islandSizeController.OpenIsland();
@@ -1056,10 +1083,10 @@ namespace DynamicGames.MiniGames.Shoot
 
                     islandSizeController.CloseIsland();
                     await Task.Delay(1000);
-                    createEnemyInCircle.Init(1100, 7, 15);
-                    createEnemyRandomPos.Init(300, 1, 4);
-                    createMetheor.Init(500, 1, 1, 0.5f);
-                    createEnemyInLine.Init(2900, 5, 10, 0.45f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInCircle.Initialize(1100, 7, 15);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyRandomPos.Initialize(300, 1, 4);
+                    aiManager.CurrentAutoAttackInfo.CreateMeteor.Initialize(500, 1, 1, 0.5f);
+                    aiManager.CurrentAutoAttackInfo.CreateEnemyInLine.Initialize(2900, 5, 10, 0.45f);
                     break;
             }
 
@@ -1069,7 +1096,7 @@ namespace DynamicGames.MiniGames.Shoot
             currentStagePlaying = -1;
         }
 
-        private async Task SpawnOnLeft(int count)
+        public async Task SpawnOnLeft(int count)
         {
             if (state != ShootGameState.Playing) return;
             doorLeftAnimator.SetTrigger("open");
@@ -1083,7 +1110,7 @@ namespace DynamicGames.MiniGames.Shoot
             doorLeftAnimator.SetTrigger("close");
         }
 
-        private async Task SpawnOnRight(int count)
+        public async Task SpawnOnRight(int count)
         {
             if (state != ShootGameState.Playing) return;
             doorRightAnimator.SetTrigger("open");
@@ -1151,7 +1178,7 @@ namespace DynamicGames.MiniGames.Shoot
                     hasRevived = false;
                     break;
                 case ShootGameState.Playing:
-                    aiManager.StartTasks();
+                    aiEnumerator.StartTasks();
                     bulletManager.StartSpawnBulletTimer();
                     stageFinished = 0;
                     currentStagePlaying = -1;
@@ -1193,7 +1220,7 @@ namespace DynamicGames.MiniGames.Shoot
             stage -= 1;
             SetStage(stage + 1);
             inputManager.gameObject.SetActive(true);
-            aiManager.StartTasks();
+            aiEnumerator.StartTasks();
             bulletManager.StartSpawnBulletTimer();
             hasRevived = true;
         }
@@ -1227,8 +1254,7 @@ namespace DynamicGames.MiniGames.Shoot
                 DestroyShield();
                 return;
             }
-
-            //dead
+            
             ChangeStatus(ShootGameState.Dead);
         }
 
@@ -1273,20 +1299,6 @@ namespace DynamicGames.MiniGames.Shoot
                     ChangeStatus(ShootGameState.Ready);
                     inputManager.gameObject.SetActive(true);
                 });
-        }
-
-        public class AutoAttackInfo
-        {
-            public int delay = 1000, min, max;
-            public float probability;
-
-            public void Init(int _delay, int _min, int _max, float _probability = 1)
-            {
-                delay = _delay;
-                min = _min;
-                max = _max;
-                probability = _probability;
-            }
         }
     }
 }

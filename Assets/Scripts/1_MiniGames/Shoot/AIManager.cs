@@ -1,106 +1,64 @@
-using System.Collections;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Random = UnityEngine.Random;
 
 namespace DynamicGames.MiniGames.Shoot
 {
-    /// <summary>
-    ///     Manages AI behaviors and tasks in shooting mini-game.
-    /// </summary>
+    public class AutoAttackInfo
+    {
+        public int Delay;
+        public int Min;
+        public int Max;
+        public float Probability;
+
+        public void Initialize(int delay, int min, int max, float probability = 1)
+        {
+            Delay = delay;
+            Min = min;
+            Max = max;
+            Probability = probability;
+        }
+
+        public AutoAttackInfo(int delay, int min, int max, float probability = 1)
+        {
+            Initialize(delay, min, max, probability);
+        }
+    }
+
+    public class AutoAttackInfoHolder
+    {
+        public AutoAttackInfo CreateEnemyInCircle;
+        public AutoAttackInfo CreateEnemyInLine;
+        public AutoAttackInfo CreateEnemyInSpiral; 
+        public AutoAttackInfo CreateEnemyRandomPos; 
+        public AutoAttackInfo CreateItem;
+        public AutoAttackInfo CreateMeteor;
+    }
+    
     public class AIManager : MonoBehaviour
     {
         [SerializeField] private GameManager gameManager;
-        [SerializeField] private EnemyManager enemyManager;
-        [SerializeField] private ItemManager itemManager;
 
-        public void StartTasks()
+        [SerializeField] private TextAsset defaultAutoAttackJson;
+        [TextArea] public string defaultAutoAttack;
+
+        public AutoAttackInfoHolder CurrentAutoAttackInfo;
+        
+        [Button]
+        public void SetDefaultState()
         {
-            StartCoroutine(CreateEnemyAtRandomPos());
-            StartCoroutine(CreateEnemyAtPlayerInCircle());
-            StartCoroutine(CreateMetheors());
-            StartCoroutine(CreateEnemyInLine());
-            StartCoroutine(CreateEnemyInSpiral());
-            StartCoroutine(CreateItem());
+            CurrentAutoAttackInfo = DeSerializeAutoAttackData(defaultAutoAttackJson.text);
         }
 
-        private IEnumerator CreateEnemyAtRandomPos()
+        private AutoAttackInfoHolder DeSerializeAutoAttackData(string input)
         {
-            while (gameManager.state == GameManager.ShootGameState.Playing)
-            {
-                var info = gameManager.createEnemyRandomPos;
-                yield return new WaitForSeconds(info.delay / 1000f);
-                if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
-                {
-                    var amt = Random.Range(info.min, info.max + 1);
-                    for (var i = 0; i < amt; i++) enemyManager.SpawnEnemyAtRandomPos();
-                }
-            }
+            return JsonConvert.DeserializeObject<AutoAttackInfoHolder>(input);
         }
 
-        private IEnumerator CreateEnemyAtPlayerInCircle()
+        private void SerializeAutoAttackDaeta(AutoAttackInfoHolder attackInfoHolder)
         {
-            while (gameManager.state == GameManager.ShootGameState.Playing)
-            {
-                var info = gameManager.createEnemyInCircle;
-                yield return new WaitForSeconds(info.delay / 1000);
-                if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
-                    enemyManager.SpawnEnemyInCircle(1f, Random.Range(info.min, info.max));
-            }
-        }
-
-        private IEnumerator CreateMetheors()
-        {
-            while (gameManager.state == GameManager.ShootGameState.Playing)
-            {
-                var info = gameManager.createMetheor;
-                yield return new WaitForSeconds(info.delay / 1000);
-                if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
-                {
-                    var amt = Random.Range(info.min, info.max + 1);
-                    for (var i = 0; i < amt; i++)
-                    {
-                        yield return new WaitForSeconds(2f);
-                        gameManager.CreateMetheor();
-                    }
-                }
-            }
-        }
-
-        private IEnumerator CreateEnemyInLine()
-        {
-            while (gameManager.state == GameManager.ShootGameState.Playing)
-            {
-                var info = gameManager.createEnemyInLine;
-                yield return new WaitForSeconds(info.delay / 1000);
-                if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
-                    enemyManager.SpawnEnemyInLineY(Random.Range(info.min, info.max + 1));
-            }
-        }
-
-        private IEnumerator CreateEnemyInSpiral()
-        {
-            while (gameManager.state == GameManager.ShootGameState.Playing)
-            {
-                var info = gameManager.createEnemyInSpira;
-                yield return new WaitForSeconds(info.delay / 1000);
-                if (info.max != 0 && Random.Range(0f, 1f) < info.probability)
-                    enemyManager.SpawnEnemyInSpiral(0.6f * Random.Range(0.9f, 1.1f),
-                        1.5f * Random.Range(0.85f, 1.3f), Random.Range(info.min, info.max + 1)
-                        , 1.5f * Random.Range(0.7f, 1.3f), 35, 0.6f * Random.Range(0.8f, 1.2f));
-            }
-        }
-
-        private IEnumerator CreateItem()
-        {
-            while (gameManager.state == GameManager.ShootGameState.Playing)
-            {
-                var info = gameManager.createItem;
-                var count = itemManager.items.Count;
-                yield return new WaitForSeconds(info.delay / 1000);
-                info.probability = (1 - 0.4f * count) * 0.85f;
-                if (info.max != 0 && Random.Range(0f, 1f) < info.probability) itemManager.SpawnItem();
-            }
+            defaultAutoAttack = JsonConvert.SerializeObject(attackInfoHolder);
         }
     }
 }
