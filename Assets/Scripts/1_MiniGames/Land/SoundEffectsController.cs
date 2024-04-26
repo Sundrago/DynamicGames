@@ -6,7 +6,7 @@ using UnityEngine;
 namespace DynamicGames.MiniGames.Land
 {
     /// <summary>
-    ///     Controls sound effects in the game.
+    ///     Controls sound effects in the Land game.
     /// </summary>
     public enum SfxType
     {

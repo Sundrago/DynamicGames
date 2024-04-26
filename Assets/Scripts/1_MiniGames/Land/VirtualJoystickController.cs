@@ -7,10 +7,13 @@ namespace DynamicGames.MiniGames.Land
     /// <summary>
     ///     Represents a virtual joystick controller in a game.
     /// </summary>
+    
+    public enum GameControls { Up,  Left, Right }
+    public enum JoystickState { Idle, Left, Up, Right, Down }
+    
     public class VirtualJoystickController : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
     {
-        public enum GameControls { Up,  Left, Right }
-        public enum JoystickState { Idle, Left, Up, Right, Down }
+        
 
         [SerializeField] private GameManager gameManager;
         [SerializeField] private GameObject joystickUI;

@@ -34,11 +34,13 @@ namespace DynamicGames.MiniGames.Jump
         private const float ScrollSpeedMax = 0.35f;
         private const float ScrollSpeedMin = 0.05f;
         private const float Friction = 0.015f;
+        private const float TimeScaleMultiplier = 1.008f;
         
         private readonly List<GameObject> footsteps = new();
         private bool firstGame, hasRevived, highFXShown;
         private float scrollSpeed, reviveTimer;
         private GameStatus status;
+        
         public int CurrentScore { get; set; }
         public int HighScore { get; private set; }
 
@@ -165,7 +167,7 @@ namespace DynamicGames.MiniGames.Jump
 
         private void AdjustGamePace()
         {
-            Time.timeScale = 1 + 0.008f * CurrentScore;
+            Time.timeScale = TimeScaleMultiplier * CurrentScore;
         }
 
         private void UpdateScrollSpeed()

@@ -33,25 +33,26 @@ namespace DynamicGames.MiniGames.Land
         [SerializeField] private Animator rocket, rocketCanvas;
         [SerializeField] private Animator screenShakeAnimator;
         [SerializeField] private GameObject playerPlaceHolder;
+        [SerializeField] private Dictionary<PetType, Vector3> CustomPetPos;
 
         private const float DeltaTimeVelocity = 50f;
         
         public Vector2 failPosition;
         public Quaternion failRotation;
-        [SerializeField] private Dictionary<PetType, Vector3> CustomPetPos;
 
         private Vector3 initialRocketPos;
+        private Rigidbody2D rocketRigidBody2D;
         private Quaternion initialRocketRot;
         private bool isBodyCollided, isLeftFootCollided, isRightFootCollided, hasRevived;
         private bool isInitialLaunch = true;
         private bool playing = true;
-        private Rigidbody2D rocketRigidBody2D;
         private int score, highScore, currentLevel;
-        public bool isButtonUpPressed { get; private set; }
-        public bool isButtonLeftPressed { get; private set; }
-        public bool isButtonRightPressed { get; private set; }
-        public bool resetAnimPlaying { get; private set; }
-        public bool holdTransition { get; private set; }
+        
+        public bool IsButtonUpPressed { get; private set; }
+        public bool IsButtonLeftPressed { get; private set; }
+        public bool IsButtonRightPressed { get; private set; }
+        public bool ResetAnimPlaying { get; private set; }
+        public bool HoldTransition { get; private set; }
 
         private void Start()
         {
@@ -63,7 +64,7 @@ namespace DynamicGames.MiniGames.Land
         private void Update()
         {
             bgAnimator.ProcessCircles(rocket.transform);
-            if (!playing & !resetAnimPlaying) return;
+            if (!playing & !ResetAnimPlaying) return;
             HandleResetAnimation();
             HandleButtonEvents();
             HandleGameStatus();
@@ -92,8 +93,7 @@ namespace DynamicGames.MiniGames.Land
             isInitialLaunch = true;
             hasRevived = false;
         }
-
-        [Button]
+        
         public override void SetupPet(bool isPlayingWithPet, PetObject petObject = null)
         {
             playerPlaceHolder.SetActive(!isPlayingWithPet);
@@ -133,7 +133,7 @@ namespace DynamicGames.MiniGames.Land
 
         private void HandleResetAnimation()
         {
-            if (resetAnimPlaying)
+            if (ResetAnimPlaying)
             {
                 if (rocket.GetCurrentAnimatorClipInfo(0)[0].clip.name !=
                     "rocket_reset") return;
@@ -147,11 +147,11 @@ namespace DynamicGames.MiniGames.Land
 
         private void HandleButtonEvents()
         {
-            if (isButtonUpPressed & playing) rocketRigidBody2D.AddForce(rocketRigidBody2D.transform.up * 1.25f);
+            if (IsButtonUpPressed & playing) rocketRigidBody2D.AddForce(rocketRigidBody2D.transform.up * 1.25f);
 
-            if (isButtonLeftPressed & playing) rocketRigidBody2D.rotation += 2.5f * Time.deltaTime * DeltaTimeVelocity;
+            if (IsButtonLeftPressed & playing) rocketRigidBody2D.rotation += 2.5f * Time.deltaTime * DeltaTimeVelocity;
 
-            if (isButtonRightPressed & playing) rocketRigidBody2D.rotation -= 2.5f * Time.deltaTime * DeltaTimeVelocity;
+            if (IsButtonRightPressed & playing) rocketRigidBody2D.rotation -= 2.5f * Time.deltaTime * DeltaTimeVelocity;
         }
 
         private void HandleGameStatus()
@@ -195,16 +195,16 @@ namespace DynamicGames.MiniGames.Land
                 case "left":
                     if (!playing) return;
                     particleFXManager.SetThrustLeftParticleEmission(pressed);
-                    isButtonLeftPressed = pressed;
+                    IsButtonLeftPressed = pressed;
                     break;
                 case "right":
                     if (!playing) return;
                     particleFXManager.SetThrustRightParticleEmission(pressed);
-                    isButtonRightPressed = pressed;
+                    IsButtonRightPressed = pressed;
                     break;
                 case "up":
                     if (!playing) return;
-                    isButtonUpPressed = pressed;
+                    IsButtonUpPressed = pressed;
                     particleFXManager.SetThrustParticleEmission(pressed);
                     if (pressed) LaunchRocket();
                     break;
@@ -299,15 +299,15 @@ namespace DynamicGames.MiniGames.Land
             rocket.SetTrigger("reset");
             islandSizeController.CloseIsland();
             uiManager.DoFadeSuccessText(0);
-            resetAnimPlaying = true;
-            holdTransition = true;
+            ResetAnimPlaying = true;
+            HoldTransition = true;
             particleFXManager.SetThrustParticleEmission(false);
             sfxController.PlaySFX(SfxType.SmallLaunch);
         }
 
         public void OpenNextStage()
         {
-            holdTransition = false;
+            HoldTransition = false;
             bgAnimator.RemoveCircles();
             LoadStage(currentLevel + 1);
         }
@@ -316,7 +316,7 @@ namespace DynamicGames.MiniGames.Land
         {
             rocketRigidBody2D.constraints = RigidbodyConstraints2D.None;
             rocket.enabled = false;
-            resetAnimPlaying = false;
+            ResetAnimPlaying = false;
             ResetToInitialState();
             if (stageLevelAnimator != null) stageLevelAnimator.PlayAnim();
         }
@@ -324,9 +324,9 @@ namespace DynamicGames.MiniGames.Land
         private void ResetToInitialState()
         {
             playing = true;
-            isButtonUpPressed = false;
-            isButtonLeftPressed = false;
-            isButtonRightPressed = false;
+            IsButtonUpPressed = false;
+            IsButtonLeftPressed = false;
+            IsButtonRightPressed = false;
             isBodyCollided = false;
             isLeftFootCollided = false;
             isRightFootCollided = false;

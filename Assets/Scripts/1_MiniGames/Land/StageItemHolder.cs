@@ -18,7 +18,8 @@ namespace DynamicGames.MiniGames.Land
         private void AddAllItemsToList()
         {
             items = new List<GameObject>();
-            for (var i = 0; i < transform.childCount; i++) items.Add(transform.GetChild(i).gameObject);
+            for (var i = 0; i < transform.childCount; i++) 
+                items.Add(transform.GetChild(i).gameObject);
         }
 #endif
     }

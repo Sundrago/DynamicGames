@@ -9,6 +9,21 @@ using UnityEngine.Pool;
 
 namespace DynamicGames.MiniGames.Shoot
 {
+    [Serializable]
+    public class BulletInfo
+    {
+        [PreviewField(Alignment = ObjectFieldAlignment.Center)]
+        public Sprite sprite;
+
+        [VerticalGroup("fx")] public FXType fx;
+        [VerticalGroup("fx")] public SfxTag sfx = SfxTag.ShootTypeA;
+
+        [VerticalGroup("value")] public int points = 1;
+        [VerticalGroup("value")] public float velocity;
+        [VerticalGroup("value")] public float radius;
+        [VerticalGroup("value")] public int intervalInMeleSec = 150;
+    }
+    
     /// <summary>
     ///     Manages the spawning, upgrading, and killing of bullets in the Shoot mini-game.
     /// </summary>
@@ -133,7 +148,7 @@ namespace DynamicGames.MiniGames.Shoot
         {
             island.transform.localScale = new Vector3(1f, 1f, 1f);
             island.transform.DOPunchScale(new Vector3(0.05f, 0.05f, 0.05f), 0.25f);
-            scoreManager.AddScore(bulletController.points);
+            scoreManager.AddScore(bulletController.Points);
 
             var fx = fxObjectPool.Get();
             fx.transform.SetParent(gameObject.transform);
@@ -142,20 +157,5 @@ namespace DynamicGames.MiniGames.Shoot
 
             KillBullet(bulletController);
         }
-    }
-
-    [Serializable]
-    public class BulletInfo
-    {
-        [PreviewField(Alignment = ObjectFieldAlignment.Center)]
-        public Sprite sprite;
-
-        [VerticalGroup("fx")] public FXType fx;
-        [VerticalGroup("fx")] public SfxTag sfx = SfxTag.ShootTypeA;
-
-        [VerticalGroup("value")] public int points = 1;
-        [VerticalGroup("value")] public float velocity;
-        [VerticalGroup("value")] public float radius;
-        [VerticalGroup("value")] public int intervalInMeleSec = 150;
     }
 }

@@ -54,7 +54,7 @@ namespace DynamicGames.MiniGames.Land
                     targetPos.y -= y * circles[i].GetComponent<RectTransform>().sizeDelta.x / 800;
                 }
 
-                if (gameManager.resetAnimPlaying & gameManager.holdTransition) continue;
+                if (gameManager.ResetAnimPlaying & gameManager.HoldTransition) continue;
 
                 newPos.x = circles[i].transform.position.x +
                            (targetPos.x - circles[i].transform.position.x) / lerpFactor;

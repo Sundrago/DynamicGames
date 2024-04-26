@@ -11,8 +11,7 @@ namespace DynamicGames.MiniGames.Land
     public class UIManager : MonoBehaviour
     {
         [SerializeField] private GameObject tutorialPanel;
-        [SerializeField] private Image tutorialImageA;
-        [SerializeField] private Image tutorialImageB;
+        [SerializeField] private Image tutorialImageA, tutorialImageB;
         [SerializeField] private TextMeshProUGUI tutorialMessageText;
         [SerializeField] public TextMeshProUGUI successMessageText;
 

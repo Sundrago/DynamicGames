@@ -98,7 +98,6 @@ namespace DynamicGames.MiniGames.Build
             HandleGameStatus();
 
             if (stageComponents.deathLight.intensity != 0) UpdateLightIntensity();
-
             if (stageItems.Count > 0) ManageStageItems();
         }
 
@@ -136,14 +135,19 @@ namespace DynamicGames.MiniGames.Build
                 player.gameObject.SetActive(true);
             }
         }
-
-        [Button]
+        
         private void InitGame()
+        {
+            var stageDatas = LoadStageDataFromJson();
+            for (var i = 0; i < stageDatas.Length; i++) stageIndices[i] = stageDatas[i].blockType;
+            ResetGame();
+        }
+
+        private StageData[] LoadStageDataFromJson()
         {
             var tmp = Converter.DeserializeJSONToArray<StageData>(stageMapJson.text);
             stageIndices = new int[tmp.Length];
-            for (var i = 0; i < tmp.Length; i++) stageIndices[i] = tmp[i].blockType;
-            ResetGame();
+            return tmp;
         }
 
         private void ResetGame()
@@ -158,7 +162,6 @@ namespace DynamicGames.MiniGames.Build
         private void ClearStageItems(List<StageItem> items)
         {
             foreach (var stageItem in items) Destroy(stageItem.Item);
-
             items.Clear();
         }
 
@@ -483,25 +486,6 @@ namespace DynamicGames.MiniGames.Build
                 .SetDelay(1f)
                 .SetEase(Ease.OutQuad);
         }
-        
-        private class StageItem
-        {
-            public StageItem(GameObject item, RectTransform rect, Vector2 deltaPosition)
-            {
-                Item = item;
-                Rect = rect;
-                DeltaPosition = deltaPosition;
-            }
-
-            public GameObject Item { get; }
-            public RectTransform Rect { get; }
-            public Vector2 DeltaPosition { get; set; }
-        }
-
-        public class StageData
-        {
-            public int blockType;
-        }
 
         #region TutorialMethods
 
@@ -535,7 +519,24 @@ namespace DynamicGames.MiniGames.Build
             uiComponents.tutorialImageA.DOFade(targetOpacity, duration);
             uiComponents.tutorialImageB.DOFade(targetOpacity, duration).OnComplete(() => onCompleteAction?.Invoke());
         }
+        private class StageItem
+        {
+            public StageItem(GameObject item, RectTransform rect, Vector2 deltaPosition)
+            {
+                Item = item;
+                Rect = rect;
+                DeltaPosition = deltaPosition;
+            }
 
+            public GameObject Item { get; }
+            public RectTransform Rect { get; }
+            public Vector2 DeltaPosition { get; set; }
+        }
+
+        public class StageData
+        {
+            public int blockType;
+        }
         #endregion
     }
 }

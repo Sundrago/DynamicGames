@@ -20,7 +20,6 @@ namespace DynamicGames.MiniGames.Build
         /// <summary>
         ///     Sets the number of filled hearts in the UI representation.
         /// </summary>
-        /// <param name="amount">The number of filled hearts.</param>
         public void SetHearts(int amount)
         {
             for (var i = 0; i < hearts.Length; i++) hearts[i].IsFilled = i < amount;
@@ -29,7 +28,6 @@ namespace DynamicGames.MiniGames.Build
         /// <summary>
         ///     Shows or hides the UI representation of the hearts.
         /// </summary>
-        /// <param name="show">If set to true, the hearts will be shown. If set to false, the hearts will be hidden.</param>
         public void Show(bool show)
         {
             foreach (var heart in hearts) SetAlphaAnim(heart, show);

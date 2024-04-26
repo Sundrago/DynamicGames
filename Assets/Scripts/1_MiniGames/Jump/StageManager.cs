@@ -6,6 +6,12 @@ using Random = UnityEngine.Random;
 
 namespace DynamicGames.MiniGames.Jump
 {
+    public class StageDifficulty
+    {
+        //Represent probabilities
+        public int Easy, Medium, Hard;
+    }
+    
     /// <summary>
     ///     Generate and manage stages in Jump Game.
     /// </summary>
@@ -15,11 +21,11 @@ namespace DynamicGames.MiniGames.Jump
         [SerializeField] private GameManager gameManager;
 
         [Header("Stage Elements")] 
-        [SerializeField] private StageDifficulty[] stageMap;
         [SerializeField] private TextAsset stageMapJson;
         [SerializeField] private GameObject step30, step60, step90, step180, step360;
         [SerializeField] private Transform footstepHolder;
 
+        private StageDifficulty[] stageMap;
         private float height;
         private int totalStepCount;
 
@@ -38,7 +44,7 @@ namespace DynamicGames.MiniGames.Jump
             GenerateStage(360, 0, 0);
             if (isFirstStage) GenerateStageEasy(0);
             foreach (var difficulty in stageMap)
-                GenerateStageByDifficulty(difficulty.easy, difficulty.medium, difficulty.hard);
+                GenerateStageByDifficulty(difficulty.Easy, difficulty.Medium, difficulty.Hard);
         }
 
         public void GenerateStageByDifficulty(float easy, float mid, float hard)
@@ -294,18 +300,6 @@ namespace DynamicGames.MiniGames.Jump
 
             gameManager.AddFootstepObject(nextStep);
             nextStep.SetActive(true);
-        }
-
-        [Serializable]
-        public class StageDifficulty
-        {
-            public int easy, medium, hard;
-        }
-
-        public class PrebuiltStage
-        {
-            public float height;
-            public int stageType, rotation;
         }
     }
 }

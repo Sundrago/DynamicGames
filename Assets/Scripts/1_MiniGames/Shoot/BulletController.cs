@@ -20,7 +20,7 @@ namespace DynamicGames.MiniGames.Shoot
         private BulletInfo info = new();
         private float velocity, radius, startTime;
 
-        public int points { get; private set; }
+        public int Points { get; private set; }
 
         private void Update()
         {
@@ -35,7 +35,7 @@ namespace DynamicGames.MiniGames.Shoot
             var currentPosition = gameObject.transform.position;
 
             if (IsInsideIsland(currentPosition, bulletManager.islandBoundaries))
-                bulletManager.IslandHit(points, this);
+                bulletManager.IslandHit(Points, this);
             else
                 UpdateBoundsAndBounce();
         }
@@ -152,7 +152,7 @@ namespace DynamicGames.MiniGames.Shoot
 
         private void InitBulletProperties(Vector2 _direction)
         {
-            points = info.points;
+            Points = info.points;
             direction = _direction;
             velocity = info.velocity;
             radius = info.radius;

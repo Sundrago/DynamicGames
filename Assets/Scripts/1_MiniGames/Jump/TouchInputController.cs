@@ -8,16 +8,17 @@ namespace DynamicGames.MiniGames.Jump
     /// </summary>
     public class TouchInputController : MonoBehaviour, IDragHandler, IPointerDownHandler
     {
+        private const float RotationSpeed = 40f;
+        
         [SerializeField] private GameObject player;
         [SerializeField] private GameObject cylindar;
-        [SerializeField] private float rotationSpeed = 0.5f;
 
         private Vector2 previousTouchPosition;
 
         public void OnDrag(PointerEventData eventData)
         {
             var touchDelta = eventData.position - previousTouchPosition;
-            var rotationAmount = -touchDelta.x * rotationSpeed * Time.deltaTime;
+            var rotationAmount = -touchDelta.x * RotationSpeed * Time.deltaTime;
 
             cylindar.transform.Rotate(0f, rotationAmount, 0f, Space.Self);
             previousTouchPosition = eventData.position;

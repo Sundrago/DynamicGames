@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DG.Tweening;
@@ -7,6 +8,7 @@ using DynamicGames.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 namespace DynamicGames.MiniGames.Shoot
 {
@@ -43,9 +45,9 @@ namespace DynamicGames.MiniGames.Shoot
         [SerializeField] private Animator doorRightAnimator;
         [SerializeField] public Transform player, island;
         [SerializeField] private Transform startPosition, loadPosition;
-        [SerializeField] private GameObject adj_transition_notch;
-        [SerializeField] private Animator face;
-        [SerializeField] private TutorialAnimation hand;
+        [FormerlySerializedAs("adj_transition_notch")] [SerializeField] private GameObject adjTransitionNotch;
+        [FormerlySerializedAs("face")] [SerializeField] private Animator faceAnimator;
+        [FormerlySerializedAs("hand")] [SerializeField] private TutorialAnimation tutorialAnimation;
 
         [SerializeField] public ItemInformationUI itemInformationUIAtk;
         [SerializeField] public ItemInformationUI itemInformationUIShield;
@@ -54,13 +56,14 @@ namespace DynamicGames.MiniGames.Shoot
         [SerializeField] private GameObject tutorial;
         [SerializeField] private SpriteAnimator playerRenderer;
         [SerializeField] private GameObject playerPlaceHolder;
-        [ReadOnly] public FXController shield;
+        
+        [NonSerialized] public FXController shield;
+        private AudioManager audioManager;
 
         public ShootGameState state;
         public bool spinMode;
 
         public int stage;
-        private AudioManager audioManager;
 
         public AutoAttackInfo createEnemyInCircle = new();
         public AutoAttackInfo createEnemyInLine = new();
@@ -88,7 +91,7 @@ namespace DynamicGames.MiniGames.Shoot
             stageFinished = 0;
             SetDefaultAttackState();
 
-            hand.gameObject.SetActive(false);
+            tutorialAnimation.gameObject.SetActive(false);
             tutorial.SetActive(false);
         }
 
@@ -122,7 +125,7 @@ namespace DynamicGames.MiniGames.Shoot
             GameScoreManager.Instance.HideScore();
             DestroyShield();
 
-            face.SetTrigger("idle");
+            faceAnimator.SetTrigger("idle");
             islandSizeController.CloseIsland();
             scoreManager.ResetScore();
 
@@ -151,8 +154,6 @@ namespace DynamicGames.MiniGames.Shoot
             gameObject.SetActive(false);
         }
         
-
-        [Button]
         public override void SetupPet(bool isPlayingWithPet, PetObject petObject = null)
         {
             playerPlaceHolder.SetActive(!isPlayingWithPet);
@@ -237,7 +238,7 @@ namespace DynamicGames.MiniGames.Shoot
                 case 1:
                     islandSizeController.OpenIsland();
                     await Task.Delay(1000);
-                    face.SetTrigger("turnRed");
+                    faceAnimator.SetTrigger("turnRed");
                     await Task.Delay(2000);
                     rnd = Random.Range(0, 3);
                     switch (rnd)
@@ -271,7 +272,7 @@ namespace DynamicGames.MiniGames.Shoot
                 case 2:
                     islandSizeController.OpenIsland();
                     await Task.Delay(1000);
-                    face.SetTrigger("angry01");
+                    faceAnimator.SetTrigger("angry01");
                     await Task.Delay(2000);
                     CreateMetheor();
                     await Task.Delay(1000);
@@ -310,7 +311,7 @@ namespace DynamicGames.MiniGames.Shoot
                 case 3:
                     islandSizeController.OpenIsland();
                     await Task.Delay(1000);
-                    face.SetTrigger("angry01");
+                    faceAnimator.SetTrigger("angry01");
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
@@ -353,7 +354,7 @@ namespace DynamicGames.MiniGames.Shoot
                 case 4:
                     islandSizeController.OpenIsland();
                     await Task.Delay(1000);
-                    face.SetTrigger("angry01");
+                    faceAnimator.SetTrigger("angry01");
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
@@ -398,7 +399,7 @@ namespace DynamicGames.MiniGames.Shoot
                 case 5:
                     islandSizeController.OpenIsland();
                     await Task.Delay(1000);
-                    face.SetTrigger("angry01");
+                    faceAnimator.SetTrigger("angry01");
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
@@ -441,7 +442,7 @@ namespace DynamicGames.MiniGames.Shoot
                 case 6:
                     islandSizeController.OpenIsland();
                     await Task.Delay(1000);
-                    face.SetTrigger("angry01");
+                    faceAnimator.SetTrigger("angry01");
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
@@ -488,7 +489,7 @@ namespace DynamicGames.MiniGames.Shoot
                 case 7:
                     islandSizeController.OpenIsland();
                     await Task.Delay(1000);
-                    face.SetTrigger("angry01");
+                    faceAnimator.SetTrigger("angry01");
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
@@ -541,7 +542,7 @@ namespace DynamicGames.MiniGames.Shoot
                 case 8:
                     islandSizeController.OpenIsland();
                     await Task.Delay(1000);
-                    face.SetTrigger("angry01");
+                    faceAnimator.SetTrigger("angry01");
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
@@ -594,7 +595,7 @@ namespace DynamicGames.MiniGames.Shoot
                 case 9:
                     islandSizeController.OpenIsland();
                     await Task.Delay(1000);
-                    face.SetTrigger("angry01");
+                    faceAnimator.SetTrigger("angry01");
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(500);
@@ -647,7 +648,7 @@ namespace DynamicGames.MiniGames.Shoot
                 case 10:
                     islandSizeController.OpenIsland();
                     await Task.Delay(1000);
-                    face.SetTrigger("angry01");
+                    faceAnimator.SetTrigger("angry01");
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
@@ -699,7 +700,7 @@ namespace DynamicGames.MiniGames.Shoot
                 case 11:
                     islandSizeController.OpenIsland();
                     await Task.Delay(1000);
-                    face.SetTrigger("angry01");
+                    faceAnimator.SetTrigger("angry01");
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
@@ -751,7 +752,7 @@ namespace DynamicGames.MiniGames.Shoot
                 case 12:
                     islandSizeController.OpenIsland();
                     await Task.Delay(1000);
-                    face.SetTrigger("angry01");
+                    faceAnimator.SetTrigger("angry01");
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
@@ -803,7 +804,7 @@ namespace DynamicGames.MiniGames.Shoot
                 case 13:
                     islandSizeController.OpenIsland();
                     await Task.Delay(1000);
-                    face.SetTrigger("angry01");
+                    faceAnimator.SetTrigger("angry01");
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
@@ -855,7 +856,7 @@ namespace DynamicGames.MiniGames.Shoot
                 case 14:
                     islandSizeController.OpenIsland();
                     await Task.Delay(1000);
-                    face.SetTrigger("angry01");
+                    faceAnimator.SetTrigger("angry01");
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
@@ -907,7 +908,7 @@ namespace DynamicGames.MiniGames.Shoot
                 case 15:
                     islandSizeController.OpenIsland();
                     await Task.Delay(1000);
-                    face.SetTrigger("angry01");
+                    faceAnimator.SetTrigger("angry01");
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
@@ -959,7 +960,7 @@ namespace DynamicGames.MiniGames.Shoot
                 case 16:
                     islandSizeController.OpenIsland();
                     await Task.Delay(1000);
-                    face.SetTrigger("angry01");
+                    faceAnimator.SetTrigger("angry01");
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
@@ -1011,7 +1012,7 @@ namespace DynamicGames.MiniGames.Shoot
                 case 17:
                     islandSizeController.OpenIsland();
                     await Task.Delay(1000);
-                    face.SetTrigger("angry01");
+                    faceAnimator.SetTrigger("angry01");
                     await Task.Delay(1000);
                     CreateMetheor();
                     await Task.Delay(1000);
@@ -1138,12 +1139,12 @@ namespace DynamicGames.MiniGames.Shoot
                     currentStagePlaying = -1;
                     if (GameScoreManager.Instance.GetHighScore(GameType.shoot) < 200)
                     {
-                        hand.Show();
+                        tutorialAnimation.Show();
                         tutorial.SetActive(true);
                     }
                     else
                     {
-                        hand.gameObject.SetActive(false);
+                        tutorialAnimation.gameObject.SetActive(false);
                         tutorial.SetActive(false);
                     }
 
@@ -1154,9 +1155,9 @@ namespace DynamicGames.MiniGames.Shoot
                     bulletManager.StartSpawnBulletTimer();
                     stageFinished = 0;
                     currentStagePlaying = -1;
-                    if (hand.gameObject.activeSelf)
+                    if (tutorialAnimation.gameObject.activeSelf)
                     {
-                        hand.Hide();
+                        tutorialAnimation.Hide();
                         tutorial.SetActive(false);
                     }
 
@@ -1164,7 +1165,7 @@ namespace DynamicGames.MiniGames.Shoot
                 case ShootGameState.Dead:
                     FXManager.Instance.CreateFX(FXType.DeadExplosion, player);
                     enemyManager.GameOver();
-                    face.SetTrigger("idle");
+                    faceAnimator.SetTrigger("idle");
                     islandSizeController.CloseIsland();
                     inputManager.gameObject.SetActive(false);
                     inputManager.ResetJoystick();
@@ -1186,7 +1187,7 @@ namespace DynamicGames.MiniGames.Shoot
         private void Revive()
         {
             enemyManager.KillAll();
-            face.SetTrigger("turnRed");
+            faceAnimator.SetTrigger("turnRed");
             state = ShootGameState.Playing;
             currentStagePlaying = -1;
             stage -= 1;
@@ -1239,7 +1240,7 @@ namespace DynamicGames.MiniGames.Shoot
 
         public void PreLoad()
         {
-            adj_transition_notch.SetActive(false);
+            adjTransitionNotch.SetActive(false);
             GameScoreManager.Instance.gameObject.SetActive(false);
             RestartGame();
             state = ShootGameState.Dead;
@@ -1248,7 +1249,7 @@ namespace DynamicGames.MiniGames.Shoot
             inputManager.gameObject.SetActive(false);
             Greetings();
             SetDefaultAttackState();
-            hand.gameObject.SetActive(false);
+            tutorialAnimation.gameObject.SetActive(false);
             tutorial.gameObject.SetActive(false);
         }
         
@@ -1256,7 +1257,7 @@ namespace DynamicGames.MiniGames.Shoot
         {
             DOTween.Kill(islandSizeController.GetComponent<RectTransform>());
             islandSizeController.OpenIsland();
-            face.SetTrigger("idle");
+            faceAnimator.SetTrigger("idle");
             await Task.Delay(1000);
             islandSizeController.CloseIsland();
         }
