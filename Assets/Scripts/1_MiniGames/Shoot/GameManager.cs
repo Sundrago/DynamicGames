@@ -202,12 +202,7 @@ namespace DynamicGames.MiniGames.Shoot
             else if (myScofre < 6000) SetStage(16);
             else SetStage(17);
         }
-
-        public enum FaceState
-        {
-            Idle, TurnRed, Angry01,
-        }
-
+        
         public void SetFaceAnimation(FaceState state)
         {
             switch (state)
@@ -223,12 +218,7 @@ namespace DynamicGames.MiniGames.Shoot
                     break;
             }
         }
-
-        public enum IslandState
-        {
-            Open,
-            Close
-        }
+        
         public void SetIslandAnimation(IslandState state)
         {
             switch (state)
