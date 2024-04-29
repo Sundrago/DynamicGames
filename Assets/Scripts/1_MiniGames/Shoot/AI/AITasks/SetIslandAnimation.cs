@@ -27,7 +27,7 @@ namespace DynamicGames.MiniGames.Shoot
         private async Task SetIslandAnimation(IAITaskParameter taskParameter)
         {
             var setIslandAnimationTask = taskParameter as SetIslandAnimation;
-            gameManager.SetIslandAnimation(setIslandAnimationTask.IslandState);
+            gameManager.AIDoorController1.SetIslandAnimation(setIslandAnimationTask.IslandState, gameManager);
             await Task.Delay(500);
         }
     }

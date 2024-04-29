@@ -27,7 +27,7 @@ namespace DynamicGames.MiniGames.Shoot
         private async Task SetFaceAnimation(IAITaskParameter taskParameter)
         {
             var setFaceAnimationTask = taskParameter as SetFaceAnimation;
-            gameManager.SetFaceAnimation(setFaceAnimationTask.FaceState);
+            gameManager.UIManager1.SetFaceAnimation(setFaceAnimationTask.FaceState, gameManager);
             await Task.Delay(500);
         }
     }

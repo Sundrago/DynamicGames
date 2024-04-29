@@ -200,19 +200,19 @@ namespace DynamicGames.MiniGames.Shoot
         private void HandleWeaponPickup()
         {
             bulletManager.UpgradeBullet();
-            gameManager.itemInformationUIAtk.Init(-1, bulletManager.currentBulletObj);
+            gameManager.UIManager.itemInformationUIAtk.Init(-1, bulletManager.currentBulletObj);
         }
 
         private void HandleShieldPickup()
         {
-            gameManager.GetShield();
-            gameManager.itemInformationUIShield.Init(-1);
+            gameManager.ItemHandler.GetShield();
+            gameManager.UIManager.itemInformationUIShield.Init(-1);
         }
 
         private void HandleBouncePickup()
         {
             bulletManager.bounceCount += 1;
-            gameManager.itemInformationUIBounce.Init(-1, bulletManager.bounceCount);
+            gameManager.UIManager.itemInformationUIBounce.Init(-1, bulletManager.bounceCount);
             bulletManager.bounceCount = Mathf.Min(bulletManager.bounceCount, MaxBounceCount);
         }
 
@@ -228,7 +228,7 @@ namespace DynamicGames.MiniGames.Shoot
             audioManager.PlaySfxByTag(SfxTag.Spin);
             fx.transform.SetParent(player.transform, true);
             gameManager.SetSpinMode(7f);
-            gameManager.itemInformationUISpin.Init(7);
+            gameManager.UIManager.itemInformationUISpin.Init(7);
         }
 
         private ItemType GetRandomSingleItem()
@@ -238,10 +238,10 @@ namespace DynamicGames.MiniGames.Shoot
 
         public void KillAll()
         {
-            gameManager.itemInformationUIAtk.HideUI();
-            gameManager.itemInformationUIShield.HideUI();
-            gameManager.itemInformationUIBounce.HideUI();
-            gameManager.itemInformationUISpin.HideUI();
+            gameManager.UIManager.itemInformationUIAtk.HideUI();
+            gameManager.UIManager.itemInformationUIShield.HideUI();
+            gameManager.UIManager.itemInformationUIBounce.HideUI();
+            gameManager.UIManager.itemInformationUISpin.HideUI();
 
             for (var i = items.Count - 1; i >= 0; i--)
             {

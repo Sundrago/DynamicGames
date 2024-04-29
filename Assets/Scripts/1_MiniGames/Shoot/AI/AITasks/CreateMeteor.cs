@@ -30,7 +30,7 @@ namespace DynamicGames.MiniGames.Shoot
             var createMeteor = taskParameter as CreateMeteor;
             for (int i = 0; i < createMeteor.Amount; i++)
             {
-                gameManager.CreateMetheor();
+                gameManager.ItemHandler.CreateMetheor();
                 await Task.Delay(createMeteor.Delay);
             }
         }

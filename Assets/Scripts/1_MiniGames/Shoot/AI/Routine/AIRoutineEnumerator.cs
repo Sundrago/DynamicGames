@@ -62,7 +62,7 @@ namespace DynamicGames.MiniGames.Shoot
                     for (var i = 0; i < amt; i++)
                     {
                         yield return new WaitForSeconds(2f);
-                        gameManager.CreateMetheor();
+                        gameManager.ItemHandler.CreateMetheor();
                     }
                 }
             }

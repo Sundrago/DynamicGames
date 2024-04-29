@@ -27,48 +27,65 @@ namespace DynamicGames.MiniGames.Shoot
         }
 
         public static GameManager Instacne { get; private set;  }
-        
+
+        public AIDoorController AIDoorController => aiDoorController;
+        public UIManager UIManager => uiManager;
+        public UIManager UIManager1 => uiManager;
+        public Animator FaceAnimator
+        {
+            set => faceAnimator = value;
+            get => faceAnimator;
+        }
+
+        public AIDoorController AIDoorController1 => aiDoorController;
+
+        public IslandSizeController IslandSizeController
+        {
+            set => islandSizeController = value;
+            get => islandSizeController;
+        }
+
+        public ItemHandler ItemHandler => itemHandler;
+
         [Header("Managers and Controllers")]
         [SerializeField] public EnemyManager enemyManager;
         [SerializeField] private BulletManager bulletManager;
-        [SerializeField] private FXManager fXManager;
         [SerializeField] private InputManager inputManager;
         [SerializeField] public ItemManager itemManager;
         [SerializeField] private IslandSizeController islandSizeController;
         [SerializeField] private ScoreManager scoreManager;
         [SerializeField] private SfxController sfxController;
         [SerializeField] private PetManager petManager;
-        [FormerlySerializedAs("aiEnumerator")] [SerializeField] private AIRoutineEnumerator aiRoutineEnumerator;
+        [SerializeField] private AIRoutineEnumerator aiRoutineEnumerator;
         [SerializeField] private Dictionary<PetType, Vector3> CustomPetPos;
         [SerializeField] private AIManager aiManager;
-
+        [SerializeField] public AudioManager audioManager;
         
-        [SerializeField] private Animator doorLeftAnimator; 
-        [SerializeField] private Animator doorRightAnimator;
+        [Header("Game Components")]
+
+        [SerializeField] private Animator faceAnimator;
         [SerializeField] public Transform player, island;
         [SerializeField] private Transform startPosition, loadPosition;
         [SerializeField] private GameObject adjTransitionNotch;
-        [SerializeField] private Animator faceAnimator;
-        [SerializeField] private TutorialAnimation tutorialAnimation;
-
-        [SerializeField] public ItemInformationUI itemInformationUIAtk;
-        [SerializeField] public ItemInformationUI itemInformationUIShield;
-        [SerializeField] public ItemInformationUI itemInformationUIBounce;
-        [SerializeField] public ItemInformationUI itemInformationUISpin;
-        [SerializeField] private GameObject tutorial;
         [SerializeField] private SpriteAnimator playerRenderer;
         [SerializeField] private GameObject playerPlaceHolder;
-        
         [NonSerialized] public FXController shield;
-        private AudioManager audioManager;
 
+        private readonly AIDoorController aiDoorController;
+        private readonly UIManager uiManager;
+        private readonly ItemHandler itemHandler;
         public ShootGameState state;
         public bool spinMode;
-
         public int currentStageIdx;
-
         private bool hasRevived;
         private float spinTime;
+
+        public GameManager()
+        {
+            aiDoorController = new AIDoorController(this);
+            uiManager = new UIManager();
+            itemHandler = new ItemHandler(this);
+        }
 
         private void Awake()
         {
@@ -84,8 +101,8 @@ namespace DynamicGames.MiniGames.Shoot
             currentStageIdx = 0;
             SetDefaultAttackState();
 
-            tutorialAnimation.gameObject.SetActive(false);
-            tutorial.SetActive(false);
+            UIManager.TutorialAnimation.gameObject.SetActive(false);
+            UIManager.Tutorial.SetActive(false);
         }
 
         private void SetDefaultAttackState()
@@ -111,7 +128,7 @@ namespace DynamicGames.MiniGames.Shoot
         public override void RestartGame()
         {
             GameScoreManager.Instance.HideScore();
-            DestroyShield();
+            ItemHandler.DestroyShield();
 
             faceAnimator.SetTrigger("idle");
             islandSizeController.CloseIsland();
@@ -199,36 +216,7 @@ namespace DynamicGames.MiniGames.Shoot
             else if (myScofre < 6000) SetStage(16);
             else SetStage(17);
         }
-        
-        public void SetFaceAnimation(FaceState state)
-        {
-            switch (state)
-            {
-                case FaceState.Idle:
-                    faceAnimator.SetTrigger("idle");
-                    break;
-                case FaceState.TurnRed:
-                    faceAnimator.SetTrigger("turnRed");
-                    break;
-                case FaceState.Angry01:
-                    faceAnimator.SetTrigger("angry01");
-                    break;
-            }
-        }
-        
-        public void SetIslandAnimation(IslandState state)
-        {
-            switch (state)
-            {
-                case IslandState.Open:
-                    islandSizeController.OpenIsland();
-                    break;
-                case IslandState.Close:
-                    islandSizeController.CloseIsland();
-                    break;
-            }
-        }
-        
+
         private void SetStage(int stage)
         {
             if (state != ShootGameState.Playing) return;
@@ -237,63 +225,6 @@ namespace DynamicGames.MiniGames.Shoot
             
             aiManager.StartStage(currentStageIdx);
             currentStageIdx += 1;
-        }
-
-        public async Task SpawnOnLeft(int count)
-        {
-            if (state != ShootGameState.Playing) return;
-            doorLeftAnimator.SetTrigger("open");
-            await Task.Delay(400);
-            for (var i = 0; i < count; i++)
-            {
-                enemyManager.SpawnOnIsland(180, -1.5f, 0f);
-                await Task.Delay(1000);
-            }
-
-            doorLeftAnimator.SetTrigger("close");
-        }
-
-        public async Task SpawnOnRight(int count)
-        {
-            if (state != ShootGameState.Playing) return;
-            doorRightAnimator.SetTrigger("open");
-            await Task.Delay(400);
-            for (var i = 0; i < count; i++)
-            {
-                enemyManager.SpawnOnIsland(0, 1.5f, 0f);
-                await Task.Delay(1000);
-            }
-
-            doorRightAnimator.SetTrigger("close");
-        }
-
-        public void CreateMetheor()
-        {
-            if (state != ShootGameState.Playing) return;
-            var path = new Vector3[3];
-            path[0] = island.transform.position;
-            path[2] = player.transform.position;
-            path[0].z = path[2].z;
-
-            var ydiff = Mathf.Abs(player.transform.position.y - island.transform.position.y);
-            var xdiff = map(ydiff, 0, 5, 0.2f, 1.5f);
-            path[1] = Vector3.Lerp(path[0], path[2], 0.5f);
-            path[1].x = player.position.x < 0 ? -xdiff : xdiff;
-
-            var metheor = fXManager.CreateFX(FXType.ShadowMissile, path[0]);
-            metheor.transform.DOPath(path, Random.Range(1.8f, 2.2f), PathType.CatmullRom, PathMode.TopDown2D, 1,
-                    Color.red)
-                .SetEase(Ease.OutQuart)
-                .OnComplete(() =>
-                {
-                    //fXManager.KillFX(metheor.GetComponent<FX>());
-                    fXManager.CreateFX(FXType.ShadowBomb, metheor.transform);
-                });
-
-            float map(float s, float a1, float a2, float b1, float b2)
-            {
-                return b1 + (s - a1) * (b2 - b1) / (a2 - a1);
-            }
         }
 
         private void ChangeStatus(ShootGameState _state)
@@ -307,13 +238,13 @@ namespace DynamicGames.MiniGames.Shoot
                     inputManager.ResetJoystick();
                     if (GameScoreManager.Instance.GetHighScore(GameType.shoot) < 200)
                     {
-                        tutorialAnimation.Show();
-                        tutorial.SetActive(true);
+                        UIManager.TutorialAnimation.Show();
+                        UIManager.Tutorial.SetActive(true);
                     }
                     else
                     {
-                        tutorialAnimation.gameObject.SetActive(false);
-                        tutorial.SetActive(false);
+                        UIManager.TutorialAnimation.gameObject.SetActive(false);
+                        UIManager.Tutorial.SetActive(false);
                     }
 
                     hasRevived = false;
@@ -321,10 +252,10 @@ namespace DynamicGames.MiniGames.Shoot
                 case ShootGameState.Playing:
                     aiRoutineEnumerator.StartTasks();
                     bulletManager.StartSpawnBulletTimer();
-                    if (tutorialAnimation.gameObject.activeSelf)
+                    if (UIManager.TutorialAnimation.gameObject.activeSelf)
                     {
-                        tutorialAnimation.Hide();
-                        tutorial.SetActive(false);
+                        UIManager.TutorialAnimation.Hide();
+                        UIManager.Tutorial.SetActive(false);
                     }
 
                     break;
@@ -345,10 +276,10 @@ namespace DynamicGames.MiniGames.Shoot
         private void ShowScore()
         {
             GameScoreManager.Instance.ShowScore(scoreManager.GetScore(), GameType.shoot);
-            itemInformationUIAtk.HideUI();
-            itemInformationUIShield.HideUI();
-            itemInformationUIBounce.HideUI();
-            itemInformationUISpin.HideUI();
+            UIManager.itemInformationUIAtk.HideUI();
+            UIManager.itemInformationUIShield.HideUI();
+            UIManager.itemInformationUIBounce.HideUI();
+            UIManager.itemInformationUISpin.HideUI();
         }
 
         private void Revive()
@@ -365,32 +296,13 @@ namespace DynamicGames.MiniGames.Shoot
         }
 
 
-        public void GetShield()
-        {
-            if (shield != null) return;
-            shield = fXManager.CreateFX(FXType.Shield, player.transform).GetComponent<FXController>();
-            shield.gameObject.transform.SetParent(player.transform, true);
-            shield.transform.localPosition = Vector3.zero;
-        }
-
-        private void DestroyShield()
-        {
-            if (shield == null) return;
-            itemInformationUIShield.HideUI();
-            fXManager.CreateFX(FXType.ShieldPop, shield.gameObject.transform);
-            fXManager.CreateFX(FXType.Bomb, shield.gameObject.transform);
-            fXManager.KillFX(shield);
-            audioManager.PlaySfxByTag(SfxTag.ShieldPop);
-            shield = null;
-        }
-
         public void GetAttack()
         {
             if (state != ShootGameState.Playing) return;
 
             if (shield != null)
             {
-                DestroyShield();
+                ItemHandler.DestroyShield();
                 return;
             }
             
@@ -414,8 +326,8 @@ namespace DynamicGames.MiniGames.Shoot
             inputManager.gameObject.SetActive(false);
             Greetings();
             SetDefaultAttackState();
-            tutorialAnimation.gameObject.SetActive(false);
-            tutorial.gameObject.SetActive(false);
+            UIManager.TutorialAnimation.gameObject.SetActive(false);
+            UIManager.Tutorial.gameObject.SetActive(false);
         }
         
         private async Task Greetings()

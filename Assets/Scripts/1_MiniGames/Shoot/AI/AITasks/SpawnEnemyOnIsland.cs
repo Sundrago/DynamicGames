@@ -29,13 +29,13 @@ namespace DynamicGames.MiniGames.Shoot
         {
             var spawnEnemyOnIslandTask = taskParameter as SpawnEnemyOnIsland;
             if (spawnEnemyOnIslandTask.Direction == SpawnDirection.Left)
-                await gameManager.SpawnOnLeft(spawnEnemyOnIslandTask.Amount);
+                await gameManager.AIDoorController.SpawnOnLeft(spawnEnemyOnIslandTask.Amount);
             else if (spawnEnemyOnIslandTask.Direction == SpawnDirection.Right)
-                await gameManager.SpawnOnRight(spawnEnemyOnIslandTask.Amount);
+                await gameManager.AIDoorController.SpawnOnRight(spawnEnemyOnIslandTask.Amount);
             else
             {
-                Task.Run(()=> gameManager.SpawnOnLeft(spawnEnemyOnIslandTask.Amount));
-                Task.Run(()=> gameManager.SpawnOnRight(spawnEnemyOnIslandTask.Amount));
+                Task.Run(()=> gameManager.AIDoorController.SpawnOnLeft(spawnEnemyOnIslandTask.Amount));
+                Task.Run(()=> gameManager.AIDoorController.SpawnOnRight(spawnEnemyOnIslandTask.Amount));
                 // await gameManager.SpawnOnRight(spawnEnemyOnIslandTask.Amount);
             }
         }
