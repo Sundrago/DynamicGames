@@ -1,5 +1,61 @@
 {
   "StageLevel": 1,
+  "PreRoutine": [
+    {
+      "RoutineType": "CreateEnemyInCircle",
+      "AutoAttackInfo": {
+        "Delay": 1000,
+        "Min": 0,
+        "Max": 0,
+        "Probability": 1.0
+      }
+    },
+    {
+      "RoutineType": "CreateEnemyRandomPos",
+      "AutoAttackInfo": {
+        "Delay": 1100,
+        "Min": 0,
+        "Max": 0,
+        "Probability": 1.0
+      }
+    },
+    {
+      "RoutineType": "CreateMeteor",
+      "AutoAttackInfo": {
+        "Delay": 1200,
+        "Min": 0,
+        "Max": 0,
+        "Probability": 1.0
+      }
+    },
+    {
+      "RoutineType": "CreateEnemyInLine",
+      "AutoAttackInfo": {
+        "Delay": 1300,
+        "Min": 0,
+        "Max": 0,
+        "Probability": 1.0
+      }
+    },
+    {
+      "RoutineType": "CreateEnemyInSpiral",
+      "AutoAttackInfo": {
+        "Delay": 1400,
+        "Min": 0,
+        "Max": 0,
+        "Probability": 1.0
+      }
+    },
+    {
+      "RoutineType": "CreateItem",
+      "AutoAttackInfo": {
+        "Delay": 1500,
+        "Min": 1,
+        "Max": 1,
+        "Probability": 0.25
+      }
+    }
+  ],
   "PreTasks": [
     {
       "AITaskType": "SetIslandAnimation",
@@ -7,8 +63,7 @@
     },
     {
       "AITaskType": "Delay",
-      "Duration": 1000,
-      "Proper": 0
+      "Duration": 1000
     },
     {
       "AITaskType": "SetFaceAnimation",
@@ -16,8 +71,7 @@
     },
     {
       "AITaskType": "Delay",
-      "Duration": 2000,
-      "Proper": 0
+      "Duration": 2000
     }
   ],
   "NumberOfRandomTasksToPerform": 1,
@@ -37,8 +91,7 @@
       },
       {
         "AITaskType": "Delay",
-        "Duration": 1000,
-        "Proper": 0
+        "Duration": 1000
       }
     ],
     [
@@ -61,10 +114,38 @@
     },
     {
       "AITaskType": "Delay",
-      "Duration": 1000,
-      "Proper": 0
+      "Duration": 1000
     }
   ],
-  "name": "",
+  "PostRoutine": [
+    {
+      "RoutineType": "CreateEnemyInCircle",
+      "AutoAttackInfo": {
+        "Delay": 12000,
+        "Min": 0,
+        "Max": 1,
+        "Probability": 1.0
+      }
+    },
+    {
+      "RoutineType": "CreateEnemyRandomPos",
+      "AutoAttackInfo": {
+        "Delay": 3000,
+        "Min": 0,
+        "Max": 2,
+        "Probability": 1.0
+      }
+    },
+    {
+      "RoutineType": "CreateMeteor",
+      "AutoAttackInfo": {
+        "Delay": 1000,
+        "Min": 0,
+        "Max": 0,
+        "Probability": 1.0
+      }
+    }
+  ],
+  "name": "Level01",
   "hideFlags": "None"
 }

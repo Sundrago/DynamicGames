@@ -6,7 +6,7 @@ using UnityEngine;
 namespace DynamicGames.MiniGames.Land
 {
     /// <summary>
-    ///     A container that holds a list of stage elements.
+    ///     A container that holds a list of currentStageIdx elements.
     /// </summary>
     [Serializable]
     public class StageItemHolder : MonoBehaviour

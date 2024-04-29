@@ -5,7 +5,7 @@ using UnityEngine;
 namespace DynamicGames.MiniGames.Build
 {
     /// <summary>
-    ///     Represents a holder for stage items.
+    ///     Represents a holder for currentStageIdx items.
     /// </summary>
     public class StageItemHolder : MonoBehaviour
     {

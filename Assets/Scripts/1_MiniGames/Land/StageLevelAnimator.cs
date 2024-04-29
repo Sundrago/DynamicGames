@@ -5,7 +5,7 @@ using UnityEngine;
 namespace DynamicGames.MiniGames.Land
 {
     /// <summary>
-    ///     Controls the animation of the stage in the game.
+    ///     Controls the animation of the currentStageIdx in the game.
     /// </summary>
     public class StageLevelAnimator : MonoBehaviour
     {

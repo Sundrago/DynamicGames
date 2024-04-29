@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -108,14 +109,15 @@ namespace DynamicGames.MiniGames.Shoot
                 return playerPos + new Vector2(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius);
             }
         }
-
+        
+        [Button]
         public void SpawnEnemyInLineY(int count, float normalY = -0.9f)
         {
             for (var i = 0; i < count; i++)
             {
                 var normalX = 2f / (count + 1) * (i + 1) - 1f;
                 var pos = new Vector2(normalX * screenBounds.x, normalY * screenBounds.y);
-                SpawnEnemy(pos);
+                SpawnEnemy(pos, true);
             }
         }
 

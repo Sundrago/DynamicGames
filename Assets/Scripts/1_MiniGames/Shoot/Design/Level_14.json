@@ -1,0 +1,156 @@
+{
+  "StageLevel": 14,
+  "PreRoutine": [],
+  "PreTasks": [
+    {
+      "AITaskType": "SetIslandAnimation",
+      "IslandState": "Open"
+    },
+    {
+      "AITaskType": "Delay",
+      "Duration": 1000
+    },
+    {
+      "AITaskType": "SetFaceAnimation",
+      "FaceState": "Angry01"
+    },
+    {
+      "AITaskType": "Delay",
+      "Duration": 300
+    },
+    {
+      "AITaskType": "CreateMeteor",
+      "Amount": 4,
+      "Delay": 330
+    },
+    {
+      "AITaskType": "SpawnEnemyInLineY",
+      "Count": 0,
+      "NormalYPos": -0.9
+    }
+  ],
+  "NumberOfRandomTasksToPerform": 4,
+  "RandomTaskPool": [
+    [
+      {
+        "AITaskType": "CreateMeteor",
+        "Amount": 3,
+        "Delay": 542
+      }
+    ],
+    [
+      {
+        "AITaskType": "SpawnEnemyInCircle",
+        "Radius": 1.0,
+        "Count": 12
+      },
+      {
+        "AITaskType": "SpawnEnemyInCircle",
+        "Radius": 1.35,
+        "Count": 8
+      },
+      {
+        "AITaskType": "Delay",
+        "Duration": 3200
+      }
+    ],
+    [
+      {
+        "AITaskType": "SpawnEnemyOnIsland",
+        "Direction": "Both",
+        "Amount": 8
+      },
+      {
+        "AITaskType": "Delay",
+        "Duration": 2000
+      }
+    ],
+    [
+      {
+        "AITaskType": "SpawnEnemyInSpiral",
+        "RadiusMin": 0.5,
+        "RadiusMax": 2.0,
+        "Count": 30,
+        "MaxAngle": 1.5,
+        "Delay": 30,
+        "PrewarmDuration": 0.75
+      },
+      {
+        "AITaskType": "Delay",
+        "Duration": 2000
+      }
+    ],
+    [
+      {
+        "AITaskType": "Delay",
+        "Duration": 2000
+      },
+      {
+        "AITaskType": "SpawnEnemyInLineY",
+        "Count": 0,
+        "NormalYPos": -0.9
+      },
+      {
+        "AITaskType": "Delay",
+        "Duration": 1500
+      },
+      {
+        "AITaskType": "SpawnEnemyInLineY",
+        "Count": 0,
+        "NormalYPos": -0.85
+      },
+      {
+        "AITaskType": "Delay",
+        "Duration": 4000
+      }
+    ]
+  ],
+  "PostTasks": [
+    {
+      "AITaskType": "SetIslandAnimation",
+      "IslandState": "Close"
+    },
+    {
+      "AITaskType": "Delay",
+      "Duration": 1000
+    }
+  ],
+  "PostRoutine": [
+    {
+      "RoutineType": "CreateEnemyInCircle",
+      "AIRoutineData": {
+        "Delay": 5500,
+        "Min": 7,
+        "Max": 20,
+        "Probability": 1.0
+      }
+    },
+    {
+      "RoutineType": "CreateEnemyRandomPos",
+      "AIRoutineData": {
+        "Delay": 1000,
+        "Min": 1,
+        "Max": 4,
+        "Probability": 1.0
+      }
+    },
+    {
+      "RoutineType": "CreateMeteor",
+      "AIRoutineData": {
+        "Delay": 1100,
+        "Min": 1,
+        "Max": 1,
+        "Probability": 0.5
+      }
+    },
+    {
+      "RoutineType": "CreateEnemyInLine",
+      "AIRoutineData": {
+        "Delay": 4900,
+        "Min": 5,
+        "Max": 10,
+        "Probability": 0.45
+      }
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "StageLevel": 1,
+  "PreRoutine": [
+    {
+      "RoutineType": "CreateEnemyInCircle",
+      "AIRoutineData": {
+        "Delay": 1000,
+        "Min": 0,
+        "Max": 0,
+        "Probability": 1.0
+      }
+    },
+    {
+      "RoutineType": "CreateEnemyRandomPos",
+      "AIRoutineData": {
+        "Delay": 1100,
+        "Min": 0,
+        "Max": 0,
+        "Probability": 1.0
+      }
+    },
+    {
+      "RoutineType": "CreateMeteor",
+      "AIRoutineData": {
+        "Delay": 1200,
+        "Min": 0,
+        "Max": 0,
+        "Probability": 1.0
+      }
+    },
+    {
+      "RoutineType": "CreateEnemyInLine",
+      "AIRoutineData": {
+        "Delay": 1300,
+        "Min": 0,
+        "Max": 0,
+        "Probability": 1.0
+      }
+    },
+    {
+      "RoutineType": "CreateEnemyInSpiral",
+      "AIRoutineData": {
+        "Delay": 1400,
+        "Min": 0,
+        "Max": 0,
+        "Probability": 1.0
+      }
+    },
+    {
+      "RoutineType": "CreateItem",
+      "AIRoutineData": {
+        "Delay": 1500,
+        "Min": 1,
+        "Max": 1,
+        "Probability": 0.25
+      }
+    }
+  ],
+  "PreTasks": [
+    {
+      "AITaskType": "SetIslandAnimation",
+      "IslandState": "Open"
+    },
+    {
+      "AITaskType": "Delay",
+      "Duration": 1000
+    },
+    {
+      "AITaskType": "SetFaceAnimation",
+      "FaceState": "TurnRed"
+    },
+    {
+      "AITaskType": "Delay",
+      "Duration": 2000
+    }
+  ],
+  "NumberOfRandomTasksToPerform": 1,
+  "RandomTaskPool": [
+    [
+      {
+        "AITaskType": "CreateMeteor",
+        "Amount": 1,
+        "Delay": 2000
+      }
+    ],
+    [
+      {
+        "AITaskType": "SpawnEnemiesAtRandomPos",
+        "Amount": 3,
+        "Delay": 100
+      },
+      {
+        "AITaskType": "Delay",
+        "Duration": 1000
+      }
+    ],
+    [
+      {
+        "AITaskType": "SpawnEnemyOnIsland",
+        "Direction": "Both",
+        "Amount": 2
+      }
+    ]
+  ],
+  "PostTasks": [
+    {
+      "AITaskType": "SetIslandAnimation",
+      "IslandState": "Close"
+    },
+    {
+      "AITaskType": "Delay",
+      "Duration": 1000
+    }
+  ],
+  "PostRoutine": [
+    {
+      "RoutineType": "CreateEnemyInCircle",
+      "AIRoutineData": {
+        "Delay": 12000,
+        "Min": 0,
+        "Max": 1,
+        "Probability": 1.0
+      }
+    },
+    {
+      "RoutineType": "CreateEnemyRandomPos",
+      "AIRoutineData": {
+        "Delay": 3000,
+        "Min": 0,
+        "Max": 2,
+        "Probability": 1.0
+      }
+    },
+    {
+      "RoutineType": "CreateMeteor",
+      "AIRoutineData": {
+        "Delay": 1000,
+        "Min": 0,
+        "Max": 0,
+        "Probability": 1.0
+      }
+    }
+  ]
+}

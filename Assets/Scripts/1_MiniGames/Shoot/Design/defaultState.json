@@ -23,13 +23,13 @@
     "Max": 0,
     "Probability": 1.0
   },
-  "CreateItem": {
+  "CreateMeteor": {
     "Delay": 1400,
     "Min": 0,
-    "Max": 1,
+    "Max": 0,
     "Probability": 1.0
   },
-  "CreateMeteor": {
+  "CreateItem": {
     "Delay": 3700,
     "Min": 1,
     "Max": 1,
